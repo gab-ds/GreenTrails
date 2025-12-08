@@ -1,0 +1,34 @@
+<!-- <img src="assets\logo.png" alt="" style="width: 90px; position: absolute; right: 5px; cursor: pointer; z-index: 2;"
+    routerLink="" class="title"> -->
+    <button mat-mini-fab aria-label="Example icon button with a home icon"
+    style="position: absolute; right: 35px; cursor: pointer; z-index: 2; top: 25px; background-color: #00FF00;" routerLink="" class="title">
+    <mat-icon style="color: white;">home</mat-icon>
+</button>
+<div class="mapContainer">
+    <div class="ricerca">
+        <div class="barraricerca">
+            <input type="text" class="searchbar" placeholder="Latitudine" id="latitudine"
+                onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 44 || event.charCode == 46"
+                [(ngModel)]="latitudine" autocomplete="off" />
+        </div>
+        <div class="barraricerca">
+            <input type="text" class="searchbar" placeholder="Longitudine" id="longitudine"
+                onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 44 || event.charCode == 46"
+                [(ngModel)]="longitudine" autocomplete="off" />
+        </div>
+        <div class="barraricerca">
+            <input type="text" class="searchbar" placeholder="Raggio" id="raggio"
+                onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 44 || event.charCode == 46"
+                [(ngModel)]="raggio" autocomplete="off" />
+        </div>
+        <button mat-raised-button color="primary" type="submit" (click)="onSubmit()"
+            style="margin-top: 20px; color: white; background-color: #32CD32; width: 100px; border-radius: 20px;"
+            [style.backgroundColor]="(!latitudine || !longitudine || !raggio || !isValidLatitude() || !isValidLongitude() || !isValidRadius()) ? 'lightgrey' : '#32CD32'"
+            style="margin-top: 20px; color: white; width: 100px; border-radius: 20px;"
+            [disabled]="!latitudine || !longitudine || !raggio || !isValidLatitude() || !isValidLongitude() || !isValidRadius()">Cerca</button>
+    </div>
+    <div class="map-container">
+        <div id="mappa">
+        </div>
+    </div>
+</div>

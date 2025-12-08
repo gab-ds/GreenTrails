@@ -1,0 +1,49 @@
+.container {
+    position: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: fit-content;
+    justify-content: center;
+  }
+
+  .card {
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    margin-right: 10px;
+    box-shadow: 7px 7px 5px #dedede;
+    overflow: hidden;
+  }
+
+  .stepper-container {
+    height:auto;
+    margin-right: 20px;
+    width: auto;
+  }
+  .pic img {
+    width: 100%;
+    height: auto; 
+  }
+  .pic{
+    width:100%;
+  }
+
+  .button-container{
+    margin: 10px;
+    position: relative;
+    margin-top: 20px;
+  }
+
+  .card-title, .card-description{
+    padding: 20px;
+  }
+
+  ::ng-deep .mat-step-header .mat-step-icon-selected {
+    color: white
+  }
+
+  ::ng-deep .mat-step-header .mat-step-icon {
+    color: white
+  }
+  

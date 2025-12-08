@@ -1,0 +1,20 @@
+<!-- Container card-attivita -->
+<mat-card class="example-card">
+    <!-- Container header card-attivita -->
+    <mat-card-header class="card-section">
+        <!-- Container titolo attivita con pulsante segnalazione -->
+        <mat-card-title style="font-weight: bold;">
+            <button mat-icon-button aria-label="report_attivita_button" matTooltip="Segnala attività" matTooltipPosition="left" *ngIf="isVisitatore" (click)="apriSegnalazione()">
+                <mat-icon style="color: red;">report_problem</mat-icon>
+            </button>
+            {{ nomeAttivita }}
+        </mat-card-title>
+    </mat-card-header>
+    <!-- Container contenuto card-attivita -->
+    <mat-card-content class="card-section" style="margin-top: 10px;">
+        <!-- Container immagine attivita -->
+        <img mat-card-image
+        src="{{ imageUrls[0] }}"
+        alt="immagine-attivita">
+    </mat-card-content>
+</mat-card>

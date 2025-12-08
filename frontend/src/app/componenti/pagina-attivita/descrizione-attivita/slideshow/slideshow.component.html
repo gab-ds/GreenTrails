@@ -1,0 +1,10 @@
+<mat-card class="carousel-container">
+    <ngb-carousel>
+      <ng-template *ngFor="let imageUrl of imageUrls" ngbSlide>
+        <div class="carousel-wrapper">
+          <img mat-card-image [src]="imageUrl.name" [alt]="imageUrl.caption">
+        </div>
+      </ng-template>
+    </ngb-carousel>
+  </mat-card>
+  

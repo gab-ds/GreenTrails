@@ -1,0 +1,37 @@
+name: Build Backend
+on:
+  push:
+      paths:
+        - 'backend/**'
+      branches:
+        - main
+  pull_request:
+    paths:
+      - 'backend/**'
+    branches:
+      - dev
+
+jobs:
+  build:
+    name: Build del progetto
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configura ambiente Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Genera artefatto JAR
+        run: mvn package
+      - name: Carica artefatto JAR come artefatto del workflow
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-build
+          path: backend/target/backend-0.0.1-SNAPSHOT.jar
+
+
+defaults:
+  run:
+    working-directory: ./backend

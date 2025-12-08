@@ -1,0 +1,12 @@
+<div class="content" style="display: flex; flex-direction: row;">
+  <mat-icon style="vertical-align: middle; margin-right: 8px;">cancel</mat-icon>
+  <h1 mat-dialog-title>
+    {{ data.message }}
+  </h1>
+</div>
+<div mat-dialog-content>
+  <p>{{ data.action }}</p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Chiudi</button>
+</div>

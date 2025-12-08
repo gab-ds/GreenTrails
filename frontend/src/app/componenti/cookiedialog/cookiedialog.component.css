@@ -1,0 +1,28 @@
+.mat-dialog-container {
+    width: 100% !important;
+    height: 100% !important;
+  }
+  
+  .mat-dialog-title,
+  .mat-dialog-content,
+  .mat-dialog-actions {
+    text-align: center;
+    width: 100% !important;
+  }
+  
+  .mat-dialog-actions {
+    justify-content: center;
+  }
+  
+  button {
+    display: flex;
+    flex-direction: row;
+    background-color: lime;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 2px;
+    border-radius: 0;
+  }
+  

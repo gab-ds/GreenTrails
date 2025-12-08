@@ -1,0 +1,25 @@
+<div class="pagecontainer" style="user-select: none;">
+    <h1 style="font-size: 45px; color: #00FF00; margin-bottom: 40px;">Lista segnalazioni</h1>
+    <div class="contenitore">
+      <table matSort (matSortChange)="sortData($event)">
+        <tr>
+          <th mat-sort-header="numero">N.</th>
+          <th mat-sort-header="idUtente">emailUtente</th>
+          <th mat-sort-header="nomeAttivita">nomeAttivita</th>
+          <th mat-sort-header="descrizione">Descrizione</th>
+        </tr>
+  
+        <tr *ngFor="let segnalazione of sortedData">
+            <td style="width: 30px;">{{segnalazione.numero}}</td>
+          <td>{{segnalazione.idUtente}}</td>
+          <td>{{segnalazione.nomeAttivita}}</td>
+          <td>{{segnalazione.descrizione}}</td>
+          <td style="border: none;">
+            <button mat-icon-button aria-label="edit" (click)="modifica(segnalazione.idAttivita)">
+                    <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>

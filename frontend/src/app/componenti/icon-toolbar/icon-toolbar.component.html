@@ -1,0 +1,13 @@
+<button mat-mini-fab aria-label="Example icon button with a home icon"
+    style="position: absolute; left: 25px; cursor: pointer; top: 16px; background-color: #00FF00;" routerLink=""
+    class="title">
+    <mat-icon style="color: white;">home</mat-icon>
+</button>
+<div class="iconContainer" *ngIf="router.url !== '/login' && router.url !== '/registrazione'">
+    <a *ngIf="isLoggedIn" routerLink="/areaRiservata" class="iconLink">
+        <i class="fa-regular fa-user icon"></i>
+    </a>
+    <a *ngIf="!isLoggedIn" routerLink="/login" class="iconLink">
+        <i class="fa-regular fa-user icon"></i>
+    </a>
+</div>

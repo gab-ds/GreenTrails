@@ -1,0 +1,76 @@
+<div class="container">
+  <!-- Suggeriti per te -->
+  <label for="suggeritiPerTe" style="font-size: 20px; color: #32CD32;"><strong>Suggeriti per te</strong></label>
+  <div class="suggeriti"
+    *ngIf="(attivitaTuristicheList && attivitaTuristicheList.length > 0) || (alloggiList && alloggiList.length > 0)">
+    <div *ngFor="let attivitaItem of suggeriti; let i = index">
+      <div class="card" style="width: 20rem;" (click)="navigateToAttivita(attivitaItem.id)">
+        <div *ngFor="let imageUrl of imageUrls[attivitaItem.id]; let j = index">
+          <img [src]="imageUrl" alt="suggeriti-image {{i + 1}} - {{j + 1}}" class="card-img-top">
+        </div>
+        <div class="card-body">
+          <h2 class="card-title"><strong>{{ attivitaItem.nome }}</strong></h2>
+          <ngb-rating [rate]="ratingSuggeriti[i]" class="rating"
+            style="color: #32CD32; display: flex; flex-wrap: wrap; row-gap: 20px; justify-content: center;"></ngb-rating>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Attività turistiche -->
+  <label for="ATuristica" style="font-size: 20px; color: #32CD32;"><strong>Attività turistiche</strong></label>
+  <div class="attivita" *ngIf="attivitaTuristicheList && attivitaTuristicheList.length > 0">
+    <div *ngFor="let attivitaItem of attivitaTuristicheList; let i = index">
+      <div class="card" style="width: 20rem;" (click)="navigateToAttivita(attivitaItem.id)">
+        <div *ngFor="let imageUrl of imageUrls[attivitaItem.id]; let j = index">
+          <img [src]="imageUrl" alt="attivita-image {{i + 1}} - {{j + 1}}" class="card-img-top">
+        </div>
+        <div class="card-body">
+          <h2 class="card-title"><strong>{{ attivitaItem.nome }}</strong></h2>
+          <div class="rating">
+            <ngb-rating [rate]="ratingAttivita[i]"
+              style="color: #32CD32; display: flex; flex-wrap: wrap; row-gap: 20px; justify-content: center;"></ngb-rating>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alloggi -->
+  <label for="Alloggi" style="font-size: 20px; color: #32CD32;"><strong>Alloggi</strong></label>
+  <div class="alloggi" *ngIf="alloggiList && alloggiList.length > 0">
+    <div *ngFor="let alloggio of alloggiList; let i = index">
+      <div class="card" style="width: 20rem;" (click)="navigateToAttivita(alloggio.id)">
+        <div *ngFor="let imageUrl of imageUrls[alloggio.id]; let j = index">
+          <img [src]="imageUrl" alt="allogio-image{{i + 1}} - {{j + 1}}" class="card-img-top">
+        </div>
+        <div class="card-body">
+          <h2 class="card-title"><strong>{{ alloggio.nome }}</strong></h2>
+          <div class="rating">
+            <ngb-rating [rate]="ratingAlloggi[i]"
+              style="color: #32CD32; display: flex; flex-wrap: wrap; row-gap: 20px; justify-content: center;"></ngb-rating>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- I più economici -->
+  <label for="Allogi" style="font-size: 20px; color: #32CD32;"><strong>I più economici</strong></label>
+  <div class="per-prezzo" *ngIf="filteredAttivitaPerPrezzoList && filteredAttivitaPerPrezzoList.length > 0">
+    <div *ngFor="let attivitaItem of filteredAttivitaPerPrezzoList; let i = index">
+      <div class="card" style="width: 20rem;" (click)="navigateToAttivita(attivitaItem.id)">
+        <div *ngFor="let imageUrl of imageUrls[attivitaItem.id]; let j = index">
+          <img [src]="imageUrl" alt="per-prezzo-image {{i + 1}} - {{j + 1}}" class="card-img-top">
+        </div>
+        <div class="card-body">
+          <h2 class="card-title"><strong>{{ attivitaItem.nome }}</strong></h2>
+          <div class="rating">
+            <ngb-rating [rate]="ratingPerPrezzo[i]"
+              style="color: #32CD32; display: flex; flex-wrap: wrap; row-gap: 20px; justify-content: center;"></ngb-rating>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

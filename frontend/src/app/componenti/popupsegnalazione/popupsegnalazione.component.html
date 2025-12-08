@@ -1,0 +1,28 @@
+<div class="overlay-background"></div>
+<div class="popup-container">
+    <div class="chiudi">
+        <mat-icon (click)="closePopup()"> close</mat-icon>
+    </div>
+    <form (submit)="submitForm()" #formSegnalazione="ngForm">
+      <h2 style="font-weight: bold; text-align: center;">Scrivi una segnalazione</h2>
+      <mat-form-field class="descrizione" appearance="fill">
+        <mat-label>Cosa è andato storto?</mat-label>
+        <textarea matInput rows="5" style="font-size: medium; resize: none;" id="descrizione" name="descrizione" required [(ngModel)]="descrizione"></textarea>
+      </mat-form-field>
+      <div>
+        <div class="icon-container">
+          <button mat-icon-button type="button" (click)="fileInput.click()">
+            <mat-icon class="add-photo" style="color: #32CD32;">add_photo_alternate</mat-icon>
+          </button>
+          <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)" accept="image/*,video/*">
+        </div>
+          <div class="file-names" *ngFor="let fileName of fileNames; let i = index">
+            {{ fileName }}
+            <mat-icon (click)="removeFile(i)" style="cursor: pointer;">clear</mat-icon>
+          </div>
+      </div>
+     <button mat-raised-button color="primary"
+     [ngStyle]="{'margin-top': formSegnalazione.valid ? '20px' : '0', 'color': 'white', 'background-color': formSegnalazione.valid ? '#32CD32' : '#ccc'}"
+     type="submit" [disabled]="!formSegnalazione.valid">Invia segnalazione</button>
+    </form>
+  </div>

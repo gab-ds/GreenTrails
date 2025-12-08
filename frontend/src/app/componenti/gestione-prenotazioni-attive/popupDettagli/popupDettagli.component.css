@@ -1,0 +1,28 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .mat-dialog-container {
+    padding: 0; /* Reset the default padding */
+  }
+  
+  .mat-dialog-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .mat-card {
+    width: 100%;
+    border: 2px solid lightgreen;
+    border-radius: 8px; /* Adjust the border-radius to your preference */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle box shadow */
+    padding: 16px; /* Add padding for better spacing */
+  }
+  
+  /* Optionally, you can add some margin to the dialog actions */
+  .mat-dialog-actions {
+    margin-top: 16px;
+  }

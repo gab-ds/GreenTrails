@@ -1,0 +1,22 @@
+<!-- Container dettagli attivita -->
+<mat-card class="example-card">
+  <mat-card-header class="card-section">
+    <mat-card-title style="font-weight: bold;">
+      Chi siamo?
+    </mat-card-title>
+    <!-- Container descrizione breve attivita -->
+    <mat-card-content>
+      <p>
+        {{ attivita.descrizioneBreve }}
+      </p>
+    </mat-card-content>
+    <app-slideshow></app-slideshow>
+    <!-- Container descrizione lunga attivita -->
+    <mat-card-content>
+      <p>
+        {{attivita.descrizioneLunga}}
+      </p>
+    </mat-card-content>
+  </mat-card-header>
+
+</mat-card>

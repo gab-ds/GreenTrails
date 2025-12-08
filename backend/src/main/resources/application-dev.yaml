@@ -1,0 +1,16 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: 'true'
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+  datasource:
+    url: jdbc:mysql://localhost:3306/greentrails
+    username: ${DB_USER}
+    password: ${DB_PASS}
+
+server:
+  error:
+    include-message: always

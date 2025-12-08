@@ -1,0 +1,14 @@
+.testo {
+     text-align: center;
+     font-family:Verdana, Geneva, Tahoma, sans-serif;
+
+     padding: 3%;
+        
+      }
+.introduzione{
+    font-size: 300%;
+    padding: 2%;
+    text-align: center;
+    background-size: cover;
+    margin-top: 5%; 
+    }

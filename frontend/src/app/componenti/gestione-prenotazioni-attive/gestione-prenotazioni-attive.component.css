@@ -1,0 +1,101 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    font-size: 18px;
+}
+
+.titolo {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.seleziona {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-self: flex-end;
+    padding-right: 10%;
+}
+
+.dettagli {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+    margin-bottom: 20px;
+    height: 10%;
+}
+
+.ricerca {
+    width: 30%;
+    height: fit-content;
+    border-radius: 10%;
+    justify-content: center;
+    align-content: center;
+    margin-top: 5%;
+}
+
+.input {
+    border-radius: 10%;
+    display: flex;
+    height: 30px;
+    flex-direction: row
+}
+
+.attivita {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid;
+    max-width: 100%;
+    height: fit-content;
+    align-content: center;
+    justify-content: center;
+    border: none;
+}
+
+#site-search {
+    width: 100%;
+    height: 100%;
+}
+
+.table {
+    border-collapse: separate;
+    border-spacing: 2px 0; 
+    font-size: medium;
+    width: 100%;
+}
+
+.mat th.mat-header-cell,
+td.mat-cell,
+td.mat-footer-cell {
+    border: 2px solid gray;
+    font-size: 18px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* Larghezza */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Traccia scrollbar */
+::-webkit-scrollbar-track {
+    background: #f1f8e9;
+    /* HEX: #f1f8e9, RGB: (241, 248, 233) */
+}
+
+/* Maniglia scrollbar */
+::-webkit-scrollbar-thumb {
+    background: #dcedc8;
+    /* HEX: #dcedc8, RGB: (220, 237, 200) */
+}
+
+/* Maniglia della scrollbar al passaggio del mouse */
+::-webkit-scrollbar-thumb:hover {
+    background: #c5e1a5;
+    /* HEX: #c5e1a5, RGB: (197, 225, 165) */
+}

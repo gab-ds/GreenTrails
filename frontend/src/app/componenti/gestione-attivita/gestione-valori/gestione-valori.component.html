@@ -1,0 +1,32 @@
+<h1 style="font-weight: bold; font-size: 40px; color: #00FF00; text-align: center;">Modifica valori di ecosostenibilità
+</h1>
+<h1 style="font-weight: bold; font-size: xx-large; color: lime; text-align: center;">{{nome}}</h1>
+<div class="containerValori">
+  <img mat-card-image [src]="imageUrl" alt="immagine-attivita" class="imgContainer">
+  <form #moduloEcosostenibilita="ngForm" (ngSubmit)="submitForm()" novalidate style="margin-left: 50px;">
+    <mat-list role="list" style="border-radius: 20px;
+    border: 5px solid lightgreen;
+    box-shadow: 7px 7px 5px #dedede;">
+      <!-- Elemento della lista -->
+      <mat-list-item role="listitem" *ngFor="let valore of valoriEcosostenibilita;">
+        <div class="list-item-container">
+          <div class="list-item-label">{{ convertCamelCaseToReadable(valore) }}</div>
+          <!-- Aggiungi radio button -->
+          <div class="radio-container">
+            <input type="radio" [name]="valore" value="true" (change)="selezionatoRadio(valore, 'true')"
+              [checked]="valoriEcosostenibilitaSelected[valore] === 'true'" style="font-size: 20px;"> Sì
+            <span style="width: 20px; display: inline-block;"></span> <!-- Spazio aggiunto -->
+            <input type="radio" [name]="valore" value="false" (change)="selezionatoRadio(valore, 'false')"
+              [checked]="valoriEcosostenibilitaSelected[valore] === 'false'" style="font-size: 20px;"> No
+          </div>
+        </div>
+      </mat-list-item>
+    </mat-list>
+    <div class="button" style="display: flex; justify-content: space-between;">
+      <button type="button" mat-raised-button color="primary" style="color: white; background-color: #32CD32;"
+        (click)="rollbackChanges()">Indietro</button>
+      <button mat-raised-button color="primary" style="color: white; background-color: #32CD32;" type="submit"
+        [disabled]="!moduloEcosostenibilita.valid">Procedi</button>
+    </div>
+  </form>
+</div>

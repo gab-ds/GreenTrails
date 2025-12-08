@@ -1,0 +1,57 @@
+.chiudi {
+    text-align: right;
+  }
+  
+  .popup-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 600px;
+    padding: 20px;
+    background-color: white;
+    z-index: 2;
+    text-align: center;
+  }
+  
+  .mat-form-field {
+    width: 100%;
+  }
+  
+  .popup-container textarea {
+    width: 100%;
+    resize: vertical; 
+  }
+  
+  
+  .popup-container button[disabled] {
+    background-color: #b3b3b3;
+    color: #000000;
+  }
+  
+  .icon-container {
+    display: flex;
+    flex-direction:row;
+    justify-content: center;
+    text-align: center;
+    background-color: white;
+    margin-bottom: 10px;
+  }
+  
+  .popup-container button .add-photo {
+    color: #32CD32;
+    font-size: 36px;
+  }
+  
+  .file-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .file-names {
+    text-align: center;
+    margin-top: 10px; 
+    margin-bottom: 20px;
+  }

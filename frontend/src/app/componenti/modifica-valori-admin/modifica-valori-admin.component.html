@@ -1,0 +1,33 @@
+<h1 style="font-weight: bold; font-size: 40px; color: #00FF00; text-align: center;">Modifica valori di ecosostenibilità</h1>
+<h1 style="font-weight: bold; font-size: xx-large; color: lime; text-align: center;">{{nome}}</h1>
+<div class="containerValori">
+  <img mat-card-image [src]="imageUrl" alt="immagine-attivita" class="imgContainer">
+  <form #moduloEcosostenibilita="ngForm" (ngSubmit)="submitForm()" novalidate style="margin-left: 50px;">
+    <div class="questionario-container">
+      <div *ngFor="let item of valori" style="font-size: 18px; display: flex; flex-direction: row-reverse; justify-content: space-between; margin-top: 5px; margin-bottom: 5px;">
+        <div>
+          <input type="radio" value="sì" (change)="selectOption(item, 'sì')" [checked]="item.selectedOption === 'sì'">
+          Sì
+          <input type="radio" [name]="item.label" value="no" (change)="selectOption(item, 'no')"
+            [checked]="item.selectedOption === 'no'"> No
+        </div>
+        <div class="label" style="margin-right: 10px;">
+          <label style="font-size: larger; margin-bottom: 5px;">{{item.label}}</label>
+        </div>
+      </div>
+    </div>
+    <div class="containerChiarimenti" style="width: 550px;">
+      <h1 style="text-align: center; color: lime; font-weight: bold;">Aggiungi dettagli</h1>
+      <mat-form-field class="descrizione" appearance="fill">
+        <textarea matInput rows="5" style="resize: none; font-size: large; height: 200px;" id="descrizione"
+          (input)="onTextareaChange()" *ngIf="isTextareaVisible" [(ngModel)]="chiarimenti"></textarea>
+      </mat-form-field>
+    </div>
+    <div class="button" style="display: flex; justify-content: space-between;">
+      <button type="button" mat-raised-button color="primary" style="color: white; background-color: #32CD32;"(click)="goBack()">Annulla
+        modifica</button>
+      <button mat-raised-button color="primary" style="color: white; background-color: #32CD32;" type="submit"
+        class="submitButton">Procedi</button>
+    </div>
+  </form>
+</div>

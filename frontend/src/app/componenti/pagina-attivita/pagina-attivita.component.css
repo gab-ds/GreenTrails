@@ -1,0 +1,27 @@
+/* Container pagina attivita */
+.pagina-attivita-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: 100%;
+  height: fit-content;
+  /* background-color: red; */
+}
+
+/* Container info-attivita*/
+.left-side {
+  display: flex;
+  flex-direction: column;
+  width: 25%;
+}
+
+/* Container descrizione-attivita */
+.right-side {
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+}
+
+.container {
+  padding: 20px;
+}

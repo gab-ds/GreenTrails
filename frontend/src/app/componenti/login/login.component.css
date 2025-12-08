@@ -1,0 +1,56 @@
+.orientamento{
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width:100%;
+    height: 100%; 
+    margin: 1; 
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-top:2px solid lightgreen;
+    border-bottom: 2px solid lightgreen;
+    padding-top: 10px;
+    padding-bottom: 10px; 
+  }
+  .underline-link {
+    text-decoration: underline;
+  }
+  .error-message {
+    color: red; 
+    font-size: 0.9em; 
+    margin-top: 1px; 
+  }
+
+  .container{
+    margin: 15px;
+  align-content: center;
+justify-content: center;}
+
+.campo{
+  display:flex;
+  flex-direction: column;
+  align-content: flex-end;
+  justify-content: flex-end;
+}
+mat-label{
+  margin-right:10px;
+}
+.form-bottom{
+  display:flex;
+}
+
+.btn button:disabled {
+  background-color: #e0e0e0;
+  color: #d3d3d3
+}
+
+.btn button {
+  background-color: lime;
+  color: white;
+}
+

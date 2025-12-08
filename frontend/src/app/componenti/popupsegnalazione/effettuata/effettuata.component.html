@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>
+    <mat-icon style="vertical-align: middle; margin-right: 8px;">check_circle</mat-icon>
+    {{ data.message }}
+  </h1>
+  <div mat-dialog-content>
+    <p>{{ data.action }}</p>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Chiudi</button>
+  </div>

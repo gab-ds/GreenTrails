@@ -1,0 +1,16 @@
+<app-toolbar-homepage *ngIf="router.url == '/'"></app-toolbar-homepage>
+<app-toolbar *ngIf="router.url.match('/attivita/') || router.url === '/areaRiservata'
+|| router.url === '/questionario'"></app-toolbar>
+<app-icon-toolbar *ngIf="router.url === '/mieAttivita' 
+|| router.url === '/modificaValoriAdmin'
+|| router.url.match('/modificaValori/')
+|| router.url === '/listaSegnalazioni'
+|| router.url === '/login'
+|| router.url === '/registrazione'
+|| router.url === '/itinerarioAutomatico'
+|| router.url === '/tabellaPrenotazioni'"></app-icon-toolbar>
+<button mat-mini-fab color="primary" aria-label="Example icon button with a menu icon" id="tornaSuBtn"
+    (click)="scrollToTop()" *ngIf="showButton">
+    <mat-icon>keyboard_arrow_up</mat-icon>
+</button>
+<router-outlet></router-outlet>

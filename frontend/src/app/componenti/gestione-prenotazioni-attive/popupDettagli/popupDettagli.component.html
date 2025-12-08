@@ -1,0 +1,15 @@
+
+<div mat-dialog-content class="mat-card">
+  <h1>Prenotazione Alloggio</h1>
+  <p>ID: {{ data.prenotazione.id }}</p>
+  <p>Bambini: {{ data.prenotazione.numBambini }}</p>
+  <p>Adulti: {{ data.prenotazione.numAdulti }}</p>
+  <p>Prezzo: {{ data.prenotazione.prezzo }} </p>
+  <h2>Dati dell'Alloggio:</h2>
+  <p>Nome Alloggio: {{ data.prenotazione.camera.alloggio?.nome }} </p>
+  <p>Indirizzo Alloggio: {{ data.prenotazione.camera.alloggio?.indirizzo }} </p>
+  <p>Descrizione alloggio: {{data.prenotazione.camera.alloggio?.descrizioneBreve}}</p>
+</div>
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Chiudi</button>
+</mat-dialog-actions>

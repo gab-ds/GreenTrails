@@ -1,0 +1,75 @@
+<div class="container">
+    <h2 style="font-weight: bold; text-align: center;"
+        *ngIf="recensioniConMedia.length === 0 && recensioniSenzaMedia.length === 0">Non è presente alcuna recensione
+    </h2>
+
+    <div class="lista-container" *ngFor="let recensione of recensioniConMedia, let i = index">
+        <ul>
+            <li style="margin: 0" class="elemento-lista">
+                <div class="recensione-container">
+                    <div class="img-propic-container">
+                        <div class="immagini-container">
+                            <img *ngIf="isImage(recensione.fileName)" [src]="recensione.image" alt="Thumbnail"
+                                class="thumbnail" (click)="openDialogue(i)">
+                            <button *ngIf="isVideo(recensione.fileName)" mat-icon-button aria-label="video_thumbnail"
+                                style="color: #32CD32; margin-top: 30px;" (click)="openDialogue(i)">
+                                <mat-icon style="font-size: 50px;">videocam</mat-icon>
+                            </button>
+                        </div>
+                        <div class="propic-nome-container">
+                            <div class="propic-container">
+                                <mat-icon style="color: #32CD32; font-size: 45px; margin-right: 30px;">account_box
+                                </mat-icon>
+                            </div>
+                            <div class="nome-container">
+                                {{recensione.visitatore.nome}} {{recensione.visitatore.cognome}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stelle-utente-container">
+                        <ngb-rating [rate]="recensione.valutazioneStelleEsperienza"
+                            style="color: #32CD32;"></ngb-rating>
+                    </div>
+
+                    <div class="valutazione-discorsiva-container" *ngIf="recensione.descrizione !== ''">
+                        <p>
+                            {{recensione.descrizione}}
+                        </p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="lista-container" *ngFor="let recensione of recensioniSenzaMedia, let i = index">
+        <ul>
+            <li style="margin: 0" class="elemento-lista">
+                <div class="recensione-container">
+                    <div class="img-propic-container">
+                        <div class="propic-nome-container">
+                            <div class="propic-container">
+                                <mat-icon style="color: #32CD32; font-size: 45px; margin-right: 30px;">account_box
+                                </mat-icon>
+                            </div>
+                            <div class="nome-container">
+                                {{recensione.visitatore.nome}} {{recensione.visitatore.cognome}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stelle-utente-container">
+                        <ngb-rating [rate]="recensione.valutazioneStelleEsperienza"
+                            style="color: #32CD32;"></ngb-rating>
+                    </div>
+
+                    <div class="valutazione-discorsiva-container" *ngIf="recensione.descrizione !== ''">
+                        <p>
+                            {{recensione.descrizione}}
+                        </p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <app-recensione-form *ngIf="!hasRecensione && isVisitatore"></app-recensione-form>
+</div>

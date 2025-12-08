@@ -1,0 +1,84 @@
+.questionario-card {
+    width: 60%; /* Adjust the width as needed */
+    margin: auto;
+    border: none;
+    box-shadow: none;
+  }
+
+  .questionario-titolo {
+    text-align: center;
+    font-size: xx-large;
+  }
+
+
+  .pulsante{
+    margin: 10px;
+    width: 100%;
+    border: none;
+    box-shadow: none;
+  }
+
+  .domanda {
+    border:2px solid;
+    border-radius: 20px;
+    padding: 15px;
+    margin-top: 10px;
+    border-color: #00FF00;
+
+  }
+
+  .button {
+    border-radius: 20px;
+    border: none;
+    box-shadow: none;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: 20px;
+
+  }
+
+  .pulsa{
+    display: flex;
+    border: none;
+    box-shadow: none;
+    border-radius: 20px;
+
+
+  }
+
+  .mat-button-toggle-checked {
+    background-color:#32CD32;
+    color: white;
+    border-radius: 20px;
+  }
+
+  .tasto1{
+    text-align: center;
+    margin: 20px; 
+    color: white; 
+    background-color: #c71717; 
+    width: 100px;
+    border-radius: 20px;
+    font-size: 18px; /* Adjust as needed */
+    width: 150px;
+  }
+
+  .tasto2{
+    text-align: center;
+    margin: 20px; 
+    color: white; 
+    background-color: #32CD32; 
+    width: 100px;
+    border-radius: 20px;
+    font-size: 25px; /* Adjust as needed */
+    width: 150px;
+    height: 50px;
+  }
+
+  @media (max-width: 1000px) {
+    .pulsa{
+      flex-direction: column; /* Stack the buttons in a column */
+      align-items: center; /* Center the buttons in the column */ /* Imposta la larghezza delle card al 100% quando la larghezza dello schermo è inferiore a 768px */
+    }
+  }

@@ -1,0 +1,26 @@
+/* Container card-attivita */
+.example-card {
+    background-color: transparent;
+    color: black;
+    border: none;
+    box-shadow: none;
+    /* background-color: blue; */
+}
+
+/* Classe che viene applicata a tutti gli elementi di card-attivita */
+.card-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 20px;
+    /* background-color: blueviolet; */
+}
+
+/* Container immagine attivita */
+.mat-card-image {
+    border: 5px solid lightgreen;
+    max-width: 100%;
+    border-radius: 20px;
+    box-shadow: 7px 7px 5px #dedede;
+    /* background-color: aqua; */
+}

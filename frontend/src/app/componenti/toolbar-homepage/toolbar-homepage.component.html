@@ -1,0 +1,35 @@
+<div class="navContainer" style="user-select: none;">
+    <div class="leftSide">
+        <a routerLink="" style="cursor: pointer; text-decoration: none;" class="title">
+            <h1
+                style="font-weight: bold; font-size: 80px; color: lime; font-family: sans-serif; user-select: none; text-decoration: none;">
+                GreenTrails</h1>
+        </a>
+        <app-ricerca></app-ricerca>
+    </div>
+    <div class="rightSide">
+        <div class="iconContainer">
+            <a routerLink="/login" class="iconLink" (click)="navigate()">
+                <i class="fa-regular fa-user icon"></i>
+                <p class="icon-text" *ngIf="!isLoggedIn">Accedi/Registrati</p>
+                <p class="icon-text" *ngIf="isLoggedIn">Area Riservata</p>
+            </a>
+            <a routerLink="/chisiamo" class="iconLink">
+                <i class="fa-solid fa-question icon"></i>
+                <p class="icon-text">Chi Siamo?</p>
+            </a>
+            <a routerLink="/tabellaPrenotazioni" class="iconLink" *ngIf="isVisitatore && isLoggedIn">
+                <i class="fa-regular fa-paper-plane icon"></i>
+                <p class="icon-text">Itinerario</p>
+            </a>
+            <a routerLink="/mieAttivita" class="iconLink" *ngIf="isGestore">
+                <i class="fa-regular fa-building"></i>
+                <p class="icon-text">Le mie attività</p>
+            </a>
+            <a routerLink="listaSegnalazioni" class="iconLink" *ngIf="isAdmin">
+                <mat-icon>report_problem</mat-icon>
+                <p class="icon-text">Lista segnalazioni</p>
+            </a>
+        </div>
+    </div>
+</div>

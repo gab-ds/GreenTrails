@@ -1,0 +1,98 @@
+.container {
+    border: 5px solid lightgreen;
+    border-radius: 20px;
+    box-shadow: 7px 7px 5px #dedede;
+    display: flex;
+    flex-direction: column;
+}
+
+.lista-container {
+    display: flex;
+    flex-direction: column;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.elemento-lista {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Container recensione */
+.recensione-container {
+    padding: 20px;
+    width: 100%;
+}
+
+/* Container button per visualizzare galleria immagini recensione e immagine del profilo utente */
+.img-propic-container {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+/* Container pulsante immagini */
+.immagini-container {
+    margin-right: 25px;
+}
+
+/* Container propic e nome utente */
+.propic-nome-container {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    align-items: center;
+    margin-top: 25px;
+}
+
+/* Container propic */
+.propic-container {
+    margin-right: 10px;
+}
+
+/* Container nome utente */
+.nome-container {
+    font-size: 20px;
+}
+
+/* Container stelle valutazione utente */
+.stelle-utente-container {
+    font-size: 50px;
+    margin-left: 50px;
+    margin-top: 20px;
+}
+  
+
+/* Container valutazione discorsiva utente */
+.valutazione-discorsiva-container {
+    display: flex;
+    flex-direction: column;
+    margin-left: 50px;
+    margin-top: 18px;
+    padding: 5px;
+    border: 3px solid lightgray;
+}
+
+.valutazione-discorsiva-container p {
+    flex: 1 1 auto;
+    word-wrap: break-word;
+}
+
+.thumbnail {
+    width: 50px;
+    height: 50px;
+    margin-top: 30px;
+    cursor: pointer;
+    object-fit: cover;
+    border: 3px solid lightgreen;
+    border-radius: 10px;
+  }

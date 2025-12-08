@@ -1,0 +1,81 @@
+<h1 mat-dialog-title>Aggiungi camere</h1>
+<div [formGroup]="camere" style="max-height: 600px; overflow-y: auto;">
+  <mat-form-field appearance="outline" style="margin: 2%; margin-bottom: 0%">
+    <label>Categoria: </label>
+    <input formControlName="tipoCamera" matInput />
+    <mat-error *ngIf="camere.get('tipoCamera')?.hasError('required')">
+      Campo obbligatorio
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" style="margin: 2%; margin-bottom: 0%">
+    <label>Disponibilita: </label>
+    <input formControlName="disponibilita" matInput />
+    <mat-error *ngIf="camere.get('disponibilita')?.hasError('required')">
+      Campo obbligatorio
+    </mat-error>
+    <mat-error *ngIf="camere.get('disponibilita')?.hasError('pattern')">
+      Valori non validi
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" style="margin: 2%; margin-bottom: 0%">
+    <label>Descrizione: </label>
+    <input formControlName="descrizione" matInput />
+    <mat-error *ngIf="camere.get('descrizione')?.hasError('required')">
+      Campo obbligatorio
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" style="margin: 2%; margin-bottom: 0%">
+    <label>Capienza: </label>
+    <input formControlName="capienza" matInput />
+    <mat-error *ngIf="camere.get('capienza')?.hasError('required')">
+      Campo obbligatorio
+    </mat-error>
+    <mat-error *ngIf="camere.get('capienza')?.hasError('pattern')">
+      Valori non validi
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" style="margin: 2%; margin-bottom: 0%">
+    <label>Prezzo: </label>
+    <input formControlName="prezzo" matInput />
+    <mat-error *ngIf="camere.get('prezzo')?.hasError('required')">
+      Campo obbligatorio
+    </mat-error>
+    <mat-error *ngIf="camere.get('prezzo')?.hasError('pattern')">
+      Valori non validi
+    </mat-error>
+  </mat-form-field>
+
+  <div *ngIf="camereInserite.length > 0">
+    <h4>Camere Inserite:</h4>
+    <ul>
+      <ng-container *ngFor="let camera of camereInserite; index as i"> 
+        <ng-container *ngIf="camera.tipoCamera">
+          <li [style.color]="deletedCameraIds.includes(camera.id) ? 'red' : 'black'">
+            Categoria: {{ camera.tipoCamera }}, Disponibilità:
+            {{ camera.disponibilita }}, Descrizione: {{ camera.descrizione }},
+            Capienza: {{ camera.capienza }}
+            <button mat-icon-button aria-label="delete_forever" *ngIf="camera.id && !deletedCameraIds.includes(camera.id)" (click)="delete(camera.id)"
+              color="warn">
+              <mat-icon style="font-size: x-large;">delete_forever</mat-icon>
+            </button>
+          </li>
+        </ng-container>
+        <ng-container *ngIf="!camera.tipoCamera">
+          <li>
+            Camera n.{{i}} aggiunta con successo
+          </li>
+        </ng-container>
+      </ng-container>
+    </ul>
+  </div>
+</div>
+<div mat-dialog-actions align="center">
+  <button mat-button (click)="aggiungiCamera()" [disabled]="!checkValidity()">Aggiungi Camera</button>
+
+  <button mat-button (click)="inviaCamere()">Completa Modifica</button>
+
+</div>

@@ -1,0 +1,15 @@
+<div class="barraricerca">
+    <input type="text" class="searchbar" placeholder="Cerca per nome, città, categoria..." [(ngModel)]="filterTerm"
+        (input)="onSearch()" onkeypress = "return (event.charCode < 48 || event.charCode > 57)"/>
+    <button [routerLink]="'ricerca/posizione'"  matTooltip="Ricerca per posizione" mat-icon-button aria-label="Example icon button with a vertical three dot icon">
+        <mat-icon class="filtericon">travel_explore</mat-icon>
+    </button>
+    <table class="results" *ngIf="showresultcontainer">
+        <tbody>
+            <tr (click)="navigateToAttivita(attivita.id)" *ngFor="let attivita of listaAttivita | filter: filterTerm"
+                class="risultato">
+                <td>{{ attivita.nome }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

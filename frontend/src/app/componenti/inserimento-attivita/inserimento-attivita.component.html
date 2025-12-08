@@ -1,0 +1,372 @@
+<h1 mat-dialog-title>Inserisci i dati</h1>
+
+<mat-dialog-content fxLayout="column" fxLayoutGap="10px">
+  <form [formGroup]="inserimento">
+    <div class="sezione">
+      <div>
+        <!--PRIMA PARTE-->
+        <!--Inserimento nome-->
+        <mat-form-field
+          appearance="outline"
+          style="margin: 2%; margin-bottom: 0%"
+        >
+          <mat-label>Inserisci Nome</mat-label>
+          <input matInput placeholder="Nome" formControlName="nome" required />
+          <mat-error id="nome" *ngIf="inserimento.get('nome')?.hasError('pattern')">
+            Campo nome non valido (consentiti solo caratteri alfabetici)
+          </mat-error>
+          <mat-error id="nome" *ngIf="inserimento.get('nome')?.hasError('required')">
+            Campo obbligatorio
+          </mat-error>
+          <mat-error id="nome" *ngIf="inserimento.get('nome')?.hasError('maxlength')">
+            Superata lunghezza massima
+          </mat-error>
+        </mat-form-field>
+        <!-- Selezione tipo -->
+        <mat-form-field
+          appearance="outline"
+          style="margin: 2%; margin-bottom: 0%"
+        >
+          <mat-label>Tipo</mat-label>
+          <mat-select formControlName="tipo" [errorStateMatcher]="matcher">
+            <mat-option value="true">Alloggio</mat-option>
+            <mat-option value="false">Attività</mat-option>
+          </mat-select>
+          <mat-error id="tipo" *ngIf="inserimento.get('tipo')?.hasError('required')">
+            Campo obbligatorio
+          </mat-error>
+        </mat-form-field>
+        <!-- Selezione categoria -->
+        <mat-form-field
+          appearance="outline"
+          style="margin: 2%; margin-bottom: 0%"
+        >
+          <mat-label>Categoria</mat-label>
+          <mat-select formControlName="categoria" [errorStateMatcher]="matcher">
+            <ng-container *ngFor="let categorieAll of categorieAll">
+              <mat-option
+                *ngIf="inserimento.get('tipo')?.value !== 'false'"
+                [value]="categorieAll.value"
+              >
+                {{ categorieAll.label }}
+              </mat-option>
+            </ng-container>
+            <ng-container *ngFor="let categorieAtt of categorieAtt">
+              <mat-option
+                *ngIf="inserimento.get('tipo')?.value !== 'true'"
+                [value]="categorieAtt.value"
+              >
+                {{ categorieAtt.label }}
+              </mat-option>
+            </ng-container>
+          </mat-select>
+          <mat-error id="categoria" *ngIf="inserimento.get('categoria')?.hasError('required')">
+            Campo obbligatorio
+          </mat-error>
+        </mat-form-field>
+        <!--Seleziona Disponibilità-->
+        <mat-form-field
+          *ngIf="inserimento.get('tipo')?.value !== 'true'"
+          appearance="outline"
+          style="margin: 2%; margin-bottom: 0%"
+        >
+          <mat-label>Disponibilità</mat-label>
+          <input
+            class="testo"
+            matInput="number"
+            placeholder="Posti"
+            formControlName="disponibilita"
+            required
+          />
+          <mat-error id="disponibilita"
+            *ngIf="inserimento.get('disponibilita')?.hasError('required')"
+          >
+            Campo obbligatorio
+          </mat-error>
+          <mat-error id="disponibilita"
+            *ngIf="inserimento.get('disponibilita')?.hasError('pattern')"
+          >
+            Consentiti solo numeri, è deve essere maggiore di 0.
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- sezione 2-->
+    <div class="contenitore">
+      <div class="card">
+        <div class="sezione1">
+          <!--Indirizzo-->
+          <mat-form-field appearance="outline" style="margin: 2%; width: 60%">
+            <mat-label>Indirizzo</mat-label>
+            <input
+              formControlName="indirizzo"
+              matInput
+              placeholder="Via Giovanni Paolo II, 132"
+            />
+            <mat-error id="indirizzo"
+              *ngIf="inserimento.get('indirizzo')?.hasError('required')">
+              Campo obbligatorio
+            </mat-error>
+            <mat-error id="indirizzo"
+            *ngIf="inserimento.get('indirizzo')?.hasError('pattern')">
+            Indirizzo non valido
+          </mat-error>
+          </mat-form-field>
+          <!--CAP-->
+          <mat-form-field appearance="outline" style="margin: 2%; width: 150px">
+            <mat-label>CAP</mat-label>
+            <input formControlName="cap" matInput placeholder="84084" />
+            <mat-error id="cap" *ngIf="inserimento.get('cap')?.hasError('required')">
+              Campo obbligatorio
+            </mat-error>
+            <mat-error id="cap" *ngIf="inserimento.get('cap')?.hasError('pattern')">
+              Consentiti solo numeri
+            </mat-error>
+            <mat-error id="cap" *ngIf="inserimento.get('cap')?.hasError('maxlength')">
+              Massimo 5 numeri
+            </mat-error>
+          </mat-form-field>
+          <!--Città-->
+          <mat-form-field appearance="outline" style="margin: 2%; width: 60%">
+            <mat-label>Città</mat-label>
+            <input formControlName="citta" matInput placeholder="Fisciano" />
+            <mat-error id="citta" *ngIf="inserimento.get('citta')?.hasError('required')">
+              Campo obbligatorio
+            </mat-error>
+            <mat-error id="citta" *ngIf="inserimento.get('citta')?.hasError('pattern')">
+              Città non valida
+            </mat-error>
+          </mat-form-field>
+          <!--Provincia-->
+          <mat-form-field appearance="outline" style="margin: 2%; width: 150px">
+            <mat-label>Provincia</mat-label>
+            <input formControlName="provincia" matInput oninput="this.value = this.value.toUpperCase()" placeholder="SA" />
+            <mat-error id="provincia"
+              *ngIf="inserimento.get('provincia')?.hasError('required')"
+            >
+              Campo obbligatorio
+            </mat-error>
+            <mat-error id="provincia"
+              *ngIf="inserimento.get('provincia')?.hasError('maxlength')"
+            >
+              Massimo 2 caratteri
+            </mat-error>
+            <mat-error id="provincia"
+            *ngIf="inserimento.get('provincia')?.hasError('pattern')"
+          >
+            Provincia non valida
+          </mat-error>
+          </mat-form-field>
+          <!--Coordinate-->
+          <div style="margin: 5%">
+            <h4>Coordinate Geografiche</h4>
+            <mat-form-field
+              appearance="outline"
+              style="margin: 2%; width: 150px"
+            >
+              <mat-label>Latitudine</mat-label>
+              <input
+                formControlName="latitudine"
+                matInput
+                placeholder="xx.xx"
+              />
+              <mat-error id="latitudine"
+                *ngIf="inserimento.get('latitudine')?.hasError('required')"
+              >
+                Campo obbligatorio
+              </mat-error>
+              <mat-error id="latitudine"
+                *ngIf="inserimento.get('latitudine')?.hasError('pattern')"
+              >
+                Valore non valido
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field
+              appearance="outline"
+              style="margin: 2%; width: 300px"
+            >
+              <mat-label>Longitudine</mat-label>
+              <input
+                formControlName="longitudine"
+                matInput
+                placeholder="xx.xx"
+              />
+              <mat-error id="longitudine"
+                *ngIf="inserimento.get('longitudine')?.hasError('required')"
+              >
+                Campo obbligatorio
+              </mat-error>
+              <mat-error id="longitudine"
+                *ngIf="inserimento.get('longitudine')?.hasError('pattern')"
+              >
+                Valore non valido
+              </mat-error>
+            </mat-form-field>
+            <!-- sezione 3-->
+          </div>
+        </div>
+      </div>
+      <div class="sezione1">
+        <!--Politiche Ecosostenibili-->
+        <mat-card class="card-section">
+          <mat-card-header>
+            <mat-card-title>Politiche ecosostenibili:</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <section class="example-section">
+              <p>
+                <mat-checkbox formControlName="politicheAntispreco"
+                  >Politiche antispreco</mat-checkbox
+                >
+              </p>
+              <p>
+                <mat-checkbox formControlName="prodottiLocali"
+                  >Prodotti locali</mat-checkbox
+                >
+              </p>
+              <p>
+                <mat-checkbox formControlName="energiaVerde"
+                  >Energia verde</mat-checkbox
+                >
+              </p>
+              <p>
+                <mat-checkbox formControlName="raccoltaDifferenziata"
+                  >Raccolta differenziata</mat-checkbox
+                >
+              </p>
+              <p>
+                <mat-checkbox formControlName="limiteEmissioneCO2"
+                  >Limiti emissioni Co2</mat-checkbox
+                >
+              </p>
+              <p>
+                <mat-checkbox formControlName="contattoConNatura"
+                  >A contatto con la natura</mat-checkbox
+                >
+              </p>
+            </section>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    <!-- sezione 4-->
+    <div class="sezione">
+      <div class="sezione1">
+        <!--Descrizione Breve-->
+        <mat-form-field style="width: 60%; margin: 2%">
+          <mat-label>Descrizione Breve</mat-label>
+          <textarea formControlName="descrizioneBreve" matInput></textarea>
+          <mat-error id="descrizioneBreve" *ngIf="inserimento.get('descrizioneBreve')?.hasError('required')">
+            Campo obbligatorio
+          </mat-error>
+          <mat-error id="descrizioneBreve" *ngIf="inserimento.get('descrizioneBreve')?.hasError('maxlength')">
+            Superata lunghezza massima
+          </mat-error>
+          <mat-error id="descrizioneBreve" *ngIf="inserimento.get('descrizioneBreve')?.hasError('pattern')">
+            Caratteri inseriti non validi
+          </mat-error>
+
+        </mat-form-field>
+        <!--Prezzo-->
+        <mat-icon *ngIf="inserimento.get('tipo')?.value !== 'true'"
+          >money</mat-icon
+        >
+        <mat-form-field
+          *ngIf="inserimento.get('tipo')?.value !== 'true'"
+          appearance="outline"
+          style="width: 150px"
+        >
+          <mat-label>Prezzo</mat-label>
+          <input formControlName="costo" matInput placeholder="xx.xx" />
+          <mat-error id="costo" *ngIf="inserimento.get('costo')?.hasError('required')">
+            Campo obbligatorio
+          </mat-error>
+          <mat-error id="costo" *ngIf="inserimento.get('costo')?.hasError('pattern')">
+            Prezzo errato
+          </mat-error>
+        </mat-form-field>
+        <mat-icon *ngIf="inserimento.get('tipo')?.value !== 'true'"
+          >euro</mat-icon
+        >
+      </div>
+    </div>
+    <!-- sezione 5-->
+    <div class="sezione">
+      <div class="sezione1">
+        <!--Descrizione Lunga-->
+        <mat-form-field class="example-full-width">
+          <mat-label>Descrizione Lunga</mat-label>
+          <textarea formControlName="descrizioneLunga" matInput></textarea>
+          <mat-error id="descrizioneLunga"
+            *ngIf="inserimento.get('descrizioneLunga')?.hasError('required')"
+          >
+            Campo obbligatorio
+          </mat-error>
+          <mat-error id="descrizioneLunga"
+          *ngIf="inserimento.get('descrizioneLunga')?.hasError('pattern')"
+        >
+          Caratteri inseriti non validi
+        </mat-error>
+        <mat-error id="descrizioneLunga"
+        *ngIf="inserimento.get('descrizioneLunga')?.hasError('maxlength')"
+      >
+        Superata lunghezza massima (massimo 2000 caratteri)
+      </mat-error>
+        </mat-form-field>
+        <!--Immagini-->
+        <label for="fileInput" class="file-label">
+          <mat-icon>image</mat-icon>
+        </label>
+        <input
+          formControlName="file"
+          id="fileInput"
+          type="file"
+          (change)="onFileSelected($event)"
+          accept="image/*,video/*"
+          style="display: none"
+
+        />
+
+        <div *ngIf="errorMessage">
+          <p style="color: red" id="file">{{ errorMessage }}</p>
+        </div>
+
+        <div class="file-name" *ngIf="file">
+          {{ file.name }}
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<!--PULSANTI DELLA FINESTRA-->
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancella</button>
+  <button
+  id="inserisci"
+    mat-button
+    type="submit"
+    [mat-dialog-close]="true"
+    cdkFocusInitial
+    (click)="onSubmit()"
+    [disabled]="
+    inserimento.get('nome')?.invalid ||
+    inserimento.get('tipo')?.invalid ||
+    inserimento.get('categoria')?.invalid ||
+    inserimento.get('disponibilita')?.invalid ||
+    inserimento.get('indirizzo')?.invalid ||
+    inserimento.get('cap')?.invalid ||
+    inserimento.get('citta')?.invalid ||
+    inserimento.get('provincia')?.invalid ||
+    inserimento.get('latitudine')?.invalid ||
+    inserimento.get('longitudine')?.invalid ||
+    inserimento.get('descrizioneBreve')?.invalid ||
+    inserimento.get('costo')?.invalid ||
+    inserimento.get('descrizioneLunga')?.invalid ||
+    inserimento.get('file')?.invalid
+  "
+>
+    Inserisci
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,54 @@
+<div class="pagecontainer" style="user-select: none;">
+  <div class="contenitore">
+    <h1 style="font-size: 45px; color: #00FF00; margin-bottom: 40px; text-align: center;" *ngIf="isGestore">Le mie
+      attività</h1>
+    <div class="tools" *ngIf="isGestore; else unauthorized">
+      <div class="lefttools">
+        <button mat-icon-button aria-label="add_circle_outline" (click)="createAttivita()"
+          style="align-self: flex-start;">
+          <mat-icon style="color: #00FF00;">add_circle_outline</mat-icon>
+        </button>
+        <p style="margin-top: 10px; cursor: pointer; user-select: none; color: #00FF00; font-weight: 450;"
+          (click)="createAttivita()">Crea attività</p>
+      </div>
+      <div class="righttools">
+        <input type="text" class="searchbar" placeholder="Cerca..." [(ngModel)]="filterTerm" />
+      </div>
+    </div>
+    <ng-container *ngIf="listaAttivita && listaAttivita.length > 0 && isGestore; else noActivities">
+      <table matSort (matSortChange)="sortData($event)">
+        <tr>
+          <th mat-sort-header="numero">N.</th>
+          <th mat-sort-header="nome">Nome</th>
+          <th mat-sort-header="categoria">Categoria</th>
+        </tr>
+        <tr *ngFor="let attivita of sortedData | filter: filterTerm">
+          <td style="width: 30px;">{{attivita.numero}}</td>
+          <td>{{attivita.nome}}</td>
+          <td>{{attivita.categoria}}</td>
+          <td style="border: none;">
+            <button mat-icon-button aria-label="edit" (click)="edit(attivita.numero)">
+              <i class="fa-regular fa-pen-to-square" style="font-size: x-large; color: #00FF00;"></i>
+            </button>
+            <button mat-icon-button aria-label="delete_forever" (click)="delete(attivita.numero)" color="warn">
+              <mat-icon style="font-size: x-large;">delete_forever</mat-icon>
+            </button>
+            <button mat-icon-button aria-label="visibility" [routerLink]="['/attivita', attivita.numero]"
+              style="color: #00FF00;">
+              <mat-icon style="font-size: x-large;">visibility</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </table>
+    </ng-container>
+  </div>
+  <ng-template #noActivities>
+    <h1 style="text-align: center; font-size: x-large; color: #00FF00; margin-top: 50px;" *ngIf="isGestore">Nessuna
+      attività disponibile
+    </h1>
+  </ng-template>
+  <ng-template #unauthorized>
+    <h1 style="text-align: center; font-size: x-large; color: #00FF00; margin-top: 50px;">Non sei autorizzato ad usare
+      questa pagina</h1>
+  </ng-template>
+</div>

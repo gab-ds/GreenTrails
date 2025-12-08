@@ -1,0 +1,7 @@
+<h1 mat-dialog-title style="text-align: center;">{{data.message}}</h1>
+<div mat-dialog-actions>
+    <div class="actions" style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: center; width: 100%;">
+        <button mat-button (click)="onNoClick()">No</button>
+        <button mat-button [mat-dialog-close]="true" (click)="delete()">Sì</button>
+    </div>
+</div>

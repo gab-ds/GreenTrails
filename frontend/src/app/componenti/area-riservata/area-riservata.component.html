@@ -1,0 +1,138 @@
+<div class="corpo">
+    <div class="dati">
+        <mat-card class="example-card">
+            <img src="https://cdn.icon-icons.com/icons2/212/PNG/256/User-green256_25015.png" alt="User Image"
+                style="max-width: 70%; height:70%;">
+
+            <mat-card-header class="card-section">
+                <mat-card-content>
+                    <mat-card-title style="width: 100%; ">
+                    </mat-card-title>
+                    <div class="list">
+                        <!-- Elemento della lista -->
+                        <p class="info"><strong>Nome:</strong> {{ userData.nome }}</p>
+                        <p class="info"><strong>Cognome:</strong> {{ userData.cognome }}</p>
+                        <p class="info"><strong>Data di Nascita:</strong> {{ userData.dataNascita | date:
+                            'dd/MM/yyyy' }}</p>
+                        <p class="info"><strong>Email:</strong> {{ userData.email }}</p>
+                        <h3 style="cursor: pointer; text-align: center; font-weight: bold; 
+                            color: lime; font-size: large;" (click)="logout()">Esci</h3>
+                    </div>
+                </mat-card-content>
+            </mat-card-header>
+        </mat-card>
+
+    </div>
+    <div class="elementi">
+        <mat-grid-list cols="2" rowHeight="3:1" gutterSize="50px">
+
+            <ng-container *ngIf="userData.ruolo==='VISITATORE'">
+
+                <mat-grid-tile>
+                    <mat-card class="custom-card" (click)="clickedSuggeriti()">
+                        <div class="header">
+                            <p> <strong>Suggeriti per te</strong></p>
+                            <mat-icon>lightbulb</mat-icon>
+                        </div>
+                        <div class="content">
+                            <p>GreenTrails ha selezionato per te delle attività che forse potrebbero interessarti.</p>
+                        </div>
+                    </mat-card>
+                </mat-grid-tile>
+
+                <mat-grid-tile>
+                    <mat-card class="custom-card" (click)="clickedQuestionario()">
+                        <div class="header">
+                            <p> <strong>Compila questionario</strong></p>
+                            <mat-icon>question_mark</mat-icon>
+                        </div>
+                        <div class="content">
+                            <p>Compila il questionario per permetterci di suggerirti, tramite un sistema di Intelligenza
+                                Artificiale, il viaggio perfetto per te.</p>
+                        </div>
+                    </mat-card>
+                </mat-grid-tile>
+
+                <mat-grid-tile>
+                    <mat-card class="custom-card" (click)="clickedMieiViaggi()">
+                        <div class="header">
+                            <p> <strong>I miei viaggi</strong></p>
+                            <mat-icon>airplanemode_active</mat-icon>
+                        </div>
+                        <div class="content">
+                            <p>Consulta tutte le tue prenotazioni qui.</p>
+                        </div>
+                    </mat-card>
+                </mat-grid-tile>
+
+                <mat-grid-tile>
+                    <mat-card class="custom-card" (click)="clickedGenera()">
+                        <div class="header">
+                            <p> <strong>Genera itinerario </strong></p>
+                            <mat-icon>casino</mat-icon>
+                        </div>
+                        <div class="content">
+                            <p>Lascia che il nostro sistema di Intelligenza Artificiale generi l'itinerario in base alle
+                                tue preferenze.</p>
+                        </div>
+                    </mat-card>
+                </mat-grid-tile>
+
+                <mat-grid-tile>
+                    <mat-card class="custom-card">
+                        <div class="header">
+                            <p> <strong>Modifica dati personali</strong></p>
+                            <mat-icon>edit</mat-icon>
+                        </div>
+                        <div class="content">
+                            <p>Modifica qui i tuoi dati personali.</p>
+                        </div>
+                    </mat-card>
+                </mat-grid-tile>
+
+                <mat-grid-tile>
+                    <mat-card class="custom-card">
+                        <div class="header">
+                            <p> <strong>Modifica Interessi</strong></p>
+                            <mat-icon>location_city</mat-icon>
+                        </div>
+                        <div class="content">
+                            <p>Modifica qui le tue preferenze.</p>
+                        </div>
+                    </mat-card>
+                </mat-grid-tile>
+            </ng-container>
+            <ng-container *ngIf="userData.ruolo==='GESTORE_ATTIVITA'">
+                <mat-grid-tile>
+                    <mat-card class="custom-card" (click)="clickedLeMieAttivita()">
+                        <div class="header">
+                            <p> <strong>Le mie attività</strong></p>
+                            <mat-icon>bed</mat-icon>
+                        </div>
+                        <div class="content">
+                            <p>Visualizza e modifica qui tutte le tue attività.</p>
+                        </div>
+                    </mat-card>
+                </mat-grid-tile>
+            </ng-container>
+
+            <ng-container *ngIf="userData.ruolo==='AMMINISTRATORE'">
+                <mat-grid-tile>
+                    <mat-card class="custom-card" (click)="clickedListaSegnalazioni()">
+                        <div class="header">
+                            <p> <strong>Segnalazioni</strong></p>
+                            <mat-icon>warning</mat-icon>
+                        </div>
+                        <div class="content">
+                            <p>Visualizza la lista di tutte le segnalazioni.</p>
+                        </div>
+                    </mat-card>
+                </mat-grid-tile>
+            </ng-container>
+
+        </mat-grid-list>
+    </div>
+    <div class="vuoto">
+
+    </div>
+</div>

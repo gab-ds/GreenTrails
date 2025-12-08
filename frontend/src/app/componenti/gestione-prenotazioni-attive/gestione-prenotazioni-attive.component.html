@@ -1,0 +1,86 @@
+<div class="container">
+  <div class="titolo">
+    <h1 style="font-size: 45px; color: #00FF00; margin-bottom: 40px;">I miei viaggi</h1>
+  </div>
+  <div class="dettagli">
+    <div class="seleziona">
+      <section class="example-section">
+        <mat-checkbox  [(ngModel)]="mostraSoloInCorso" (change)="updateTable()" class="example-margin" color="primary">
+          Mostra solo in corso
+        </mat-checkbox>
+      </section>
+    </div>
+    <!-- <div class="ricerca">
+      <div class="input" style="height: 50%;">
+        <input type="search" id="site-search" name="q" style="border-radius: 10%" [(ngModel)]="searchQuery" />
+        <button (click)="search()">Search</button>
+      </div>
+    </div> -->
+  </div>
+
+  <div class="attivita" #tableContainer (scroll)="onScroll($event)">
+   <!-- Utilizza MatTable per creare la tabella -->
+<table mat-table [dataSource]="dataSource" class="table">
+  <!-- Nome column -->
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef style="color: #00FF00; border: 2px solid gray; margin-bottom: 5px; font-size: 18px; text-align: center; vertical-align: middle;"><strong> ID </strong></th>
+    <td mat-cell *matCellDef="let prenotazione">{{ prenotazione.id }}</td>
+  </ng-container>
+  <!-- stato column -->
+  <ng-container matColumnDef="stato">
+    <th mat-header-cell *matHeaderCellDef style="color: #00FF00; border: 2px solid gray; margin-bottom: 5px; font-size: 18px; text-align: center; vertical-align: middle;"> <strong>Stato </strong></th>
+    <td mat-cell *matCellDef="let prenotazione">{{ formatStato(prenotazione.stato) }}</td>
+  </ng-container>
+  <!-- Check-in column -->
+  <ng-container matColumnDef="check-in">
+    <th mat-header-cell *matHeaderCellDef style="color: #00FF00; border: 2px solid gray; margin-bottom: 5px; font-size: 18px; text-align: center; vertical-align: middle;"><strong> Check-in </strong></th>
+    <td mat-cell *matCellDef="let prenotazione">{{ formatDateTime(prenotazione.checkIn )}}</td>
+  </ng-container>
+  <!-- Check-out column -->
+  <ng-container matColumnDef="check-out">
+    <th mat-header-cell *matHeaderCellDef style="color: #00FF00; border: 2px solid gray; margin-bottom: 5px; font-size: 18px; text-align: center; vertical-align: middle;"><strong> Check-out </strong></th>
+    <td mat-cell *matCellDef="let prenotazione">
+      {{ prenotazione.checkOut ? formatDateTime(prenotazione.checkOut) : '' }}</td>
+  </ng-container>
+  <!-- Bambini column -->
+  <ng-container matColumnDef="bambini">
+    <th mat-header-cell *matHeaderCellDef style="color: #00FF00; border: 2px solid gray; margin-bottom: 5px; font-size: 18px; text-align: center; vertical-align: middle;"> <strong> Bambini </strong></th>
+    <td mat-cell *matCellDef="let prenotazione">{{ prenotazione.bambini }}</td>
+  </ng-container>
+  <!-- Adulti column -->
+  <ng-container matColumnDef="adulti">
+    <th mat-header-cell *matHeaderCellDef style="color: #00FF00; border: 2px solid gray; margin-bottom: 5px; font-size: 18px; text-align: center; vertical-align: middle;"> <strong>  Adulti </strong> </th>
+    <td mat-cell *matCellDef="let prenotazione">{{ prenotazione.adulti }}</td>
+  </ng-container>
+  <!-- Prezzo column -->
+  <ng-container matColumnDef="prezzo">
+    <th mat-header-cell *matHeaderCellDef style="color: #00FF00; border: 2px solid gray; margin-bottom: 5px; font-size: 18px; text-align: center; vertical-align: middle;"> <strong> Prezzo </strong> </th>
+    <td mat-cell *matCellDef="let prenotazione">{{ prenotazione.prezzo | currency:'EUR':'symbol':'1.2-2' }}</td>
+  </ng-container>
+  <!-- Actions column -->
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef style="border: none"></th>
+    <td mat-cell *matCellDef="let prenotazione" style="border: none">
+      <button mat-icon-button aria-label="visibility" *ngIf="prenotazione.tipo === 'alloggio'" (click)="visualizzaAlloggio(prenotazione)" style="color: #00FF00;">
+        <mat-icon style="font-size: x-large;">visibility</mat-icon>
+      </button>
+      
+      <button mat-icon-button aria-label="visibility" *ngIf="prenotazione.tipo === 'attivita'" (click)="VisualizzaAttivita(prenotazione)" style="color: #00FF00;">
+        <mat-icon style="font-size: x-large;">visibility</mat-icon>
+      </button>
+      
+   
+      <button mat-icon-button color="warn" *ngIf="prenotazione.stato === 'IN_CORSO' && prenotazione.tipo === 'alloggio'" (click)="onDeletePrenotazioneAlloggio(prenotazione.id, prenotazione.stato)">
+        <mat-icon style="color: red;">delete_forever</mat-icon>
+      </button>
+      
+      <button mat-icon-button color="warn" *ngIf="prenotazione.stato === 'IN_CORSO' && prenotazione.tipo === 'attivita'" (click)="onDeletePrenotazioneAttivita(prenotazione.id, prenotazione.stato)">
+        <mat-icon style="color: red;">delete_forever</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+  </div>
+</div>

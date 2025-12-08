@@ -1,0 +1,33 @@
+<div class="orientamento">
+  <h1 style="font-weight: bold; color: lime;">Accedi</h1>
+  <form [formGroup]="loginForm" (keyup.enter)="onEnterKeyPressed()">
+    <div class="campo">
+      <div class="container">
+        <mat-label>E-mail: </mat-label>
+        <mat-form-field>
+          <input matInput type="email" formControlName="email" required />
+        </mat-form-field>
+      </div>
+      <div class="container">
+        <mat-label>Pasword:</mat-label>
+        <mat-form-field>
+          <input matInput formControlName="password" [type]="hide ? 'password' : 'text'" required/>
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide">
+            <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="form-bottom"
+      style="display: flex; flex-direction:column; justify-content:flex-end; width:100%; align-items:flex-end;">
+      <br>
+      <a ng-reflect-router-link="/registrazione" style="color:lightgreen" href="/registrazione">Non hai un account?
+        Registrati</a>
+      <br>
+      <div class="btn">
+        <button mat-raised-button (click)="onClick()" style="margin-right:20%; border: 1px;" [disabled]="!loginForm.valid">Accedi</button>
+      </div>
+    </div>
+  </form>
+</div>

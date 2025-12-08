@@ -1,0 +1,48 @@
+<div class="tutto">
+    <div>
+        <h2 style="font-weight: bold; text-align: center; color: #00FF00; margin-top: 40px;">Itinerario proposto in base
+            alle tue preferenze</h2>
+    </div>
+    <div class="container">
+        <div class="stepper-container">
+            <mat-stepper orientation="vertical" #stepper class="stepper-container">
+                <mat-step *ngFor="let alloggio of alloggi; let i = index" [label]="alloggio.nome" style="font-weight: bold;">
+                    <ng-template matStepLabel>{{ alloggio.nome }}</ng-template>
+                    <div class="card" style="width: 20rem;">
+                        <div class="pic">
+                            <img [src]="alloggio.img.image" alt="Immagine Alloggio">
+                        </div>
+                        <h2 class="card-title">
+                            <p><strong>{{ alloggio.nome }}</strong></p>
+                        </h2>
+                        <p class="card-description">{{ alloggio.descrizioneBreve }}</p>
+                    </div>
+                </mat-step>
+
+                <mat-step *ngFor="let attivita of attivitaTuristiche; let i = index" [label]="attivita.nome">
+                    <ng-template matStepLabel>{{ attivita.nome }}</ng-template>
+                    <div class="card" style="width: 20rem;">
+                        <div class="pic">
+                            <img [src]="attivita.img.image" alt="Immagine AttivitÃ ">
+                        </div>
+                        <h2 class="card-title">
+                            <p><strong>{{ attivita.nome }}</strong></p>
+                        </h2>
+                        <p class="card-description">{{ attivita.descrizioneBreve }}</p>
+                    </div>
+                </mat-step>
+            </mat-stepper>
+        </div>
+
+        <div class="button-container">
+            <button mat-raised-button color="primary" style="margin-top: 20px; color: white; background-color: red;" id="areaRiservata"
+                (click)="clickedHome()"> Torna all'area riservata</button>
+            <button mat-raised-button color="primary"
+                style="margin-top: 40px; margin-left: 20px; color: white; background-color: orange;" id="rigeneraItinerario"
+                (click)="rigeneraItinerario()"> Rigenera itinerario</button>
+            <button mat-raised-button color="primary" id="confermaItinerario"
+                style="margin-top: 40px; margin-left: 20px; color: white; background-color: #00FF00;"
+                (click)="openCalendario()">Conferma itinerario proposto</button>
+        </div>
+    </div>
+</div>

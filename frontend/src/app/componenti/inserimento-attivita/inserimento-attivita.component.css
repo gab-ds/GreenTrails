@@ -1,0 +1,83 @@
+.sezione{
+    display: flex;
+   flex-direction: column;
+   margin-bottom: 2%;
+   border: none;
+   flex-wrap: wrap; 
+}
+
+.contenitore {
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: space-between; /* Puoi scegliere il tipo di allineamento che preferisci */
+ }
+ 
+ .card {
+   width: 70%; /* o qualsiasi larghezza desiderata */
+   margin-bottom: 2%;
+   border: none; /* o qualsiasi margine desiderato */
+ }
+ .card1 {
+   width: 30%; /* o qualsiasi larghezza desiderata */
+   margin-bottom: 2%;
+   border: none; /* o qualsiasi margine desiderato */
+ }
+ @media (max-width: 768px) {
+   .card {
+     flex-basis: 100%; /* Imposta la larghezza delle card al 100% quando la larghezza dello schermo è inferiore a 768px */
+   }
+ }
+ @media (max-width: 768px) {
+   .card1 {
+     flex-basis: 100%; /* Imposta la larghezza delle card al 100% quando la larghezza dello schermo è inferiore a 768px */
+   }
+ }
+
+ input.example-right-align::-webkit-outer-spin-button,
+input.example-right-align::-webkit-inner-spin-button {
+ display: none;
+}
+input.example-right-align {
+   -moz-appearance: textfield;
+ }
+ .sezione1 mat-form-field + mat-form-field {
+   margin-left: 8px;
+ }
+
+ .example-right-align {
+   text-align: right;
+ }
+
+ .example-full-width {
+   width: 70%;
+   margin: 2%;
+ }
+
+
+ .file-label {
+   cursor: pointer;
+   padding: 10px;
+   color:palegreen;
+   border-radius: 5px;
+ }
+
+ .example-section {
+   margin: 5%;
+ }
+
+ .example-card {
+   background-color: transparent;
+   color:black;
+   border: none;
+   box-shadow: none;
+ }
+ 
+ .card-section {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   border:5px solid lightgreen;
+   border-radius: 20px;
+   box-shadow: 7px 7px 5px #dedede;
+   padding: 15px;
+ }

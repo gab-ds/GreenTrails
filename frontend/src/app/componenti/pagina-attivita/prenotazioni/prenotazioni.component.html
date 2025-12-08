@@ -1,0 +1,201 @@
+<h1 mat-dialog-title>Prenotazione Aloggio</h1>
+
+<mat-dialog-content>
+  <mat-stepper linear #stepper>
+    <!--PRIMA PARTE-->
+    <mat-step  linear #stepper [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup">
+        <mat-grid-list cols="2" rowHeight="4:1">
+          <mat-grid-tile>
+            <mat-label class="mat-label">Seleziona date</mat-label>
+          </mat-grid-tile>
+          <mat-grid-tile>
+            <mat-date-range-input [rangePicker]="rangePicker" required>
+              <input matStartDate placeholder="Arrivo" formControlName="arrivo" />
+              <input
+                matEndDate
+                placeholder="Partenza"
+                formControlName="partenza"
+              />
+            </mat-date-range-input>
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="rangePicker"
+            ></mat-datepicker-toggle>
+
+            <mat-date-range-picker #rangePicker>
+              <mat-date-range-picker-actions>
+                <button mat-button matDateRangePickerCancel>Cancel</button>
+                <button
+                  mat-raised-button
+                  color="primary"
+                  matDateRangePickerApply
+                >
+                  Apply
+                </button>
+              </mat-date-range-picker-actions>
+            </mat-date-range-picker>
+          </mat-grid-tile>
+
+          <mat-grid-tile>
+            <mat-icon>person</mat-icon>
+            <label class="mat-label">Adulti:</label>
+          </mat-grid-tile>
+
+          <mat-grid-tile>
+            <input
+            id="adulti"
+              required
+              class="input"
+              name="numAdulti"
+              [value]="1"
+              min="0"
+              formControlName="numAdulti"
+              
+            />
+          </mat-grid-tile>
+
+          <mat-grid-tile>
+            <mat-icon>child_care</mat-icon>
+            <label class="mat-label">Bambini:</label>
+          </mat-grid-tile>
+
+          <mat-grid-tile>
+            <input
+            id="bambini"
+              required
+              class="input"
+              name="numBambini"
+              [value]="0"
+              min="-1"
+              formControlName="numBambini"
+            />
+          </mat-grid-tile>
+
+          <mat-grid-tile>
+            <mat-icon>tag</mat-icon>
+            <label class="mat-label">Camere:</label>
+          </mat-grid-tile>
+
+          <mat-grid-tile>
+            <input
+            id="camere"
+              class="input"
+              name="numCamere"
+              [value]="1"
+              min="0"
+              formControlName="numCamere"
+              required
+            />
+          </mat-grid-tile>
+
+          <mat-grid-tile>
+            <mat-icon>bed</mat-icon>
+            <label class="mat-label"> Tipologia: </label>
+          </mat-grid-tile>
+
+          <mat-grid-tile>
+            <mat-select
+              class="testo"
+              formControlName="idCamera"
+              [errorStateMatcher]="matcher"
+            >
+              <mat-option
+                *ngFor="let camera of camereOptions"
+                [value]="camera.id"
+              >
+                {{ camera.tipoCamera }}
+              </mat-option>
+            </mat-select>
+          </mat-grid-tile>
+        </mat-grid-list>
+
+        <div class="button-container">
+          <button mat-button matStepperNext id="continua"  (click)="verificaDisponibilita()" >
+            Continua
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!--SECONDO PARTE-->
+    <mat-step [stepControl]="secondFormGroup" [optional]="isOptional">
+      <form [formGroup]="secondFormGroup">
+        <ng-template matStepLabel>Disponibilità</ng-template>
+        <div *ngIf="isDisponibile && isCapienza">
+          Disponibile nelle date selezionate
+          <button mat-button matStepperPrevious>Torna in dietro</button>
+          <button mat-button matStepperNext [disabled]="!isDisponibile">
+            Continua
+          </button>
+        </div>
+        <div *ngIf="!isDisponibile">
+          Non disponibile, cambia date
+          <button mat-button matStepperPrevious>Torna in dietro</button>
+          <button mat-button matStepperNext [disabled]="!isDisponibile">
+            Continua
+          </button>
+        </div>
+        <div *ngIf=" isDisponibile && !isCapienza">
+          Capienza delle camere superata, aggiungi una camera
+          <button mat-button matStepperPrevious>Torna in dietro</button>
+          <button mat-button matStepperNext [disabled]="!isCapienza">
+            Continua
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!--TERZA PARTE-->
+    <mat-step>
+      <div *ngIf="idItinerario; else noItinerarioFound">
+        <p>
+          Vuoi aggiungere all'itinerario: {{ idItinerario }} oppure crearne uno
+          nuovo?
+        </p>
+        <div>
+          <button
+            mat-button
+            (click)="aggiungiAllItinerario()"
+            [disabled]="azioneEseguita || siClicked"
+          >
+            Aggiungi all'itinerario
+          </button>
+          <button
+            mat-button
+            (click)="creaItinerario()"
+            [disabled]="azioneEseguita || creaClicked"
+          >
+            Crea un nuovo itinerario
+          </button>
+        </div>
+      </div>
+
+      <ng-template #noItinerarioFound>
+        <p>Nessun Itinerario trovato</p>
+        <button
+          mat-button
+          (click)="creaItinerario()"
+          [disabled]="azioneEseguita || creaClicked"
+        >
+          Crea un nuovo itinerario
+        </button>
+      </ng-template>
+    </mat-step>
+  </mat-stepper>
+</mat-dialog-content>
+
+<!--PULSANTI FINESTRA-->
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancella</button>
+  <button
+    mat-button
+    type="submit"
+    [mat-dialog-close]="true"
+    cdkFocusInitial
+    (click)="onSubmit1()"
+    [disabled]="!azioneEseguita"
+  >
+    Verifica Disponibilità
+  </button>
+</mat-dialog-actions>

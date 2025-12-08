@@ -1,0 +1,50 @@
+name: Backend coverage
+on:
+  push:
+      paths:
+        - 'backend/**'
+      branches:
+        - dev
+  pull_request:
+    paths:
+      - 'backend/**'
+    branches:
+      - main
+      - dev
+
+jobs:
+  coverage:
+    name: Analisi coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configura ambiente Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Esegui analisi coverage
+        run: mvn verify
+      - name: Genera badge JaCoCo
+        id: jacoco
+        uses: cicirello/jacoco-badge-generator@v2
+        with:
+          badges-directory: badges
+          generate-branches-badge: true
+          generate-summary: true
+          jacoco-csv-file: backend/target/site/jacoco/jacoco.csv
+      - name: Stampa percentuali di coverage
+        run: |
+          echo "coverage = ${{ steps.jacoco.outputs.coverage }}"
+          echo "branches = ${{ steps.jacoco.outputs.branches }}"
+      - name: Carica report coverage JaCoCo come artefatto del workflow
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: backend/target/site/jacoco/
+
+
+defaults:
+  run:
+    working-directory: ./backend

@@ -1,0 +1,24 @@
+name: checkstyle
+on:
+  push:
+    paths:
+      - 'backend/**'
+    branches:
+      - dev
+  pull_request:
+    paths:
+      - 'backend/**'
+    branches:
+      - main
+      - dev
+jobs:
+  checkstyle:
+    name: Checkstyle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dbelyaev/action-checkstyle@master
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          level: warning
