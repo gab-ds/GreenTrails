@@ -1,4 +1,6 @@
 # GreenTrails
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fgab-ds%2FGreenTrails.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fgab-ds%2FGreenTrails?ref=badge_shield)
+
 
 Portale per la creazione e la prenotazione di itinerari ecosostenibili.
 
@@ -18,3 +20,7 @@ Di seguito, sono elencati i partecipanti per ogni progetto precedentemente citat
 |Gabriele Di Stefano|  x |  x | x |
 |  Roberta Galluzzo |  x |  x | x |
 | Francesco Pisaturo|  x |    |   |
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fgab-ds%2FGreenTrails.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fgab-ds%2FGreenTrails?ref=badge_large)
