@@ -115,12 +115,12 @@ export class QuestionarioComponent implements OnInit {
       }
       this.openPopupQuestionario(errorMessage);
     }
+    this.router.navigate(['/areaRiservata']);
+
   }
   
-    this.router.navigate(['/areaRiservata']);
-  }
 
-  invio() {
+  invioA() {
 
 
     this.utenteService.invioQuestionario(
