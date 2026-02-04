@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  backend:
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+          cpus: 0.5
+
+  frontend:
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: 0.1
+
+  db:
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+          cpus: 0.2

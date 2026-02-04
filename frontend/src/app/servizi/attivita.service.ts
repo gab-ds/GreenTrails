@@ -1,6 +1,7 @@
-import { Observable, catchError } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { API_BASE_URL } from '../config/api-config';
 import { CookieService } from 'ngx-cookie-service';
 import { InserimentoAttivitaComponent } from '../componenti/inserimento-attivita/inserimento-attivita.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,7 +11,7 @@ import { PopupModificaComponent } from '../componenti/gestione-attivita/popup-mo
 })
 export class AttivitaService {
 
-  private baseUrl = 'http://localhost:8080/api/attivita';
+  private baseUrl = `${API_BASE_URL}/api/attivita`;
 
   constructor(private http: HttpClient, private cookieService: CookieService, private dialog: MatDialog) { }
 

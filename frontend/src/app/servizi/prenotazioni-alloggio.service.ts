@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
 import { PrenotazioniComponent } from '../componenti/pagina-attivita/prenotazioni/prenotazioni.component';
+import { API_BASE_URL } from '../config/api-config';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class PrenotazioniAlloggioService {
 
   constructor(private dialog: MatDialog, private http: HttpClient, private cookieService: CookieService) { }
 
-  private baseUrl = 'http://localhost:8080/api/prenotazioni-alloggio';
+  private baseUrl = `${API_BASE_URL}/api/prenotazioni-alloggio`;
 
   apriDialogAlloggio() {
     const dialogRef =

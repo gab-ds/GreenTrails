@@ -2,13 +2,14 @@ import { CookieService } from 'ngx-cookie-service';
 import { Observable, catchError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { API_BASE_URL } from '../config/api-config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PrenotazioniAlloggiService {
 
-  private baseUrl = 'http://localhost:8080/api/prenotazioni-alloggio' 
+  private baseUrl = `${API_BASE_URL}/api/prenotazioni-alloggio`
 
   constructor(private http: HttpClient, private cookie: CookieService) { }
 
