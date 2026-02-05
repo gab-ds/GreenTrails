@@ -2,7 +2,7 @@ version: '3.8'
 services:
   backend:
     build: ./backend
-    image: ghcr.io/gab-ds/greentrails-backend:latest
+    image: gabdis/greentrails-backend:latest
     ports:
       - "8080:8080"
     volumes:
@@ -23,7 +23,7 @@ services:
 
   frontend:
     build: ./frontend
-    image: ghcr.io/gab-ds/greentrails-frontend:latest
+    image: gabdis/greentrails-frontend:latest
     ports:
       - "9000:80"
     environment:
