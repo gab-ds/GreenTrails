@@ -44,12 +44,19 @@ jobs:
           else
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
+      - name: Prepara cartella per pubblicazione su gh-pages
+        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && steps.check_report.outputs.exists == 'false'
+        run: |
+          mkdir -p ./public/surefire
+          mkdir -p ./public/jacoco
+          cp -r ./target/reports/* ./public/surefire/
+          cp -r ./target/site/jacoco/* ./public/jacoco/
       - name: Carica report test su gh-pages
         if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && steps.check_report.outputs.exists == 'false'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./target
+          publish_dir: ./public
           destination_dir: ${{ github.sha }}/report
           keep_files: true
       - name: Carica report come artifact per PR
@@ -71,7 +78,7 @@ jobs:
         id: jacoco_reporter
         uses: PavanMudigonda/jacoco-reporter@v5.0
         with:
-          coverage_results_path: ./target/site/jacoco.xml
+          coverage_results_path: ./target/site/jacoco/jacoco.xml
           coverage_report_name: Coverage
           coverage_report_title: JaCoCo
           github_token: ${{ secrets.GITHUB_TOKEN }}
