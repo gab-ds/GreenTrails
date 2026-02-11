@@ -88,7 +88,7 @@ jobs:
           fail_below_threshold: false
           publish_only_summary: false
       - name: Aggiungi report JaCoCo al workflow summary
-        if: success() || failure()
+        if: steps.jacoco_reporter.outcome == 'success'
         run: |
           echo "## :bar_chart: JaCoCo Code Coverage" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
