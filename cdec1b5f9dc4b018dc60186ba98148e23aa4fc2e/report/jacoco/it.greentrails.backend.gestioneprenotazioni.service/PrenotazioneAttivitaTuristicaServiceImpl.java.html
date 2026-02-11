@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PrenotazioneAttivitaTuristicaServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">it.greentrails.backend.gestioneprenotazioni.service</a> &gt; <span class="el_source">PrenotazioneAttivitaTuristicaServiceImpl.java</span></div><h1>PrenotazioneAttivitaTuristicaServiceImpl.java</h1><pre class="source lang-java linenums">package it.greentrails.backend.gestioneprenotazioni.service;
+
+import it.greentrails.backend.entities.Attivita;
+import it.greentrails.backend.entities.Itinerario;
+import it.greentrails.backend.entities.PrenotazioneAttivitaTuristica;
+import it.greentrails.backend.entities.Utente;
+import it.greentrails.backend.enums.RuoloUtente;
+import it.greentrails.backend.enums.StatoPrenotazione;
+import it.greentrails.backend.gestioneprenotazioni.repository.PrenotazioneAttivitaTuristicaRepository;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+
+@Service
+<span class="fc" id="L20">@RequiredArgsConstructor</span>
+public class PrenotazioneAttivitaTuristicaServiceImpl implements
+    PrenotazioneAttivitaTuristicaService {
+
+  private final PrenotazioneAttivitaTuristicaRepository repository;
+
+  @Override
+  public PrenotazioneAttivitaTuristica savePrenotazioneAttivitaTuristica(Attivita attivita,
+      PrenotazioneAttivitaTuristica prenotazioneAttivitaTuristica) throws Exception {
+<span class="nc bnc" id="L29" title="All 2 branches missed.">    if (prenotazioneAttivitaTuristica == null) {</span>
+<span class="nc" id="L30">      throw new Exception(&quot;La prenotazione dell'attività è vuota.&quot;);</span>
+    }
+<span class="nc bnc" id="L32" title="All 2 branches missed.">    if (attivita == null) {</span>
+<span class="nc" id="L33">      throw new Exception(&quot;L'attività è vuota.&quot;);</span>
+    }
+<span class="nc bnc" id="L35" title="All 2 branches missed.">    if (attivita.isAlloggio()) {</span>
+<span class="nc" id="L36">      throw new Exception(&quot;L'attività non può essere un alloggio.&quot;);</span>
+    }
+<span class="nc" id="L38">    prenotazioneAttivitaTuristica.setAttivitaTuristica(attivita);</span>
+<span class="nc" id="L39">    return repository.save(prenotazioneAttivitaTuristica);</span>
+  }
+
+  @Override
+  public boolean deletePrenotazioneAttivitaTuristica(
+      PrenotazioneAttivitaTuristica prenotazioneAttivitaTuristica) throws Exception {
+<span class="nc bnc" id="L45" title="All 2 branches missed.">    if (prenotazioneAttivitaTuristica == null) {</span>
+<span class="nc" id="L46">      throw new Exception(&quot;La prenotazione dell'attività è vuota.&quot;);</span>
+    }
+<span class="nc" id="L48">    repository.delete(prenotazioneAttivitaTuristica);</span>
+<span class="nc" id="L49">    repository.flush();</span>
+<span class="nc" id="L50">    return repository.findById(prenotazioneAttivitaTuristica.getId()).isEmpty();</span>
+  }
+
+  @Override
+  public List&lt;PrenotazioneAttivitaTuristica&gt; getAllPrenotazioniAttivitaTuristica() {
+<span class="nc" id="L55">    return repository.findAll();</span>
+  }
+
+  @Override
+  public List&lt;PrenotazioneAttivitaTuristica&gt; getPrenotazioniAttivitaTuristicaByStato(
+      StatoPrenotazione stato) throws Exception {
+<span class="nc bnc" id="L61" title="All 2 branches missed.">    if (stato == null) {</span>
+<span class="nc" id="L62">      throw new Exception(&quot;Lo stato della prenotazione dell'attività è inesistente.&quot;);</span>
+    }
+<span class="nc" id="L64">    List&lt;PrenotazioneAttivitaTuristica&gt; risultato = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L65">    getAllPrenotazioniAttivitaTuristica().forEach(p -&gt; {</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">      if (p.getStato().equals(stato)) {</span>
+<span class="nc" id="L67">        risultato.add(p);</span>
+      }
+<span class="nc" id="L69">    });</span>
+<span class="nc" id="L70">    return risultato;</span>
+  }
+
+  @Override
+  public PrenotazioneAttivitaTuristica findById(Long id) throws Exception {
+<span class="nc bnc" id="L75" title="All 4 branches missed.">    if (id == null || id &lt; 0) {</span>
+<span class="nc" id="L76">      throw new Exception(&quot;L'id non è valido.&quot;);</span>
+    }
+<span class="nc" id="L78">    Optional&lt;PrenotazioneAttivitaTuristica&gt; prenotazioneAttivitaTuristica = repository.findById(id);</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">    if (prenotazioneAttivitaTuristica.isEmpty()) {</span>
+<span class="nc" id="L80">      throw new Exception(&quot;La prenotazione non è stata trovata.&quot;);</span>
+    }
+<span class="nc" id="L82">    return prenotazioneAttivitaTuristica.get();</span>
+  }
+
+  @Override
+  public List&lt;PrenotazioneAttivitaTuristica&gt; getPrenotazioniByAttivitaTuristica(Attivita attivita)
+      throws Exception {
+<span class="nc bnc" id="L88" title="All 2 branches missed.">    if (attivita == null) {</span>
+<span class="nc" id="L89">      throw new Exception(&quot;L'attività è vuota.&quot;);</span>
+    }
+<span class="nc" id="L91">    return repository.findByAttivitaTuristica(attivita.getId(), Pageable.unpaged()).toList();</span>
+  }
+
+  @Override
+  public List&lt;PrenotazioneAttivitaTuristica&gt; getPrenotazioniByVisitatore(Utente visitatore)
+      throws Exception {
+<span class="fc bfc" id="L97" title="All 2 branches covered.">    if (visitatore == null) {</span>
+<span class="fc" id="L98">      throw new Exception(&quot;L'utente è vuoto.&quot;);</span>
+    }
+<span class="fc bfc" id="L100" title="All 2 branches covered.">    if (visitatore.getRuolo() != RuoloUtente.VISITATORE) {</span>
+<span class="fc" id="L101">      throw new Exception(&quot;L'utente non è un visitatore.&quot;);</span>
+    }
+<span class="fc" id="L103">    return repository.findByVisitatore(visitatore.getId(), Pageable.unpaged()).toList();</span>
+  }
+
+  @Override
+  public List&lt;PrenotazioneAttivitaTuristica&gt; getPrenotazioniByItinerario(Itinerario itinerario)
+      throws Exception {
+<span class="nc bnc" id="L109" title="All 2 branches missed.">    if (itinerario == null) {</span>
+<span class="nc" id="L110">      throw new Exception(&quot;L'itinerario è vuoto.&quot;);</span>
+    }
+<span class="nc" id="L112">    return repository.findByItinerario(itinerario.getId(), Pageable.unpaged()).toList();</span>
+  }
+
+  @Override
+  public int controllaDisponibilitaAttivitaTuristica(Attivita attivita, Date dataInizio)
+      throws Exception {
+<span class="nc bnc" id="L118" title="All 2 branches missed.">    if (attivita == null) {</span>
+<span class="nc" id="L119">      throw new Exception(&quot;L'attività è vuota.&quot;);</span>
+    }
+<span class="nc bnc" id="L121" title="All 2 branches missed.">    if (attivita.isAlloggio()) {</span>
+<span class="nc" id="L122">      throw new Exception(&quot;L'attività non può essere un alloggio.&quot;);</span>
+    }
+<span class="nc" id="L124">    return attivita.getDisponibilita() - repository.getPostiOccupatiIn(</span>
+<span class="nc" id="L125">        attivita.getId(), dataInizio);</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

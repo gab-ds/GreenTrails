@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ValoriEcosostenibilita.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">it.greentrails.backend.entities</a> &gt; <span class="el_source">ValoriEcosostenibilita.java</span></div><h1>ValoriEcosostenibilita.java</h1><pre class="source lang-java linenums">package it.greentrails.backend.entities;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+<span class="nc" id="L13">@Setter</span>
+@Entity
+@Table(name = &quot;valori_ecosostenibilita&quot;)
+<span class="fc" id="L16">public class ValoriEcosostenibilita {</span>
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = &quot;id&quot;, nullable = false)
+<span class="nc" id="L21">  private Long id;</span>
+
+  @Column(name = &quot;politiche_antispreco&quot;)
+<span class="nc" id="L24">  private Boolean politicheAntispreco;</span>
+
+  @Column(name = &quot;prodotti_locali&quot;)
+<span class="nc" id="L27">  private Boolean prodottiLocali;</span>
+
+  @Column(name = &quot;energia_verde&quot;)
+<span class="nc" id="L30">  private Boolean energiaVerde;</span>
+
+  @Column(name = &quot;raccolta_differenziata&quot;)
+<span class="nc" id="L33">  private Boolean raccoltaDifferenziata;</span>
+
+  @SuppressWarnings(&quot;checkstyle:AbbreviationAsWordInName&quot;)
+  @Column(name = &quot;limite_emissione_CO2&quot;)
+<span class="nc" id="L37">  private Boolean limiteEmissioneCO2;</span>
+
+  @Column(name = &quot;contatto_con_natura&quot;)
+<span class="nc" id="L40">  private Boolean contattoConNatura;</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

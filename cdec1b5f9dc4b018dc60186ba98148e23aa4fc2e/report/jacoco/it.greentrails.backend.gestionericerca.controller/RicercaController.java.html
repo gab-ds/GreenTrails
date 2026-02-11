@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RicercaController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">it.greentrails.backend.gestionericerca.controller</a> &gt; <span class="el_source">RicercaController.java</span></div><h1>RicercaController.java</h1><pre class="source lang-java linenums">package it.greentrails.backend.gestionericerca.controller;
+
+import it.greentrails.backend.entities.Attivita;
+import it.greentrails.backend.gestioneattivita.service.CategoriaService;
+import it.greentrails.backend.gestionericerca.service.RicercaService;
+import it.greentrails.backend.utils.service.ResponseGenerator;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.geo.Point;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Controller
+@RequestMapping(&quot;api/ricerca&quot;)
+<span class="fc" id="L21">@RequiredArgsConstructor</span>
+public class RicercaController {
+
+  private final RicercaService ricercaService;
+  private final CategoriaService categoriaService;
+
+  @PostMapping
+  private ResponseEntity&lt;Object&gt; cerca(
+      @RequestParam(value = &quot;query&quot;) final String query,
+      @RequestParam(value = &quot;idCategorie&quot;, required = false) final Long[] idCategorie,
+      @RequestParam(value = &quot;latitudine&quot;, required = false) final Long latitudine,
+      @RequestParam(value = &quot;longitudine&quot;, required = false) final Long longitudine,
+      @RequestParam(value = &quot;raggio&quot;, required = false) final Double raggio
+  ) {
+<span class="nc" id="L35">    List&lt;Attivita&gt; risultati = ricercaService.findAttivita(query);</span>
+<span class="nc bnc" id="L36" title="All 4 branches missed.">    if (idCategorie != null &amp;&amp; idCategorie.length &gt; 0) {</span>
+<span class="nc" id="L37">      risultati = ricercaService.findAttivitaByCategorie(</span>
+<span class="nc" id="L38">              Arrays.stream(idCategorie).map(idCategoria -&gt; {</span>
+                try {
+<span class="nc" id="L40">                  return categoriaService.findById(idCategoria);</span>
+<span class="nc" id="L41">                } catch (Exception e) {</span>
+<span class="nc" id="L42">                  throw new RuntimeException(e);</span>
+                }
+<span class="nc" id="L44">              }).collect(Collectors.toList()))</span>
+<span class="nc" id="L45">          .stream()</span>
+<span class="nc" id="L46">          .filter(risultati::contains)</span>
+<span class="nc" id="L47">          .collect(Collectors.toList());</span>
+    }
+<span class="nc bnc" id="L49" title="All 6 branches missed.">    if (latitudine != null &amp;&amp; longitudine != null &amp;&amp; raggio != null) {</span>
+<span class="nc" id="L50">      Point coordinate = new Point(latitudine, longitudine);</span>
+<span class="nc" id="L51">      risultati = ricercaService.findAttivitaByPosizione(coordinate, raggio)</span>
+<span class="nc" id="L52">          .stream()</span>
+<span class="nc" id="L53">          .filter(risultati::contains)</span>
+<span class="nc" id="L54">          .collect(Collectors.toList());</span>
+    }
+<span class="nc" id="L56">    return ResponseGenerator.generateResponse(HttpStatus.OK, risultati);</span>
+  }
+
+  @PostMapping(&quot;perPosizione&quot;)
+  private ResponseEntity&lt;Object&gt; cercaSenzaQuery(
+      @RequestParam(value = &quot;latitudine&quot;) final Double latitudine,
+      @RequestParam(value = &quot;longitudine&quot;) final Double longitudine,
+      @RequestParam(value = &quot;raggio&quot;) final Double raggio,
+      @RequestParam(value = &quot;idCategorie&quot;, required = false) final Long[] idCategorie
+  ) {
+<span class="nc" id="L66">    Point coordinate = new Point(latitudine, longitudine);</span>
+<span class="nc" id="L67">    List&lt;Attivita&gt; risultati = ricercaService.findAttivitaByPosizione(coordinate, raggio);</span>
+<span class="nc bnc" id="L68" title="All 4 branches missed.">    if (idCategorie != null &amp;&amp; idCategorie.length &gt; 0) {</span>
+<span class="nc" id="L69">      risultati = ricercaService.findAttivitaByCategorie(</span>
+<span class="nc" id="L70">              Arrays.stream(idCategorie).map(idCategoria -&gt; {</span>
+                try {
+<span class="nc" id="L72">                  return categoriaService.findById(idCategoria);</span>
+<span class="nc" id="L73">                } catch (Exception e) {</span>
+<span class="nc" id="L74">                  throw new RuntimeException(e);</span>
+                }
+<span class="nc" id="L76">              }).collect(Collectors.toList()))</span>
+<span class="nc" id="L77">          .stream()</span>
+<span class="nc" id="L78">          .filter(risultati::contains)</span>
+<span class="nc" id="L79">          .collect(Collectors.toList());</span>
+    }
+<span class="nc" id="L81">    return ResponseGenerator.generateResponse(HttpStatus.OK, risultati);</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

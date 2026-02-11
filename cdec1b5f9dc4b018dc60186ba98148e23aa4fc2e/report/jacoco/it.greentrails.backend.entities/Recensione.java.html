@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Recensione.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">it.greentrails.backend.entities</a> &gt; <span class="el_source">Recensione.java</span></div><h1>Recensione.java</h1><pre class="source lang-java linenums">package it.greentrails.backend.entities;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+<span class="nc" id="L21">@Setter</span>
+@Entity
+@Table(name = &quot;recensione&quot;)
+<span class="fc" id="L24">public class Recensione {</span>
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = &quot;id&quot;, nullable = false)
+<span class="nc" id="L29">  private Long id;</span>
+
+  @ManyToOne
+  @JoinColumn(name = &quot;id_visitatore&quot;)
+  @NotNull(message = &quot;Il visitatore non può essere vuoto.&quot;)
+<span class="nc" id="L34">  private Utente visitatore;</span>
+
+  @ManyToOne(optional = false)
+  @JoinColumn(name = &quot;id_attivita&quot;, nullable = false)
+  @NotNull(message = &quot;L'attività non può essere vuota.&quot;)
+<span class="nc" id="L39">  private Attivita attivita;</span>
+
+  @Column(name = &quot;valutazione_stelle_esperienza&quot;, nullable = false)
+  @NotNull(message = &quot;La valutazione dell'esperienza non può essere vuota.&quot;)
+  @PositiveOrZero(message = &quot;La valutazione dell'esperienza non può essere negativa.&quot;)
+  @Max(value = 5, message = &quot;La valutazione dell'esperienza non può essere superiore a 5.&quot;)
+<span class="nc" id="L45">  private int valutazioneStelleEsperienza;</span>
+
+  @Column(name = &quot;descrizione&quot;)
+  @Size(max = 255, message = &quot;La valutazione discorsiva è troppo lunga.&quot;)
+  @Pattern(regexp = &quot;^$|^[A-Za-zÀ-ÖØ-öø-ÿ0-9][\\s\\S]*$&quot;,
+      message = &quot;La valutazione discorsiva non ha un formato valido.&quot;)
+<span class="nc" id="L51">  private String descrizione;</span>
+
+  @Column(name = &quot;media&quot;)
+<span class="nc" id="L54">  private String media;</span>
+
+  @ManyToOne(optional = false)
+  @JoinColumn(name = &quot;id_valori&quot;, nullable = false)
+  @NotNull(message = &quot;I valori di ecosostenibilità non possono essere vuoti.&quot;)
+<span class="nc" id="L59">  private ValoriEcosostenibilita valoriEcosostenibilita;</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
