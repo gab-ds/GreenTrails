@@ -35,25 +35,15 @@ jobs:
           path: ~/.m2/repository
       - name: Esegui test
         run: mvn test jacoco:report surefire-report:report --batch-mode --fail-at-end
-      - name: Verifica se report esiste già su gh-pages
-        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-        id: check_report
-        run: |
-          git fetch origin gh-pages --depth=1 2>/dev/null || true
-          if git cat-file -e origin/gh-pages:${{ github.sha }}/report/jacoco/index.html 2>/dev/null; then
-            echo "exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "exists=false" >> $GITHUB_OUTPUT
-          fi
       - name: Prepara cartella per pubblicazione su gh-pages
-        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && steps.check_report.outputs.exists == 'false'
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         run: |
           mkdir -p ../public/surefire
           mkdir -p ../public/jacoco
           cp -r ./target/reports/* ../public/surefire/
           cp -r ./target/site/jacoco/* ../public/jacoco/
       - name: Carica report test su gh-pages
-        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && steps.check_report.outputs.exists == 'false'
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
