@@ -66,20 +66,20 @@ jobs:
         with:
           name: test-reports-${{ github.event.pull_request.number }}
           path: |
-            ./target/site/jacoco/
-            ./target/reports/
+            ./backend/target/site/jacoco/
+            ./backend/target/reports/
           retention-days: 30
       - name: Pubblica Test Report
         if: success() || failure()
         uses: scacap/action-surefire-report@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          report_paths: './target/surefire-reports/TEST-*.xml'
+          report_paths: './backend/target/surefire-reports/TEST-*.xml'
       - name: JaCoCo Code Coverage Report
         id: jacoco_reporter
         uses: PavanMudigonda/jacoco-reporter@v5.0
         with:
-          coverage_results_path: ./target/site/jacoco/jacoco.xml
+          coverage_results_path: ./backend/target/site/jacoco/jacoco.xml
           coverage_report_name: Coverage
           coverage_report_title: JaCoCo
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -103,7 +103,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-coverage-report
-          path: ./target/site/jacoco/
+          path: ./backend/target/site/jacoco/
           retention-days: 30
 
 defaults:
