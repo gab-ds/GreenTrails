@@ -48,10 +48,10 @@ jobs:
       - name: Prepara cartella per pubblicazione su gh-pages
         if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && steps.check_report.outputs.exists == 'false'
         run: |
-          mkdir -p ./public/surefire
-          mkdir -p ./public/jacoco
-          cp -r ./target/reports/* ./public/surefire/
-          cp -r ./target/site/jacoco/* ./public/jacoco/
+          mkdir -p ../public/surefire
+          mkdir -p ../public/jacoco
+          cp -r ./target/reports/* ../public/surefire/
+          cp -r ./target/site/jacoco/* ../public/jacoco/
       - name: Carica report test su gh-pages
         if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && steps.check_report.outputs.exists == 'false'
         uses: peaceiris/actions-gh-pages@v4
