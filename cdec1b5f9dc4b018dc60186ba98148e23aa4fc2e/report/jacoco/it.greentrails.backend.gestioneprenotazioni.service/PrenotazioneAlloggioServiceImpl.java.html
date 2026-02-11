@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PrenotazioneAlloggioServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">it.greentrails.backend.gestioneprenotazioni.service</a> &gt; <span class="el_source">PrenotazioneAlloggioServiceImpl.java</span></div><h1>PrenotazioneAlloggioServiceImpl.java</h1><pre class="source lang-java linenums">package it.greentrails.backend.gestioneprenotazioni.service;
+
+import it.greentrails.backend.entities.Attivita;
+import it.greentrails.backend.entities.Camera;
+import it.greentrails.backend.entities.Itinerario;
+import it.greentrails.backend.entities.PrenotazioneAlloggio;
+import it.greentrails.backend.entities.Utente;
+import it.greentrails.backend.enums.RuoloUtente;
+import it.greentrails.backend.enums.StatoPrenotazione;
+import it.greentrails.backend.gestioneattivita.service.CameraService;
+import it.greentrails.backend.gestioneprenotazioni.repository.PrenotazioneAlloggioRepository;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+@Service
+<span class="fc" id="L21">@RequiredArgsConstructor</span>
+public class PrenotazioneAlloggioServiceImpl implements PrenotazioneAlloggioService {
+
+  private final PrenotazioneAlloggioRepository repository;
+  private final CameraService cameraService;
+
+  @Override
+  public PrenotazioneAlloggio savePrenotazioneAlloggio(Camera camera,
+      PrenotazioneAlloggio prenotazioneAlloggio) throws Exception {
+<span class="nc bnc" id="L30" title="All 2 branches missed.">    if (prenotazioneAlloggio == null) {</span>
+<span class="nc" id="L31">      throw new Exception(&quot;La prenotazione dell'attività è vuota.&quot;);</span>
+    }
+<span class="nc bnc" id="L33" title="All 2 branches missed.">    if (camera == null) {</span>
+<span class="nc" id="L34">      throw new Exception(&quot;La camera è vuota.&quot;);</span>
+    }
+<span class="nc bnc" id="L36" title="All 2 branches missed.">    if (camera.getAlloggio() == null) {</span>
+<span class="nc" id="L37">      throw new Exception(&quot;La camera non ha un alloggio collegato.&quot;);</span>
+    }
+<span class="nc" id="L39">    prenotazioneAlloggio.setCamera(camera);</span>
+<span class="nc" id="L40">    return repository.save(prenotazioneAlloggio);</span>
+  }
+
+  @Override
+  public boolean deletePrenotazioneAlloggio(PrenotazioneAlloggio prenotazioneAlloggio)
+      throws Exception {
+<span class="nc bnc" id="L46" title="All 2 branches missed.">    if (prenotazioneAlloggio == null) {</span>
+<span class="nc" id="L47">      throw new Exception(&quot;La prenotazione dell'alloggio è vuota.&quot;);</span>
+    }
+<span class="nc" id="L49">    repository.delete(prenotazioneAlloggio);</span>
+<span class="nc" id="L50">    repository.flush();</span>
+<span class="nc" id="L51">    return repository.findById(prenotazioneAlloggio.getId()).isEmpty();</span>
+  }
+
+  @Override
+  public List&lt;PrenotazioneAlloggio&gt; getAllPrenotazioniAlloggio() {
+<span class="nc" id="L56">    return repository.findAll();</span>
+  }
+
+  @Override
+  public List&lt;PrenotazioneAlloggio&gt; getPrenotazioniAlloggioByStato(StatoPrenotazione stato)
+      throws Exception {
+<span class="nc bnc" id="L62" title="All 2 branches missed.">    if (stato == null) {</span>
+<span class="nc" id="L63">      throw new Exception(&quot;Lo stato della prenotazione dell'alloggio è inesistente.&quot;);</span>
+    }
+<span class="nc" id="L65">    List&lt;PrenotazioneAlloggio&gt; risultato = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L66">    getAllPrenotazioniAlloggio().forEach(p -&gt; {</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">      if (p.getStato().equals(stato)) {</span>
+<span class="nc" id="L68">        risultato.add(p);</span>
+      }
+<span class="nc" id="L70">    });</span>
+<span class="nc" id="L71">    return risultato;</span>
+  }
+
+  @Override
+  public PrenotazioneAlloggio findById(Long id) throws Exception {
+<span class="nc bnc" id="L76" title="All 4 branches missed.">    if (id == null || id &lt; 0) {</span>
+<span class="nc" id="L77">      throw new Exception(&quot;L'id non è valido.&quot;);</span>
+    }
+<span class="nc" id="L79">    Optional&lt;PrenotazioneAlloggio&gt; prenotazioneAlloggio = repository.findById(id);</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">    if (prenotazioneAlloggio.isEmpty()) {</span>
+<span class="nc" id="L81">      throw new Exception(&quot;La prenotazione non è stata trovata.&quot;);</span>
+    }
+<span class="nc" id="L83">    return prenotazioneAlloggio.get();</span>
+  }
+
+
+  @Override
+  public List&lt;PrenotazioneAlloggio&gt; getPrenotazioniByAlloggio(Attivita attivita) throws Exception {
+<span class="nc bnc" id="L89" title="All 2 branches missed.">    if (attivita == null) {</span>
+<span class="nc" id="L90">      throw new Exception(&quot;L'attività è vuota.&quot;);</span>
+    }
+<span class="nc bnc" id="L92" title="All 2 branches missed.">    if (!attivita.isAlloggio()) {</span>
+<span class="nc" id="L93">      throw new Exception(&quot;L'attività non può essere un'attività turistica.&quot;);</span>
+    }
+<span class="nc" id="L95">    return repository.findByAlloggio(attivita.getId(), Pageable.unpaged()).toList();</span>
+  }
+
+  @Override
+  public List&lt;PrenotazioneAlloggio&gt; getPrenotazioniByVisitatore(Utente visitatore)
+      throws Exception {
+<span class="nc bnc" id="L101" title="All 2 branches missed.">    if (visitatore == null) {</span>
+<span class="nc" id="L102">      throw new Exception(&quot;L'utente è vuoto.&quot;);</span>
+    }
+<span class="nc bnc" id="L104" title="All 2 branches missed.">    if (visitatore.getRuolo() != RuoloUtente.VISITATORE) {</span>
+<span class="nc" id="L105">      throw new Exception(&quot;L'utente non è un visitatore.&quot;);</span>
+    }
+<span class="nc" id="L107">    return repository.findByVisitatore(visitatore.getId(), Pageable.unpaged()).toList();</span>
+  }
+
+  @Override
+  public List&lt;PrenotazioneAlloggio&gt; getPrenotazioniByItinerario(Itinerario itinerario)
+      throws Exception {
+<span class="nc bnc" id="L113" title="All 2 branches missed.">    if (itinerario == null) {</span>
+<span class="nc" id="L114">      throw new Exception(&quot;L'itinerario è vuoto.&quot;);</span>
+    }
+<span class="nc" id="L116">    return repository.findByItinerario(itinerario.getId(), Pageable.unpaged()).toList();</span>
+  }
+
+  @Override
+  public int controllaDisponibilitaAlloggio(Attivita alloggio, Date dataInizio, Date dataFine)
+      throws Exception {
+<span class="fc bfc" id="L122" title="All 2 branches covered.">    if (alloggio == null) {</span>
+<span class="fc" id="L123">      throw new Exception(&quot;L'alloggio è vuoto.&quot;);</span>
+    }
+<span class="fc bfc" id="L125" title="All 2 branches covered.">    if (!alloggio.isAlloggio()) {</span>
+<span class="fc" id="L126">      throw new Exception(&quot;L'attività non è un alloggio.&quot;);</span>
+    }
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">    if (dataFine.before(dataInizio)) {</span>
+<span class="nc" id="L129">      throw new Exception(&quot;La data di fine non può essere precedente alla data di inizio.&quot;);</span>
+    }
+<span class="fc" id="L131">    return cameraService</span>
+<span class="fc" id="L132">        .getCamereByAlloggio(alloggio)</span>
+<span class="fc" id="L133">        .stream()</span>
+<span class="fc" id="L134">        .mapToInt(Camera::getDisponibilita)</span>
+<span class="fc" id="L135">        .sum() - repository.getPostiOccupatiAlloggioTra(alloggio.getId(), dataInizio, dataFine);</span>
+  }
+
+  @Override
+  public int controllaDisponibilitaCamera(Camera camera, Date dataInizio, Date dataFine)
+      throws Exception {
+<span class="nc bnc" id="L141" title="All 2 branches missed.">    if (camera == null) {</span>
+<span class="nc" id="L142">      throw new Exception(&quot;La camera è vuota.&quot;);</span>
+    }
+<span class="nc bnc" id="L144" title="All 2 branches missed.">    if (dataFine.before(dataInizio)) {</span>
+<span class="nc" id="L145">      throw new Exception(&quot;La data di fine non può essere precedente alla data di inizio.&quot;);</span>
+    }
+<span class="nc" id="L147">    return camera.getDisponibilita() - repository.getPostiOccupatiCameraTra(camera.getId(),</span>
+        dataInizio, dataFine);
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

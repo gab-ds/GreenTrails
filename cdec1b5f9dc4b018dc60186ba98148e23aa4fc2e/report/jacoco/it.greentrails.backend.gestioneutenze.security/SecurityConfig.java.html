@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">it.greentrails.backend.gestioneutenze.security</a> &gt; <span class="el_source">SecurityConfig.java</span></div><h1>SecurityConfig.java</h1><pre class="source lang-java linenums">package it.greentrails.backend.gestioneutenze.security;
+
+import it.greentrails.backend.enums.RuoloUtente;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+
+
+@Configuration
+@EnableWebSecurity
+@Order(SecurityProperties.BASIC_AUTH_ORDER - 10)
+<span class="fc" id="L21">public class SecurityConfig {</span>
+
+<span class="fc" id="L23">  private static final String ROLE_VISITATORE = RuoloUtente.VISITATORE.name();</span>
+<span class="fc" id="L24">  private static final String ROLE_GESTORE = RuoloUtente.GESTORE_ATTIVITA.name();</span>
+<span class="fc" id="L25">  private static final String ROLE_ADMIN = RuoloUtente.AMMINISTRATORE.name();</span>
+
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+<span class="fc" id="L29">    return new BCryptPasswordEncoder();</span>
+  }
+
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+<span class="fc" id="L34">    http</span>
+<span class="fc" id="L35">        .authorizeHttpRequests((authorize) -&gt; authorize</span>
+<span class="fc" id="L36">            .requestMatchers(HttpMethod.PUT, &quot;/api/utenti&quot;).permitAll()</span>
+<span class="fc" id="L37">            .requestMatchers(HttpMethod.GET, &quot;/api/utenti&quot;).authenticated()</span>
+<span class="fc" id="L38">            .requestMatchers(HttpMethod.GET, &quot;/api/utenti/preferenze&quot;).hasRole(ROLE_VISITATORE)</span>
+
+<span class="fc" id="L40">            .requestMatchers(HttpMethod.POST, &quot;/api/utenti/questionario&quot;).hasRole(ROLE_VISITATORE)</span>
+
+<span class="fc" id="L42">            .requestMatchers(HttpMethod.POST, &quot;/api/file&quot;).authenticated()</span>
+<span class="fc" id="L43">            .requestMatchers(HttpMethod.DELETE, &quot;/api/file/**&quot;).authenticated()</span>
+<span class="fc" id="L44">            .requestMatchers(HttpMethod.GET, &quot;/api/file/**&quot;).permitAll()</span>
+
+<span class="fc" id="L46">            .requestMatchers(HttpMethod.GET, &quot;/api/attivita/*&quot;).permitAll()</span>
+<span class="fc" id="L47">            .requestMatchers(HttpMethod.GET, &quot;/api/attivita/perPrezzo&quot;).permitAll()</span>
+<span class="fc" id="L48">            .requestMatchers(HttpMethod.GET, &quot;/api/attivita/perGestore&quot;).hasRole(ROLE_GESTORE)</span>
+<span class="fc" id="L49">            .requestMatchers(HttpMethod.GET, &quot;/api/attivita/alloggi&quot;).permitAll()</span>
+<span class="fc" id="L50">            .requestMatchers(HttpMethod.GET, &quot;/api/attivita/attivitaTuristiche&quot;).permitAll()</span>
+<span class="fc" id="L51">            .requestMatchers(HttpMethod.GET, &quot;/api/attivita/all&quot;).permitAll()</span>
+<span class="fc" id="L52">            .requestMatchers(HttpMethod.GET, &quot;/api/attivita&quot;).hasRole(ROLE_GESTORE)</span>
+<span class="fc" id="L53">            .requestMatchers(HttpMethod.POST, &quot;/api/attivita&quot;).hasRole(ROLE_GESTORE)</span>
+<span class="fc" id="L54">            .requestMatchers(HttpMethod.POST, &quot;/api/attivita/*&quot;).hasRole(ROLE_GESTORE)</span>
+<span class="fc" id="L55">            .requestMatchers(HttpMethod.DELETE, &quot;/api/attivita/*&quot;).hasRole(ROLE_GESTORE)</span>
+
+<span class="fc" id="L57">            .requestMatchers(HttpMethod.GET, &quot;/api/camere/**&quot;).permitAll()</span>
+<span class="fc" id="L58">            .requestMatchers(HttpMethod.POST, &quot;/api/camere&quot;).hasRole(ROLE_GESTORE)</span>
+<span class="fc" id="L59">            .requestMatchers(HttpMethod.DELETE, &quot;/api/camere/*&quot;).hasRole(ROLE_GESTORE)</span>
+
+<span class="fc" id="L61">            .requestMatchers(&quot;/api/categorie/**&quot;).hasRole(ROLE_GESTORE)</span>
+
+<span class="fc" id="L63">            .requestMatchers(HttpMethod.GET, &quot;/api/recensioni/**&quot;).permitAll()</span>
+<span class="fc" id="L64">            .requestMatchers(HttpMethod.POST, &quot;/api/recensioni&quot;).hasRole(ROLE_VISITATORE)</span>
+<span class="fc" id="L65">            .requestMatchers(HttpMethod.DELETE, &quot;/api/recensioni/*&quot;).authenticated()</span>
+
+<span class="fc" id="L67">            .requestMatchers(HttpMethod.GET, &quot;/api/valori/*&quot;).permitAll()</span>
+<span class="fc" id="L68">            .requestMatchers(HttpMethod.POST, &quot;/api/valori&quot;).authenticated()</span>
+<span class="fc" id="L69">            .requestMatchers(HttpMethod.POST, &quot;/api/valori/*&quot;).hasAnyRole(ROLE_GESTORE, ROLE_ADMIN)</span>
+
+<span class="fc" id="L71">            .requestMatchers(&quot;/api/itinerari/**&quot;).hasRole(ROLE_VISITATORE)</span>
+
+<span class="fc" id="L73">            .requestMatchers(HttpMethod.GET, &quot;/api/prenotazioni-alloggio&quot;)</span>
+<span class="fc" id="L74">            .hasRole(ROLE_VISITATORE)</span>
+<span class="fc" id="L75">            .requestMatchers(HttpMethod.GET, &quot;/api/prenotazioni-attivita-turistica&quot;)</span>
+<span class="fc" id="L76">            .hasRole(ROLE_VISITATORE)</span>
+<span class="fc" id="L77">            .requestMatchers(HttpMethod.GET, &quot;/api/prenotazioni-alloggio/*&quot;)</span>
+<span class="fc" id="L78">            .hasRole(ROLE_VISITATORE)</span>
+<span class="fc" id="L79">            .requestMatchers(HttpMethod.GET, &quot;/api/prenotazioni-attivita-turistica/*&quot;)</span>
+<span class="fc" id="L80">            .hasRole(ROLE_VISITATORE)</span>
+<span class="fc" id="L81">            .requestMatchers(HttpMethod.GET, &quot;/api/prenotazioni-alloggio/perAttivita/*&quot;)</span>
+<span class="fc" id="L82">            .hasRole(ROLE_GESTORE)</span>
+<span class="fc" id="L83">            .requestMatchers(HttpMethod.GET, &quot;/api/prenotazioni-attivita-turistica/perAttivita/*&quot;)</span>
+<span class="fc" id="L84">            .hasRole(ROLE_GESTORE)</span>
+<span class="fc" id="L85">            .requestMatchers(HttpMethod.POST, &quot;/api/prenotazioni-alloggio&quot;)</span>
+<span class="fc" id="L86">            .hasRole(ROLE_VISITATORE)</span>
+<span class="fc" id="L87">            .requestMatchers(HttpMethod.POST, &quot;/api/prenotazioni-attivita-turistica&quot;)</span>
+<span class="fc" id="L88">            .hasRole(ROLE_VISITATORE)</span>
+<span class="fc" id="L89">            .requestMatchers(HttpMethod.DELETE, &quot;/api/prenotazioni-alloggio/*&quot;)</span>
+<span class="fc" id="L90">            .hasRole(ROLE_VISITATORE)</span>
+<span class="fc" id="L91">            .requestMatchers(HttpMethod.DELETE, &quot;/api/prenotazioni-attivita-turistica/*&quot;)</span>
+<span class="fc" id="L92">            .hasRole(ROLE_VISITATORE)</span>
+
+<span class="fc" id="L94">            .requestMatchers(&quot;/api/ricerca/**&quot;).permitAll()</span>
+
+<span class="fc" id="L96">            .requestMatchers(HttpMethod.POST, &quot;/api/segnalazioni&quot;).authenticated()</span>
+<span class="fc" id="L97">            .requestMatchers(HttpMethod.GET, &quot;/api/segnalazioni/**&quot;).hasRole(ROLE_ADMIN)</span>
+<span class="fc" id="L98">            .requestMatchers(HttpMethod.DELETE, &quot;/api/segnalazioni/*&quot;).hasRole(ROLE_ADMIN)</span>
+
+<span class="fc" id="L100">            .anyRequest().authenticated()</span>
+        )
+<span class="fc" id="L102">        .httpBasic(Customizer.withDefaults())</span>
+<span class="fc" id="L103">        .csrf(AbstractHttpConfigurer::disable);</span>
+
+<span class="fc" id="L105">    return http.build();</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
