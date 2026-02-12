@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ItinerariStubAdapter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">it.greentrails.backend.gestioneitinerari.adapter</a> &gt; <span class="el_source">ItinerariStubAdapter.java</span></div><h1>ItinerariStubAdapter.java</h1><pre class="source lang-java linenums">package it.greentrails.backend.gestioneitinerari.adapter;
+
+import it.greentrails.backend.entities.Attivita;
+import it.greentrails.backend.entities.Camera;
+import it.greentrails.backend.entities.Itinerario;
+import it.greentrails.backend.entities.Preferenze;
+import it.greentrails.backend.entities.PrenotazioneAlloggio;
+import it.greentrails.backend.entities.PrenotazioneAttivitaTuristica;
+import it.greentrails.backend.gestioneattivita.repository.AttivitaRepository;
+import it.greentrails.backend.gestioneattivita.repository.CameraRepository;
+import it.greentrails.backend.gestioneitinerari.repository.ItinerariRepository;
+import it.greentrails.backend.gestioneprenotazioni.repository.PrenotazioneAlloggioRepository;
+import it.greentrails.backend.gestioneprenotazioni.repository.PrenotazioneAttivitaTuristicaRepository;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+<span class="fc" id="L23">@RequiredArgsConstructor</span>
+public class ItinerariStubAdapter implements ItinerariAdapter {
+
+  private final AttivitaRepository attivitaRepository;
+  private final CameraRepository cameraRepository;
+  private final ItinerariRepository itinerariRepository;
+  private final PrenotazioneAlloggioRepository prenotazioneAlloggioRepository;
+  private final PrenotazioneAttivitaTuristicaRepository prenotazioneAttivitaTuristicaRepository;
+
+
+  @Override
+  public Itinerario pianificazioneAutomatica(Preferenze preferenze) {
+<span class="fc" id="L35">    Itinerario itinerario = new Itinerario();</span>
+<span class="fc" id="L36">    itinerario.setVisitatore(preferenze.getVisitatore());</span>
+<span class="fc" id="L37">    Itinerario itinerarioFinal = itinerariRepository.save(itinerario);</span>
+<span class="fc" id="L38">    List&lt;Attivita&gt; attivitaTuristiche = attivitaRepository.findAll();</span>
+<span class="fc" id="L39">    Collections.shuffle(attivitaTuristiche);</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">    attivitaTuristiche.stream().filter(a -&gt; !a.isAlloggio()).limit(3).forEach(a -&gt; {</span>
+<span class="fc" id="L41">      PrenotazioneAttivitaTuristica p = new PrenotazioneAttivitaTuristica();</span>
+<span class="fc" id="L42">      p.setAttivitaTuristica(a);</span>
+<span class="fc" id="L43">      p.setItinerario(itinerarioFinal);</span>
+<span class="fc" id="L44">      p.setDataInizio(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)));</span>
+<span class="fc" id="L45">      p.setNumAdulti(1);</span>
+<span class="fc" id="L46">      p.setNumBambini(0);</span>
+<span class="fc" id="L47">      p.setPrezzo(a.getPrezzo());</span>
+<span class="fc" id="L48">      prenotazioneAttivitaTuristicaRepository.save(p);</span>
+<span class="fc" id="L49">    });</span>
+<span class="fc" id="L50">    List&lt;Camera&gt; camere = cameraRepository.findAll();</span>
+<span class="fc" id="L51">    Collections.shuffle(camere);</span>
+<span class="fc" id="L52">    camere.stream().limit(1).forEach(c -&gt; {</span>
+<span class="fc" id="L53">      PrenotazioneAlloggio p = new PrenotazioneAlloggio();</span>
+<span class="fc" id="L54">      p.setCamera(c);</span>
+<span class="fc" id="L55">      p.setItinerario(itinerarioFinal);</span>
+<span class="fc" id="L56">      p.setDataInizio(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)));</span>
+<span class="fc" id="L57">      p.setDataFine(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));</span>
+<span class="fc" id="L58">      p.setNumAdulti(1);</span>
+<span class="fc" id="L59">      p.setNumBambini(0);</span>
+<span class="fc" id="L60">      p.setNumCamere(1);</span>
+<span class="fc" id="L61">      p.setPrezzo(c.getPrezzo());</span>
+<span class="fc" id="L62">      prenotazioneAlloggioRepository.save(p);</span>
+<span class="fc" id="L63">    });</span>
+<span class="fc" id="L64">    return itinerario;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
