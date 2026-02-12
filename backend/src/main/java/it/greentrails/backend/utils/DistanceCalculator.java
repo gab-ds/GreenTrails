@@ -4,6 +4,8 @@ import org.springframework.data.geo.Point;
 
 public class DistanceCalculator {
 
+  private DistanceCalculator() {}
+
   public static double distance(Point punto1, Point punto2) {
 
     double lat1 = punto1.getX();
