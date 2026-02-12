@@ -8,7 +8,7 @@ COPY . .
 RUN npm run build --prod
 
 FROM nginx:alpine AS runtime
-COPY --from=builder /app/dist/* /usr/share/nginx/html
+COPY --from=builder /app/dist/frontend/ /usr/share/nginx/html/
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
