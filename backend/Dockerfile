@@ -16,5 +16,5 @@ COPY --from=builder /build/target/backend*.jar ./backend.jar
 EXPOSE 8080
 ENV DB_URL=jdbc:mysql://localhost:3306/greentrails
 ENV DB_USER=myuser
-ENV DB_PASSWORD=mypassword
+ENV DB_PASS=mypassword
 ENTRYPOINT ["java", "-jar", "backend.jar"]
