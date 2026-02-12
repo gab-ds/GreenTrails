@@ -1,0 +1,101 @@
+name: Report test Java
+on:
+  push:
+    paths:
+      - 'backend/**'
+    branches:
+      - main
+  pull_request:
+    paths:
+      - 'backend/**'
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Generazione report test
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configura ambiente Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Cache dipendenze Maven
+        uses: actions/cache@v3
+        with:
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          path: ~/.m2/repository
+      - name: Esegui test
+        run: mvn test jacoco:report surefire-report:report --batch-mode --fail-at-end
+      - name: Prepara cartella per pubblicazione su gh-pages
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        run: |
+          mkdir -p ../public/surefire
+          mkdir -p ../public/jacoco
+          cp -r ./target/reports/* ../public/surefire/
+          cp -r ./target/site/jacoco/* ../public/jacoco/
+      - name: Carica report test su gh-pages
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          destination_dir: ${{ github.sha }}/report
+          keep_files: true
+      - name: Carica report come artifact per PR
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports-${{ github.event.pull_request.number }}
+          path: |
+            ./backend/target/site/jacoco/
+            ./backend/target/reports/
+          retention-days: 30
+      - name: Pubblica Test Report
+        if: success() || failure()
+        uses: scacap/action-surefire-report@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          report_paths: './backend/target/surefire-reports/TEST-*.xml'
+      - name: JaCoCo Code Coverage Report
+        id: jacoco_reporter
+        uses: PavanMudigonda/jacoco-reporter@v5.0
+        with:
+          coverage_results_path: ./backend/target/site/jacoco/jacoco.xml
+          coverage_report_name: Coverage
+          coverage_report_title: JaCoCo
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          skip_check_run: false
+          minimum_coverage: 80
+          fail_below_threshold: false
+          publish_only_summary: false
+      - name: Aggiungi report JaCoCo al workflow summary
+        if: steps.jacoco_reporter.outcome == 'success'
+        run: |
+          echo "## :bar_chart: JaCoCo Code Coverage" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metrica | Valore |" >> $GITHUB_STEP_SUMMARY
+          echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
+          echo "| Code Coverage % | ${{ steps.jacoco_reporter.outputs.coverage_percentage }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| :heavy_check_mark: Linee Coperte | ${{ steps.jacoco_reporter.outputs.covered_lines }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| :x: Linee Non Coperte | ${{ steps.jacoco_reporter.outputs.missed_lines }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| :chart_with_upwards_trend: Linee Totali | ${{ steps.jacoco_reporter.outputs.total_lines }} |" >> $GITHUB_STEP_SUMMARY
+      - name: Carica JaCoCo Report come Artifact
+        if: success() || failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-coverage-report
+          path: ./backend/target/site/jacoco/
+          retention-days: 30
+
+defaults:
+  run:
+    working-directory: ./backend
