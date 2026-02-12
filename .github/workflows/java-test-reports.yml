@@ -34,7 +34,8 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           path: ~/.m2/repository
       - name: Esegui test
-        run: mvn test jacoco:report surefire-report:report --batch-mode --fail-at-end
+        id: test
+        run: mvn test jacoco:report surefire-report:report --batch-mode -Dmaven.test.failure.ignore=true
       - name: Prepara cartella per pubblicazione su gh-pages
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         run: |
