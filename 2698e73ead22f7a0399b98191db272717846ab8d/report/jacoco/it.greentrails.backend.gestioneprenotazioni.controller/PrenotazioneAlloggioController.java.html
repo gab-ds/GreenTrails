@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PrenotazioneAlloggioController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">it.greentrails.backend.gestioneprenotazioni.controller</a> &gt; <span class="el_source">PrenotazioneAlloggioController.java</span></div><h1>PrenotazioneAlloggioController.java</h1><pre class="source lang-java linenums">package it.greentrails.backend.gestioneprenotazioni.controller;
+
+import it.greentrails.backend.entities.Attivita;
+import it.greentrails.backend.entities.Camera;
+import it.greentrails.backend.entities.Itinerario;
+import it.greentrails.backend.entities.PrenotazioneAlloggio;
+import it.greentrails.backend.entities.Utente;
+import it.greentrails.backend.enums.StatoPrenotazione;
+import it.greentrails.backend.gestioneattivita.service.AttivitaService;
+import it.greentrails.backend.gestioneattivita.service.CameraService;
+import it.greentrails.backend.gestioneitinerari.service.ItinerariService;
+import it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAlloggioService;
+import it.greentrails.backend.utils.service.ResponseGenerator;
+import java.time.Duration;
+import java.util.Date;
+import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping(path = &quot;api/prenotazioni-alloggio&quot;)
+<span class="fc" id="L31">@RequiredArgsConstructor</span>
+public class PrenotazioneAlloggioController {
+
+  private final ItinerariService itinerariService;
+  private final AttivitaService attivitaService;
+  private final CameraService cameraService;
+  private final PrenotazioneAlloggioService prenotazioneAlloggioService;
+
+
+  @PostMapping
+  private ResponseEntity&lt;Object&gt; creaPrenotazioneAlloggio(
+      @AuthenticationPrincipal Utente utente,
+      @RequestParam(&quot;idItinerario&quot;) final Long idItinerario,
+      @RequestParam(&quot;idCamera&quot;) final Long idCamera,
+      @RequestParam(&quot;numAdulti&quot;) final int adulti,
+      @RequestParam(value = &quot;numBambini&quot;, defaultValue = &quot;0&quot;, required = false) final int bambini,
+      @RequestParam(&quot;dataInizio&quot;) @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) final Date dataInizio,
+      @RequestParam(&quot;dataFine&quot;) @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) final Date dataFine,
+      @RequestParam(&quot;numCamere&quot;) final int numCamere
+  ) {
+    try {
+<span class="fc" id="L52">      Itinerario itinerario = itinerariService.findById(idItinerario);</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">      if (!itinerario.getVisitatore().getId().equals(utente.getId())) {</span>
+<span class="fc" id="L54">        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND,</span>
+            &quot;Itinerario non trovato&quot;);
+      }
+<span class="fc" id="L57">      Camera camera = cameraService.findById(idCamera);</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">      if (adulti + bambini &gt; camera.getCapienza() * numCamere) {</span>
+<span class="fc" id="L59">        return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span>
+            &quot;Numero camere non sufficienti&quot;);
+      }
+<span class="fc" id="L62">      PrenotazioneAlloggio prenotazioneAlloggio = new PrenotazioneAlloggio();</span>
+<span class="fc" id="L63">      prenotazioneAlloggio.setCamera(camera);</span>
+<span class="fc" id="L64">      prenotazioneAlloggio.setItinerario(itinerario);</span>
+<span class="fc" id="L65">      prenotazioneAlloggio.setNumAdulti(adulti);</span>
+<span class="fc" id="L66">      prenotazioneAlloggio.setNumBambini(bambini);</span>
+<span class="fc" id="L67">      prenotazioneAlloggio.setNumCamere(numCamere);</span>
+<span class="fc" id="L68">      prenotazioneAlloggio.setDataInizio(dataInizio);</span>
+<span class="fc" id="L69">      prenotazioneAlloggio.setStato(StatoPrenotazione.CREATA);</span>
+<span class="fc" id="L70">      double prezzo = numCamere * camera.getPrezzo();</span>
+<span class="fc" id="L71">      prenotazioneAlloggio.setDataFine(dataFine);</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">      if (prenotazioneAlloggioService.controllaDisponibilitaCamera(camera,</span>
+          dataInizio, dataFine) &lt; numCamere) {
+<span class="fc" id="L74">        return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span>
+            &quot;Camera non disponibile&quot;);
+      }
+<span class="fc" id="L77">      long durataOre = Duration.between(dataInizio.toInstant(), dataFine.toInstant()).toHours();</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">      if (durataOre &gt; 24) {</span>
+<span class="fc" id="L79">        prezzo = prezzo * Math.ceil((double) durataOre / 24);</span>
+      }
+<span class="fc" id="L81">      prenotazioneAlloggio.setPrezzo(prezzo);</span>
+<span class="fc" id="L82">      prenotazioneAlloggio = prenotazioneAlloggioService.savePrenotazioneAlloggio(camera,</span>
+          prenotazioneAlloggio);
+<span class="fc" id="L84">      itinerario.setTotale(prezzo + itinerario.getTotale());</span>
+<span class="fc" id="L85">      itinerariService.saveItinerario(itinerario);</span>
+<span class="fc" id="L86">      return ResponseGenerator.generateResponse(HttpStatus.OK, prenotazioneAlloggio);</span>
+<span class="fc" id="L87">    } catch (Exception e) {</span>
+<span class="fc" id="L88">      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span>
+    }
+  }
+
+  @PostMapping(&quot;{id}&quot;)
+  private ResponseEntity&lt;Object&gt; confermaPrenotazioneAlloggio(
+      @AuthenticationPrincipal Utente utente,
+      @PathVariable(&quot;id&quot;) final long id,
+      @RequestParam(&quot;numAdulti&quot;) final int adulti,
+      @RequestParam(value = &quot;numBambini&quot;, defaultValue = &quot;0&quot;, required = false) final int bambini,
+      @RequestParam(&quot;dataInizio&quot;) @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) final Date dataInizio,
+      @RequestParam(&quot;dataFine&quot;) @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) final Date dataFine,
+      @RequestParam(&quot;numCamere&quot;) final int numCamere
+  ) {
+    try {
+<span class="fc" id="L103">      PrenotazioneAlloggio prenotazione = prenotazioneAlloggioService.findById(id);</span>
+<span class="fc" id="L104">      Itinerario itinerario = prenotazione.getItinerario();</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">      if (!itinerario.getVisitatore().getId().equals(utente.getId())) {</span>
+<span class="fc" id="L106">        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND,</span>
+            &quot;Prenotazione non trovata&quot;);
+      }
+<span class="fc bfc" id="L109" title="All 2 branches covered.">      if (prenotazione.getStato() != StatoPrenotazione.NON_CONFERMATA) {</span>
+<span class="fc" id="L110">        return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span>
+            &quot;Prenotazione non modificabile&quot;);
+      }
+<span class="fc" id="L113">      Camera camera = prenotazione.getCamera();</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">      if (adulti + bambini &gt; camera.getCapienza() * numCamere) {</span>
+<span class="fc" id="L115">        return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span>
+            &quot;Numero camere non sufficienti&quot;);
+      }
+<span class="fc" id="L118">      prenotazione.setNumAdulti(adulti);</span>
+<span class="fc" id="L119">      prenotazione.setNumBambini(bambini);</span>
+<span class="fc" id="L120">      prenotazione.setNumCamere(numCamere);</span>
+<span class="fc" id="L121">      prenotazione.setDataInizio(dataInizio);</span>
+<span class="fc" id="L122">      prenotazione.setStato(StatoPrenotazione.CREATA);</span>
+<span class="fc" id="L123">      double prezzo = numCamere * camera.getPrezzo();</span>
+<span class="fc" id="L124">      prenotazione.setDataFine(dataFine);</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">      if (prenotazioneAlloggioService.controllaDisponibilitaCamera(camera,</span>
+          dataInizio, dataFine) &lt; numCamere) {
+<span class="fc" id="L127">        return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span>
+            &quot;Camera non disponibile&quot;);
+      }
+<span class="fc" id="L130">      long durataOre = Duration.between(dataInizio.toInstant(), dataFine.toInstant()).toHours();</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">      if (durataOre &gt; 24) {</span>
+<span class="fc" id="L132">        prezzo = prezzo * Math.ceil((double) durataOre / 24);</span>
+      }
+<span class="fc" id="L134">      prenotazione.setPrezzo(prezzo);</span>
+<span class="fc" id="L135">      prenotazione = prenotazioneAlloggioService.savePrenotazioneAlloggio(camera,</span>
+          prenotazione);
+<span class="fc" id="L137">      itinerario.setTotale(prezzo + itinerario.getTotale());</span>
+<span class="fc" id="L138">      itinerariService.saveItinerario(itinerario);</span>
+<span class="fc" id="L139">      return ResponseGenerator.generateResponse(HttpStatus.OK, prenotazione);</span>
+<span class="fc" id="L140">    } catch (Exception e) {</span>
+<span class="fc" id="L141">      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span>
+    }
+  }
+
+  @GetMapping(&quot;{id}&quot;)
+  private ResponseEntity&lt;Object&gt; visualizzaPrenotazioneAlloggio(
+      @AuthenticationPrincipal Utente utente,
+      @PathVariable(&quot;id&quot;) final Long id
+  ) {
+    try {
+<span class="fc" id="L151">      PrenotazioneAlloggio prenotazioneAlloggio = prenotazioneAlloggioService.findById(id);</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">      if (!prenotazioneAlloggio.getItinerario().getVisitatore().getId().equals(utente.getId())) {</span>
+<span class="fc" id="L153">        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, &quot;Prenotazione non trovata&quot;);</span>
+      }
+<span class="fc" id="L155">      return ResponseGenerator.generateResponse(HttpStatus.OK, prenotazioneAlloggio);</span>
+<span class="fc" id="L156">    } catch (Exception e) {</span>
+<span class="fc" id="L157">      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span>
+    }
+  }
+
+  @GetMapping(&quot;perAttivita/{idAttivita}&quot;)
+  private ResponseEntity&lt;Object&gt; visualizzaPrenotazioniAlloggioPerAttivita(
+      @AuthenticationPrincipal Utente utente,
+      @PathVariable(&quot;idAttivita&quot;) final long idAttivita
+  ) {
+    try {
+<span class="fc" id="L167">      Attivita attivita = attivitaService.findById(idAttivita);</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">      if (!attivita.getGestore().getId().equals(utente.getId())) {</span>
+<span class="fc" id="L169">        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, &quot;Alloggio non trovato&quot;);</span>
+      } 
+<span class="fc" id="L171">      return ResponseGenerator.generateResponse(HttpStatus.OK,</span>
+<span class="fc" id="L172">          prenotazioneAlloggioService.getPrenotazioniByAlloggio(attivita));</span>
+<span class="fc" id="L173">    } catch (Exception e) {</span>
+<span class="fc" id="L174">      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span>
+    }
+  }
+
+  @GetMapping(&quot;perAttivita/{idAttivita}/disponibilita&quot;)
+  private ResponseEntity&lt;Object&gt; visualizzaDisponibilitaPerAlloggio(
+      @PathVariable(&quot;idAttivita&quot;) final long idAttivita,
+      @RequestParam(&quot;dataInizio&quot;) @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) final Date dataInizio,
+      @RequestParam(&quot;dataFine&quot;) @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) final Date dataFine
+  ) {
+    try {
+<span class="fc" id="L185">      Attivita attivita = attivitaService.findById(idAttivita);</span>
+<span class="fc" id="L186">      return ResponseGenerator.generateResponse(HttpStatus.OK,</span>
+<span class="fc" id="L187">          prenotazioneAlloggioService.controllaDisponibilitaAlloggio(attivita, dataInizio,</span>
+              dataFine));
+<span class="fc" id="L189">    } catch (Exception e) {</span>
+<span class="fc" id="L190">      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span>
+    }
+  }
+
+  @GetMapping(&quot;perCamera/{idCamera}/disponibilita&quot;)
+  private ResponseEntity&lt;Object&gt; visualizzaDisponibilitaPerCamera(
+      @PathVariable(&quot;idCamera&quot;) final long idCamera,
+      @RequestParam(&quot;dataInizio&quot;) @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) final Date dataInizio,
+      @RequestParam(&quot;dataFine&quot;) @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) final Date dataFine
+  ) {
+    try {
+<span class="fc" id="L201">      Camera camera = cameraService.findById(idCamera);</span>
+<span class="fc" id="L202">      return ResponseGenerator.generateResponse(HttpStatus.OK,</span>
+<span class="fc" id="L203">          prenotazioneAlloggioService.controllaDisponibilitaCamera(camera, dataInizio, dataFine));</span>
+<span class="fc" id="L204">    } catch (Exception e) {</span>
+<span class="fc" id="L205">      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span>
+    }
+  }
+
+  @GetMapping
+  private ResponseEntity&lt;Object&gt; visualizzaPrenotazioniAlloggioPerVisitatore(
+      @AuthenticationPrincipal Utente utente
+  ) {
+    try {
+<span class="fc" id="L214">      return ResponseGenerator.generateResponse(HttpStatus.OK,</span>
+<span class="fc" id="L215">          prenotazioneAlloggioService.getPrenotazioniByVisitatore(utente));</span>
+<span class="fc" id="L216">    } catch (Exception e) {</span>
+<span class="fc" id="L217">      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span>
+    }
+  }
+
+  @DeleteMapping(&quot;{id}&quot;)
+  private ResponseEntity&lt;Object&gt; cancellaPrenotazioneAlloggio(
+      @AuthenticationPrincipal Utente utente,
+      @PathVariable(&quot;id&quot;) final Long id
+  ) {
+    try {
+<span class="fc" id="L227">      PrenotazioneAlloggio prenotazioneAlloggio = prenotazioneAlloggioService.findById(id);</span>
+<span class="fc bfc" id="L228" title="All 2 branches covered.">      if (!prenotazioneAlloggio.getItinerario().getVisitatore().getId().equals(utente.getId())) {</span>
+<span class="fc" id="L229">        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, &quot;Prenotazione non trovata&quot;);</span>
+      }
+<span class="fc" id="L231">      Itinerario itinerario = prenotazioneAlloggio.getItinerario();</span>
+<span class="fc" id="L232">      itinerario.setTotale(itinerario.getTotale() - prenotazioneAlloggio.getPrezzo());</span>
+<span class="fc" id="L233">      itinerariService.saveItinerario(itinerario);</span>
+<span class="fc" id="L234">      return ResponseGenerator.generateResponse(HttpStatus.OK,</span>
+<span class="fc" id="L235">          prenotazioneAlloggioService.deletePrenotazioneAlloggio(prenotazioneAlloggio));</span>
+<span class="fc" id="L236">    } catch (Exception e) {</span>
+<span class="fc" id="L237">      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span>
+    }
+  }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
