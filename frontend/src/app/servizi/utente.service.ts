@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable, catchError, of, tap } from 'rxjs';
+import { API_BASE_URL } from '../config/api-config';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { Observable, catchError, of, tap } from 'rxjs';
 export class UtenteService {
 private isLogged: boolean = false;
 
-private url = 'http://localhost:8080/api/utenti';
+private url = `${API_BASE_URL}/api/utenti`;
 
 constructor(private http: HttpClient, private cookieService: CookieService) {}
 
@@ -49,7 +50,7 @@ logout(): Observable<any> {
   this.isLogged = false;
 
   const allCookies = this.cookieService.getAll();
-    
+
     for (const cookieName in allCookies) {
       if (allCookies.hasOwnProperty(cookieName)) {
         this.cookieService.delete(cookieName);
@@ -57,7 +58,7 @@ logout(): Observable<any> {
     }
 
     return of({ success: true });
-  
+
 
 }
 
@@ -95,7 +96,7 @@ invioQuestionario(
    }
 
 getPreferenze():Observable<any> {
- 
+
   const headers = new HttpHeaders({
     Authorization: 'Basic ' + this.cookieService.get('credenziali').replace(/"/g, '')
   });
@@ -104,4 +105,3 @@ getPreferenze():Observable<any> {
 }
 
 }
-

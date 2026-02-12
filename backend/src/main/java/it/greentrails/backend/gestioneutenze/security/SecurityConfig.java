@@ -13,6 +13,11 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.Arrays;
+import java.util.List;
 
 
 @Configuration
@@ -27,6 +32,45 @@ public class SecurityConfig {
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+
+    // Permetti richieste da questi origins
+    configuration.setAllowedOrigins(Arrays.asList(
+        "http://localhost:9000",
+        "http://localhost:4200",
+        "http://frontend",
+        "http://frontend:80"
+    ));
+
+    // Permetti tutti i metodi HTTP comuni
+    configuration.setAllowedMethods(Arrays.asList(
+        "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"
+    ));
+
+    // Permetti tutti gli headers
+    configuration.setAllowedHeaders(List.of("*"));
+
+    // Permetti l'invio di credenziali (cookies, authorization headers)
+    configuration.setAllowCredentials(true);
+
+    // Esponi questi headers nella risposta
+    configuration.setExposedHeaders(Arrays.asList(
+        "Authorization",
+        "Content-Type",
+        "X-Requested-With"
+    ));
+
+    // Max age per la cache della preflight request
+    configuration.setMaxAge(3600L);
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+
+    return source;
   }
 
   @Bean
@@ -97,8 +141,12 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.GET, "/api/segnalazioni/**").hasRole(ROLE_ADMIN)
             .requestMatchers(HttpMethod.DELETE, "/api/segnalazioni/*").hasRole(ROLE_ADMIN)
 
+            .requestMatchers("/actuator/health", "/actuator/health/**").permitAll()
+            .requestMatchers("/actuator/**").authenticated()
+
             .anyRequest().authenticated()
         )
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .httpBasic(Customizer.withDefaults())
         .csrf(AbstractHttpConfigurer::disable);
 

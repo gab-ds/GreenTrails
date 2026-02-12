@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
 import { PrenotazioniAttivitaComponent } from '../componenti/pagina-attivita/prenotazioni-attivita/prenotazioni-attivita.component';
+import { API_BASE_URL } from '../config/api-config';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class PrenotazioniAttivitaService {
 
   constructor(private dialog: MatDialog, private http: HttpClient, private cookieService: CookieService) { }
 
-  private baseUrl = 'http://localhost:8080/api/prenotazioni-attivita-turistica';
+  private baseUrl = `${API_BASE_URL}/api/prenotazioni-attivita-turistica`;
 
   apriDialogAttivita() {
     const dialogRef =
@@ -39,7 +40,7 @@ export class PrenotazioniAttivitaService {
   }
 
   prenotazioneAttivita(idItinerario: number, idAttivita: number,numAdulti: number, numBambini: number, dataInizio: string, dataFine: string ): Observable<any>{
-  
+
     const headers = new HttpHeaders({
       Authorization: 'Basic ' + this.cookieService.get('credenziali').replace(/"/g, '')
     });

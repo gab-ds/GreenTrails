@@ -1,8 +1,10 @@
 import { RecensioneFormComponent } from './componenti/pagina-attivita/recensioni/recensione-form/recensione-form.component';
-import { NgModule,CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { NgbCarouselModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ConfigService } from './config/config.service';
+import { setApiBaseUrl } from './config/api-config';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -117,6 +119,14 @@ import { PopupRecensioneFailComponent } from './componenti/pagina-attivita/recen
 import { PopuperroreComponent } from './componenti/modifica-valori-admin/popuperrore/popuperrore.component';
 import { ErrorPopupComponent } from './componenti/generazione-automatica/error-popup/error-popup.component';
 
+export function initializeApp(configService: ConfigService) {
+  return () => configService.loadConfig().toPromise().then(config => {
+    if (config) {
+      setApiBaseUrl(config.apiBaseUrl);
+    }
+  });
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -194,9 +204,9 @@ import { ErrorPopupComponent } from './componenti/generazione-automatica/error-p
     TopbuttonComponent,
     CookieDialogComponent,
     PopupRecensioneFailComponent,
-    PopuperroreComponent
+    PopuperroreComponent,
     PopUpErroriComponent,
-    PopupRecensioneFailComponent
+    PopupRecensioneFailComponent,
     ErrorPopupComponent
   ],
   imports: [
@@ -297,7 +307,16 @@ import { ErrorPopupComponent } from './componenti/generazione-automatica/error-p
     MatIconModule,
     Ng2SearchPipeModule
   ],
-  providers: [CookieService],
+  providers: [
+    CookieService,
+    ConfigService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeApp,
+      deps: [ConfigService],
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
