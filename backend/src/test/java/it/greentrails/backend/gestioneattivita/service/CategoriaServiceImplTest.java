@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -84,6 +85,50 @@ public class CategoriaServiceImplTest {
     assertFalse(violations.isEmpty());
     assertEquals("La descrizione non può essere vuota.",
         violations.iterator().next().getMessage());
+  }
+
+  @Test
+  void deleteCategoriaSuccess() throws Exception {
+    Categoria categoria = new Categoria();
+    categoria.setId(1L);
+
+    // dopo la cancellazione il repository non deve trovare più l'entità
+    when(categoriaRepository.findById(1L)).thenReturn(java.util.Optional.empty());
+
+    boolean result = categoriaService.deleteCategoria(categoria);
+
+    assertTrue(result);
+  }
+
+  @Test
+  void deleteCategoriaNullCategoriaExceptionThrown() {
+    assertThrows(Exception.class, () -> categoriaService.deleteCategoria(null));
+  }
+
+  @Test
+  void findByIdSuccess() throws Exception {
+    Categoria categoria = new Categoria();
+    categoria.setId(2L);
+
+    when(categoriaRepository.findById(2L)).thenReturn(java.util.Optional.of(categoria));
+
+    Categoria found = categoriaService.findById(2L);
+
+    assertNotNull(found);
+    assertEquals(2L, found.getId());
+  }
+
+  @Test
+  void findByIdInvalidIdExceptionThrown() {
+    assertThrows(Exception.class, () -> categoriaService.findById(-1L));
+    assertThrows(Exception.class, () -> categoriaService.findById(null));
+  }
+
+  @Test
+  void findByIdNotFoundExceptionThrown() {
+    when(categoriaRepository.findById(3L)).thenReturn(java.util.Optional.empty());
+
+    assertThrows(Exception.class, () -> categoriaService.findById(3L));
   }
 
 }
