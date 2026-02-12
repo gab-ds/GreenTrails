@@ -5,6 +5,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { PrenotazioniAttivitaComponent } from '../componenti/pagina-attivita/prenotazioni-attivita/prenotazioni-attivita.component';
 import { PrenotazioniComponent } from '../componenti/pagina-attivita/prenotazioni/prenotazioni.component';
+import { API_BASE_URL } from '../config/api-config';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class ItinerariService {
 
   constructor(private dialog: MatDialog,private http: HttpClient, private cookieService: CookieService) {}
 
-  private baseUrl = 'http://localhost:8080/api/itinerari';
+  private baseUrl = `${API_BASE_URL}/api/itinerari`;
 
   private idSource = new BehaviorSubject<number>(0);
   currentId = this.idSource.asObservable();
@@ -26,7 +27,7 @@ export class ItinerariService {
   }
 
   cancellaItinerario(idItinerario: number): Observable<any> {
-      
+
     const headers = new HttpHeaders({
       Authorization: 'Basic ' + this.cookieService.get('credenziali').replace(/"/g, '')
     });
@@ -40,7 +41,7 @@ export class ItinerariService {
     });
     return this.http.post(`${this.baseUrl}`,{},  {headers});
   }
-  
+
 
 
   getidItinerario(): number |null {
@@ -54,7 +55,7 @@ export class ItinerariService {
   }
 
   getItinerariUtente(): Observable<any[]>{
-    
+
     const headers = new HttpHeaders({
       Authorization: 'Basic ' + this.cookieService.get('credenziali').replace(/"/g, '')
     });
@@ -66,7 +67,7 @@ export class ItinerariService {
     const headers = new HttpHeaders({
       Authorization: 'Basic ' + this.cookieService.get('credenziali').replace(/"/g, '')
     });
-  
+
     return this.http.post<any>(`${this.baseUrl}/genera`,{param}, {headers});
   }
 
@@ -76,5 +77,5 @@ export class ItinerariService {
     });
     return this.http.get<any>(`${this.baseUrl}/${id}`, {headers});
   }
-  
+
 }

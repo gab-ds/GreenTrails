@@ -2,13 +2,14 @@ import { CookieService } from 'ngx-cookie-service';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { API_BASE_URL } from '../config/api-config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SegnalazioneService {
 
-  private Url = "http://localhost:8080/api/segnalazioni";
+  private Url = `${API_BASE_URL}/api/segnalazioni`;
 
   constructor(private http : HttpClient, private cookie: CookieService) { }
 
@@ -39,5 +40,5 @@ export class SegnalazioneService {
     return this.http.get<any>(`${this.Url}`, {headers, params});
   }
 
- 
+
 }

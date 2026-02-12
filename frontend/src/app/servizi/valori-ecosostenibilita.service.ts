@@ -2,13 +2,14 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
+import { API_BASE_URL } from '../config/api-config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ValoriEcosostenibilitaService {
 
-  baseUrl: string = "http://localhost:8080/api/valori";
+  baseUrl: string = `${API_BASE_URL}/api/valori`;
 
   constructor(private http: HttpClient, private cookieService: CookieService) { }
 

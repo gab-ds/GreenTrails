@@ -11,11 +11,12 @@
   </parent>
   <groupId>it.greentrails</groupId>
   <artifactId>backend</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>${revision}</version>
   <name>backend</name>
   <description>Backend del progetto C03 - Greentrails.</description>
   <properties>
     <java.version>21</java.version>
+    <revision>0.0.1-SNAPSHOT</revision>
   </properties>
   <dependencies>
     <dependency>
@@ -29,6 +30,10 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
 
     <dependency>
