@@ -61,7 +61,7 @@ public class ItinerariStubAdapter implements ItinerariAdapter {
       p.setPrezzo(c.getPrezzo());
       prenotazioneAlloggioRepository.save(p);
     });
-    return itinerario;
+    return itinerarioFinal;
   }
 
 }
