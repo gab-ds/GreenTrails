@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ItinerariController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">it.greentrails.backend.gestioneitinerari.controller</a> &gt; <span class="el_source">ItinerariController.java</span></div><h1>ItinerariController.java</h1><pre class="source lang-java linenums">package it.greentrails.backend.gestioneitinerari.controller;
+
+import it.greentrails.backend.entities.Itinerario;
+import it.greentrails.backend.entities.Preferenze;
+import it.greentrails.backend.entities.Utente;
+import it.greentrails.backend.gestioneitinerari.service.ItinerariService;
+import it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAlloggioService;
+import it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaService;
+import it.greentrails.backend.gestioneutenze.service.GestioneUtenzeService;
+import it.greentrails.backend.utils.service.ResponseGenerator;
+import java.util.HashMap;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping(&quot;api/itinerari&quot;)
+<span class="fc" id="L25">@RequiredArgsConstructor</span>
+public class ItinerariController {
+
+  private final ItinerariService itinerariService;
+  private final PrenotazioneAttivitaTuristicaService prenotazioneAttivitaTuristicaService;
+  private final PrenotazioneAlloggioService prenotazioneAlloggioService;
+  private final GestioneUtenzeService gestioneUtenzeService;
+
+  @PostMapping
+  private ResponseEntity&lt;Object&gt; creaItinerario(
+      @AuthenticationPrincipal Utente utente
+  ) {
+    try {
+<span class="fc" id="L38">      Itinerario itinerario = new Itinerario();</span>
+<span class="fc" id="L39">      itinerario.setVisitatore(utente);</span>
+<span class="fc" id="L40">      itinerario = itinerariService.saveItinerario(itinerario);</span>
+<span class="fc" id="L41">      return ResponseGenerator.generateResponse(HttpStatus.OK, itinerario);</span>
+<span class="fc" id="L42">    } catch (Exception e) {</span>
+<span class="fc" id="L43">      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span>
+    }
+  }
+
+  @PostMapping(&quot;genera&quot;)
+  private ResponseEntity&lt;Object&gt; generaItinerario(
+      @AuthenticationPrincipal Utente utente
+  ) {
+    try {
+<span class="fc" id="L52">      Preferenze preferenze = gestioneUtenzeService.getPreferenzeById(utente.getId());</span>
+<span class="fc" id="L53">      Itinerario itinerario = itinerariService.createByPreferenze(preferenze);</span>
+<span class="fc" id="L54">      return ResponseGenerator.generateResponse(HttpStatus.OK, itinerario);</span>
+<span class="fc" id="L55">    } catch (Exception e) {</span>
+<span class="fc" id="L56">      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span>
+    }
+  }
+
+  @GetMapping(&quot;{id}&quot;)
+  private ResponseEntity&lt;Object&gt; visualizzaItinerario(
+      @AuthenticationPrincipal Utente utente,
+      @PathVariable(&quot;id&quot;) final Long id
+  ) {
+    try {
+<span class="fc" id="L66">      Itinerario itinerario = itinerariService.findById(id);</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">      if (!itinerario.getVisitatore().getId().equals(utente.getId())) {</span>
+<span class="fc" id="L68">        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, &quot;Itinerario non trovato&quot;);</span>
+      }
+<span class="fc" id="L70">      HashMap&lt;String, Object&gt; risultato = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L71">      risultato.put(&quot;itinerario&quot;, itinerario);</span>
+<span class="fc" id="L72">      risultato.put(&quot;prenotazioniAlloggio&quot;,</span>
+<span class="fc" id="L73">          prenotazioneAlloggioService.getPrenotazioniByItinerario(itinerario));</span>
+<span class="fc" id="L74">      risultato.put(&quot;prenotazioniAttivitaTuristica&quot;,</span>
+<span class="fc" id="L75">          prenotazioneAttivitaTuristicaService.getPrenotazioniByItinerario(itinerario));</span>
+<span class="fc" id="L76">      return ResponseGenerator.generateResponse(HttpStatus.OK, risultato);</span>
+<span class="fc" id="L77">    } catch (Exception e) {</span>
+<span class="fc" id="L78">      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span>
+    }
+  }
+
+  @DeleteMapping(&quot;{id}&quot;)
+  private ResponseEntity&lt;Object&gt; cancellaItinerario(
+      @AuthenticationPrincipal Utente utente,
+      @PathVariable(&quot;id&quot;) final Long id
+  ) {
+    try {
+<span class="fc" id="L88">      Itinerario itinerario = itinerariService.findById(id);</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">      if (!itinerario.getVisitatore().getId().equals(utente.getId())) {</span>
+<span class="fc" id="L90">        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, &quot;Itinerario non trovato&quot;);</span>
+      }
+<span class="fc" id="L92">      return ResponseGenerator.generateResponse(HttpStatus.OK,</span>
+<span class="fc" id="L93">          itinerariService.deleteItinerario(itinerario));</span>
+<span class="fc" id="L94">    } catch (Exception e) {</span>
+<span class="fc" id="L95">      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span>
+    }
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
