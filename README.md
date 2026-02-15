@@ -13,8 +13,7 @@ Questo fork è parte di tre differenti progetti (a.a. 2025/2026, Università deg
 
 Di seguito, sono elencati i partecipanti per ogni progetto precedentemente citato:
 
-|    Team Member    |ISTA| SD |SSE|
-|:-----------------:|:--:|:--:|:-:|
-|Gabriele Di Stefano|  x |  x | x |
-|  Roberta Galluzzo |  x |  x | x |
-| Francesco Pisaturo|  x |    |   |
+|     Team Member     | ISTA | SD | SSE |
+|:-------------------:|:----:|:--:|:---:|
+| Gabriele Di Stefano |  x   | x  |  x  |
+|  Roberta Galluzzo   |  x   | x  |  x  |
