@@ -143,11 +143,18 @@ class SegnalazioniControllerTest {
             .param("idAttivita", "1")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists());
 
     verify(attivitaService).findById(1L);
     verify(archiviazioneService).store(anyString(), eq(mockFile));
-    verify(segnalazioniService).saveSegnalazione(any(Segnalazione.class));
+    verify(segnalazioniService).saveSegnalazione(argThat(segnalazione ->
+        segnalazione.getUtente().equals(visitatore) &&
+            segnalazione.getDescrizione().equals("Attività non conforme") &&
+            segnalazione.getAttivita().equals(alloggio) &&
+            segnalazione.getMedia() != null &&
+            segnalazione.getDataSegnalazione() != null
+    ));
   }
 
   @Test
@@ -161,11 +168,18 @@ class SegnalazioniControllerTest {
             .param("idAttivita", "1")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists());
 
     verify(attivitaService).findById(1L);
     verify(archiviazioneService, never()).store(anyString(), any());
-    verify(segnalazioniService).saveSegnalazione(any(Segnalazione.class));
+    verify(segnalazioniService).saveSegnalazione(argThat(segnalazione ->
+        segnalazione.getUtente().equals(visitatore) &&
+            segnalazione.getDescrizione().equals("Attività non conforme") &&
+            segnalazione.getAttivita().equals(alloggio) &&
+            segnalazione.getMedia() == null &&
+            segnalazione.getDataSegnalazione() != null
+    ));
   }
 
   @Test
@@ -183,11 +197,18 @@ class SegnalazioniControllerTest {
             .param("idRecensione", "1")
             .with(user(gestore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists());
 
     verify(recensioneService).findById(1L);
     verify(archiviazioneService).store(anyString(), eq(mockFile));
-    verify(segnalazioniService).saveSegnalazione(any(Segnalazione.class));
+    verify(segnalazioniService).saveSegnalazione(argThat(segnalazione ->
+        segnalazione.getUtente().equals(gestore) &&
+            segnalazione.getDescrizione().equals("Recensione offensiva") &&
+            segnalazione.getRecensione().equals(recensione) &&
+            segnalazione.getMedia() != null &&
+            segnalazione.getDataSegnalazione() != null
+    ));
   }
 
   @Test
@@ -201,11 +222,18 @@ class SegnalazioniControllerTest {
             .param("idRecensione", "1")
             .with(user(gestore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists());
 
     verify(recensioneService).findById(1L);
     verify(archiviazioneService, never()).store(anyString(), any());
-    verify(segnalazioniService).saveSegnalazione(any(Segnalazione.class));
+    verify(segnalazioniService).saveSegnalazione(argThat(segnalazione ->
+        segnalazione.getUtente().equals(gestore) &&
+            segnalazione.getDescrizione().equals("Recensione offensiva") &&
+            segnalazione.getRecensione().equals(recensione) &&
+            segnalazione.getMedia() == null &&
+            segnalazione.getDataSegnalazione() != null
+    ));
   }
 
   @Test
@@ -263,7 +291,8 @@ class SegnalazioniControllerTest {
     mockMvc.perform(get("/api/segnalazioni/1")
             .with(user(amministratore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists());
 
     verify(segnalazioniService).findById(1L);
   }
@@ -291,7 +320,8 @@ class SegnalazioniControllerTest {
             .param("isForRecensione", "false")
             .with(user(amministratore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists());
 
     verify(segnalazioniService).getAllSegnalazioniByTipo(false);
   }
@@ -307,7 +337,8 @@ class SegnalazioniControllerTest {
             .param("isForRecensione", "true")
             .with(user(amministratore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists());
 
     verify(segnalazioniService).getAllSegnalazioniByTipo(true);
   }
@@ -321,10 +352,13 @@ class SegnalazioniControllerTest {
     mockMvc.perform(delete("/api/segnalazioni/1")
             .with(user(amministratore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists());
 
     verify(segnalazioniService).findById(1L);
-    verify(segnalazioniService).saveSegnalazione(any(Segnalazione.class));
+    verify(segnalazioniService).saveSegnalazione(argThat(segnalazione ->
+        segnalazione.getStato() == StatoSegnalazione.RISOLTA
+    ));
   }
 
   @Test
@@ -337,10 +371,13 @@ class SegnalazioniControllerTest {
             .param("chiarimenti", "Problema risolto")
             .with(user(amministratore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists());
 
     verify(segnalazioniService).findById(1L);
-    verify(segnalazioniService).saveSegnalazione(any(Segnalazione.class));
+    verify(segnalazioniService).saveSegnalazione(argThat(segnalazione ->
+        segnalazione.getStato() == StatoSegnalazione.RISOLTA
+    ));
   }
 
   @Test
