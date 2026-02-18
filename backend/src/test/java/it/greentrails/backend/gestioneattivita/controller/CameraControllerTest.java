@@ -93,7 +93,8 @@ class CameraControllerTest {
   @Test
   void testCreaCamera_Success() throws Exception {
     when(attivitaService.findById(1L)).thenReturn(alloggio);
-    when(cameraService.saveCamera(any(Camera.class))).thenReturn(camera);
+    when(cameraService.saveCamera(any(Camera.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
 
     mockMvc.perform(post("/api/camere")
             .param("idAlloggio", "1")
@@ -104,7 +105,13 @@ class CameraControllerTest {
             .param("prezzo", "100.0")
             .with(user(utente))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.alloggio.id").value(1))
+        .andExpect(jsonPath("$.data.tipoCamera").value("Doppia"))
+        .andExpect(jsonPath("$.data.disponibilita").value(10))
+        .andExpect(jsonPath("$.data.descrizione").value("Camera doppia con vista"))
+        .andExpect(jsonPath("$.data.capienza").value(2))
+        .andExpect(jsonPath("$.data.prezzo").value(100.0));
 
     verify(attivitaService).findById(1L);
     verify(cameraService).saveCamera(any(Camera.class));
@@ -177,7 +184,10 @@ class CameraControllerTest {
 
     mockMvc.perform(get("/api/camere/1")
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.id").value(1))
+        .andExpect(jsonPath("$.data.tipoCamera").value("Doppia"))
+        .andExpect(jsonPath("$.data.disponibilita").value(10));
 
     verify(cameraService).findById(1L);
   }
@@ -201,7 +211,10 @@ class CameraControllerTest {
 
     mockMvc.perform(get("/api/camere/perAlloggio/1")
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data[0].id").value(1))
+        .andExpect(jsonPath("$.data[0].tipoCamera").value("Doppia"));
 
     verify(attivitaService).findById(1L);
     verify(cameraService).getCamereByAlloggio(alloggio);
@@ -238,7 +251,8 @@ class CameraControllerTest {
     mockMvc.perform(delete("/api/camere/1")
             .with(user(utente))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").value(true));
 
     verify(cameraService).findById(1L);
     verify(cameraService).deleteCamera(camera);
