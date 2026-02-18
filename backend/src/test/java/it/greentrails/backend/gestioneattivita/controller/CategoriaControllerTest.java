@@ -83,15 +83,30 @@ class CategoriaControllerTest {
 
   @Test
   void testAggiungiCategoria_Success() throws Exception {
+    // Verifico che le categorie siano vuote all'inizio
+    alloggio.setCategorie(new LinkedHashSet<>());
+
     when(categoriaService.findById(1L)).thenReturn(categoria);
     when(attivitaService.findById(1L)).thenReturn(alloggio);
-    when(attivitaService.saveAttivita(any(Attivita.class))).thenReturn(alloggio);
+    when(attivitaService.saveAttivita(any(Attivita.class)))
+        .thenAnswer(invocation -> {
+          Attivita attivitaSalvata = invocation.getArgument(0);
+          // Verifico che la categoria sia stata aggiunta al Set
+          if (!attivitaSalvata.getCategorie().contains(categoria)) {
+            throw new AssertionError("La categoria non è stata aggiunta");
+          }
+          return attivitaSalvata;
+        });
 
     mockMvc.perform(post("/api/categorie/1")
             .param("idAttivita", "1")
             .with(user(utente))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.id").value(1))
+        .andExpect(jsonPath("$.data.categorie").isArray())
+        .andExpect(jsonPath("$.data.categorie[0].id").value(1))
+        .andExpect(jsonPath("$.data.categorie[0].nome").value("Relax e Benessere"));
 
     verify(categoriaService).findById(1L);
     verify(attivitaService).findById(1L);
@@ -139,7 +154,10 @@ class CategoriaControllerTest {
     mockMvc.perform(get("/api/categorie/1")
             .with(user(utente))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.id").value(1))
+        .andExpect(jsonPath("$.data.nome").value("Relax e Benessere"))
+        .andExpect(jsonPath("$.data.descrizione").value("Attività e alloggi per il relax e il benessere"));
 
     verify(categoriaService).findById(1L);
   }
@@ -164,13 +182,24 @@ class CategoriaControllerTest {
 
     when(categoriaService.findById(1L)).thenReturn(categoria);
     when(attivitaService.findById(1L)).thenReturn(alloggio);
-    when(attivitaService.saveAttivita(any(Attivita.class))).thenReturn(alloggio);
+    when(attivitaService.saveAttivita(any(Attivita.class)))
+        .thenAnswer(invocation -> {
+          Attivita attivitaSalvata = invocation.getArgument(0);
+          // Verifico che la categoria sia stata rimossa dal Set
+          if (attivitaSalvata.getCategorie().contains(categoria)) {
+            throw new AssertionError("La categoria non è stata rimossa");
+          }
+          return attivitaSalvata;
+        });
 
     mockMvc.perform(delete("/api/categorie/1")
             .param("idAttivita", "1")
             .with(user(utente))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.id").value(1))
+        .andExpect(jsonPath("$.data.categorie").isArray())
+        .andExpect(jsonPath("$.data.categorie").isEmpty());
 
     verify(categoriaService).findById(1L);
     verify(attivitaService).findById(1L);
