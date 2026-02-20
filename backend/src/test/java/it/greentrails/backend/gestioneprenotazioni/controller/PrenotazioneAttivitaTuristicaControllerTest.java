@@ -130,8 +130,6 @@ class PrenotazioneAttivitaTuristicaControllerTest {
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
 
-    assertTrue(result.getResponse().getContentAsString().contains("data"));
-
     verify(itinerariService).findById(1L);
     verify(attivitaService).findById(1L);
 
@@ -462,8 +460,6 @@ class PrenotazioneAttivitaTuristicaControllerTest {
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
 
-    assertTrue(result.getResponse().getContentAsString().contains("data"));
-
     verify(prenotazioneAttivitaTuristicaService).findById(1L);
 
     ArgumentCaptor<PrenotazioneAttivitaTuristica> captor = ArgumentCaptor.forClass(PrenotazioneAttivitaTuristica.class);
@@ -758,8 +754,6 @@ class PrenotazioneAttivitaTuristicaControllerTest {
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
 
-    assertTrue(result.getResponse().getContentAsString().contains("data"));
-
     verify(prenotazioneAttivitaTuristicaService).findById(1L);
   }
 
@@ -809,8 +803,6 @@ class PrenotazioneAttivitaTuristicaControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
-
-    assertTrue(result.getResponse().getContentAsString().contains("data"));
 
     verify(attivitaService).findById(1L);
     verify(prenotazioneAttivitaTuristicaService)
@@ -864,8 +856,6 @@ class PrenotazioneAttivitaTuristicaControllerTest {
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
 
-    assertTrue(result.getResponse().getContentAsString().contains("data"));
-
     verify(attivitaService).findById(1L);
     verify(prenotazioneAttivitaTuristicaService).controllaDisponibilitaAttivitaTuristica(
         eq(attivitaTuristica), any(Date.class));
@@ -900,8 +890,6 @@ class PrenotazioneAttivitaTuristicaControllerTest {
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
 
-    assertTrue(result.getResponse().getContentAsString().contains("data"));
-
     verify(prenotazioneAttivitaTuristicaService).getPrenotazioniByVisitatore(visitatore);
   }
 
@@ -932,8 +920,6 @@ class PrenotazioneAttivitaTuristicaControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
-
-    assertTrue(result.getResponse().getContentAsString().contains("data"));
 
     verify(prenotazioneAttivitaTuristicaService).findById(1L);
     verify(prenotazioneAttivitaTuristicaService)

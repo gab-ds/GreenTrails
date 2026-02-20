@@ -144,8 +144,6 @@ class PrenotazioneAlloggioControllerTest {
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
 
-    assertTrue(result.getResponse().getContentAsString().contains("data"));
-
     verify(itinerariService).findById(1L);
     verify(cameraService).findById(1L);
 
@@ -449,8 +447,6 @@ class PrenotazioneAlloggioControllerTest {
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
 
-    assertTrue(result.getResponse().getContentAsString().contains("data"));
-
     verify(prenotazioneAlloggioService).findById(1L);
 
     ArgumentCaptor<PrenotazioneAlloggio> captor = ArgumentCaptor.forClass(PrenotazioneAlloggio.class);
@@ -735,8 +731,6 @@ class PrenotazioneAlloggioControllerTest {
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
 
-    assertTrue(result.getResponse().getContentAsString().contains("data"));
-
     verify(prenotazioneAlloggioService).findById(1L);
   }
 
@@ -785,8 +779,6 @@ class PrenotazioneAlloggioControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
-
-    assertTrue(result.getResponse().getContentAsString().contains("data"));
 
     verify(attivitaService).findById(1L);
     verify(prenotazioneAlloggioService).getPrenotazioniByAlloggio(alloggio);
@@ -838,8 +830,6 @@ class PrenotazioneAlloggioControllerTest {
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
 
-    assertTrue(result.getResponse().getContentAsString().contains("data"));
-
     verify(attivitaService).findById(1L);
     verify(prenotazioneAlloggioService).controllaDisponibilitaAlloggio(eq(alloggio), any(Date.class), any(Date.class));
   }
@@ -873,8 +863,6 @@ class PrenotazioneAlloggioControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
-
-    assertTrue(result.getResponse().getContentAsString().contains("data"));
 
     verify(cameraService).findById(1L);
     verify(prenotazioneAlloggioService).controllaDisponibilitaCamera(eq(camera), any(Date.class), any(Date.class));
@@ -910,8 +898,6 @@ class PrenotazioneAlloggioControllerTest {
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
 
-    assertTrue(result.getResponse().getContentAsString().contains("data"));
-
     verify(prenotazioneAlloggioService).getPrenotazioniByVisitatore(visitatore);
   }
 
@@ -941,8 +927,6 @@ class PrenotazioneAlloggioControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
-
-    assertTrue(result.getResponse().getContentAsString().contains("data"));
 
     verify(prenotazioneAlloggioService).findById(1L);
     verify(prenotazioneAlloggioService).deletePrenotazioneAlloggio(prenotazioneAlloggio);
