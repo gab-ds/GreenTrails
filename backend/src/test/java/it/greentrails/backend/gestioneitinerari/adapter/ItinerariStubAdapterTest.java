@@ -127,7 +127,7 @@ class ItinerariStubAdapterTest {
       assertEquals(itinerarioSaved, p.getItinerario());
       assertNotNull(p.getDataInizio());
       assertEquals(1, p.getNumAdulti());
-      assertEquals(1, p.getNumBambini());
+      assertEquals(0, p.getNumBambini());
       assertEquals(p.getAttivitaTuristica().getPrezzo(), p.getPrezzo());
     }
 
@@ -146,7 +146,7 @@ class ItinerariStubAdapterTest {
       assertNotNull(p.getDataInizio());
       assertNotNull(p.getDataFine());
       assertEquals(1, p.getNumAdulti());
-      assertEquals(1, p.getNumBambini());
+      assertEquals(0, p.getNumBambini());
       assertEquals(1, p.getNumCamere());
       assertEquals(p.getCamera().getPrezzo(), p.getPrezzo());
     }
@@ -183,7 +183,7 @@ class ItinerariStubAdapterTest {
     assertEquals(2, prenotazioniAttivita.size());
     for (PrenotazioneAttivitaTuristica p : prenotazioniAttivita) {
       assertFalse(p.getAttivitaTuristica().isAlloggio());
-      assertEquals(1, p.getNumBambini());
+      assertEquals(0, p.getNumBambini());
       assertEquals(p.getAttivitaTuristica().getPrezzo(), p.getPrezzo());
     }
   }
@@ -216,7 +216,7 @@ class ItinerariStubAdapterTest {
     verify(prenotazioneAlloggioRepository, atLeast(1)).save(alloggioCaptor.capture());
 
     for (PrenotazioneAlloggio p : alloggioCaptor.getAllValues()) {
-      assertEquals(1, p.getNumBambini());
+      assertEquals(0, p.getNumBambini());
       assertEquals(p.getCamera().getPrezzo(), p.getPrezzo());
     }
   }
@@ -270,7 +270,7 @@ class ItinerariStubAdapterTest {
     verify(prenotazioneAlloggioRepository, atLeast(1)).save(alloggioCaptor.capture());
 
     for (PrenotazioneAlloggio p : alloggioCaptor.getAllValues()) {
-      assertEquals(1, p.getNumBambini());
+      assertEquals(0, p.getNumBambini());
       assertEquals(p.getCamera().getPrezzo(), p.getPrezzo());
     }
   }
@@ -328,7 +328,7 @@ class ItinerariStubAdapterTest {
     assertEquals(3, prenotazioniAttivita.size());
 
     for (PrenotazioneAttivitaTuristica p : prenotazioniAttivita) {
-      assertEquals(1, p.getNumBambini());
+      assertEquals(0, p.getNumBambini());
       assertEquals(p.getAttivitaTuristica().getPrezzo(), p.getPrezzo());
     }
   }
@@ -360,14 +360,14 @@ class ItinerariStubAdapterTest {
         ArgumentCaptor.forClass(PrenotazioneAttivitaTuristica.class);
     verify(prenotazioneAttivitaTuristicaRepository, atLeast(1)).save(captorAtt.capture());
     captorAtt.getAllValues().forEach(p ->
-        assertEquals(1, p.getNumBambini()));
+        assertEquals(0, p.getNumBambini()));
 
     // Verifica numBambini = 0 per tutte le prenotazioni alloggio
     ArgumentCaptor<PrenotazioneAlloggio> captorAll =
         ArgumentCaptor.forClass(PrenotazioneAlloggio.class);
     verify(prenotazioneAlloggioRepository, atLeast(1)).save(captorAll.capture());
     captorAll.getAllValues().forEach(p ->
-        assertEquals(1, p.getNumBambini()));
+        assertEquals(0, p.getNumBambini()));
   }
 
   @Test
