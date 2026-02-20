@@ -397,7 +397,7 @@ class PrenotazioneAlloggioControllerTest {
   }
 
   @Test
-  void testCreaPrenotazioneAlloggio_Durata25Ore() throws Exception {
+  void testCreaPrenotazioneAlloggio_Durata48Ore() throws Exception {
     when(itinerariService.findById(1L)).thenReturn(itinerario);
     when(cameraService.findById(1L)).thenReturn(camera);
     when(prenotazioneAlloggioService.controllaDisponibilitaCamera(eq(camera), any(Date.class), any(Date.class)))
@@ -697,7 +697,7 @@ class PrenotazioneAlloggioControllerTest {
   }
 
   @Test
-  void testConfermaPrenotazioneAlloggio_Durata25Ore() throws Exception {
+  void testConfermaPrenotazioneAlloggio_Durata48Ore() throws Exception {
     prenotazioneAlloggio.setStato(StatoPrenotazione.NON_CONFERMATA);
     when(prenotazioneAlloggioService.findById(1L)).thenReturn(prenotazioneAlloggio);
     when(prenotazioneAlloggioService.controllaDisponibilitaCamera(eq(camera), any(Date.class), any(Date.class)))
