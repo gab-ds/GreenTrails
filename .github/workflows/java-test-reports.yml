@@ -44,7 +44,7 @@ jobs:
       - name: Esegui test
         id: test
         continue-on-error: ${{ github.event_name != 'pull_request' }}
-        run: mvn test jacoco:report surefire-report:report pitest:mutationCoverage -DhistoryInputFile=target/pit-history/history.bin -DhistoryOutputFile=target/pit-history/history.bin -DmutationThreshold=80 --batch-mode -Dmaven.test.failure.ignore=true
+        run: mvn test jacoco:report surefire-report:report pitest:mutationCoverage -Dthreads=4 -DhistoryInputFile=target/pit-history/history.bin -DhistoryOutputFile=target/pit-history/history.bin -DmutationThreshold=80 --batch-mode -Dmaven.test.failure.ignore=true
       - name: Prepara cartella per pubblicazione su gh-pages
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         run: |
