@@ -33,16 +33,27 @@ jobs:
         with:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           path: ~/.m2/repository
+      - name: Cache PIT history
+        uses: actions/cache@v3
+        with:
+          key: ${{ runner.os }}-pit-history-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-pit-history-${{ github.ref_name }}-
+            ${{ runner.os }}-pit-history-
+          path: ./backend/target/pit-history
       - name: Esegui test
         id: test
-        run: mvn test jacoco:report surefire-report:report --batch-mode -Dmaven.test.failure.ignore=true
+        continue-on-error: ${{ github.event_name != 'pull_request' }}
+        run: mvn test jacoco:report surefire-report:report pitest:mutationCoverage -DhistoryInputFile=target/pit-history/history.bin -DhistoryOutputFile=target/pit-history/history.bin -DmutationThreshold=80 --batch-mode -Dmaven.test.failure.ignore=true
       - name: Prepara cartella per pubblicazione su gh-pages
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         run: |
           mkdir -p ../public/surefire
           mkdir -p ../public/jacoco
+          mkdir -p ../public/pit
           cp -r ./target/reports/* ../public/surefire/
           cp -r ./target/site/jacoco/* ../public/jacoco/
+          cp -r ./target/pit-reports/* ../public/pit/
       - name: Carica report test su gh-pages
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         uses: peaceiris/actions-gh-pages@v4
@@ -59,6 +70,7 @@ jobs:
           path: |
             ./backend/target/site/jacoco/
             ./backend/target/reports/
+            ./backend/target/pit-reports/
           retention-days: 30
       - name: Pubblica Test Report
         if: success() || failure()
@@ -76,7 +88,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           skip_check_run: false
           minimum_coverage: 80
-          fail_below_threshold: false
+          fail_below_threshold: ${{ github.event_name == 'pull_request' }}
           publish_only_summary: false
       - name: Aggiungi report JaCoCo al workflow summary
         if: steps.jacoco_reporter.outcome == 'success'
