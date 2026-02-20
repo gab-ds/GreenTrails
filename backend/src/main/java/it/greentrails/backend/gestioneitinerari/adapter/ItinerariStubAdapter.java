@@ -43,7 +43,7 @@ public class ItinerariStubAdapter implements ItinerariAdapter {
       p.setItinerario(itinerarioFinal);
       p.setDataInizio(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)));
       p.setNumAdulti(1);
-      p.setNumBambini(0);
+      p.setNumBambini(1);
       p.setPrezzo(a.getPrezzo());
       prenotazioneAttivitaTuristicaRepository.save(p);
     });
@@ -56,7 +56,7 @@ public class ItinerariStubAdapter implements ItinerariAdapter {
       p.setDataInizio(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)));
       p.setDataFine(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
       p.setNumAdulti(1);
-      p.setNumBambini(0);
+      p.setNumBambini(1);
       p.setNumCamere(1);
       p.setPrezzo(c.getPrezzo());
       prenotazioneAlloggioRepository.save(p);
