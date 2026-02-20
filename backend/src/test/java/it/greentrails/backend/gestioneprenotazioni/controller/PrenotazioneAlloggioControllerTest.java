@@ -144,7 +144,6 @@ class PrenotazioneAlloggioControllerTest {
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
 
-    assertNotNull(result.getResponse().getContentAsString());
     assertTrue(result.getResponse().getContentAsString().contains("data"));
 
     verify(itinerariService).findById(1L);
@@ -450,7 +449,6 @@ class PrenotazioneAlloggioControllerTest {
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
 
-    assertNotNull(result.getResponse().getContentAsString());
     assertTrue(result.getResponse().getContentAsString().contains("data"));
 
     verify(prenotazioneAlloggioService).findById(1L);
@@ -737,7 +735,6 @@ class PrenotazioneAlloggioControllerTest {
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
 
-    assertNotNull(result.getResponse().getContentAsString());
     assertTrue(result.getResponse().getContentAsString().contains("data"));
 
     verify(prenotazioneAlloggioService).findById(1L);
@@ -789,7 +786,6 @@ class PrenotazioneAlloggioControllerTest {
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
 
-    assertNotNull(result.getResponse().getContentAsString());
     assertTrue(result.getResponse().getContentAsString().contains("data"));
 
     verify(attivitaService).findById(1L);
@@ -842,7 +838,6 @@ class PrenotazioneAlloggioControllerTest {
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
 
-    assertNotNull(result.getResponse().getContentAsString());
     assertTrue(result.getResponse().getContentAsString().contains("data"));
 
     verify(attivitaService).findById(1L);
@@ -879,7 +874,6 @@ class PrenotazioneAlloggioControllerTest {
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
 
-    assertNotNull(result.getResponse().getContentAsString());
     assertTrue(result.getResponse().getContentAsString().contains("data"));
 
     verify(cameraService).findById(1L);
@@ -916,7 +910,6 @@ class PrenotazioneAlloggioControllerTest {
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
 
-    assertNotNull(result.getResponse().getContentAsString());
     assertTrue(result.getResponse().getContentAsString().contains("data"));
 
     verify(prenotazioneAlloggioService).getPrenotazioniByVisitatore(visitatore);
@@ -949,7 +942,6 @@ class PrenotazioneAlloggioControllerTest {
         .andExpect(jsonPath("$.data").exists())
         .andReturn();
 
-    assertNotNull(result.getResponse().getContentAsString());
     assertTrue(result.getResponse().getContentAsString().contains("data"));
 
     verify(prenotazioneAlloggioService).findById(1L);
