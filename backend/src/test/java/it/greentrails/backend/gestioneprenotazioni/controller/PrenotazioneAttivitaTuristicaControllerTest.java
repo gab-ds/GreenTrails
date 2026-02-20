@@ -479,7 +479,6 @@ class PrenotazioneAttivitaTuristicaControllerTest {
     assertNotNull(captured.getDataFine());
     assertEquals(StatoPrenotazione.CREATA, captured.getStato());
     assertEquals(100.0, captured.getPrezzo(), 0.01);
-    assertEquals(100.0, captured.getPrezzo(), 0.01);
   }
 
   @Test
