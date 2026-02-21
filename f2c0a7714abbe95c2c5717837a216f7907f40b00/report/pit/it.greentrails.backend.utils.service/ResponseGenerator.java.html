@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>ResponseGenerator.java</h1>
+
+<table class="src">
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package it.greentrails.backend.utils.service;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.HashMap;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.Map;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.http.HttpStatus;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.http.ResponseEntity;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>public class ResponseGenerator {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>  private ResponseGenerator() {</span></pre></td></tr>
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public static ResponseEntity&#60;Object&#62; generateResponse(final HttpStatus statusCode,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      final Object response) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    Map&#60;String, Object&#62; responseMap = new HashMap&#60;&#62;();</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_16'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    String message;</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_17'/>
+17
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_17'>1</a>
+<span>
+1. generateResponse : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (statusCode.isError()) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_18'/>
+18
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_18'>1</a>
+<span>
+1. generateResponse : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      if (statusCode.is4xxClientError()) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_19'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        responseMap.put(&#34;data&#34;, response);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_20'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        message = &#34;failure&#34;;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      } else {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_22'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        responseMap.put(&#34;error&#34;, response.toString());</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_23'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        message = &#34;error&#34;;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_24'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    } else {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_26'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      responseMap.put(&#34;data&#34;, response);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_27'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      message = &#34;success&#34;;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_28'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_29'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    responseMap.put(&#34;status&#34;, message);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_30'/>
+30
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_30'>1</a>
+<span>
+1. generateResponse : replaced return value with null for it/greentrails/backend/utils/service/ResponseGenerator::generateResponse &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return new ResponseEntity&#60;&#62;(responseMap, statusCode);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_31'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58f7ba29_32'/>
+32
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_32'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58f7ba29_17'>17</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_17'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>generateResponse<br/><b>Killed by : </b>it.greentrails.backend.utils.service.ResponseGeneratorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.service.ResponseGeneratorTest]/[method:testGenerateResponse_ClientError_BadRequest()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58f7ba29_18'>18</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_18'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>generateResponse<br/><b>Killed by : </b>it.greentrails.backend.utils.service.ResponseGeneratorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.service.ResponseGeneratorTest]/[method:testGenerateResponse_ClientError_BadRequest()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58f7ba29_30'>30</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58f7ba29_30'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>generateResponse<br/><b>Killed by : </b>it.greentrails.backend.utils.service.ResponseGeneratorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.service.ResponseGeneratorTest]/[method:testGenerateResponse_ClientError_BadRequest()]</span></span> replaced return value with null for it/greentrails/backend/utils/service/ResponseGenerator::generateResponse &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+<li class='mutator'>CONDITIONALS_BOUNDARY</li>
+<li class='mutator'>EMPTY_RETURNS</li>
+<li class='mutator'>FALSE_RETURNS</li>
+<li class='mutator'>INCREMENTS</li>
+<li class='mutator'>INVERT_NEGS</li>
+<li class='mutator'>MATH</li>
+<li class='mutator'>NEGATE_CONDITIONALS</li>
+<li class='mutator'>NULL_RETURNS</li>
+<li class='mutator'>PRIMITIVE_RETURNS</li>
+<li class='mutator'>TRUE_RETURNS</li>
+<li class='mutator'>VOID_METHOD_CALLS</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>it.greentrails.backend.utils.service.ResponseGeneratorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.service.ResponseGeneratorTest]/[method:testGenerateResponse_ClientError_BadRequest()] (0 ms)</li><li>it.greentrails.backend.utils.service.ResponseGeneratorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.service.ResponseGeneratorTest]/[method:testGenerateResponse_ServerError_ServiceUnavailable()] (0 ms)</li><li>it.greentrails.backend.utils.service.ResponseGeneratorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.service.ResponseGeneratorTest]/[method:testGenerateResponse_ClientError_NotFound()] (0 ms)</li><li>it.greentrails.backend.utils.service.ResponseGeneratorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.service.ResponseGeneratorTest]/[method:testGenerateResponse_ClientError_Conflict()] (0 ms)</li><li>it.greentrails.backend.utils.service.ResponseGeneratorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.service.ResponseGeneratorTest]/[method:testGenerateResponse_ServerError_InternalServerError()] (0 ms)</li><li>it.greentrails.backend.gestioneitinerari.controller.ItinerariControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.controller.ItinerariControllerTest]/[method:testGeneraItinerario_Exception()] (5 ms)</li><li>it.greentrails.backend.gestioneutenze.controller.GestioneUtenzeControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneutenze.controller.GestioneUtenzeControllerTest]/[method:testVisualizzaInfo_UtenteNonTrovato()] (3 ms)</li><li>it.greentrails.backend.gestioneutenze.controller.GestioneUtenzeControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneutenze.controller.GestioneUtenzeControllerTest]/[method:testVisualizzaPreferenze_Exception()] (3 ms)</li><li>it.greentrails.backend.gestioneutenze.controller.GestioneUtenzeControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneutenze.controller.GestioneUtenzeControllerTest]/[method:testRegistrazione_UtenteGiaEsistente()] (4 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testVisualizzaPrenotazioniAttivitaTuristicaPerAttivita_Exception()] (4 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_NonAutorizzato()] (3 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testVisualizzaPrenotazioneAttivitaTuristica_Exception()] (4 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest]/[method:testCreaRecensione_Exception()] (4 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest]/[method:testVisualizzaRecensione_Exception()] (4 ms)</li><li>it.greentrails.backend.gestioneutenze.controller.GestioneUtenzeControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneutenze.controller.GestioneUtenzeControllerTest]/[method:testCompilaQuestionario_Exception()] (3 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest]/[method:testVisualizzaValoriEcosostenibilita_Exception()] (4 ms)</li><li>it.greentrails.backend.gestioneitinerari.controller.ItinerariControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.controller.ItinerariControllerTest]/[method:testVisualizzaItinerario_Exception()] (7 ms)</li><li>it.greentrails.backend.gestioneitinerari.controller.ItinerariControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.controller.ItinerariControllerTest]/[method:testCancellaItinerario_Exception()] (7 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testVisualizzaPrenotazioneAttivitaTuristica_PrenotazioneNonTrovata()] (3 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testConfermaPrenotazioneAttivitaTuristica_Exception()] (4 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_NonAutorizzato()] (4 ms)</li><li>it.greentrails.backend.gestioneitinerari.controller.ItinerariControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.controller.ItinerariControllerTest]/[method:testCreaItinerario_Exception()] (7 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest]/[method:testCancellaRecensione_AltroUtente_Forbidden()] (4 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest]/[method:testCancellaRecensione_Exception()] (5 ms)</li><li>it.greentrails.backend.gestioneitinerari.controller.ItinerariControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.controller.ItinerariControllerTest]/[method:testCancellaItinerario_AltroUtente_NotFound()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioneAlloggio_Exception()] (4 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testCreaPrenotazioneAttivitaTuristica_Exception()] (4 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.CategoriaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.CategoriaControllerTest]/[method:testAggiungiCategoria_Exception()] (6 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest]/[method:testVisualizzaRecensioniPerAttivita_Exception()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testConfermaPrenotazioneAttivitaTuristica_PrenotazioneNonTrovata()] (4 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest]/[method:testModificaValoriEcosostenibilita_AttivitaNonTrovata_NotFound()] (4 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCancellaPrenotazioneAlloggio_Exception()] (3 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testVisualizzaPrenotazioniAttivitaTuristicaPerVisitatore_Exception()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioniAlloggioPerAttivita_AlloggioNonTrovato()] (3 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioniAlloggioPerVisitatore_Exception()] (5 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.CameraControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.CameraControllerTest]/[method:testCreaCamera_Exception()] (6 ms)</li><li>it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest]/[method:testChiudiSegnalazione_Exception()] (4 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.CategoriaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.CategoriaControllerTest]/[method:testRimuoviCategoria_Exception()] (7 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioneAlloggio_PrenotazioneNonTrovata()] (4 ms)</li><li>it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest]/[method:testCreaSegnalazione_Visitatore_SenzaIdAttivita_BadRequest()] (3 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testVisualizzaDisponibilitaPerAttivitaTuristica_Exception()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testCancellaPrenotazioneAttivitaTuristica_PrenotazioneNonTrovata()] (4 ms)</li><li>it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest]/[method:testVisualizzaSegnalazione_Exception()] (4 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_Exception()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testCancellaPrenotazioneAttivitaTuristica_Exception()] (5 ms)</li><li>it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest]/[method:testCreaSegnalazione_Amministratore_BadRequest()] (3 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_MediaNonEsiste()] (3 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaDisponibilitaPerAlloggio_Exception()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testCreaPrenotazioneAttivitaTuristica_ItinerarioNonTrovato()] (4 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest]/[method:testModificaValoriEcosostenibilita_Exception()] (6 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.CameraControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.CameraControllerTest]/[method:testVisualizzaCamerePerAlloggio_Exception()] (7 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.CameraControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.CameraControllerTest]/[method:testCreaCamera_NonAlloggio()] (5 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.CategoriaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.CategoriaControllerTest]/[method:testAggiungiCategoria_AttivitaNonTrovata()] (6 ms)</li><li>it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest]/[method:testCreaSegnalazione_Exception()] (4 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.CameraControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.CameraControllerTest]/[method:testVisualizzaCamerePerAlloggio_NonAlloggio()] (7 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioniAlloggioPerAttivita_Exception()] (6 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCancellaAttivita_Exception()] (7 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.CameraControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.CameraControllerTest]/[method:testCancellaCamera_CameraNonTrovata()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_PrenotazioneNonModificabile()] (4 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCancellaAttivita_GestoreDiverso()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testCreaPrenotazioneAttivitaTuristica_AttivitaEAlloggio()] (4 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_MediaNonEsiste()] (4 ms)</li><li>it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest]/[method:testCreaSegnalazione_Gestore_SenzaIdRecensione_BadRequest()] (4 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.CameraControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.CameraControllerTest]/[method:testCreaCamera_AlloggioNonTrovato()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testConfermaPrenotazioneAttivitaTuristica_AttivitaNonDisponibile()] (4 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_PrenotazioneNonTrovata()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCancellaPrenotazioneAlloggio_PrenotazioneNonTrovata()] (4 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_ItinerarioNonTrovato()] (4 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testVisualizzaAttivita_Exception()] (8 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.CategoriaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.CategoriaControllerTest]/[method:testRimuoviCategoria_AttivitaNonTrovata()] (7 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testCreaPrenotazioneAttivitaTuristica_AttivitaNonDisponibile()] (4 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_CapienzaNonSufficiente()] (5 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest]/[method:testModificaValoriEcosostenibilita_AltroGestore_NotFound()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testConfermaPrenotazioneAttivitaTuristica_PrenotazioneNonModificabile()] (7 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_CameraNonDisponibile()] (4 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testConfermaPrenotazioneAttivitaTuristica_DataFineAntecedente()] (5 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivita_GestoreDiverso()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaDisponibilitaPerCamera_Exception()] (8 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_CapienzaNonSufficiente()] (6 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivitaTuristica_SenzaCategoria()] (5 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_SenzaDisponibilita()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testCreaPrenotazioneAttivitaTuristica_DataFineAntecedente()] (6 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivita_ValoriException()] (6 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivita_ValoriNotFound()] (7 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.CameraControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.CameraControllerTest]/[method:testVisualizzaCamera_Exception()] (12 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_Exception()] (10 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_CameraNonDisponibile()] (6 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivitaTuristica_SenzaDisponibilita()] (7 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivita_AttivitaEliminata()] (9 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivitaTuristica_SenzaPrezzo()] (8 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testVisualizzaAttivitaPerGestore_Exception()] (13 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAlloggio_SenzaCategoria()] (8 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivita_SaveException()] (8 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAlloggio_SenzaCategoria()] (9 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivita_Exception()] (12 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivita_ArchiviazioneException()] (10 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivita_Exception()] (16 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_SenzaCategoria()] (11 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivita_SaveException()] (12 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testVisualizzaPrenotazioniAttivitaTuristicaPerAttivita_AttivitaNonTrovata()] (12 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.CameraControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.CameraControllerTest]/[method:testCancellaCamera_Exception()] (14 ms)</li><li>it.greentrails.backend.gestioneitinerari.controller.ItinerariControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.controller.ItinerariControllerTest]/[method:testVisualizzaItinerario_AltroUtente_NotFound()] (17 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.CategoriaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.CategoriaControllerTest]/[method:testVisualizzaCategoria_Exception()] (22 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest]/[method:testCreaValoriEcosostenibilita_Exception()] (23 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_SenzaPrezzo()] (158 ms)</li><li>it.greentrails.backend.utils.service.ResponseGeneratorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.service.ResponseGeneratorTest]/[method:testGenerateResponse_Success_NoContent()] (0 ms)</li><li>it.greentrails.backend.utils.service.ResponseGeneratorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.service.ResponseGeneratorTest]/[method:testGenerateResponse_Success_WithCreated()] (0 ms)</li><li>it.greentrails.backend.utils.service.ResponseGeneratorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.service.ResponseGeneratorTest]/[method:testGenerateResponse_Success_WithData()] (0 ms)</li><li>it.greentrails.backend.utils.service.ResponseGeneratorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.service.ResponseGeneratorTest]/[method:testGenerateResponse_Success_WithComplexObject()] (0 ms)</li><li>it.greentrails.backend.gestioneutenze.controller.GestioneUtenzeControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneutenze.controller.GestioneUtenzeControllerTest]/[method:testVisualizzaInfo_Success()] (3 ms)</li><li>it.greentrails.backend.gestioneutenze.controller.GestioneUtenzeControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneutenze.controller.GestioneUtenzeControllerTest]/[method:testVisualizzaPreferenze_Success()] (3 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_Amministratore()] (4 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testElencaFileCaricati_MediaVuoto()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testVisualizzaPrenotazioniAttivitaTuristicaPerVisitatore_Success()] (3 ms)</li><li>it.greentrails.backend.gestionericerca.controller.RicercaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.controller.RicercaControllerTest]/[method:testCerca_SoloQuery()] (4 ms)</li><li>it.greentrails.backend.gestionericerca.controller.RicercaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.controller.RicercaControllerTest]/[method:testCerca_NessunRisultato()] (4 ms)</li><li>it.greentrails.backend.gestionericerca.controller.RicercaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.controller.RicercaControllerTest]/[method:testCercaPerPosizione_NessunRisultato()] (3 ms)</li><li>it.greentrails.backend.gestioneitinerari.controller.ItinerariControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.controller.ItinerariControllerTest]/[method:testCancellaItinerario_Success()] (5 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest]/[method:testVisualizzaRecensione_Success()] (4 ms)</li><li>it.greentrails.backend.gestioneutenze.controller.GestioneUtenzeControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneutenze.controller.GestioneUtenzeControllerTest]/[method:testRegistrazione_GestoreSuccess()] (4 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testVisualizzaPrenotazioneAttivitaTuristica_Success()] (4 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.CameraControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.CameraControllerTest]/[method:testVisualizzaCamera_Success()] (5 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_AttivitaProprietario()] (4 ms)</li><li>it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest]/[method:testVisualizzaSegnalazioniPerTipo_Attivita_Success()] (3 ms)</li><li>it.greentrails.backend.gestionericerca.controller.RicercaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.controller.RicercaControllerTest]/[method:testCercaPerPosizione_Success()] (4 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.CameraControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.CameraControllerTest]/[method:testCancellaCamera_Success()] (5 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest]/[method:testCancellaRecensione_ProprioUtente_Success()] (5 ms)</li><li>it.greentrails.backend.gestionericerca.controller.RicercaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.controller.RicercaControllerTest]/[method:testCerca_CategorieVuote()] (5 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testGetAlloggi_ConLimite()] (5 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testVisualizzaAttivita_Success()] (6 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_AttivitaProprietario()] (4 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_RecensioneProprietario()] (3 ms)</li><li>it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest]/[method:testVisualizzaSegnalazioniPerTipo_Recensioni_Success()] (4 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioniAlloggioPerAttivita_Success()] (4 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testVisualizzaDisponibilitaPerAttivitaTuristica_Success()] (4 ms)</li><li>it.greentrails.backend.gestionericerca.controller.RicercaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.controller.RicercaControllerTest]/[method:testCercaPerPosizione_CategorieVuote()] (4 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_RecensioneProprietario()] (4 ms)</li><li>it.greentrails.backend.gestioneutenze.controller.GestioneUtenzeControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneutenze.controller.GestioneUtenzeControllerTest]/[method:testCompilaQuestionario_NuovePreferenze()] (4 ms)</li><li>it.greentrails.backend.gestioneitinerari.controller.ItinerariControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.controller.ItinerariControllerTest]/[method:testVisualizzaItinerario_Success()] (6 ms)</li><li>it.greentrails.backend.gestionericerca.controller.RicercaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.controller.RicercaControllerTest]/[method:testCercaPerPosizione_CoordinateDecimali()] (5 ms)</li><li>it.greentrails.backend.gestionericerca.controller.RicercaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.controller.RicercaControllerTest]/[method:testCercaPerPosizione_RaggioGrande()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioniAlloggioPerVisitatore_Success()] (5 ms)</li><li>it.greentrails.backend.gestionericerca.controller.RicercaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.controller.RicercaControllerTest]/[method:testCerca_SoloPosizioneSenzaRaggio()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testVisualizzaPrenotazioniAttivitaTuristicaPerAttivita_Success()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioneAlloggio_Success()] (6 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testGetAttivitaTuristiche_SenzaLimite()] (6 ms)</li><li>it.greentrails.backend.gestionericerca.controller.RicercaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.controller.RicercaControllerTest]/[method:testCerca_ConPosizione()] (4 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest]/[method:testCancellaRecensione_Amministratore_Success()] (5 ms)</li><li>it.greentrails.backend.gestionericerca.controller.RicercaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.controller.RicercaControllerTest]/[method:testCerca_QueryVuota()] (7 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testGetAttivitaTuristiche_ConLimite()] (6 ms)</li><li>it.greentrails.backend.gestioneitinerari.controller.ItinerariControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.controller.ItinerariControllerTest]/[method:testCreaItinerario_Success()] (10 ms)</li><li>it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest]/[method:testVisualizzaSegnalazione_Success()] (6 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testVisualizzaAttivitaPerPrezzo_ConLimite()] (7 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_SegnalazioneProprietario()] (5 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testVisualizzaAttivitaPerGestore_Success()] (7 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testGetAlloggi_SenzaLimite()] (7 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_SegnalazioneProprietario()] (4 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaDisponibilitaPerCamera_Success()] (5 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.CameraControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.CameraControllerTest]/[method:testVisualizzaCamerePerAlloggio_Success()] (7 ms)</li><li>it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest]/[method:testChiudiSegnalazione_Success()] (4 ms)</li><li>it.greentrails.backend.gestionericerca.controller.RicercaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.controller.RicercaControllerTest]/[method:testCercaPerPosizione_ConUnaSolaCategoria()] (4 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaDisponibilitaPerAlloggio_Success()] (6 ms)</li><li>it.greentrails.backend.gestionericerca.controller.RicercaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.controller.RicercaControllerTest]/[method:testCerca_ConUnaSolaCategoria()] (5 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest]/[method:testCreaRecensione_ConImmagineVuota_Success()] (4 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCancellaPrenotazioneAlloggio_Success()] (4 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testVisualizzaAttivitaPerPrezzo_SenzaLimite()] (8 ms)</li><li>it.greentrails.backend.gestionericerca.controller.RicercaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.controller.RicercaControllerTest]/[method:testCerca_ConCategorie()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testCancellaPrenotazioneAttivitaTuristica_Success()] (5 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest]/[method:testCreaValoriEcosostenibilita_TuttiNull_Success()] (8 ms)</li><li>it.greentrails.backend.gestionericerca.controller.RicercaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.controller.RicercaControllerTest]/[method:testCercaPerPosizione_ConCategorie()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testConfermaPrenotazioneAttivitaTuristica_SenzaNumBambini()] (4 ms)</li><li>it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest]/[method:testChiudiSegnalazione_ConChiarimenti_Success()] (6 ms)</li><li>it.greentrails.backend.gestionericerca.controller.RicercaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.controller.RicercaControllerTest]/[method:testCercaPerPosizione_ConPiuCategorie()] (5 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.CategoriaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.CategoriaControllerTest]/[method:testRimuoviCategoria_Success()] (7 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCancellaAttivita_Success()] (8 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testConfermaPrenotazioneAttivitaTuristica_SenzaDataFine()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testCreaPrenotazioneAttivitaTuristica_SenzaDataFine()] (5 ms)</li><li>it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest]/[method:testCreaSegnalazioneAttivita_Visitatore_SenzaImmagine_Success()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testCreaPrenotazioneAttivitaTuristica_SenzaNumBambini()] (4 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testConfermaPrenotazioneAttivitaTuristica_Durata48Ore()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testConfermaPrenotazioneAttivitaTuristica_DurataPiuDi24Ore()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_CapienzaEsatta()] (3 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_DisponibilitaEsattaAlLimite()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testCreaPrenotazioneAttivitaTuristica_DurataPiuDi24Ore()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testCreaPrenotazioneAttivitaTuristica_DisponibilitaEsatta()] (5 ms)</li><li>it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest]/[method:testCreaSegnalazioneAttivita_Visitatore_ConImmagine_Success()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_CapienzaEsatta()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_MultipleCamera()] (4 ms)</li><li>it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest]/[method:testCreaSegnalazioneRecensione_Gestore_ConImmagine_Success()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testCreaPrenotazioneAttivitaTuristica_ConBambini()] (5 ms)</li><li>it.greentrails.backend.gestioneutenze.controller.GestioneUtenzeControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneutenze.controller.GestioneUtenzeControllerTest]/[method:testCompilaQuestionario_AggiornaPreferenzeEsistenti()] (9 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testConfermaPrenotazioneAttivitaTuristica_ConBambini()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_SenzaNumBambini()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_Durata48Ore()] (5 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest]/[method:testCreaValoriEcosostenibilita_Success()] (10 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testConfermaPrenotazioneAttivitaTuristica_DisponibilitaEsatta()] (7 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_Success()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_Durata48Ore()] (7 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_DurataPiuDi24Ore()] (6 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.CategoriaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.CategoriaControllerTest]/[method:testVisualizzaCategoria_Success()] (16 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testConfermaPrenotazioneAttivitaTuristica_Success()] (7 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testCreaPrenotazioneAttivitaTuristica_Success()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_SenzaNumBambini()] (7 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testElencaFileCaricati_Success()] (16 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_MultipleCamera()] (9 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest]/[method:testModificaValoriEcosostenibilita_Amministratore_Success()] (10 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_DurataPiuDi24Ore()] (8 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest]/[method:testCreaRecensione_SenzaImmagine_Success()] (10 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_Success()] (7 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest]/[method:testModificaValoriEcosostenibilita_CambioValoriSpecifici_Success()] (10 ms)</li><li>it.greentrails.backend.gestioneitinerari.controller.ItinerariControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.controller.ItinerariControllerTest]/[method:testGeneraItinerario_Success()] (20 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest]/[method:testModificaValoriEcosostenibilita_ProprioGestore_Success()] (15 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivitaTuristica_Success()] (10 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_Amministratore()] (7 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAlloggio_Success()] (13 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest]/[method:testCreaRecensione_ConImmagine_Success()] (18 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_Success()] (13 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.CameraControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.CameraControllerTest]/[method:testCreaCamera_Success()] (22 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAlloggio_Success()] (18 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAttivitaTuristicaControllerTest]/[method:testCreaPrenotazioneAttivitaTuristica_Durata48Ore()] (22 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.CategoriaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.CategoriaControllerTest]/[method:testAggiungiCategoria_Success()] (27 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.ValoriEcosostenibilitaControllerTest]/[method:testVisualizzaValoriEcosostenibilita_Success()] (29 ms)</li><li>it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionesegnalazioni.controller.SegnalazioniControllerTest]/[method:testCreaSegnalazioneRecensione_Gestore_SenzaImmagine_Success()] (20 ms)</li><li>it.greentrails.backend.gestionericerca.controller.RicercaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.controller.RicercaControllerTest]/[method:testCerca_ConCategorieEPosizione()] (21 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.RecensioneControllerTest]/[method:testVisualizzaRecensioniPerAttivita_Success()] (28 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_DisponibilitaEsattaAlLimite()] (26 ms)</li><li>it.greentrails.backend.gestioneutenze.controller.GestioneUtenzeControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneutenze.controller.GestioneUtenzeControllerTest]/[method:testRegistrazione_VisitatorSuccess()] (41 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testFindAll()] (83 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='https://pitest.org'>PIT</a> 1.22.1
+
+</body>
+</html>
