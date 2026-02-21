@@ -92,17 +92,37 @@ public class CategoriaServiceImplTest {
     Categoria categoria = new Categoria();
     categoria.setId(1L);
 
-    // dopo la cancellazione il repository non deve trovare più l'entità
-    when(categoriaRepository.findById(1L)).thenReturn(java.util.Optional.empty());
+    // configura il mock per restituire empty quando viene chiamato findById
+    // (simulando che la categoria è stata cancellata con successo)
+    when(categoriaRepository.findById(1L))
+        .thenReturn(java.util.Optional.empty());
 
     boolean result = categoriaService.deleteCategoria(categoria);
 
     assertTrue(result);
+
+    // verifica che delete e flush siano stati chiamati
+    org.mockito.Mockito.verify(categoriaRepository).delete(categoria);
+    org.mockito.Mockito.verify(categoriaRepository).flush();
   }
 
   @Test
   void deleteCategoriaNullCategoriaExceptionThrown() {
     assertThrows(Exception.class, () -> categoriaService.deleteCategoria(null));
+  }
+
+  @Test
+  void deleteCategoriaFailureReturnsFalse() throws Exception {
+    Categoria categoria = new Categoria();
+    categoria.setId(1L);
+
+    // simula che l'entità non venga cancellata (ancora presente dopo delete/flush)
+    when(categoriaRepository.findById(1L))
+        .thenReturn(java.util.Optional.of(categoria));
+
+    boolean result = categoriaService.deleteCategoria(categoria);
+
+    assertFalse(result);
   }
 
   @Test

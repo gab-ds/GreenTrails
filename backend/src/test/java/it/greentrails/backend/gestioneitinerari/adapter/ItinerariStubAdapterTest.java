@@ -128,6 +128,7 @@ class ItinerariStubAdapterTest {
       assertNotNull(p.getDataInizio());
       assertEquals(1, p.getNumAdulti());
       assertEquals(0, p.getNumBambini());
+      assertEquals(p.getAttivitaTuristica().getPrezzo(), p.getPrezzo());
     }
 
     // Verifica che sia stata creata una prenotazione alloggio
@@ -147,6 +148,7 @@ class ItinerariStubAdapterTest {
       assertEquals(1, p.getNumAdulti());
       assertEquals(0, p.getNumBambini());
       assertEquals(1, p.getNumCamere());
+      assertEquals(p.getCamera().getPrezzo(), p.getPrezzo());
     }
   }
 
@@ -181,6 +183,8 @@ class ItinerariStubAdapterTest {
     assertEquals(2, prenotazioniAttivita.size());
     for (PrenotazioneAttivitaTuristica p : prenotazioniAttivita) {
       assertFalse(p.getAttivitaTuristica().isAlloggio());
+      assertEquals(0, p.getNumBambini());
+      assertEquals(p.getAttivitaTuristica().getPrezzo(), p.getPrezzo());
     }
   }
 
@@ -207,7 +211,14 @@ class ItinerariStubAdapterTest {
     verify(prenotazioneAttivitaTuristicaRepository, never()).save(any());
 
     // Deve essere creata una prenotazione alloggio
-    verify(prenotazioneAlloggioRepository, atLeast(1)).save(any(PrenotazioneAlloggio.class));
+    ArgumentCaptor<PrenotazioneAlloggio> alloggioCaptor =
+        ArgumentCaptor.forClass(PrenotazioneAlloggio.class);
+    verify(prenotazioneAlloggioRepository, atLeast(1)).save(alloggioCaptor.capture());
+
+    for (PrenotazioneAlloggio p : alloggioCaptor.getAllValues()) {
+      assertEquals(0, p.getNumBambini());
+      assertEquals(p.getCamera().getPrezzo(), p.getPrezzo());
+    }
   }
 
   @Test
@@ -254,7 +265,14 @@ class ItinerariStubAdapterTest {
     verify(prenotazioneAttivitaTuristicaRepository, never()).save(any());
 
     // Deve essere creata una prenotazione alloggio
-    verify(prenotazioneAlloggioRepository, atLeast(1)).save(any(PrenotazioneAlloggio.class));
+    ArgumentCaptor<PrenotazioneAlloggio> alloggioCaptor =
+        ArgumentCaptor.forClass(PrenotazioneAlloggio.class);
+    verify(prenotazioneAlloggioRepository, atLeast(1)).save(alloggioCaptor.capture());
+
+    for (PrenotazioneAlloggio p : alloggioCaptor.getAllValues()) {
+      assertEquals(0, p.getNumBambini());
+      assertEquals(p.getCamera().getPrezzo(), p.getPrezzo());
+    }
   }
 
   @Test
@@ -308,6 +326,11 @@ class ItinerariStubAdapterTest {
     List<PrenotazioneAttivitaTuristica> prenotazioniAttivita =
         prenotazioneAttivitaCaptor.getAllValues();
     assertEquals(3, prenotazioniAttivita.size());
+
+    for (PrenotazioneAttivitaTuristica p : prenotazioniAttivita) {
+      assertEquals(0, p.getNumBambini());
+      assertEquals(p.getAttivitaTuristica().getPrezzo(), p.getPrezzo());
+    }
   }
 
   @Test
@@ -331,6 +354,20 @@ class ItinerariStubAdapterTest {
     Itinerario itinerarioSalvato = itinerarioCaptor.getValue();
     assertNotNull(itinerarioSalvato);
     assertEquals(visitatore, itinerarioSalvato.getVisitatore());
+
+    // Verifica numBambini = 0 per tutte le prenotazioni attività
+    ArgumentCaptor<PrenotazioneAttivitaTuristica> captorAtt =
+        ArgumentCaptor.forClass(PrenotazioneAttivitaTuristica.class);
+    verify(prenotazioneAttivitaTuristicaRepository, atLeast(1)).save(captorAtt.capture());
+    captorAtt.getAllValues().forEach(p ->
+        assertEquals(0, p.getNumBambini()));
+
+    // Verifica numBambini = 0 per tutte le prenotazioni alloggio
+    ArgumentCaptor<PrenotazioneAlloggio> captorAll =
+        ArgumentCaptor.forClass(PrenotazioneAlloggio.class);
+    verify(prenotazioneAlloggioRepository, atLeast(1)).save(captorAll.capture());
+    captorAll.getAllValues().forEach(p ->
+        assertEquals(0, p.getNumBambini()));
   }
 
   @Test

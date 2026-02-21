@@ -164,6 +164,33 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <version>1.22.1</version>
+        <configuration>
+          <excludedClasses>
+            <param>it.greentrails.backend.entities.*</param>
+            <param>it.greentrails.backend.enums.*</param>
+            <param>it.greentrails.backend.gestioneutenze.security.SecurityConfig</param>
+            <param>it.greentrails.backend.BackendApplication</param>
+            <param>it.greentrails.backend.utils.CorsConfig</param>
+            <!-- Temporaneamente escluso, verrà incluso a seguito della manutenzione evolutiva -->
+            <param>it.greentrails.backend.gestioneitinerari.adapter.ItinerariAiAdapter</param>
+          </excludedClasses>
+          <excludedTestClasses>
+            <!-- Temporaneamente escluso, verrà incluso a seguito della manutenzione evolutiva -->
+            <param>it.greentrails.backend.gestioneitinerari.adapter.ItinerariAiAdapterTest</param>
+          </excludedTestClasses>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-junit5-plugin</artifactId>
+            <version>1.2.3</version>
+          </dependency>
+        </dependencies>
+      </plugin>
     </plugins>
   </build>
 

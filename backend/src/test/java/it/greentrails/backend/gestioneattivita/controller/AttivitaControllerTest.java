@@ -114,7 +114,8 @@ class AttivitaControllerTest {
 
     when(gestioneUtenzeService.findById(1L)).thenReturn(utente);
     when(valoriEcosostenibilitaService.findById(1L)).thenReturn(valori);
-    when(attivitaService.saveAttivita(any(Attivita.class))).thenReturn(alloggio);
+    when(attivitaService.saveAttivita(any(Attivita.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
 
     mockMvc.perform(multipart("/api/attivita")
             .file(mockFile)
@@ -132,7 +133,19 @@ class AttivitaControllerTest {
             .param("categoriaAlloggio", "0")
             .with(user(utente))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.alloggio").value(true))
+        .andExpect(jsonPath("$.data.gestore.id").value(1))
+        .andExpect(jsonPath("$.data.nome").value("Hotel Eco"))
+        .andExpect(jsonPath("$.data.indirizzo").value("Via Verde 1"))
+        .andExpect(jsonPath("$.data.cap").value("00100"))
+        .andExpect(jsonPath("$.data.citta").value("Roma"))
+        .andExpect(jsonPath("$.data.provincia").value("RM"))
+        .andExpect(jsonPath("$.data.descrizioneBreve").value("Hotel ecosostenibile"))
+        .andExpect(jsonPath("$.data.descrizioneLunga").value("Un hotel completamente ecosostenibile"))
+        .andExpect(jsonPath("$.data.valoriEcosostenibilita.id").value(1))
+        .andExpect(jsonPath("$.data.media").exists())
+        .andExpect(jsonPath("$.data.categoriaAlloggio").exists());
 
     verify(archiviazioneService).store(anyString(), eq(mockFile));
     verify(attivitaService).saveAttivita(any(Attivita.class));
@@ -146,7 +159,8 @@ class AttivitaControllerTest {
 
     when(gestioneUtenzeService.findById(1L)).thenReturn(utente);
     when(valoriEcosostenibilitaService.findById(1L)).thenReturn(valori);
-    when(attivitaService.saveAttivita(any(Attivita.class))).thenReturn(attivitaTuristica);
+    when(attivitaService.saveAttivita(any(Attivita.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
 
     mockMvc.perform(multipart("/api/attivita")
             .file(mockFile)
@@ -166,7 +180,21 @@ class AttivitaControllerTest {
             .param("categoriaAttivitaTuristica", "0")
             .with(user(utente))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.alloggio").value(false))
+        .andExpect(jsonPath("$.data.gestore.id").value(1))
+        .andExpect(jsonPath("$.data.nome").value("Tour Verde"))
+        .andExpect(jsonPath("$.data.indirizzo").value("Via Verde 2"))
+        .andExpect(jsonPath("$.data.cap").value("00100"))
+        .andExpect(jsonPath("$.data.citta").value("Roma"))
+        .andExpect(jsonPath("$.data.provincia").value("RM"))
+        .andExpect(jsonPath("$.data.descrizioneBreve").value("Tour ecologico"))
+        .andExpect(jsonPath("$.data.descrizioneLunga").value("Un tour completamente ecologico"))
+        .andExpect(jsonPath("$.data.valoriEcosostenibilita.id").value(1))
+        .andExpect(jsonPath("$.data.media").exists())
+        .andExpect(jsonPath("$.data.prezzo").value(50.0))
+        .andExpect(jsonPath("$.data.disponibilita").value(20))
+        .andExpect(jsonPath("$.data.categoriaAttivitaTuristica").exists());
 
     verify(archiviazioneService).store(anyString(), eq(mockFile));
     verify(attivitaService).saveAttivita(any(Attivita.class));
@@ -409,7 +437,9 @@ class AttivitaControllerTest {
     when(attivitaService.findById(1L)).thenReturn(alloggio);
 
     mockMvc.perform(get("/api/attivita/1"))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.id").value(1))
+        .andExpect(jsonPath("$.data.nome").value("Hotel Eco"));
 
     verify(attivitaService).findById(1L);
   }
@@ -430,7 +460,9 @@ class AttivitaControllerTest {
 
     mockMvc.perform(get("/api/attivita/perGestore")
             .with(user(utente)))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data[0].id").value(1));
 
     verify(attivitaService).findAllAttivitaByGestore(1L);
   }
@@ -453,7 +485,9 @@ class AttivitaControllerTest {
 
     mockMvc.perform(get("/api/attivita/perPrezzo")
             .param("limite", "5"))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data[0].id").value(2));
 
     verify(attivitaService).getAttivitaTuristicheEconomiche(5);
   }
@@ -464,7 +498,9 @@ class AttivitaControllerTest {
     when(attivitaService.getAttivitaTuristicheEconomiche(10)).thenReturn(attivita);
 
     mockMvc.perform(get("/api/attivita/perPrezzo"))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data[0].id").value(2));
 
     verify(attivitaService).getAttivitaTuristicheEconomiche(10);
   }
@@ -475,7 +511,8 @@ class AttivitaControllerTest {
     when(gestioneUtenzeService.findById(1L)).thenReturn(utente);
     when(attivitaService.findById(1L)).thenReturn(alloggio);
     when(valoriEcosostenibilitaService.findById(1L)).thenReturn(valori);
-    when(attivitaService.saveAttivita(any(Attivita.class))).thenReturn(alloggio);
+    when(attivitaService.saveAttivita(any(Attivita.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
 
     mockMvc.perform(post("/api/attivita/1")
             .param("nome", "Hotel Eco Updated")
@@ -491,7 +528,16 @@ class AttivitaControllerTest {
             .param("categoriaAlloggio", "0")
             .with(user(utente))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.nome").value("Hotel Eco Updated"))
+        .andExpect(jsonPath("$.data.indirizzo").value("Via Verde 1"))
+        .andExpect(jsonPath("$.data.cap").value("00100"))
+        .andExpect(jsonPath("$.data.citta").value("Roma"))
+        .andExpect(jsonPath("$.data.provincia").value("RM"))
+        .andExpect(jsonPath("$.data.descrizioneBreve").value("Hotel ecosostenibile"))
+        .andExpect(jsonPath("$.data.descrizioneLunga").value("Un hotel completamente ecosostenibile"))
+        .andExpect(jsonPath("$.data.valoriEcosostenibilita.id").value(1))
+        .andExpect(jsonPath("$.data.categoriaAlloggio").exists());
 
     verify(attivitaService).saveAttivita(any(Attivita.class));
   }
@@ -502,7 +548,8 @@ class AttivitaControllerTest {
     when(gestioneUtenzeService.findById(1L)).thenReturn(utente);
     when(attivitaService.findById(2L)).thenReturn(attivitaTuristica);
     when(valoriEcosostenibilitaService.findById(1L)).thenReturn(valori);
-    when(attivitaService.saveAttivita(any(Attivita.class))).thenReturn(attivitaTuristica);
+    when(attivitaService.saveAttivita(any(Attivita.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
 
     mockMvc.perform(post("/api/attivita/2")
             .param("nome", "Tour Verde Updated")
@@ -520,7 +567,18 @@ class AttivitaControllerTest {
             .param("categoriaAttivitaTuristica", "0")
             .with(user(utente))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.nome").value("Tour Verde Updated"))
+        .andExpect(jsonPath("$.data.indirizzo").value("Via Verde 2"))
+        .andExpect(jsonPath("$.data.cap").value("00100"))
+        .andExpect(jsonPath("$.data.citta").value("Roma"))
+        .andExpect(jsonPath("$.data.provincia").value("RM"))
+        .andExpect(jsonPath("$.data.descrizioneBreve").value("Tour ecologico"))
+        .andExpect(jsonPath("$.data.descrizioneLunga").value("Un tour completamente ecologico"))
+        .andExpect(jsonPath("$.data.valoriEcosostenibilita.id").value(1))
+        .andExpect(jsonPath("$.data.prezzo").value(60.0))
+        .andExpect(jsonPath("$.data.disponibilita").value(25))
+        .andExpect(jsonPath("$.data.categoriaAttivitaTuristica").exists());
 
     verify(attivitaService).saveAttivita(any(Attivita.class));
   }
@@ -759,7 +817,8 @@ class AttivitaControllerTest {
     mockMvc.perform(delete("/api/attivita/1")
             .with(user(utente))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").value(true));
 
     verify(attivitaService).deleteAttivita(alloggio);
   }
@@ -800,7 +859,9 @@ class AttivitaControllerTest {
 
     mockMvc.perform(get("/api/attivita/alloggi")
             .param("limite", "3"))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data[0].id").value(1));
 
     verify(attivitaService).getAlloggi(3);
   }
@@ -811,7 +872,9 @@ class AttivitaControllerTest {
     when(attivitaService.getAlloggi(5)).thenReturn(alloggi);
 
     mockMvc.perform(get("/api/attivita/alloggi"))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data[0].id").value(1));
 
     verify(attivitaService).getAlloggi(5);
   }
@@ -823,7 +886,9 @@ class AttivitaControllerTest {
 
     mockMvc.perform(get("/api/attivita/attivitaTuristiche")
             .param("limite", "3"))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data[0].id").value(2));
 
     verify(attivitaService).getAttivitaTuristiche(3);
   }
@@ -834,7 +899,9 @@ class AttivitaControllerTest {
     when(attivitaService.getAttivitaTuristiche(5)).thenReturn(attivita);
 
     mockMvc.perform(get("/api/attivita/attivitaTuristiche"))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data[0].id").value(2));
 
     verify(attivitaService).getAttivitaTuristiche(5);
   }
@@ -845,7 +912,10 @@ class AttivitaControllerTest {
     when(attivitaService.findAll()).thenReturn(attivita);
 
     mockMvc.perform(get("/api/attivita/all"))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data[0].id").value(1))
+        .andExpect(jsonPath("$.data[1].id").value(2));
 
     verify(attivitaService).findAll();
   }

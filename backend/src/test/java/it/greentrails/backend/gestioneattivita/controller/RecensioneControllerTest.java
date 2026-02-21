@@ -110,7 +110,8 @@ class RecensioneControllerTest {
     when(attivitaService.findById(1L)).thenReturn(alloggio);
     when(gestioneUtenzeService.findById(1L)).thenReturn(visitatore);
     when(valoriEcosostenibilitaService.findById(1L)).thenReturn(valori);
-    when(recensioneService.saveRecensione(any(Recensione.class))).thenReturn(recensione);
+    when(recensioneService.saveRecensione(any(Recensione.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
 
     mockMvc.perform(multipart("/api/recensioni")
             .file(mockFile)
@@ -120,7 +121,13 @@ class RecensioneControllerTest {
             .param("idValori", "1")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.visitatore.id").value(1))
+        .andExpect(jsonPath("$.data.attivita.id").value(1))
+        .andExpect(jsonPath("$.data.valutazioneStelleEsperienza").value(5))
+        .andExpect(jsonPath("$.data.descrizione").value("Esperienza fantastica!"))
+        .andExpect(jsonPath("$.data.media").exists())
+        .andExpect(jsonPath("$.data.valoriEcosostenibilita.id").value(1));
 
     verify(attivitaService).findById(1L);
     verify(gestioneUtenzeService).findById(1L);
@@ -134,7 +141,8 @@ class RecensioneControllerTest {
     when(attivitaService.findById(1L)).thenReturn(alloggio);
     when(gestioneUtenzeService.findById(1L)).thenReturn(visitatore);
     when(valoriEcosostenibilitaService.findById(1L)).thenReturn(valori);
-    when(recensioneService.saveRecensione(any(Recensione.class))).thenReturn(recensione);
+    when(recensioneService.saveRecensione(any(Recensione.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
 
     mockMvc.perform(multipart("/api/recensioni")
             .param("idAttivita", "1")
@@ -143,7 +151,12 @@ class RecensioneControllerTest {
             .param("idValori", "1")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.visitatore.id").value(1))
+        .andExpect(jsonPath("$.data.attivita.id").value(1))
+        .andExpect(jsonPath("$.data.valutazioneStelleEsperienza").value(5))
+        .andExpect(jsonPath("$.data.descrizione").value("Esperienza fantastica!"))
+        .andExpect(jsonPath("$.data.valoriEcosostenibilita.id").value(1));
 
     verify(attivitaService).findById(1L);
     verify(gestioneUtenzeService).findById(1L);
@@ -202,7 +215,10 @@ class RecensioneControllerTest {
     mockMvc.perform(get("/api/recensioni/1")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.id").value(1))
+        .andExpect(jsonPath("$.data.visitatore.id").value(1))
+        .andExpect(jsonPath("$.data.attivita.id").value(1));
 
     verify(recensioneService).findById(1L);
   }
@@ -228,7 +244,9 @@ class RecensioneControllerTest {
     mockMvc.perform(get("/api/recensioni/perAttivita/1")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data[0].id").value(1));
 
     verify(attivitaService).findById(1L);
     verify(recensioneService).getRecensioniByAttivita(alloggio);
@@ -254,7 +272,8 @@ class RecensioneControllerTest {
     mockMvc.perform(delete("/api/recensioni/1")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").value(true));
 
     verify(recensioneService).findById(1L);
     verify(recensioneService).deleteRecensione(recensione);
@@ -268,7 +287,8 @@ class RecensioneControllerTest {
     mockMvc.perform(delete("/api/recensioni/1")
             .with(user(amministratore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").value(true));
 
     verify(recensioneService).findById(1L);
     verify(recensioneService).deleteRecensione(recensione);
