@@ -14,17 +14,20 @@ import it.greentrails.backend.gestioneitinerari.service.ItinerariService;
 import it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -114,7 +117,7 @@ class PrenotazioneAttivitaTuristicaControllerTest {
         .thenReturn(prenotazioneAttivitaTuristica);
     when(itinerariService.saveItinerario(any(Itinerario.class))).thenReturn(itinerario);
 
-    mockMvc.perform(post("/api/prenotazioni-attivita-turistica")
+    MvcResult result = mockMvc.perform(post("/api/prenotazioni-attivita-turistica")
             .param("idItinerario", "1")
             .param("idAttivita", "1")
             .param("numAdulti", "2")
@@ -123,12 +126,26 @@ class PrenotazioneAttivitaTuristicaControllerTest {
             .param("dataFine", "2026-03-02")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists())
+        .andReturn();
 
     verify(itinerariService).findById(1L);
     verify(attivitaService).findById(1L);
+
+    ArgumentCaptor<PrenotazioneAttivitaTuristica> captor = ArgumentCaptor.forClass(PrenotazioneAttivitaTuristica.class);
     verify(prenotazioneAttivitaTuristicaService).savePrenotazioneAttivitaTuristica(
-        eq(attivitaTuristica), any(PrenotazioneAttivitaTuristica.class));
+        eq(attivitaTuristica), captor.capture());
+
+    PrenotazioneAttivitaTuristica captured = captor.getValue();
+    assertEquals(2, captured.getNumAdulti());
+    assertEquals(0, captured.getNumBambini());
+    assertEquals(attivitaTuristica, captured.getAttivitaTuristica());
+    assertEquals(itinerario, captured.getItinerario());
+    assertNotNull(captured.getDataInizio());
+    assertNotNull(captured.getDataFine());
+    assertEquals(StatoPrenotazione.CREATA, captured.getStato());
+    assertEquals(100.0, captured.getPrezzo(), 0.01);
   }
 
   @Test
@@ -323,6 +340,104 @@ class PrenotazioneAttivitaTuristicaControllerTest {
   }
 
   @Test
+  void testCreaPrenotazioneAttivitaTuristica_DisponibilitaEsatta() throws Exception {
+    when(itinerariService.findById(1L)).thenReturn(itinerario);
+    when(attivitaService.findById(1L)).thenReturn(attivitaTuristica);
+    // Disponibilità = 2, adulti + bambini = 2 -> esattamente al limite
+    when(prenotazioneAttivitaTuristicaService.controllaDisponibilitaAttivitaTuristica(
+        eq(attivitaTuristica), any(Date.class))).thenReturn(2);
+    when(prenotazioneAttivitaTuristicaService.savePrenotazioneAttivitaTuristica(
+        eq(attivitaTuristica), any(PrenotazioneAttivitaTuristica.class)))
+        .thenReturn(prenotazioneAttivitaTuristica);
+    when(itinerariService.saveItinerario(any(Itinerario.class))).thenReturn(itinerario);
+
+    mockMvc.perform(post("/api/prenotazioni-attivita-turistica")
+            .param("idItinerario", "1")
+            .param("idAttivita", "1")
+            .param("numAdulti", "1")
+            .param("numBambini", "1")
+            .param("dataInizio", "2026-03-01")
+            .param("dataFine", "2026-03-02")
+            .with(user(visitatore))
+            .with(csrf()))
+        .andExpect(status().isOk());
+
+    ArgumentCaptor<PrenotazioneAttivitaTuristica> captor = ArgumentCaptor.forClass(PrenotazioneAttivitaTuristica.class);
+    verify(prenotazioneAttivitaTuristicaService).savePrenotazioneAttivitaTuristica(
+        eq(attivitaTuristica), captor.capture());
+
+    PrenotazioneAttivitaTuristica captured = captor.getValue();
+    assertEquals(1, captured.getNumAdulti());
+    assertEquals(1, captured.getNumBambini());
+  }
+
+  @Test
+  void testCreaPrenotazioneAttivitaTuristica_ConBambini() throws Exception {
+    when(itinerariService.findById(1L)).thenReturn(itinerario);
+    when(attivitaService.findById(1L)).thenReturn(attivitaTuristica);
+    when(prenotazioneAttivitaTuristicaService.controllaDisponibilitaAttivitaTuristica(
+        eq(attivitaTuristica), any(Date.class))).thenReturn(20);
+    when(prenotazioneAttivitaTuristicaService.savePrenotazioneAttivitaTuristica(
+        eq(attivitaTuristica), any(PrenotazioneAttivitaTuristica.class)))
+        .thenReturn(prenotazioneAttivitaTuristica);
+    when(itinerariService.saveItinerario(any(Itinerario.class))).thenReturn(itinerario);
+
+    mockMvc.perform(post("/api/prenotazioni-attivita-turistica")
+            .param("idItinerario", "1")
+            .param("idAttivita", "1")
+            .param("numAdulti", "2")
+            .param("numBambini", "3")
+            .param("dataInizio", "2026-03-01")
+            .param("dataFine", "2026-03-02")
+            .with(user(visitatore))
+            .with(csrf()))
+        .andExpect(status().isOk());
+
+    ArgumentCaptor<PrenotazioneAttivitaTuristica> captor = ArgumentCaptor.forClass(PrenotazioneAttivitaTuristica.class);
+    verify(prenotazioneAttivitaTuristicaService).savePrenotazioneAttivitaTuristica(
+        eq(attivitaTuristica), captor.capture());
+
+    PrenotazioneAttivitaTuristica captured = captor.getValue();
+    assertEquals(2, captured.getNumAdulti());
+    assertEquals(3, captured.getNumBambini());
+    // Prezzo = (adulti + bambini) * prezzoUnitario = (2 + 3) * 50 = 250
+    assertEquals(250.0, captured.getPrezzo(), 0.01);
+  }
+
+  @Test
+  void testCreaPrenotazioneAttivitaTuristica_Durata48Ore() throws Exception {
+    when(itinerariService.findById(1L)).thenReturn(itinerario);
+    when(attivitaService.findById(1L)).thenReturn(attivitaTuristica);
+    when(prenotazioneAttivitaTuristicaService.controllaDisponibilitaAttivitaTuristica(
+        eq(attivitaTuristica), any(Date.class))).thenReturn(20);
+    when(prenotazioneAttivitaTuristicaService.savePrenotazioneAttivitaTuristica(
+        eq(attivitaTuristica), any(PrenotazioneAttivitaTuristica.class)))
+        .thenReturn(prenotazioneAttivitaTuristica);
+    when(itinerariService.saveItinerario(any(Itinerario.class))).thenReturn(itinerario);
+
+    // Durata = 2 giorni -> 48 ore -> ceil(48/24) = 2
+    mockMvc.perform(post("/api/prenotazioni-attivita-turistica")
+            .param("idItinerario", "1")
+            .param("idAttivita", "1")
+            .param("numAdulti", "2")
+            .param("numBambini", "0")
+            .param("dataInizio", "2026-03-01")
+            .param("dataFine", "2026-03-03")
+            .with(user(visitatore))
+            .with(csrf()))
+        .andExpect(status().isOk());
+
+    ArgumentCaptor<PrenotazioneAttivitaTuristica> captor = ArgumentCaptor.forClass(PrenotazioneAttivitaTuristica.class);
+    verify(prenotazioneAttivitaTuristicaService).savePrenotazioneAttivitaTuristica(
+        eq(attivitaTuristica), captor.capture());
+
+    PrenotazioneAttivitaTuristica captured = captor.getValue();
+    // Con durata > 24 ore, il prezzo viene moltiplicato per ceil(durataOre/24)
+    // 48 ore -> ceil(48/24) = 2 -> prezzo = (2 * 50) * 2 = 200
+    assertEquals(200.0, captured.getPrezzo(), 0.01);
+  }
+
+  @Test
   void testConfermaPrenotazioneAttivitaTuristica_Success() throws Exception {
     prenotazioneAttivitaTuristica.setStato(StatoPrenotazione.NON_CONFERMATA);
     when(prenotazioneAttivitaTuristicaService.findById(1L))
@@ -334,18 +449,30 @@ class PrenotazioneAttivitaTuristicaControllerTest {
         .thenReturn(prenotazioneAttivitaTuristica);
     when(itinerariService.saveItinerario(any(Itinerario.class))).thenReturn(itinerario);
 
-    mockMvc.perform(post("/api/prenotazioni-attivita-turistica/1")
+    MvcResult result = mockMvc.perform(post("/api/prenotazioni-attivita-turistica/1")
             .param("numAdulti", "2")
             .param("numBambini", "0")
             .param("dataInizio", "2026-03-01")
             .param("dataFine", "2026-03-02")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists())
+        .andReturn();
 
     verify(prenotazioneAttivitaTuristicaService).findById(1L);
+
+    ArgumentCaptor<PrenotazioneAttivitaTuristica> captor = ArgumentCaptor.forClass(PrenotazioneAttivitaTuristica.class);
     verify(prenotazioneAttivitaTuristicaService).savePrenotazioneAttivitaTuristica(
-        eq(attivitaTuristica), any(PrenotazioneAttivitaTuristica.class));
+        eq(attivitaTuristica), captor.capture());
+
+    PrenotazioneAttivitaTuristica captured = captor.getValue();
+    assertEquals(2, captured.getNumAdulti());
+    assertEquals(0, captured.getNumBambini());
+    assertNotNull(captured.getDataInizio());
+    assertNotNull(captured.getDataFine());
+    assertEquals(StatoPrenotazione.CREATA, captured.getStato());
+    assertEquals(100.0, captured.getPrezzo(), 0.01);
   }
 
   @Test
@@ -507,6 +634,98 @@ class PrenotazioneAttivitaTuristicaControllerTest {
   }
 
   @Test
+  void testConfermaPrenotazioneAttivitaTuristica_DisponibilitaEsatta() throws Exception {
+    prenotazioneAttivitaTuristica.setStato(StatoPrenotazione.NON_CONFERMATA);
+    when(prenotazioneAttivitaTuristicaService.findById(1L)).thenReturn(prenotazioneAttivitaTuristica);
+    // Disponibilità = 2, adulti + bambini = 2 -> esattamente al limite
+    when(prenotazioneAttivitaTuristicaService.controllaDisponibilitaAttivitaTuristica(
+        eq(attivitaTuristica), any(Date.class))).thenReturn(2);
+    when(prenotazioneAttivitaTuristicaService.savePrenotazioneAttivitaTuristica(
+        eq(attivitaTuristica), any(PrenotazioneAttivitaTuristica.class)))
+        .thenReturn(prenotazioneAttivitaTuristica);
+    when(itinerariService.saveItinerario(any(Itinerario.class))).thenReturn(itinerario);
+
+    mockMvc.perform(post("/api/prenotazioni-attivita-turistica/1")
+            .param("numAdulti", "1")
+            .param("numBambini", "1")
+            .param("dataInizio", "2026-03-01")
+            .param("dataFine", "2026-03-02")
+            .with(user(visitatore))
+            .with(csrf()))
+        .andExpect(status().isOk());
+
+    ArgumentCaptor<PrenotazioneAttivitaTuristica> captor = ArgumentCaptor.forClass(PrenotazioneAttivitaTuristica.class);
+    verify(prenotazioneAttivitaTuristicaService).savePrenotazioneAttivitaTuristica(
+        eq(attivitaTuristica), captor.capture());
+
+    PrenotazioneAttivitaTuristica captured = captor.getValue();
+    assertEquals(1, captured.getNumAdulti());
+    assertEquals(1, captured.getNumBambini());
+  }
+
+  @Test
+  void testConfermaPrenotazioneAttivitaTuristica_ConBambini() throws Exception {
+    prenotazioneAttivitaTuristica.setStato(StatoPrenotazione.NON_CONFERMATA);
+    when(prenotazioneAttivitaTuristicaService.findById(1L)).thenReturn(prenotazioneAttivitaTuristica);
+    when(prenotazioneAttivitaTuristicaService.controllaDisponibilitaAttivitaTuristica(
+        eq(attivitaTuristica), any(Date.class))).thenReturn(20);
+    when(prenotazioneAttivitaTuristicaService.savePrenotazioneAttivitaTuristica(
+        eq(attivitaTuristica), any(PrenotazioneAttivitaTuristica.class)))
+        .thenReturn(prenotazioneAttivitaTuristica);
+    when(itinerariService.saveItinerario(any(Itinerario.class))).thenReturn(itinerario);
+
+    mockMvc.perform(post("/api/prenotazioni-attivita-turistica/1")
+            .param("numAdulti", "2")
+            .param("numBambini", "3")
+            .param("dataInizio", "2026-03-01")
+            .param("dataFine", "2026-03-02")
+            .with(user(visitatore))
+            .with(csrf()))
+        .andExpect(status().isOk());
+
+    ArgumentCaptor<PrenotazioneAttivitaTuristica> captor = ArgumentCaptor.forClass(PrenotazioneAttivitaTuristica.class);
+    verify(prenotazioneAttivitaTuristicaService).savePrenotazioneAttivitaTuristica(
+        eq(attivitaTuristica), captor.capture());
+
+    PrenotazioneAttivitaTuristica captured = captor.getValue();
+    assertEquals(2, captured.getNumAdulti());
+    assertEquals(3, captured.getNumBambini());
+    // Prezzo = (adulti + bambini) * prezzoUnitario = (2 + 3) * 50 = 250
+    assertEquals(250.0, captured.getPrezzo(), 0.01);
+  }
+
+  @Test
+  void testConfermaPrenotazioneAttivitaTuristica_Durata48Ore() throws Exception {
+    prenotazioneAttivitaTuristica.setStato(StatoPrenotazione.NON_CONFERMATA);
+    when(prenotazioneAttivitaTuristicaService.findById(1L)).thenReturn(prenotazioneAttivitaTuristica);
+    when(prenotazioneAttivitaTuristicaService.controllaDisponibilitaAttivitaTuristica(
+        eq(attivitaTuristica), any(Date.class))).thenReturn(20);
+    when(prenotazioneAttivitaTuristicaService.savePrenotazioneAttivitaTuristica(
+        eq(attivitaTuristica), any(PrenotazioneAttivitaTuristica.class)))
+        .thenReturn(prenotazioneAttivitaTuristica);
+    when(itinerariService.saveItinerario(any(Itinerario.class))).thenReturn(itinerario);
+
+    // Durata = 2 giorni -> 48 ore -> ceil(48/24) = 2
+    mockMvc.perform(post("/api/prenotazioni-attivita-turistica/1")
+            .param("numAdulti", "2")
+            .param("numBambini", "0")
+            .param("dataInizio", "2026-03-01")
+            .param("dataFine", "2026-03-03")
+            .with(user(visitatore))
+            .with(csrf()))
+        .andExpect(status().isOk());
+
+    ArgumentCaptor<PrenotazioneAttivitaTuristica> captor = ArgumentCaptor.forClass(PrenotazioneAttivitaTuristica.class);
+    verify(prenotazioneAttivitaTuristicaService).savePrenotazioneAttivitaTuristica(
+        eq(attivitaTuristica), captor.capture());
+
+    PrenotazioneAttivitaTuristica captured = captor.getValue();
+    // Con durata > 24 ore, il prezzo viene moltiplicato per ceil(durataOre/24)
+    // 48 ore -> ceil(48/24) = 2 -> prezzo = (2 * 50) * 2 = 200
+    assertEquals(200.0, captured.getPrezzo(), 0.01);
+  }
+
+  @Test
   void testConfermaPrenotazioneAttivitaTuristica_Exception() throws Exception {
     when(prenotazioneAttivitaTuristicaService.findById(1L))
         .thenThrow(new Exception("Errore DB"));
@@ -528,10 +747,12 @@ class PrenotazioneAttivitaTuristicaControllerTest {
     when(prenotazioneAttivitaTuristicaService.findById(1L))
         .thenReturn(prenotazioneAttivitaTuristica);
 
-    mockMvc.perform(get("/api/prenotazioni-attivita-turistica/1")
+    MvcResult result = mockMvc.perform(get("/api/prenotazioni-attivita-turistica/1")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists())
+        .andReturn();
 
     verify(prenotazioneAttivitaTuristicaService).findById(1L);
   }
@@ -576,10 +797,12 @@ class PrenotazioneAttivitaTuristicaControllerTest {
     when(prenotazioneAttivitaTuristicaService.getPrenotazioniByAttivitaTuristica(
         attivitaTuristica)).thenReturn(prenotazioni);
 
-    mockMvc.perform(get("/api/prenotazioni-attivita-turistica/perAttivita/1")
+    MvcResult result = mockMvc.perform(get("/api/prenotazioni-attivita-turistica/perAttivita/1")
             .with(user(gestore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists())
+        .andReturn();
 
     verify(attivitaService).findById(1L);
     verify(prenotazioneAttivitaTuristicaService)
@@ -625,11 +848,13 @@ class PrenotazioneAttivitaTuristicaControllerTest {
     when(prenotazioneAttivitaTuristicaService.controllaDisponibilitaAttivitaTuristica(
         eq(attivitaTuristica), any(Date.class))).thenReturn(20);
 
-    mockMvc.perform(get("/api/prenotazioni-attivita-turistica/perAttivita/1/disponibilita")
+    MvcResult result = mockMvc.perform(get("/api/prenotazioni-attivita-turistica/perAttivita/1/disponibilita")
             .param("dataInizio", "2026-03-01")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists())
+        .andReturn();
 
     verify(attivitaService).findById(1L);
     verify(prenotazioneAttivitaTuristicaService).controllaDisponibilitaAttivitaTuristica(
@@ -658,10 +883,12 @@ class PrenotazioneAttivitaTuristicaControllerTest {
     when(prenotazioneAttivitaTuristicaService.getPrenotazioniByVisitatore(visitatore))
         .thenReturn(prenotazioni);
 
-    mockMvc.perform(get("/api/prenotazioni-attivita-turistica")
+    MvcResult result = mockMvc.perform(get("/api/prenotazioni-attivita-turistica")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists())
+        .andReturn();
 
     verify(prenotazioneAttivitaTuristicaService).getPrenotazioniByVisitatore(visitatore);
   }
@@ -687,15 +914,23 @@ class PrenotazioneAttivitaTuristicaControllerTest {
         prenotazioneAttivitaTuristica)).thenReturn(true);
     when(itinerariService.saveItinerario(any(Itinerario.class))).thenReturn(itinerario);
 
-    mockMvc.perform(delete("/api/prenotazioni-attivita-turistica/1")
+    MvcResult result = mockMvc.perform(delete("/api/prenotazioni-attivita-turistica/1")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists())
+        .andReturn();
 
     verify(prenotazioneAttivitaTuristicaService).findById(1L);
     verify(prenotazioneAttivitaTuristicaService)
         .deletePrenotazioneAttivitaTuristica(prenotazioneAttivitaTuristica);
-    verify(itinerariService).saveItinerario(any(Itinerario.class));
+
+    ArgumentCaptor<Itinerario> captor = ArgumentCaptor.forClass(Itinerario.class);
+    verify(itinerariService).saveItinerario(captor.capture());
+
+    Itinerario captured = captor.getValue();
+    // Verifica che il totale dell'itinerario sia stato aggiornato (totale - prezzo prenotazione)
+    assertEquals(0.0, captured.getTotale(), 0.01);
   }
 
   @Test

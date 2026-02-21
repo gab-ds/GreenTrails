@@ -79,12 +79,15 @@ class ItinerariControllerTest {
 
   @Test
   void testCreaItinerario_Success() throws Exception {
-    when(itinerariService.saveItinerario(any(Itinerario.class))).thenReturn(itinerario);
+    when(itinerariService.saveItinerario(any(Itinerario.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
 
     mockMvc.perform(post("/api/itinerari")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.visitatore.id").value(1))
+        .andExpect(jsonPath("$.data.visitatore.email").value("visitatore@test.com"));
 
     verify(itinerariService).saveItinerario(any(Itinerario.class));
   }
@@ -110,7 +113,9 @@ class ItinerariControllerTest {
     mockMvc.perform(post("/api/itinerari/genera")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.id").value(1))
+        .andExpect(jsonPath("$.data.visitatore.id").value(1));
 
     verify(gestioneUtenzeService).getPreferenzeById(1L);
     verify(itinerariService).createByPreferenze(preferenze);
@@ -140,7 +145,10 @@ class ItinerariControllerTest {
     mockMvc.perform(get("/api/itinerari/1")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.itinerario.id").value(1))
+        .andExpect(jsonPath("$.data.prenotazioniAlloggio").isArray())
+        .andExpect(jsonPath("$.data.prenotazioniAttivitaTuristica").isArray());
 
     verify(itinerariService).findById(1L);
     verify(prenotazioneAlloggioService).getPrenotazioniByItinerario(itinerario);
@@ -187,7 +195,8 @@ class ItinerariControllerTest {
     mockMvc.perform(delete("/api/itinerari/1")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").value(true));
 
     verify(itinerariService).findById(1L);
     verify(itinerariService).deleteItinerario(itinerario);

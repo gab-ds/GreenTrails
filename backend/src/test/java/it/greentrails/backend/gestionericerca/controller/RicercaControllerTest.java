@@ -107,7 +107,9 @@ class RicercaControllerTest {
     mockMvc.perform(post("/api/ricerca")
             .param("query", "hotel")
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data.length()").value(3));
 
     verify(ricercaService).findAttivita("hotel");
   }
@@ -123,7 +125,9 @@ class RicercaControllerTest {
             .param("query", "eco")
             .param("idCategorie", "1", "2")
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data.length()").value(2));
 
     verify(ricercaService).findAttivita("eco");
     verify(categoriaService).findById(1L);
@@ -143,7 +147,9 @@ class RicercaControllerTest {
             .param("longitudine", "12")
             .param("raggio", "10.0")
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data.length()").value(1));
 
     verify(ricercaService).findAttivita("roma");
     verify(ricercaService).findAttivitaByPosizione(any(Point.class), eq(10.0));
@@ -164,7 +170,9 @@ class RicercaControllerTest {
             .param("longitudine", "12")
             .param("raggio", "50.0")
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data.length()").value(2));
 
     verify(ricercaService).findAttivita("hotel");
     verify(categoriaService).findById(1L);
@@ -179,7 +187,9 @@ class RicercaControllerTest {
     mockMvc.perform(post("/api/ricerca")
             .param("query", "")
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data.length()").value(0));
 
     verify(ricercaService).findAttivita("");
   }
@@ -191,7 +201,9 @@ class RicercaControllerTest {
     mockMvc.perform(post("/api/ricerca")
             .param("query", "nonEsiste")
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data.length()").value(0));
 
     verify(ricercaService).findAttivita("nonEsiste");
   }
@@ -204,9 +216,12 @@ class RicercaControllerTest {
             .param("query", "hotel")
             .param("idCategorie", "")
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data.length()").value(3));
 
     verify(ricercaService).findAttivita("hotel");
+    verify(ricercaService, never()).findAttivitaByCategorie(anyList());
   }
 
   @Test
@@ -218,9 +233,12 @@ class RicercaControllerTest {
             .param("latitudine", "41")
             .param("longitudine", "12")
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data.length()").value(3));
 
     verify(ricercaService).findAttivita("hotel");
+    verify(ricercaService, never()).findAttivitaByPosizione(any(Point.class), anyDouble());
   }
 
   @Test
@@ -233,7 +251,9 @@ class RicercaControllerTest {
             .param("longitudine", "12.5")
             .param("raggio", "20.0")
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data.length()").value(2));
 
     verify(ricercaService).findAttivitaByPosizione(any(Point.class), eq(20.0));
   }
@@ -251,7 +271,9 @@ class RicercaControllerTest {
             .param("raggio", "30.0")
             .param("idCategorie", "1")
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data.length()").value(2));
 
     verify(ricercaService).findAttivitaByPosizione(any(Point.class), eq(30.0));
     verify(categoriaService).findById(1L);
@@ -272,7 +294,9 @@ class RicercaControllerTest {
             .param("raggio", "15.0")
             .param("idCategorie", "1", "2")
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data.length()").value(2));
 
     verify(ricercaService).findAttivitaByPosizione(any(Point.class), eq(15.0));
     verify(categoriaService).findById(1L);
@@ -290,7 +314,9 @@ class RicercaControllerTest {
             .param("longitudine", "10.0")
             .param("raggio", "5.0")
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data.length()").value(0));
 
     verify(ricercaService).findAttivitaByPosizione(any(Point.class), eq(5.0));
   }
@@ -306,9 +332,12 @@ class RicercaControllerTest {
             .param("raggio", "25.0")
             .param("idCategorie", "")
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data.length()").value(3));
 
     verify(ricercaService).findAttivitaByPosizione(any(Point.class), eq(25.0));
+    verify(ricercaService, never()).findAttivitaByCategorie(anyList());
   }
 
   @Test
@@ -321,7 +350,9 @@ class RicercaControllerTest {
             .param("longitudine", "12.5")
             .param("raggio", "100.0")
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data.length()").value(3));
 
     verify(ricercaService).findAttivitaByPosizione(any(Point.class), eq(100.0));
   }
@@ -336,9 +367,53 @@ class RicercaControllerTest {
             .param("longitudine", "12.4964")
             .param("raggio", "12.5")
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data.length()").value(1));
 
     verify(ricercaService).findAttivitaByPosizione(any(Point.class), eq(12.5));
   }
+
+  @Test
+  void testCerca_ConUnaSolaCategoria() throws Exception {
+    when(ricercaService.findAttivita("hotel")).thenReturn(tutteAttivita);
+    when(categoriaService.findById(1L)).thenReturn(categoria1);
+    when(ricercaService.findAttivitaByCategorie(anyList())).thenReturn(attivitaFiltrate);
+
+    mockMvc.perform(post("/api/ricerca")
+            .param("query", "hotel")
+            .param("idCategorie", "1")
+            .with(csrf()))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data.length()").value(2));
+
+    verify(ricercaService).findAttivita("hotel");
+    verify(categoriaService).findById(1L);
+    verify(ricercaService).findAttivitaByCategorie(anyList());
+  }
+
+  @Test
+  void testCercaPerPosizione_ConUnaSolaCategoria() throws Exception {
+    when(ricercaService.findAttivitaByPosizione(any(Point.class), eq(30.0)))
+        .thenReturn(tutteAttivita);
+    when(categoriaService.findById(2L)).thenReturn(categoria2);
+    when(ricercaService.findAttivitaByCategorie(anyList())).thenReturn(Arrays.asList(attivita2));
+
+    mockMvc.perform(post("/api/ricerca/perPosizione")
+            .param("latitudine", "45.5")
+            .param("longitudine", "9.2")
+            .param("raggio", "30.0")
+            .param("idCategorie", "2")
+            .with(csrf()))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data.length()").value(1));
+
+    verify(ricercaService).findAttivitaByPosizione(any(Point.class), eq(30.0));
+    verify(categoriaService).findById(2L);
+    verify(ricercaService).findAttivitaByCategorie(anyList());
+  }
 }
+
 

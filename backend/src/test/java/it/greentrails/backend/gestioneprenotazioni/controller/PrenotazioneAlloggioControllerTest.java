@@ -16,17 +16,20 @@ import it.greentrails.backend.gestioneitinerari.service.ItinerariService;
 import it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAlloggioService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -127,7 +130,7 @@ class PrenotazioneAlloggioControllerTest {
         .thenReturn(prenotazioneAlloggio);
     when(itinerariService.saveItinerario(any(Itinerario.class))).thenReturn(itinerario);
 
-    mockMvc.perform(post("/api/prenotazioni-alloggio")
+    MvcResult result = mockMvc.perform(post("/api/prenotazioni-alloggio")
             .param("idItinerario", "1")
             .param("idCamera", "1")
             .param("numAdulti", "2")
@@ -137,11 +140,26 @@ class PrenotazioneAlloggioControllerTest {
             .param("numCamere", "1")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists())
+        .andReturn();
 
     verify(itinerariService).findById(1L);
     verify(cameraService).findById(1L);
-    verify(prenotazioneAlloggioService).savePrenotazioneAlloggio(eq(camera), any(PrenotazioneAlloggio.class));
+
+    ArgumentCaptor<PrenotazioneAlloggio> captor = ArgumentCaptor.forClass(PrenotazioneAlloggio.class);
+    verify(prenotazioneAlloggioService).savePrenotazioneAlloggio(eq(camera), captor.capture());
+
+    PrenotazioneAlloggio captured = captor.getValue();
+    assertEquals(2, captured.getNumAdulti());
+    assertEquals(0, captured.getNumBambini());
+    assertEquals(1, captured.getNumCamere());
+    assertEquals(camera, captured.getCamera());
+    assertEquals(itinerario, captured.getItinerario());
+    assertNotNull(captured.getDataInizio());
+    assertNotNull(captured.getDataFine());
+    assertEquals(StatoPrenotazione.CREATA, captured.getStato());
+    assertEquals(100.0, captured.getPrezzo(), 0.01);
   }
 
   @Test
@@ -289,6 +307,125 @@ class PrenotazioneAlloggioControllerTest {
   }
 
   @Test
+  void testCreaPrenotazioneAlloggio_CapienzaEsatta() throws Exception {
+    when(itinerariService.findById(1L)).thenReturn(itinerario);
+    when(cameraService.findById(1L)).thenReturn(camera);
+    when(prenotazioneAlloggioService.controllaDisponibilitaCamera(eq(camera), any(Date.class), any(Date.class)))
+        .thenReturn(5);
+    when(prenotazioneAlloggioService.savePrenotazioneAlloggio(eq(camera), any(PrenotazioneAlloggio.class)))
+        .thenReturn(prenotazioneAlloggio);
+    when(itinerariService.saveItinerario(any(Itinerario.class))).thenReturn(itinerario);
+
+    // Capienza camera = 2, numAdulti + numBambini = 2 -> esattamente al limite
+    mockMvc.perform(post("/api/prenotazioni-alloggio")
+            .param("idItinerario", "1")
+            .param("idCamera", "1")
+            .param("numAdulti", "1")
+            .param("numBambini", "1")
+            .param("dataInizio", "2026-03-01")
+            .param("dataFine", "2026-03-02")
+            .param("numCamere", "1")
+            .with(user(visitatore))
+            .with(csrf()))
+        .andExpect(status().isOk());
+
+    ArgumentCaptor<PrenotazioneAlloggio> captor = ArgumentCaptor.forClass(PrenotazioneAlloggio.class);
+    verify(prenotazioneAlloggioService).savePrenotazioneAlloggio(eq(camera), captor.capture());
+
+    PrenotazioneAlloggio captured = captor.getValue();
+    assertEquals(1, captured.getNumAdulti());
+    assertEquals(1, captured.getNumBambini());
+  }
+
+  @Test
+  void testCreaPrenotazioneAlloggio_MultipleCamera() throws Exception {
+    when(itinerariService.findById(1L)).thenReturn(itinerario);
+    when(cameraService.findById(1L)).thenReturn(camera);
+    when(prenotazioneAlloggioService.controllaDisponibilitaCamera(eq(camera), any(Date.class), any(Date.class)))
+        .thenReturn(5);
+    when(prenotazioneAlloggioService.savePrenotazioneAlloggio(eq(camera), any(PrenotazioneAlloggio.class)))
+        .thenReturn(prenotazioneAlloggio);
+    when(itinerariService.saveItinerario(any(Itinerario.class))).thenReturn(itinerario);
+
+    // 3 camere, capienza 2 per camera = 6 persone totali, numAdulti + numBambini = 5 -> OK
+    mockMvc.perform(post("/api/prenotazioni-alloggio")
+            .param("idItinerario", "1")
+            .param("idCamera", "1")
+            .param("numAdulti", "3")
+            .param("numBambini", "2")
+            .param("dataInizio", "2026-03-01")
+            .param("dataFine", "2026-03-02")
+            .param("numCamere", "3")
+            .with(user(visitatore))
+            .with(csrf()))
+        .andExpect(status().isOk());
+
+    ArgumentCaptor<PrenotazioneAlloggio> captor = ArgumentCaptor.forClass(PrenotazioneAlloggio.class);
+    verify(prenotazioneAlloggioService).savePrenotazioneAlloggio(eq(camera), captor.capture());
+
+    PrenotazioneAlloggio captured = captor.getValue();
+    assertEquals(3, captured.getNumCamere());
+    // Prezzo = numCamere * prezzoCamera = 3 * 100 = 300
+    assertEquals(300.0, captured.getPrezzo(), 0.01);
+  }
+
+  @Test
+  void testCreaPrenotazioneAlloggio_DisponibilitaEsattaAlLimite() throws Exception {
+    when(itinerariService.findById(1L)).thenReturn(itinerario);
+    when(cameraService.findById(1L)).thenReturn(camera);
+    // Disponibilità = 1, numCamere = 1 -> esattamente sufficiente
+    when(prenotazioneAlloggioService.controllaDisponibilitaCamera(eq(camera), any(Date.class), any(Date.class)))
+        .thenReturn(1);
+    when(prenotazioneAlloggioService.savePrenotazioneAlloggio(eq(camera), any(PrenotazioneAlloggio.class)))
+        .thenReturn(prenotazioneAlloggio);
+    when(itinerariService.saveItinerario(any(Itinerario.class))).thenReturn(itinerario);
+
+    mockMvc.perform(post("/api/prenotazioni-alloggio")
+            .param("idItinerario", "1")
+            .param("idCamera", "1")
+            .param("numAdulti", "2")
+            .param("numBambini", "0")
+            .param("dataInizio", "2026-03-01")
+            .param("dataFine", "2026-03-02")
+            .param("numCamere", "1")
+            .with(user(visitatore))
+            .with(csrf()))
+        .andExpect(status().isOk());
+  }
+
+  @Test
+  void testCreaPrenotazioneAlloggio_Durata48Ore() throws Exception {
+    when(itinerariService.findById(1L)).thenReturn(itinerario);
+    when(cameraService.findById(1L)).thenReturn(camera);
+    when(prenotazioneAlloggioService.controllaDisponibilitaCamera(eq(camera), any(Date.class), any(Date.class)))
+        .thenReturn(5);
+    when(prenotazioneAlloggioService.savePrenotazioneAlloggio(eq(camera), any(PrenotazioneAlloggio.class)))
+        .thenReturn(prenotazioneAlloggio);
+    when(itinerariService.saveItinerario(any(Itinerario.class))).thenReturn(itinerario);
+
+    // Durata = 2 giorni -> 48 ore -> ceil(48/24) = 2
+    mockMvc.perform(post("/api/prenotazioni-alloggio")
+            .param("idItinerario", "1")
+            .param("idCamera", "1")
+            .param("numAdulti", "2")
+            .param("numBambini", "0")
+            .param("dataInizio", "2026-03-01")
+            .param("dataFine", "2026-03-03")
+            .param("numCamere", "1")
+            .with(user(visitatore))
+            .with(csrf()))
+        .andExpect(status().isOk());
+
+    ArgumentCaptor<PrenotazioneAlloggio> captor = ArgumentCaptor.forClass(PrenotazioneAlloggio.class);
+    verify(prenotazioneAlloggioService).savePrenotazioneAlloggio(eq(camera), captor.capture());
+
+    PrenotazioneAlloggio captured = captor.getValue();
+    // Con durata > 24 ore, il prezzo viene moltiplicato per ceil(durataOre/24)
+    // 48 ore -> ceil(48/24) = 2 -> prezzo = 100 * 2 = 200
+    assertEquals(200.0, captured.getPrezzo(), 0.01);
+  }
+
+  @Test
   void testConfermaPrenotazioneAlloggio_Success() throws Exception {
     prenotazioneAlloggio.setStato(StatoPrenotazione.NON_CONFERMATA);
     when(prenotazioneAlloggioService.findById(1L)).thenReturn(prenotazioneAlloggio);
@@ -298,7 +435,7 @@ class PrenotazioneAlloggioControllerTest {
         .thenReturn(prenotazioneAlloggio);
     when(itinerariService.saveItinerario(any(Itinerario.class))).thenReturn(itinerario);
 
-    mockMvc.perform(post("/api/prenotazioni-alloggio/1")
+    MvcResult result = mockMvc.perform(post("/api/prenotazioni-alloggio/1")
             .param("numAdulti", "2")
             .param("numBambini", "0")
             .param("dataInizio", "2026-03-01")
@@ -306,10 +443,23 @@ class PrenotazioneAlloggioControllerTest {
             .param("numCamere", "1")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists())
+        .andReturn();
 
     verify(prenotazioneAlloggioService).findById(1L);
-    verify(prenotazioneAlloggioService).savePrenotazioneAlloggio(eq(camera), any(PrenotazioneAlloggio.class));
+
+    ArgumentCaptor<PrenotazioneAlloggio> captor = ArgumentCaptor.forClass(PrenotazioneAlloggio.class);
+    verify(prenotazioneAlloggioService).savePrenotazioneAlloggio(eq(camera), captor.capture());
+
+    PrenotazioneAlloggio captured = captor.getValue();
+    assertEquals(2, captured.getNumAdulti());
+    assertEquals(0, captured.getNumBambini());
+    assertEquals(1, captured.getNumCamere());
+    assertNotNull(captured.getDataInizio());
+    assertNotNull(captured.getDataFine());
+    assertEquals(StatoPrenotazione.CREATA, captured.getStato());
+    assertEquals(100.0, captured.getPrezzo(), 0.01);
   }
 
   @Test
@@ -460,13 +610,126 @@ class PrenotazioneAlloggioControllerTest {
   }
 
   @Test
-  void testVisualizzaPrenotazioneAlloggio_Success() throws Exception {
+  void testConfermaPrenotazioneAlloggio_CapienzaEsatta() throws Exception {
+    prenotazioneAlloggio.setStato(StatoPrenotazione.NON_CONFERMATA);
     when(prenotazioneAlloggioService.findById(1L)).thenReturn(prenotazioneAlloggio);
+    when(prenotazioneAlloggioService.controllaDisponibilitaCamera(eq(camera), any(Date.class), any(Date.class)))
+        .thenReturn(5);
+    when(prenotazioneAlloggioService.savePrenotazioneAlloggio(eq(camera), any(PrenotazioneAlloggio.class)))
+        .thenReturn(prenotazioneAlloggio);
+    when(itinerariService.saveItinerario(any(Itinerario.class))).thenReturn(itinerario);
 
-    mockMvc.perform(get("/api/prenotazioni-alloggio/1")
+    // Capienza camera = 2, numAdulti + numBambini = 2 -> esattamente al limite
+    mockMvc.perform(post("/api/prenotazioni-alloggio/1")
+            .param("numAdulti", "1")
+            .param("numBambini", "1")
+            .param("dataInizio", "2026-03-01")
+            .param("dataFine", "2026-03-02")
+            .param("numCamere", "1")
             .with(user(visitatore))
             .with(csrf()))
         .andExpect(status().isOk());
+
+    ArgumentCaptor<PrenotazioneAlloggio> captor = ArgumentCaptor.forClass(PrenotazioneAlloggio.class);
+    verify(prenotazioneAlloggioService).savePrenotazioneAlloggio(eq(camera), captor.capture());
+
+    PrenotazioneAlloggio captured = captor.getValue();
+    assertEquals(1, captured.getNumAdulti());
+    assertEquals(1, captured.getNumBambini());
+  }
+
+  @Test
+  void testConfermaPrenotazioneAlloggio_MultipleCamera() throws Exception {
+    prenotazioneAlloggio.setStato(StatoPrenotazione.NON_CONFERMATA);
+    when(prenotazioneAlloggioService.findById(1L)).thenReturn(prenotazioneAlloggio);
+    when(prenotazioneAlloggioService.controllaDisponibilitaCamera(eq(camera), any(Date.class), any(Date.class)))
+        .thenReturn(5);
+    when(prenotazioneAlloggioService.savePrenotazioneAlloggio(eq(camera), any(PrenotazioneAlloggio.class)))
+        .thenReturn(prenotazioneAlloggio);
+    when(itinerariService.saveItinerario(any(Itinerario.class))).thenReturn(itinerario);
+
+    // 3 camere, capienza 2 per camera = 6 persone totali
+    mockMvc.perform(post("/api/prenotazioni-alloggio/1")
+            .param("numAdulti", "3")
+            .param("numBambini", "2")
+            .param("dataInizio", "2026-03-01")
+            .param("dataFine", "2026-03-02")
+            .param("numCamere", "3")
+            .with(user(visitatore))
+            .with(csrf()))
+        .andExpect(status().isOk());
+
+    ArgumentCaptor<PrenotazioneAlloggio> captor = ArgumentCaptor.forClass(PrenotazioneAlloggio.class);
+    verify(prenotazioneAlloggioService).savePrenotazioneAlloggio(eq(camera), captor.capture());
+
+    PrenotazioneAlloggio captured = captor.getValue();
+    assertEquals(3, captured.getNumCamere());
+    // Prezzo = numCamere * prezzoCamera = 3 * 100 = 300
+    assertEquals(300.0, captured.getPrezzo(), 0.01);
+  }
+
+  @Test
+  void testConfermaPrenotazioneAlloggio_DisponibilitaEsattaAlLimite() throws Exception {
+    prenotazioneAlloggio.setStato(StatoPrenotazione.NON_CONFERMATA);
+    when(prenotazioneAlloggioService.findById(1L)).thenReturn(prenotazioneAlloggio);
+    // Disponibilità = 1, numCamere = 1 -> esattamente sufficiente
+    when(prenotazioneAlloggioService.controllaDisponibilitaCamera(eq(camera), any(Date.class), any(Date.class)))
+        .thenReturn(1);
+    when(prenotazioneAlloggioService.savePrenotazioneAlloggio(eq(camera), any(PrenotazioneAlloggio.class)))
+        .thenReturn(prenotazioneAlloggio);
+    when(itinerariService.saveItinerario(any(Itinerario.class))).thenReturn(itinerario);
+
+    mockMvc.perform(post("/api/prenotazioni-alloggio/1")
+            .param("numAdulti", "2")
+            .param("numBambini", "0")
+            .param("dataInizio", "2026-03-01")
+            .param("dataFine", "2026-03-02")
+            .param("numCamere", "1")
+            .with(user(visitatore))
+            .with(csrf()))
+        .andExpect(status().isOk());
+  }
+
+  @Test
+  void testConfermaPrenotazioneAlloggio_Durata48Ore() throws Exception {
+    prenotazioneAlloggio.setStato(StatoPrenotazione.NON_CONFERMATA);
+    when(prenotazioneAlloggioService.findById(1L)).thenReturn(prenotazioneAlloggio);
+    when(prenotazioneAlloggioService.controllaDisponibilitaCamera(eq(camera), any(Date.class), any(Date.class)))
+        .thenReturn(5);
+    when(prenotazioneAlloggioService.savePrenotazioneAlloggio(eq(camera), any(PrenotazioneAlloggio.class)))
+        .thenReturn(prenotazioneAlloggio);
+    when(itinerariService.saveItinerario(any(Itinerario.class))).thenReturn(itinerario);
+
+    // Durata = 2 giorni -> 48 ore -> ceil(48/24) = 2
+    mockMvc.perform(post("/api/prenotazioni-alloggio/1")
+            .param("numAdulti", "2")
+            .param("numBambini", "0")
+            .param("dataInizio", "2026-03-01")
+            .param("dataFine", "2026-03-03")
+            .param("numCamere", "1")
+            .with(user(visitatore))
+            .with(csrf()))
+        .andExpect(status().isOk());
+
+    ArgumentCaptor<PrenotazioneAlloggio> captor = ArgumentCaptor.forClass(PrenotazioneAlloggio.class);
+    verify(prenotazioneAlloggioService).savePrenotazioneAlloggio(eq(camera), captor.capture());
+
+    PrenotazioneAlloggio captured = captor.getValue();
+    // Con durata > 24 ore, il prezzo viene moltiplicato per ceil(durataOre/24)
+    // 48 ore -> ceil(48/24) = 2 -> prezzo = 100 * 2 = 200
+    assertEquals(200.0, captured.getPrezzo(), 0.01);
+  }
+
+  @Test
+  void testVisualizzaPrenotazioneAlloggio_Success() throws Exception {
+    when(prenotazioneAlloggioService.findById(1L)).thenReturn(prenotazioneAlloggio);
+
+    MvcResult result = mockMvc.perform(get("/api/prenotazioni-alloggio/1")
+            .with(user(visitatore))
+            .with(csrf()))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists())
+        .andReturn();
 
     verify(prenotazioneAlloggioService).findById(1L);
   }
@@ -510,10 +773,12 @@ class PrenotazioneAlloggioControllerTest {
     when(prenotazioneAlloggioService.getPrenotazioniByAlloggio(alloggio))
         .thenReturn(prenotazioni);
 
-    mockMvc.perform(get("/api/prenotazioni-alloggio/perAttivita/1")
+    MvcResult result = mockMvc.perform(get("/api/prenotazioni-alloggio/perAttivita/1")
             .with(user(gestore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists())
+        .andReturn();
 
     verify(attivitaService).findById(1L);
     verify(prenotazioneAlloggioService).getPrenotazioniByAlloggio(alloggio);
@@ -556,12 +821,14 @@ class PrenotazioneAlloggioControllerTest {
     when(prenotazioneAlloggioService.controllaDisponibilitaAlloggio(eq(alloggio), any(Date.class), any(Date.class)))
         .thenReturn(5);
 
-    mockMvc.perform(get("/api/prenotazioni-alloggio/perAttivita/1/disponibilita")
+    MvcResult result = mockMvc.perform(get("/api/prenotazioni-alloggio/perAttivita/1/disponibilita")
             .param("dataInizio", "2026-03-01")
             .param("dataFine", "2026-03-02")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists())
+        .andReturn();
 
     verify(attivitaService).findById(1L);
     verify(prenotazioneAlloggioService).controllaDisponibilitaAlloggio(eq(alloggio), any(Date.class), any(Date.class));
@@ -588,12 +855,14 @@ class PrenotazioneAlloggioControllerTest {
     when(prenotazioneAlloggioService.controllaDisponibilitaCamera(eq(camera), any(Date.class), any(Date.class)))
         .thenReturn(5);
 
-    mockMvc.perform(get("/api/prenotazioni-alloggio/perCamera/1/disponibilita")
+    MvcResult result = mockMvc.perform(get("/api/prenotazioni-alloggio/perCamera/1/disponibilita")
             .param("dataInizio", "2026-03-01")
             .param("dataFine", "2026-03-02")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists())
+        .andReturn();
 
     verify(cameraService).findById(1L);
     verify(prenotazioneAlloggioService).controllaDisponibilitaCamera(eq(camera), any(Date.class), any(Date.class));
@@ -622,10 +891,12 @@ class PrenotazioneAlloggioControllerTest {
     when(prenotazioneAlloggioService.getPrenotazioniByVisitatore(visitatore))
         .thenReturn(prenotazioni);
 
-    mockMvc.perform(get("/api/prenotazioni-alloggio")
+    MvcResult result = mockMvc.perform(get("/api/prenotazioni-alloggio")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists())
+        .andReturn();
 
     verify(prenotazioneAlloggioService).getPrenotazioniByVisitatore(visitatore);
   }
@@ -650,14 +921,22 @@ class PrenotazioneAlloggioControllerTest {
         .thenReturn(true);
     when(itinerariService.saveItinerario(any(Itinerario.class))).thenReturn(itinerario);
 
-    mockMvc.perform(delete("/api/prenotazioni-alloggio/1")
+    MvcResult result = mockMvc.perform(delete("/api/prenotazioni-alloggio/1")
             .with(user(visitatore))
             .with(csrf()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").exists())
+        .andReturn();
 
     verify(prenotazioneAlloggioService).findById(1L);
     verify(prenotazioneAlloggioService).deletePrenotazioneAlloggio(prenotazioneAlloggio);
-    verify(itinerariService).saveItinerario(any(Itinerario.class));
+
+    ArgumentCaptor<Itinerario> captor = ArgumentCaptor.forClass(Itinerario.class);
+    verify(itinerariService).saveItinerario(captor.capture());
+
+    Itinerario captured = captor.getValue();
+    // Verifica che il totale dell'itinerario sia stato aggiornato (totale - prezzo prenotazione)
+    assertEquals(0.0, captured.getTotale(), 0.01);
   }
 
   @Test
