@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>DistanceCalculator.java</h1>
+
+<table class="src">
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package it.greentrails.backend.utils;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.data.geo.Point;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>public class DistanceCalculator {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>  private DistanceCalculator() {}</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public static double distance(Point punto1, Point punto2) {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    double lat1 = punto1.getX();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    double lat2 = punto2.getX();</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    double lon1 = punto1.getY();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    double lon2 = punto2.getY();</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_16'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_17'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    final int R = 6371;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_18'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_19'/>
+19
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_19'>1</a>
+<span>
+1. distance : Replaced double subtraction with addition &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    double latDistance = Math.toRadians(lat2 - lat1);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_20'/>
+20
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_20'>1</a>
+<span>
+1. distance : Replaced double subtraction with addition &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    double lonDistance = Math.toRadians(lon2 - lon1);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_22'/>
+22
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_22'>3</a>
+<span>
+1. distance : Replaced double division with multiplication &rarr; SURVIVED<br/>
+2. distance : Replaced double division with multiplication &rarr; SURVIVED<br/>
+3. distance : Replaced double multiplication with division &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>    double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_23'/>
+23
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_23'>2</a>
+<span>
+1. distance : Replaced double multiplication with division &rarr; KILLED<br/>
+2. distance : Replaced double division with multiplication &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_24'/>
+24
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_24'>4</a>
+<span>
+1. distance : Replaced double multiplication with division &rarr; KILLED<br/>
+2. distance : Replaced double addition with subtraction &rarr; KILLED<br/>
+3. distance : Replaced double division with multiplication &rarr; KILLED<br/>
+4. distance : Replaced double multiplication with division &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_26'/>
+26
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_26'>2</a>
+<span>
+1. distance : Replaced double multiplication with division &rarr; KILLED<br/>
+2. distance : Replaced double subtraction with addition &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_27'/>
+27
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_27'>2</a>
+<span>
+1. distance : Replaced double multiplication with division &rarr; KILLED<br/>
+2. distance : Replaced double multiplication with division &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    double distance = R * c * 1000;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_28'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_29'/>
+29
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_29'>1</a>
+<span>
+1. distance : replaced double return with 0.0d for it/greentrails/backend/utils/DistanceCalculator::distance &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return Math.sqrt(Math.pow(distance, 2));</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_30'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_31'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@455b7522_32'/>
+32
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_32'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@455b7522_19'>19</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_19'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>distance<br/><b>Killed by : </b>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:zeroDistance()]</span></span> Replaced double subtraction with addition &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@455b7522_20'>20</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_20'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>distance<br/><b>Killed by : </b>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:zeroDistance()]</span></span> Replaced double subtraction with addition &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@455b7522_22'>22</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_22'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>distance<br/><b>Killed by : </b>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:knownDistanceOneDegreeLongitudeAtEquator()]</span></span> Replaced double multiplication with division &rarr; KILLED</span>
+</div> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>distance<br/><b>Killed by : </b>none</span></span> Replaced double division with multiplication &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.utils.DistanceCalculator,-method=distance,-methodDesc=(Lorg/springframework/data/geo/Point;Lorg/springframework/data/geo/Point;)D],-indexes=[47],-mutator=org.pitest.mutationtest.engine.gregor.mutators.MathMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.utils.DistanceCalculator,-method=distance,-methodDesc=(Lorg/springframework/data/geo/Point;Lorg/springframework/data/geo/Point;)D],-indexes=[47],-mutator=org.pitest.mutationtest.engine.gregor.mutators.MathMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.utils.DistanceCalculator,-method=distance,-methodDesc=(Lorg/springframework/data/geo/Point;Lorg/springframework/data/geo/Point;)D],-indexes=[47],-mutator=org.pitest.mutationtest.engine.gregor.mutators.MathMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:knownDistanceOneDegreeLongitudeAtEquator()]</li> <li>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:zeroDistance()]</li> <li>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:symmetry()]</li> <li>it.greentrails.backend.gestionericerca.service.RicercaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.service.RicercaServiceImplTest]/[method:findAttivitaByPosizioneEmptyResults()]</li> <li>it.greentrails.backend.gestionericerca.service.RicercaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.service.RicercaServiceImplTest]/[method:findAttivitaByPosizioneZeroRaggioSuccess()]</li> <li>it.greentrails.backend.gestionericerca.service.RicercaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.service.RicercaServiceImplTest]/[method:findAttivitaByPosizioneSuccess()]</li> 
+</ul>
+</div></div> <p class='SURVIVED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>distance<br/><b>Killed by : </b>none</span></span> Replaced double division with multiplication &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.utils.DistanceCalculator,-method=distance,-methodDesc=(Lorg/springframework/data/geo/Point;Lorg/springframework/data/geo/Point;)D],-indexes=[43],-mutator=org.pitest.mutationtest.engine.gregor.mutators.MathMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.utils.DistanceCalculator,-method=distance,-methodDesc=(Lorg/springframework/data/geo/Point;Lorg/springframework/data/geo/Point;)D],-indexes=[43],-mutator=org.pitest.mutationtest.engine.gregor.mutators.MathMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.utils.DistanceCalculator,-method=distance,-methodDesc=(Lorg/springframework/data/geo/Point;Lorg/springframework/data/geo/Point;)D],-indexes=[43],-mutator=org.pitest.mutationtest.engine.gregor.mutators.MathMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:knownDistanceOneDegreeLongitudeAtEquator()]</li> <li>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:zeroDistance()]</li> <li>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:symmetry()]</li> <li>it.greentrails.backend.gestionericerca.service.RicercaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.service.RicercaServiceImplTest]/[method:findAttivitaByPosizioneEmptyResults()]</li> <li>it.greentrails.backend.gestionericerca.service.RicercaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.service.RicercaServiceImplTest]/[method:findAttivitaByPosizioneZeroRaggioSuccess()]</li> <li>it.greentrails.backend.gestionericerca.service.RicercaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.service.RicercaServiceImplTest]/[method:findAttivitaByPosizioneSuccess()]</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@455b7522_23'>23</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_23'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>distance<br/><b>Killed by : </b>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:symmetry()]</span></span> Replaced double multiplication with division &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>distance<br/><b>Killed by : </b>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:knownDistanceOneDegreeLongitudeAtEquator()]</span></span> Replaced double division with multiplication &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@455b7522_24'>24</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_24'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>distance<br/><b>Killed by : </b>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:knownDistanceOneDegreeLongitudeAtEquator()]</span></span> Replaced double multiplication with division &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>distance<br/><b>Killed by : </b>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:knownDistanceOneDegreeLongitudeAtEquator()]</span></span> Replaced double addition with subtraction &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>distance<br/><b>Killed by : </b>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:knownDistanceOneDegreeLongitudeAtEquator()]</span></span> Replaced double division with multiplication &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>distance<br/><b>Killed by : </b>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:knownDistanceOneDegreeLongitudeAtEquator()]</span></span> Replaced double multiplication with division &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@455b7522_26'>26</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_26'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>distance<br/><b>Killed by : </b>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:knownDistanceOneDegreeLongitudeAtEquator()]</span></span> Replaced double multiplication with division &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>distance<br/><b>Killed by : </b>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:knownDistanceOneDegreeLongitudeAtEquator()]</span></span> Replaced double subtraction with addition &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@455b7522_27'>27</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_27'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>distance<br/><b>Killed by : </b>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:knownDistanceOneDegreeLongitudeAtEquator()]</span></span> Replaced double multiplication with division &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>distance<br/><b>Killed by : </b>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:knownDistanceOneDegreeLongitudeAtEquator()]</span></span> Replaced double multiplication with division &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@455b7522_29'>29</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@455b7522_29'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>distance<br/><b>Killed by : </b>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:knownDistanceOneDegreeLongitudeAtEquator()]</span></span> replaced double return with 0.0d for it/greentrails/backend/utils/DistanceCalculator::distance &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+<li class='mutator'>CONDITIONALS_BOUNDARY</li>
+<li class='mutator'>EMPTY_RETURNS</li>
+<li class='mutator'>FALSE_RETURNS</li>
+<li class='mutator'>INCREMENTS</li>
+<li class='mutator'>INVERT_NEGS</li>
+<li class='mutator'>MATH</li>
+<li class='mutator'>NEGATE_CONDITIONALS</li>
+<li class='mutator'>NULL_RETURNS</li>
+<li class='mutator'>PRIMITIVE_RETURNS</li>
+<li class='mutator'>TRUE_RETURNS</li>
+<li class='mutator'>VOID_METHOD_CALLS</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:knownDistanceOneDegreeLongitudeAtEquator()] (0 ms)</li><li>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:zeroDistance()] (0 ms)</li><li>it.greentrails.backend.utils.DistanceCalculatorTest.[engine:junit-jupiter]/[class:it.greentrails.backend.utils.DistanceCalculatorTest]/[method:symmetry()] (0 ms)</li><li>it.greentrails.backend.gestionericerca.service.RicercaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.service.RicercaServiceImplTest]/[method:findAttivitaByPosizioneEmptyResults()] (0 ms)</li><li>it.greentrails.backend.gestionericerca.service.RicercaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.service.RicercaServiceImplTest]/[method:findAttivitaByPosizioneZeroRaggioSuccess()] (0 ms)</li><li>it.greentrails.backend.gestionericerca.service.RicercaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestionericerca.service.RicercaServiceImplTest]/[method:findAttivitaByPosizioneSuccess()] (1 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='https://pitest.org'>PIT</a> 1.22.1
+
+</body>
+</html>

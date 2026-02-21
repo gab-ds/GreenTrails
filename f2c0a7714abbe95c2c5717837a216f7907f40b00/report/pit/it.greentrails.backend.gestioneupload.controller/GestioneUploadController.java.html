@@ -1,0 +1,2121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>GestioneUploadController.java</h1>
+
+<table class="src">
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package it.greentrails.backend.gestioneupload.controller;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.entities.Utente;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.enums.RuoloUtente;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.gestioneattivita.repository.AttivitaRepository;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.gestioneattivita.repository.RecensioneRepository;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.gestionesegnalazioni.repository.SegnalazioniRepository;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.gestioneupload.exceptions.FileNonTrovatoException;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.gestioneupload.service.ArchiviazioneService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.utils.service.ResponseGenerator;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.concurrent.atomic.AtomicBoolean;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import lombok.RequiredArgsConstructor;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.core.io.Resource;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.http.HttpHeaders;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.http.HttpStatus;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_16'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.http.MediaType;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_17'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.http.ResponseEntity;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_18'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.security.core.annotation.AuthenticationPrincipal;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_19'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.DeleteMapping;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_20'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.ExceptionHandler;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.GetMapping;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_22'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.PathVariable;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_23'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.PostMapping;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_24'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.RequestMapping;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.RequestParam;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_26'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.ResponseBody;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_27'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.RestController;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_28'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.multipart.MultipartFile;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_29'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_30'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_31'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>@RestController</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_32'/>
+32
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_32'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>@RequestMapping(&#34;api/file&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_33'/>
+33
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_33'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>@RequiredArgsConstructor</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_34'/>
+34
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_34'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>public class GestioneUploadController {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_35'/>
+35
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_35'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_36'/>
+36
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_36'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final ArchiviazioneService archiviazioneService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_37'/>
+37
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_37'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final AttivitaRepository attivitaRepository;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_38'/>
+38
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_38'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final RecensioneRepository recensioneRepository;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_39'/>
+39
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_39'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final SegnalazioniRepository segnalazioniRepository;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_40'/>
+40
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_40'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_41'/>
+41
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_41'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @GetMapping(&#34;{media:.+}&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_42'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ResponseEntity&#60;Object&#62; elencaFileCaricati(@PathVariable final String media) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_43'/>
+43
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_43'>1</a>
+<span>
+1. elencaFileCaricati : replaced return value with null for it/greentrails/backend/gestioneupload/controller/GestioneUploadController::elencaFileCaricati &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>    return ResponseGenerator.generateResponse(HttpStatus.OK, archiviazioneService.loadAll(media));</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_44'/>
+44
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_44'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_45'/>
+45
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_45'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_46'/>
+46
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_46'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @GetMapping(&#34;{media:.+}/{filename:.+}&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_47'/>
+47
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_47'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @ResponseBody</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_48'/>
+48
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_48'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ResponseEntity&#60;Resource&#62; serviFile(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_49'/>
+49
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_49'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @PathVariable final String media,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_50'/>
+50
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_50'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @PathVariable final String filename) {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_51'/>
+51
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_51'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_52'/>
+52
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_52'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    Resource file = archiviazioneService.loadAsResource(media, filename);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_53'/>
+53
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_53'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_54'/>
+54
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_54'>1</a>
+<span>
+1. serviFile : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (file == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_55'/>
+55
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_55'>1</a>
+<span>
+1. serviFile : replaced return value with null for it/greentrails/backend/gestioneupload/controller/GestioneUploadController::serviFile &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseEntity.notFound().build();</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_56'/>
+56
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_56'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_57'/>
+57
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_57'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_58'/>
+58
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_58'>1</a>
+<span>
+1. serviFile : replaced return value with null for it/greentrails/backend/gestioneupload/controller/GestioneUploadController::serviFile &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_59'/>
+59
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_59'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            &#34;attachment; filename=\&#34;&#34; + file.getFilename() + &#34;\&#34;&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_60'/>
+60
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_60'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        .contentType(MediaType.APPLICATION_OCTET_STREAM).body(file);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_61'/>
+61
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_61'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_62'/>
+62
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_62'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_63'/>
+63
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_63'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @PostMapping</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_64'/>
+64
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_64'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ResponseEntity&#60;Object&#62; gestisciUploadFile(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_65'/>
+65
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_65'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @AuthenticationPrincipal Utente utente,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_66'/>
+66
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_66'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;media&#34;) String media,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_67'/>
+67
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_67'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;file&#34;) MultipartFile file) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_68'/>
+68
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_68'>1</a>
+<span>
+1. gestisciUploadFile : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    AtomicBoolean auth = new AtomicBoolean(utente.getRuolo() == RuoloUtente.AMMINISTRATORE);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_69'/>
+69
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_69'>1</a>
+<span>
+1. gestisciUploadFile : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (!auth.get()) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_70'/>
+70
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_70'>1</a>
+<span>
+1. gestisciUploadFile : removed call to java/util/Optional::ifPresentOrElse &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      attivitaRepository.findOneByMedia(media).ifPresentOrElse(</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_71'/>
+71
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_71'>1</a>
+<span>
+1. lambda$gestisciUploadFile$0 : removed call to java/util/concurrent/atomic/AtomicBoolean::set &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          a -&#62; auth.set(a.getGestore().getId().equals(utente.getId())),</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_72'/>
+72
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_72'>1</a>
+<span>
+1. lambda$gestisciUploadFile$4 : removed call to java/util/Optional::ifPresentOrElse &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          () -&#62; recensioneRepository.findOneByMedia(media).ifPresentOrElse(</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_73'/>
+73
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_73'>1</a>
+<span>
+1. lambda$gestisciUploadFile$1 : removed call to java/util/concurrent/atomic/AtomicBoolean::set &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>              r -&#62; auth.set(r.getVisitatore().getId().equals(utente.getId())),</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_74'/>
+74
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_74'>1</a>
+<span>
+1. lambda$gestisciUploadFile$3 : removed call to java/util/Optional::ifPresent &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>              () -&#62; segnalazioniRepository.findOneByMedia(media).ifPresent(</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_75'/>
+75
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_75'>1</a>
+<span>
+1. lambda$gestisciUploadFile$2 : removed call to java/util/concurrent/atomic/AtomicBoolean::set &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                  s -&#62; auth.set(s.getUtente().getId().equals(utente.getId()))</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_76'/>
+76
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_76'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>              )</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_77'/>
+77
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_77'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          )</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_78'/>
+78
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_78'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      );</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_79'/>
+79
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_79'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_80'/>
+80
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_80'>1</a>
+<span>
+1. gestisciUploadFile : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (!auth.get()) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_81'/>
+81
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_81'>1</a>
+<span>
+1. gestisciUploadFile : replaced return value with null for it/greentrails/backend/gestioneupload/controller/GestioneUploadController::gestisciUploadFile &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.FORBIDDEN,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_82'/>
+82
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_82'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          &#34;Impossibile caricare un file qui.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_83'/>
+83
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_83'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_84'/>
+84
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_84'>1</a>
+<span>
+1. gestisciUploadFile : removed call to it/greentrails/backend/gestioneupload/service/ArchiviazioneService::store &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    archiviazioneService.store(media, file);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_85'/>
+85
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_85'>1</a>
+<span>
+1. gestisciUploadFile : replaced return value with null for it/greentrails/backend/gestioneupload/controller/GestioneUploadController::gestisciUploadFile &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>    return ResponseGenerator.generateResponse(HttpStatus.OK, &#34;File caricato&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_86'/>
+86
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_86'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_87'/>
+87
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_87'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_88'/>
+88
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_88'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @ExceptionHandler(FileNonTrovatoException.class)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_89'/>
+89
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_89'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ResponseEntity&#60;?&#62; handleStorageFileNotFound(FileNonTrovatoException exc) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_90'/>
+90
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_90'>1</a>
+<span>
+1. handleStorageFileNotFound : replaced return value with null for it/greentrails/backend/gestioneupload/controller/GestioneUploadController::handleStorageFileNotFound &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return ResponseEntity.notFound().build();</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_91'/>
+91
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_91'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_92'/>
+92
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_92'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_93'/>
+93
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_93'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_94'/>
+94
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_94'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @DeleteMapping(&#34;{media:.+}/{filename:.+}&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_95'/>
+95
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_95'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private ResponseEntity&#60;Object&#62; cancellaMedia(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_96'/>
+96
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_96'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @AuthenticationPrincipal Utente utente,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_97'/>
+97
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_97'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @PathVariable final String media,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_98'/>
+98
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_98'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @PathVariable final String filename</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_99'/>
+99
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_99'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  ) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_100'/>
+100
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_100'>1</a>
+<span>
+1. cancellaMedia : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    AtomicBoolean auth = new AtomicBoolean(utente.getRuolo() == RuoloUtente.AMMINISTRATORE);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_101'/>
+101
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_101'>1</a>
+<span>
+1. cancellaMedia : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (!auth.get()) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_102'/>
+102
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_102'>1</a>
+<span>
+1. cancellaMedia : removed call to java/util/Optional::ifPresentOrElse &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      attivitaRepository.findOneByMedia(media).ifPresentOrElse(</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_103'/>
+103
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_103'>1</a>
+<span>
+1. lambda$cancellaMedia$5 : removed call to java/util/concurrent/atomic/AtomicBoolean::set &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          a -&#62; auth.set(a.getGestore().getId().equals(utente.getId())),</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_104'/>
+104
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_104'>1</a>
+<span>
+1. lambda$cancellaMedia$9 : removed call to java/util/Optional::ifPresentOrElse &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          () -&#62; recensioneRepository.findOneByMedia(media).ifPresentOrElse(</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_105'/>
+105
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_105'>1</a>
+<span>
+1. lambda$cancellaMedia$6 : removed call to java/util/concurrent/atomic/AtomicBoolean::set &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>              r -&#62; auth.set(r.getVisitatore().getId().equals(utente.getId())),</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_106'/>
+106
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_106'>1</a>
+<span>
+1. lambda$cancellaMedia$8 : removed call to java/util/Optional::ifPresent &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>              () -&#62; segnalazioniRepository.findOneByMedia(media).ifPresent(</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_107'/>
+107
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_107'>1</a>
+<span>
+1. lambda$cancellaMedia$7 : removed call to java/util/concurrent/atomic/AtomicBoolean::set &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                  s -&#62; auth.set(s.getUtente().getId().equals(utente.getId()))</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_108'/>
+108
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_108'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>              )</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_109'/>
+109
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_109'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          )</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_110'/>
+110
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_110'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      );</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_111'/>
+111
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_111'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_112'/>
+112
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_112'>1</a>
+<span>
+1. cancellaMedia : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (!auth.get()) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_113'/>
+113
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_113'>1</a>
+<span>
+1. cancellaMedia : replaced return value with null for it/greentrails/backend/gestioneupload/controller/GestioneUploadController::cancellaMedia &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.FORBIDDEN,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_114'/>
+114
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_114'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          &#34;Impossibile eliminare il file.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_115'/>
+115
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_115'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_116'/>
+116
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_116'>1</a>
+<span>
+1. cancellaMedia : removed call to it/greentrails/backend/gestioneupload/service/ArchiviazioneService::delete &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    archiviazioneService.delete(media, filename);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_117'/>
+117
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_117'>1</a>
+<span>
+1. cancellaMedia : replaced return value with null for it/greentrails/backend/gestioneupload/controller/GestioneUploadController::cancellaMedia &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>    return ResponseGenerator.generateResponse(HttpStatus.OK, &#34;File eliminato&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_118'/>
+118
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_118'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_119'/>
+119
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_119'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@41ee6606_120'/>
+120
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_120'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_43'>43</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_43'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>elencaFileCaricati<br/><b>Killed by : </b>none</span></span> replaced return value with null for it/greentrails/backend/gestioneupload/controller/GestioneUploadController::elencaFileCaricati &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneupload.controller.GestioneUploadController,-method=elencaFileCaricati,-methodDesc=(Ljava/lang/String;)Lorg/springframework/http/ResponseEntity;],-indexes=[9],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.NullReturnValsMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneupload.controller.GestioneUploadController,-method=elencaFileCaricati,-methodDesc=(Ljava/lang/String;)Lorg/springframework/http/ResponseEntity;],-indexes=[9],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.NullReturnValsMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneupload.controller.GestioneUploadController,-method=elencaFileCaricati,-methodDesc=(Ljava/lang/String;)Lorg/springframework/http/ResponseEntity;],-indexes=[9],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.NullReturnValsMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testElencaFileCaricati_MediaVuoto()]</li> <li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testElencaFileCaricati_Success()]</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_54'>54</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_54'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>serviFile<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testServiFile_Success()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_55'>55</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_55'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>serviFile<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testServiFile_FileNonTrovato()]</span></span> replaced return value with null for it/greentrails/backend/gestioneupload/controller/GestioneUploadController::serviFile &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_58'>58</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_58'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>serviFile<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testServiFile_Success()]</span></span> replaced return value with null for it/greentrails/backend/gestioneupload/controller/GestioneUploadController::serviFile &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_68'>68</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_68'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>gestisciUploadFile<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_NonAutorizzato()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_69'>69</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_69'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>gestisciUploadFile<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_NonAutorizzato()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_70'>70</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_70'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>gestisciUploadFile<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_AttivitaProprietario()]</span></span> removed call to java/util/Optional::ifPresentOrElse &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_71'>71</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_71'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>lambda$gestisciUploadFile$0<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_AttivitaProprietario()]</span></span> removed call to java/util/concurrent/atomic/AtomicBoolean::set &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_72'>72</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_72'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>lambda$gestisciUploadFile$4<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_RecensioneProprietario()]</span></span> removed call to java/util/Optional::ifPresentOrElse &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_73'>73</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_73'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>lambda$gestisciUploadFile$1<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_RecensioneProprietario()]</span></span> removed call to java/util/concurrent/atomic/AtomicBoolean::set &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_74'>74</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_74'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>lambda$gestisciUploadFile$3<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_SegnalazioneProprietario()]</span></span> removed call to java/util/Optional::ifPresent &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_75'>75</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_75'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>lambda$gestisciUploadFile$2<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_SegnalazioneProprietario()]</span></span> removed call to java/util/concurrent/atomic/AtomicBoolean::set &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_80'>80</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_80'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>gestisciUploadFile<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_NonAutorizzato()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_81'>81</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_81'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>gestisciUploadFile<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_NonAutorizzato()]</span></span> replaced return value with null for it/greentrails/backend/gestioneupload/controller/GestioneUploadController::gestisciUploadFile &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_84'>84</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_84'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>gestisciUploadFile<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_AttivitaProprietario()]</span></span> removed call to it/greentrails/backend/gestioneupload/service/ArchiviazioneService::store &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_85'>85</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_85'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>gestisciUploadFile<br/><b>Killed by : </b>none</span></span> replaced return value with null for it/greentrails/backend/gestioneupload/controller/GestioneUploadController::gestisciUploadFile &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneupload.controller.GestioneUploadController,-method=gestisciUploadFile,-methodDesc=(Lit/greentrails/backend/entities/Utente;Ljava/lang/String;Lorg/springframework/web/multipart/MultipartFile;)Lorg/springframework/http/ResponseEntity;],-indexes=[63],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.NullReturnValsMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneupload.controller.GestioneUploadController,-method=gestisciUploadFile,-methodDesc=(Lit/greentrails/backend/entities/Utente;Ljava/lang/String;Lorg/springframework/web/multipart/MultipartFile;)Lorg/springframework/http/ResponseEntity;],-indexes=[63],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.NullReturnValsMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneupload.controller.GestioneUploadController,-method=gestisciUploadFile,-methodDesc=(Lit/greentrails/backend/entities/Utente;Ljava/lang/String;Lorg/springframework/web/multipart/MultipartFile;)Lorg/springframework/http/ResponseEntity;],-indexes=[63],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.NullReturnValsMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_AttivitaProprietario()]</li> <li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_RecensioneProprietario()]</li> <li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_SegnalazioneProprietario()]</li> <li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_Amministratore()]</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_90'>90</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_90'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>handleStorageFileNotFound<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testServiFile_FileNonTrovatoException()]</span></span> replaced return value with null for it/greentrails/backend/gestioneupload/controller/GestioneUploadController::handleStorageFileNotFound &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_100'>100</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_100'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>cancellaMedia<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_Amministratore()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_101'>101</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_101'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>cancellaMedia<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_NonAutorizzato()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_102'>102</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_102'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>cancellaMedia<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_AttivitaProprietario()]</span></span> removed call to java/util/Optional::ifPresentOrElse &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_103'>103</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_103'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>lambda$cancellaMedia$5<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_AttivitaProprietario()]</span></span> removed call to java/util/concurrent/atomic/AtomicBoolean::set &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_104'>104</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_104'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>lambda$cancellaMedia$9<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_RecensioneProprietario()]</span></span> removed call to java/util/Optional::ifPresentOrElse &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_105'>105</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_105'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>lambda$cancellaMedia$6<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_RecensioneProprietario()]</span></span> removed call to java/util/concurrent/atomic/AtomicBoolean::set &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_106'>106</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_106'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>lambda$cancellaMedia$8<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_SegnalazioneProprietario()]</span></span> removed call to java/util/Optional::ifPresent &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_107'>107</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_107'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>lambda$cancellaMedia$7<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_SegnalazioneProprietario()]</span></span> removed call to java/util/concurrent/atomic/AtomicBoolean::set &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_112'>112</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_112'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>cancellaMedia<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_Amministratore()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_113'>113</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_113'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>cancellaMedia<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_NonAutorizzato()]</span></span> replaced return value with null for it/greentrails/backend/gestioneupload/controller/GestioneUploadController::cancellaMedia &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_116'>116</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_116'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>cancellaMedia<br/><b>Killed by : </b>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_Amministratore()]</span></span> removed call to it/greentrails/backend/gestioneupload/service/ArchiviazioneService::delete &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@41ee6606_117'>117</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@41ee6606_117'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>cancellaMedia<br/><b>Killed by : </b>none</span></span> replaced return value with null for it/greentrails/backend/gestioneupload/controller/GestioneUploadController::cancellaMedia &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneupload.controller.GestioneUploadController,-method=cancellaMedia,-methodDesc=(Lit/greentrails/backend/entities/Utente;Ljava/lang/String;Ljava/lang/String;)Lorg/springframework/http/ResponseEntity;],-indexes=[63],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.NullReturnValsMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneupload.controller.GestioneUploadController,-method=cancellaMedia,-methodDesc=(Lit/greentrails/backend/entities/Utente;Ljava/lang/String;Ljava/lang/String;)Lorg/springframework/http/ResponseEntity;],-indexes=[63],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.NullReturnValsMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneupload.controller.GestioneUploadController,-method=cancellaMedia,-methodDesc=(Lit/greentrails/backend/entities/Utente;Ljava/lang/String;Ljava/lang/String;)Lorg/springframework/http/ResponseEntity;],-indexes=[63],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.NullReturnValsMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_Amministratore()]</li> <li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_AttivitaProprietario()]</li> <li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_RecensioneProprietario()]</li> <li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_SegnalazioneProprietario()]</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+<li class='mutator'>CONDITIONALS_BOUNDARY</li>
+<li class='mutator'>EMPTY_RETURNS</li>
+<li class='mutator'>FALSE_RETURNS</li>
+<li class='mutator'>INCREMENTS</li>
+<li class='mutator'>INVERT_NEGS</li>
+<li class='mutator'>MATH</li>
+<li class='mutator'>NEGATE_CONDITIONALS</li>
+<li class='mutator'>NULL_RETURNS</li>
+<li class='mutator'>PRIMITIVE_RETURNS</li>
+<li class='mutator'>TRUE_RETURNS</li>
+<li class='mutator'>VOID_METHOD_CALLS</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_SegnalazioneProprietario()] (5 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_SegnalazioneProprietario()] (4 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_NonAutorizzato()] (3 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_MediaNonEsiste()] (4 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testServiFile_Success()] (9 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testServiFile_FileNonTrovato()] (15 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_RecensioneProprietario()] (4 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_RecensioneProprietario()] (3 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_AttivitaProprietario()] (4 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testGestisciUploadFile_Amministratore()] (7 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_NonAutorizzato()] (4 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_MediaNonEsiste()] (3 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_AttivitaProprietario()] (4 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testCancellaMedia_Amministratore()] (4 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testServiFile_FileNonTrovatoException()] (6 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testElencaFileCaricati_MediaVuoto()] (5 ms)</li><li>it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneupload.controller.GestioneUploadControllerTest]/[method:testElencaFileCaricati_Success()] (16 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='https://pitest.org'>PIT</a> 1.22.1
+
+</body>
+</html>

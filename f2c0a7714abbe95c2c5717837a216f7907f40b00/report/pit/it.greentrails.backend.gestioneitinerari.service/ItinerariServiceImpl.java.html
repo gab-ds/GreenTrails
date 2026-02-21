@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>ItinerariServiceImpl.java</h1>
+
+<table class="src">
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package it.greentrails.backend.gestioneitinerari.service;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.entities.Itinerario;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.entities.Preferenze;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.entities.Utente;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.enums.RuoloUtente;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.gestioneitinerari.adapter.ItinerariAdapter;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.gestioneitinerari.repository.ItinerariRepository;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.gestioneprenotazioni.repository.PrenotazioneAlloggioRepository;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.gestioneprenotazioni.repository.PrenotazioneAttivitaTuristicaRepository;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAlloggioService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.List;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.Optional;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import lombok.RequiredArgsConstructor;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_16'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.data.domain.Pageable;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_17'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.stereotype.Service;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_18'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_19'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>@Service</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_20'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>@RequiredArgsConstructor</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>public class ItinerariServiceImpl implements ItinerariService {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_22'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_23'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final ItinerariRepository repository;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_24'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final PrenotazioneAlloggioService prenotazioneAlloggioService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final PrenotazioneAttivitaTuristicaService prenotazioneAttivitaTuristicaService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_26'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final PrenotazioneAlloggioRepository prenotazioneAlloggioRepository;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_27'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final PrenotazioneAttivitaTuristicaRepository prenotazioneAttivitaTuristicaRepository;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_28'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final ItinerariAdapter itinerariStubAdapter;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_29'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_30'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @Override</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_31'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public Itinerario saveItinerario(Itinerario itinerario) throws Exception {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_32'/>
+32
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_32'>1</a>
+<span>
+1. saveItinerario : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (itinerario == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_33'/>
+33
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_33'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      throw new Exception(&#34;L&#39;itinerario &#232; vuoto.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_34'/>
+34
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_34'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_35'/>
+35
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_35'>1</a>
+<span>
+1. saveItinerario : replaced return value with null for it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl::saveItinerario &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return repository.save(itinerario);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_36'/>
+36
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_36'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_37'/>
+37
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_37'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_38'/>
+38
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_38'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_39'/>
+39
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_39'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @Override</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_40'/>
+40
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_40'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public Itinerario createByPreferenze(Preferenze preferenze) throws Exception {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_41'/>
+41
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_41'>1</a>
+<span>
+1. createByPreferenze : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (preferenze == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_42'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      throw new Exception(&#34;Le preferenze sono vuote.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_43'/>
+43
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_43'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_44'/>
+44
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_44'>1</a>
+<span>
+1. createByPreferenze : replaced return value with null for it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl::createByPreferenze &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return itinerariStubAdapter.pianificazioneAutomatica(preferenze);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_45'/>
+45
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_45'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_46'/>
+46
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_46'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_47'/>
+47
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_47'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @Override</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_48'/>
+48
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_48'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public List&#60;Itinerario&#62; findItinerariByUtente(Utente utente) throws Exception {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_49'/>
+49
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_49'>1</a>
+<span>
+1. findItinerariByUtente : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (utente == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_50'/>
+50
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_50'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      throw new Exception(&#34;L&#39;utente &#232; vuoto.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_51'/>
+51
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_51'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_52'/>
+52
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_52'>1</a>
+<span>
+1. findItinerariByUtente : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (utente.getRuolo() != RuoloUtente.VISITATORE) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_53'/>
+53
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_53'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      throw new Exception(&#34;L&#39;utente non &#232; un visitatore.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_54'/>
+54
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_54'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_55'/>
+55
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_55'>1</a>
+<span>
+1. findItinerariByUtente : replaced return value with Collections.emptyList for it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl::findItinerariByUtente &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>    return repository.findByVisitatore(utente.getId(), Pageable.unpaged()).toList();</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_56'/>
+56
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_56'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_57'/>
+57
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_57'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_58'/>
+58
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_58'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @Override</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_59'/>
+59
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_59'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public boolean deleteItinerario(Itinerario itinerario) throws Exception {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_60'/>
+60
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_60'>1</a>
+<span>
+1. deleteItinerario : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (itinerario == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_61'/>
+61
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_61'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      throw new Exception(&#34;L&#39;itinerario &#232; vuoto.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_62'/>
+62
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_62'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_63'/>
+63
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_63'>1</a>
+<span>
+1. deleteItinerario : removed call to it/greentrails/backend/gestioneprenotazioni/repository/PrenotazioneAlloggioRepository::deleteAllInBatch &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    prenotazioneAlloggioRepository.deleteAllInBatch(</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_64'/>
+64
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_64'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        prenotazioneAlloggioService.getPrenotazioniByItinerario(itinerario));</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_65'/>
+65
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_65'>1</a>
+<span>
+1. deleteItinerario : removed call to it/greentrails/backend/gestioneprenotazioni/repository/PrenotazioneAttivitaTuristicaRepository::deleteAllInBatch &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    prenotazioneAttivitaTuristicaRepository.deleteAllInBatch(</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_66'/>
+66
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_66'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        prenotazioneAttivitaTuristicaService.getPrenotazioniByItinerario(itinerario));</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_67'/>
+67
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_67'>1</a>
+<span>
+1. deleteItinerario : removed call to it/greentrails/backend/gestioneitinerari/repository/ItinerariRepository::delete &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    repository.delete(itinerario);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_68'/>
+68
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_68'>1</a>
+<span>
+1. deleteItinerario : removed call to it/greentrails/backend/gestioneprenotazioni/repository/PrenotazioneAlloggioRepository::flush &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    prenotazioneAlloggioRepository.flush();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_69'/>
+69
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_69'>1</a>
+<span>
+1. deleteItinerario : removed call to it/greentrails/backend/gestioneprenotazioni/repository/PrenotazioneAttivitaTuristicaRepository::flush &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    prenotazioneAttivitaTuristicaRepository.flush();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_70'/>
+70
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_70'>1</a>
+<span>
+1. deleteItinerario : removed call to it/greentrails/backend/gestioneitinerari/repository/ItinerariRepository::flush &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    repository.flush();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_71'/>
+71
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_71'>2</a>
+<span>
+1. deleteItinerario : replaced boolean return with false for it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl::deleteItinerario &rarr; KILLED<br/>
+2. deleteItinerario : replaced boolean return with true for it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl::deleteItinerario &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return repository.findById(itinerario.getId()).isEmpty();</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_72'/>
+72
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_72'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_73'/>
+73
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_73'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_74'/>
+74
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_74'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @Override</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_75'/>
+75
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_75'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public Itinerario findById(Long id) throws Exception {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_76'/>
+76
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_76'>3</a>
+<span>
+1. findById : changed conditional boundary &rarr; SURVIVED<br/>
+2. findById : negated conditional &rarr; KILLED<br/>
+3. findById : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>    if (id == null || id &#60; 0) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_77'/>
+77
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_77'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      throw new Exception(&#34;L&#39;id non &#232; valido.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_78'/>
+78
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_78'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_79'/>
+79
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_79'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    Optional&#60;Itinerario&#62; itinerario = repository.findById(id);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_80'/>
+80
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_80'>1</a>
+<span>
+1. findById : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (itinerario.isEmpty()) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_81'/>
+81
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_81'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      throw new Exception(&#34;L&#39;itinerario non &#232; stato trovato.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_82'/>
+82
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_82'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_83'/>
+83
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_83'>1</a>
+<span>
+1. findById : replaced return value with null for it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl::findById &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return itinerario.get();</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_84'/>
+84
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_84'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_85'/>
+85
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_85'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@52f19ca5_86'/>
+86
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_86'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@52f19ca5_32'>32</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_32'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>saveItinerario<br/><b>Killed by : </b>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testSaveItinerarioWithNull()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@52f19ca5_35'>35</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_35'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>saveItinerario<br/><b>Killed by : </b>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testSaveItinerarioWithValidItinerario()]</span></span> replaced return value with null for it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl::saveItinerario &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@52f19ca5_41'>41</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_41'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>createByPreferenze<br/><b>Killed by : </b>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testCreateByPreferenzeWithNull()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@52f19ca5_44'>44</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_44'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>createByPreferenze<br/><b>Killed by : </b>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testCreateByPreferenzeWithValidPreferenze()]</span></span> replaced return value with null for it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl::createByPreferenze &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@52f19ca5_49'>49</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_49'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>findItinerariByUtente<br/><b>Killed by : </b>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testFindItinerariByUtente()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@52f19ca5_52'>52</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_52'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>findItinerariByUtente<br/><b>Killed by : </b>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testFindItinerariByUtente()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@52f19ca5_55'>55</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_55'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>findItinerariByUtente<br/><b>Killed by : </b>none</span></span> replaced return value with Collections.emptyList for it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl::findItinerariByUtente &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImpl,-method=findItinerariByUtente,-methodDesc=(Lit/greentrails/backend/entities/Utente;)Ljava/util/List;],-indexes=[36],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.EmptyObjectReturnValsMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImpl,-method=findItinerariByUtente,-methodDesc=(Lit/greentrails/backend/entities/Utente;)Ljava/util/List;],-indexes=[36],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.EmptyObjectReturnValsMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImpl,-method=findItinerariByUtente,-methodDesc=(Lit/greentrails/backend/entities/Utente;)Ljava/util/List;],-indexes=[36],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.EmptyObjectReturnValsMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testFindItinerariByUtente()]</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@52f19ca5_60'>60</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_60'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>deleteItinerario<br/><b>Killed by : </b>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testDeleteItinerarioFailed()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@52f19ca5_63'>63</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_63'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>deleteItinerario<br/><b>Killed by : </b>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testDeleteItinerarioSuccessful()]</span></span> removed call to it/greentrails/backend/gestioneprenotazioni/repository/PrenotazioneAlloggioRepository::deleteAllInBatch &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@52f19ca5_65'>65</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_65'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>deleteItinerario<br/><b>Killed by : </b>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testDeleteItinerarioSuccessful()]</span></span> removed call to it/greentrails/backend/gestioneprenotazioni/repository/PrenotazioneAttivitaTuristicaRepository::deleteAllInBatch &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@52f19ca5_67'>67</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_67'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>deleteItinerario<br/><b>Killed by : </b>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testDeleteItinerarioSuccessful()]</span></span> removed call to it/greentrails/backend/gestioneitinerari/repository/ItinerariRepository::delete &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@52f19ca5_68'>68</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_68'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>deleteItinerario<br/><b>Killed by : </b>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testDeleteItinerarioSuccessful()]</span></span> removed call to it/greentrails/backend/gestioneprenotazioni/repository/PrenotazioneAlloggioRepository::flush &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@52f19ca5_69'>69</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_69'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>deleteItinerario<br/><b>Killed by : </b>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testDeleteItinerarioSuccessful()]</span></span> removed call to it/greentrails/backend/gestioneprenotazioni/repository/PrenotazioneAttivitaTuristicaRepository::flush &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@52f19ca5_70'>70</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_70'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>deleteItinerario<br/><b>Killed by : </b>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testDeleteItinerarioSuccessful()]</span></span> removed call to it/greentrails/backend/gestioneitinerari/repository/ItinerariRepository::flush &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@52f19ca5_71'>71</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_71'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>deleteItinerario<br/><b>Killed by : </b>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testDeleteItinerarioSuccessful()]</span></span> replaced boolean return with false for it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl::deleteItinerario &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>deleteItinerario<br/><b>Killed by : </b>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testDeleteItinerarioFailed()]</span></span> replaced boolean return with true for it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl::deleteItinerario &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@52f19ca5_76'>76</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_76'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>findById<br/><b>Killed by : </b>none</span></span> changed conditional boundary &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImpl,-method=findById,-methodDesc=(Ljava/lang/Long;)Lit/greentrails/backend/entities/Itinerario;],-indexes=[9],-mutator=org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImpl,-method=findById,-methodDesc=(Ljava/lang/Long;)Lit/greentrails/backend/entities/Itinerario;],-indexes=[9],-mutator=org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImpl,-method=findById,-methodDesc=(Ljava/lang/Long;)Lit/greentrails/backend/entities/Itinerario;],-indexes=[9],-mutator=org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testFindByIdWithNegativeId()]</li> <li>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testFindByIdNotFound()]</li> <li>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testFindByIdWithValidId()]</li> 
+</ul>
+</div></div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>findById<br/><b>Killed by : </b>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testFindByIdWithValidId()]</span></span> negated conditional &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>findById<br/><b>Killed by : </b>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testFindByIdWithValidId()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@52f19ca5_80'>80</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_80'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>findById<br/><b>Killed by : </b>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testFindByIdWithValidId()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@52f19ca5_83'>83</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@52f19ca5_83'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>findById<br/><b>Killed by : </b>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testFindByIdWithValidId()]</span></span> replaced return value with null for it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl::findById &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+<li class='mutator'>CONDITIONALS_BOUNDARY</li>
+<li class='mutator'>EMPTY_RETURNS</li>
+<li class='mutator'>FALSE_RETURNS</li>
+<li class='mutator'>INCREMENTS</li>
+<li class='mutator'>INVERT_NEGS</li>
+<li class='mutator'>MATH</li>
+<li class='mutator'>NEGATE_CONDITIONALS</li>
+<li class='mutator'>NULL_RETURNS</li>
+<li class='mutator'>PRIMITIVE_RETURNS</li>
+<li class='mutator'>TRUE_RETURNS</li>
+<li class='mutator'>VOID_METHOD_CALLS</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testFindByIdWithNegativeId()] (1 ms)</li><li>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testFindByIdNotFound()] (1 ms)</li><li>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testFindByIdWithValidId()] (80 ms)</li><li>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testSaveItinerarioWithValidItinerario()] (1 ms)</li><li>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testDeleteItinerarioFailed()] (1 ms)</li><li>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testDeleteItinerarioSuccessful()] (2 ms)</li><li>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testSaveItinerarioWithNull()] (1 ms)</li><li>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testFindItinerariByNonVisitorUtente()] (1 ms)</li><li>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testFindItinerariByUtente()] (1 ms)</li><li>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testCreateByPreferenzeWithNull()] (1 ms)</li><li>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testCreateByPreferenzeWithValidPreferenze()] (1 ms)</li><li>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testFindByIdWithNull()] (1 ms)</li><li>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testDeleteItinerarioWithNull()] (1 ms)</li><li>it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImplTest]/[method:testFindItinerariByNullUtente()] (3 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='https://pitest.org'>PIT</a> 1.22.1
+
+</body>
+</html>
