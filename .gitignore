@@ -54,5 +54,4 @@ local.properties
 .scala_dependencies
 .worksheet
 .vscode/settings.json
-frontend/src/app/app-routing.module.ts
 backend/src/main/resources/META-INF/additional-spring-configuration-metadata.json
