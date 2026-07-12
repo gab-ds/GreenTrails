@@ -37,7 +37,7 @@ public class RicercaServiceImpl implements RicercaService {
         (l1, l2) -> l1.stream()
             .filter(l2::contains)
             .collect(Collectors.toList())
-    ).orElse(new ArrayList<>());
+    ).orElse(new ArrayList<Attivita>());
   }
 
   @Override

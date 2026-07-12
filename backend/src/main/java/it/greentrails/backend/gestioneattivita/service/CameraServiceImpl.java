@@ -11,32 +11,48 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+/*@ nullable_by_default @*/
 public class CameraServiceImpl implements CameraService {
 
+  /*@ spec_public @*/
   private final CameraRepository repository;
 
+  //@ public invariant repository != null;
+
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public Camera saveCamera(Camera camera) throws Exception {
+  public Camera saveCamera(/*@ nullable @*/ Camera camera) throws Exception {
     if (camera == null) {
       throw new Exception("La camera è vuota.");
     }
     return repository.save(camera);
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public Camera findById(Long id) throws Exception {
+  public Camera findById(/*@ nullable @*/ Long id) throws Exception {
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
     Optional<Camera> camera = repository.findById(id);
     if (camera.isEmpty()) {
-      throw new Exception("La recensione non è stata trovata.");
+      throw new Exception("La camera non è stata trovata.");
     }
     return camera.get();
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public List<Camera> getCamereByAlloggio(Attivita alloggio) throws Exception {
+  public List<Camera> getCamereByAlloggio(/*@ nullable @*/ Attivita alloggio) throws Exception {
     if (alloggio == null) {
       throw new Exception("L'attività è vuota.");
     }
@@ -53,7 +69,7 @@ public class CameraServiceImpl implements CameraService {
   }
 
   @Override
-  public boolean deleteCamera(Camera camera) throws Exception {
+  public boolean deleteCamera(/*@ nullable @*/ Camera camera) throws Exception {
     if (camera == null) {
       throw new Exception("La camera è vuota.");
     }
