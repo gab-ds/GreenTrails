@@ -1,61 +1,19 @@
-# ================================
-# Node and build output
-# ================================
 node_modules
+.nuxt
+.output
 dist
-out-tsc
-.angular
-.cache
-.tmp
-
-# ================================
-# Testing & Coverage
-# ================================
-coverage
-jest
-cypress
-cypress/screenshots
-cypress/videos
-reports
-playwright-report
-.vite
-.vitepress
-
-# ================================
-# Environment & log files
-# ================================
-*.env*
-!*.env.production
+.git
+.gitignore
+.env
+.env.*
 *.log
-*.tsbuildinfo
-
-# ================================
-# IDE & OS-specific files
-# ================================
+Dockerfile
+.dockerignore
+docker-compose*.yml
+test/
+coverage/
 .vscode
 .idea
 .DS_Store
-Thumbs.db
 *.swp
-
-# ================================
-# Version control & CI files
-# ================================
-.git
-.gitignore
-
-# ================================
-# Docker & local orchestration
-# ================================
-Dockerfile
-Dockerfile.*
-.dockerignore
-docker-compose.yml
-docker-compose*.yml
-
-# ================================
-# Miscellaneous
-# ================================
 *.bak
-*.old
-*.tmp
