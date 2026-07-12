@@ -19,14 +19,24 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+/*@ nullable_by_default @*/
 public class PrenotazioneAlloggioServiceImpl implements PrenotazioneAlloggioService {
 
+  /*@ spec_public @*/
   private final PrenotazioneAlloggioRepository repository;
+  /*@ spec_public @*/
   private final CameraService cameraService;
 
+  //@ public invariant repository != null;
+  //@ public invariant cameraService != null;
+
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public PrenotazioneAlloggio savePrenotazioneAlloggio(Camera camera,
-      PrenotazioneAlloggio prenotazioneAlloggio) throws Exception {
+  public PrenotazioneAlloggio savePrenotazioneAlloggio(/*@ nullable @*/ Camera camera,
+      /*@ nullable @*/ PrenotazioneAlloggio prenotazioneAlloggio) throws Exception {
     if (prenotazioneAlloggio == null) {
       throw new Exception("La prenotazione dell'attività è vuota.");
     }
@@ -41,7 +51,7 @@ public class PrenotazioneAlloggioServiceImpl implements PrenotazioneAlloggioServ
   }
 
   @Override
-  public boolean deletePrenotazioneAlloggio(PrenotazioneAlloggio prenotazioneAlloggio)
+  public boolean deletePrenotazioneAlloggio(/*@ nullable @*/ PrenotazioneAlloggio prenotazioneAlloggio)
       throws Exception {
     if (prenotazioneAlloggio == null) {
       throw new Exception("La prenotazione dell'alloggio è vuota.");
@@ -56,8 +66,12 @@ public class PrenotazioneAlloggioServiceImpl implements PrenotazioneAlloggioServ
     return repository.findAll();
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public List<PrenotazioneAlloggio> getPrenotazioniAlloggioByStato(StatoPrenotazione stato)
+  public List<PrenotazioneAlloggio> getPrenotazioniAlloggioByStato(/*@ nullable @*/ StatoPrenotazione stato)
       throws Exception {
     if (stato == null) {
       throw new Exception("Lo stato della prenotazione dell'alloggio è inesistente.");
@@ -71,8 +85,12 @@ public class PrenotazioneAlloggioServiceImpl implements PrenotazioneAlloggioServ
     return risultato;
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public PrenotazioneAlloggio findById(Long id) throws Exception {
+  public PrenotazioneAlloggio findById(/*@ nullable @*/ Long id) throws Exception {
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
@@ -83,9 +101,12 @@ public class PrenotazioneAlloggioServiceImpl implements PrenotazioneAlloggioServ
     return prenotazioneAlloggio.get();
   }
 
-
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public List<PrenotazioneAlloggio> getPrenotazioniByAlloggio(Attivita attivita) throws Exception {
+  public List<PrenotazioneAlloggio> getPrenotazioniByAlloggio(/*@ nullable @*/ Attivita attivita) throws Exception {
     if (attivita == null) {
       throw new Exception("L'attività è vuota.");
     }
@@ -95,8 +116,12 @@ public class PrenotazioneAlloggioServiceImpl implements PrenotazioneAlloggioServ
     return repository.findByAlloggio(attivita.getId(), Pageable.unpaged()).toList();
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public List<PrenotazioneAlloggio> getPrenotazioniByVisitatore(Utente visitatore)
+  public List<PrenotazioneAlloggio> getPrenotazioniByVisitatore(/*@ nullable @*/ Utente visitatore)
       throws Exception {
     if (visitatore == null) {
       throw new Exception("L'utente è vuoto.");
@@ -107,8 +132,12 @@ public class PrenotazioneAlloggioServiceImpl implements PrenotazioneAlloggioServ
     return repository.findByVisitatore(visitatore.getId(), Pageable.unpaged()).toList();
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public List<PrenotazioneAlloggio> getPrenotazioniByItinerario(Itinerario itinerario)
+  public List<PrenotazioneAlloggio> getPrenotazioniByItinerario(/*@ nullable @*/ Itinerario itinerario)
       throws Exception {
     if (itinerario == null) {
       throw new Exception("L'itinerario è vuoto.");
@@ -117,8 +146,8 @@ public class PrenotazioneAlloggioServiceImpl implements PrenotazioneAlloggioServ
   }
 
   @Override
-  public int controllaDisponibilitaAlloggio(Attivita alloggio, Date dataInizio, Date dataFine)
-      throws Exception {
+  public int controllaDisponibilitaAlloggio(/*@ nullable @*/ Attivita alloggio, /*@ nullable @*/ Date dataInizio,
+      /*@ nullable @*/ Date dataFine) throws Exception {
     if (alloggio == null) {
       throw new Exception("L'alloggio è vuoto.");
     }
@@ -136,8 +165,8 @@ public class PrenotazioneAlloggioServiceImpl implements PrenotazioneAlloggioServ
   }
 
   @Override
-  public int controllaDisponibilitaCamera(Camera camera, Date dataInizio, Date dataFine)
-      throws Exception {
+  public int controllaDisponibilitaCamera(/*@ nullable @*/ Camera camera, /*@ nullable @*/ Date dataInizio,
+      /*@ nullable @*/ Date dataFine) throws Exception {
     if (camera == null) {
       throw new Exception("La camera è vuota.");
     }

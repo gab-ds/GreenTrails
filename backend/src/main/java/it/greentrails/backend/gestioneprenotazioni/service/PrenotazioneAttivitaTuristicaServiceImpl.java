@@ -18,14 +18,22 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+/*@ nullable_by_default @*/
 public class PrenotazioneAttivitaTuristicaServiceImpl implements
     PrenotazioneAttivitaTuristicaService {
 
+  /*@ spec_public @*/
   private final PrenotazioneAttivitaTuristicaRepository repository;
 
+  //@ public invariant repository != null;
+
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public PrenotazioneAttivitaTuristica savePrenotazioneAttivitaTuristica(Attivita attivita,
-      PrenotazioneAttivitaTuristica prenotazioneAttivitaTuristica) throws Exception {
+  public PrenotazioneAttivitaTuristica savePrenotazioneAttivitaTuristica(/*@ nullable @*/ Attivita attivita,
+      /*@ nullable @*/ PrenotazioneAttivitaTuristica prenotazioneAttivitaTuristica) throws Exception {
     if (prenotazioneAttivitaTuristica == null) {
       throw new Exception("La prenotazione dell'attività è vuota.");
     }
@@ -41,7 +49,7 @@ public class PrenotazioneAttivitaTuristicaServiceImpl implements
 
   @Override
   public boolean deletePrenotazioneAttivitaTuristica(
-      PrenotazioneAttivitaTuristica prenotazioneAttivitaTuristica) throws Exception {
+      /*@ nullable @*/ PrenotazioneAttivitaTuristica prenotazioneAttivitaTuristica) throws Exception {
     if (prenotazioneAttivitaTuristica == null) {
       throw new Exception("La prenotazione dell'attività è vuota.");
     }
@@ -55,9 +63,13 @@ public class PrenotazioneAttivitaTuristicaServiceImpl implements
     return repository.findAll();
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
   public List<PrenotazioneAttivitaTuristica> getPrenotazioniAttivitaTuristicaByStato(
-      StatoPrenotazione stato) throws Exception {
+      /*@ nullable @*/ StatoPrenotazione stato) throws Exception {
     if (stato == null) {
       throw new Exception("Lo stato della prenotazione dell'attività è inesistente.");
     }
@@ -70,8 +82,12 @@ public class PrenotazioneAttivitaTuristicaServiceImpl implements
     return risultato;
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public PrenotazioneAttivitaTuristica findById(Long id) throws Exception {
+  public PrenotazioneAttivitaTuristica findById(/*@ nullable @*/ Long id) throws Exception {
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
@@ -82,8 +98,12 @@ public class PrenotazioneAttivitaTuristicaServiceImpl implements
     return prenotazioneAttivitaTuristica.get();
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public List<PrenotazioneAttivitaTuristica> getPrenotazioniByAttivitaTuristica(Attivita attivita)
+  public List<PrenotazioneAttivitaTuristica> getPrenotazioniByAttivitaTuristica(/*@ nullable @*/ Attivita attivita)
       throws Exception {
     if (attivita == null) {
       throw new Exception("L'attività è vuota.");
@@ -91,8 +111,12 @@ public class PrenotazioneAttivitaTuristicaServiceImpl implements
     return repository.findByAttivitaTuristica(attivita.getId(), Pageable.unpaged()).toList();
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public List<PrenotazioneAttivitaTuristica> getPrenotazioniByVisitatore(Utente visitatore)
+  public List<PrenotazioneAttivitaTuristica> getPrenotazioniByVisitatore(/*@ nullable @*/ Utente visitatore)
       throws Exception {
     if (visitatore == null) {
       throw new Exception("L'utente è vuoto.");
@@ -103,8 +127,12 @@ public class PrenotazioneAttivitaTuristicaServiceImpl implements
     return repository.findByVisitatore(visitatore.getId(), Pageable.unpaged()).toList();
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public List<PrenotazioneAttivitaTuristica> getPrenotazioniByItinerario(Itinerario itinerario)
+  public List<PrenotazioneAttivitaTuristica> getPrenotazioniByItinerario(/*@ nullable @*/ Itinerario itinerario)
       throws Exception {
     if (itinerario == null) {
       throw new Exception("L'itinerario è vuoto.");
@@ -113,7 +141,7 @@ public class PrenotazioneAttivitaTuristicaServiceImpl implements
   }
 
   @Override
-  public int controllaDisponibilitaAttivitaTuristica(Attivita attivita, Date dataInizio)
+  public int controllaDisponibilitaAttivitaTuristica(/*@ nullable @*/ Attivita attivita, /*@ nullable @*/ Date dataInizio)
       throws Exception {
     if (attivita == null) {
       throw new Exception("L'attività è vuota.");

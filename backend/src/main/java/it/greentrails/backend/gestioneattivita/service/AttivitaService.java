@@ -5,24 +5,33 @@ import it.greentrails.backend.entities.ValoriEcosostenibilita;
 import java.util.List;
 import java.util.Optional;
 
+/*@ nullable_by_default @*/
 public interface AttivitaService {
 
-  Attivita saveAttivita(Attivita attivita) throws Exception;
+  /*@ ensures \result != null; @*/
+  Attivita saveAttivita(/*@ nullable @*/ Attivita attivita) throws Exception;
 
-  Attivita findById(Long id) throws Exception;
+  /*@ ensures \result != null; @*/
+  Attivita findById(/*@ nullable @*/ Long id) throws Exception;
 
-  List<Attivita> findAllAttivitaByGestore(Long idGestore) throws Exception;
+  /*@ ensures \result != null; @*/
+  List<Attivita> findAllAttivitaByGestore(/*@ nullable @*/ Long idGestore) throws Exception;
 
-  Optional<Attivita> findByValori(ValoriEcosostenibilita valoriEcosostenibilita)
+  /*@ ensures \result != null; @*/
+  Optional<Attivita> findByValori(/*@ nullable @*/ ValoriEcosostenibilita valoriEcosostenibilita)
       throws Exception;
 
+  /*@ ensures \result != null; @*/
   List<Attivita> getAttivitaTuristicheEconomiche(int limite);
 
-  boolean deleteAttivita(Attivita attivita) throws Exception;
+  boolean deleteAttivita(/*@ nullable @*/ Attivita attivita) throws Exception;
 
+  /*@ ensures \result != null; @*/
   List<Attivita> getAttivitaTuristiche(int limite);
 
+  /*@ ensures \result != null; @*/
   List<Attivita> getAlloggi(int limite);
 
+  /*@ ensures \result != null; @*/
   List<Attivita> findAll();
 }

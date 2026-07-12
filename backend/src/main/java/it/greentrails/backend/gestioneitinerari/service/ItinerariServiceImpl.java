@@ -18,26 +18,39 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+/*@ nullable_by_default @*/
 public class ItinerariServiceImpl implements ItinerariService {
 
+  /*@ spec_public @*/
   private final ItinerariRepository repository;
+  /*@ spec_public @*/
   private final PrenotazioneAlloggioService prenotazioneAlloggioService;
+  /*@ spec_public @*/
   private final PrenotazioneAttivitaTuristicaService prenotazioneAttivitaTuristicaService;
+  /*@ spec_public @*/
   private final PrenotazioneAlloggioRepository prenotazioneAlloggioRepository;
+  /*@ spec_public @*/
   private final PrenotazioneAttivitaTuristicaRepository prenotazioneAttivitaTuristicaRepository;
+  /*@ spec_public @*/
   private final ItinerariAdapter itinerariStubAdapter;
 
+  //@ public invariant repository != null;
+  //@ public invariant prenotazioneAlloggioService != null;
+  //@ public invariant prenotazioneAttivitaTuristicaService != null;
+  //@ public invariant prenotazioneAlloggioRepository != null;
+  //@ public invariant prenotazioneAttivitaTuristicaRepository != null;
+  //@ public invariant itinerariStubAdapter != null;
+
   @Override
-  public Itinerario saveItinerario(Itinerario itinerario) throws Exception {
+  public Itinerario saveItinerario(/*@ nullable @*/ Itinerario itinerario) throws Exception {
     if (itinerario == null) {
       throw new Exception("L'itinerario è vuoto.");
     }
     return repository.save(itinerario);
   }
 
-
   @Override
-  public Itinerario createByPreferenze(Preferenze preferenze) throws Exception {
+  public Itinerario createByPreferenze(/*@ nullable @*/ Preferenze preferenze) throws Exception {
     if (preferenze == null) {
       throw new Exception("Le preferenze sono vuote.");
     }
@@ -45,7 +58,7 @@ public class ItinerariServiceImpl implements ItinerariService {
   }
 
   @Override
-  public List<Itinerario> findItinerariByUtente(Utente utente) throws Exception {
+  public List<Itinerario> findItinerariByUtente(/*@ nullable @*/ Utente utente) throws Exception {
     if (utente == null) {
       throw new Exception("L'utente è vuoto.");
     }
@@ -56,7 +69,7 @@ public class ItinerariServiceImpl implements ItinerariService {
   }
 
   @Override
-  public boolean deleteItinerario(Itinerario itinerario) throws Exception {
+  public boolean deleteItinerario(/*@ nullable @*/ Itinerario itinerario) throws Exception {
     if (itinerario == null) {
       throw new Exception("L'itinerario è vuoto.");
     }
@@ -72,7 +85,7 @@ public class ItinerariServiceImpl implements ItinerariService {
   }
 
   @Override
-  public Itinerario findById(Long id) throws Exception {
+  public Itinerario findById(/*@ nullable @*/ Long id) throws Exception {
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }

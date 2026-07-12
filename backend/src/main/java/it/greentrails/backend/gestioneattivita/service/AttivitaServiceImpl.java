@@ -11,12 +11,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+/*@ nullable_by_default @*/
 public class AttivitaServiceImpl implements AttivitaService {
 
+  /*@ spec_public @*/
   private final AttivitaRepository repository;
 
+  //@ public invariant repository != null;
+
   @Override
-  public Attivita saveAttivita(Attivita attivita) throws Exception {
+  public Attivita saveAttivita(/*@ nullable @*/ Attivita attivita) throws Exception {
     if (attivita == null) {
       throw new Exception("L'attività è vuota.");
     }
@@ -24,7 +28,7 @@ public class AttivitaServiceImpl implements AttivitaService {
   }
 
   @Override
-  public Attivita findById(Long id) throws Exception {
+  public Attivita findById(/*@ nullable @*/ Long id) throws Exception {
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
@@ -36,7 +40,7 @@ public class AttivitaServiceImpl implements AttivitaService {
   }
 
   @Override
-  public List<Attivita> findAllAttivitaByGestore(Long idGestore) throws Exception {
+  public List<Attivita> findAllAttivitaByGestore(/*@ nullable @*/ Long idGestore) throws Exception {
     if (idGestore == null || idGestore < 0) {
       throw new Exception("L'id non è valido.");
     }
@@ -44,7 +48,7 @@ public class AttivitaServiceImpl implements AttivitaService {
   }
 
   @Override
-  public Optional<Attivita> findByValori(ValoriEcosostenibilita valoriEcosostenibilita)
+  public Optional<Attivita> findByValori(/*@ nullable @*/ ValoriEcosostenibilita valoriEcosostenibilita)
       throws Exception {
     if (valoriEcosostenibilita == null) {
       throw new Exception("I valori sono vuoti.");
@@ -58,7 +62,7 @@ public class AttivitaServiceImpl implements AttivitaService {
   }
 
   @Override
-  public boolean deleteAttivita(Attivita attivita) throws Exception {
+  public boolean deleteAttivita(/*@ nullable @*/ Attivita attivita) throws Exception {
     if (attivita == null) {
       throw new Exception("L'attività è vuota.");
     }
@@ -85,6 +89,5 @@ public class AttivitaServiceImpl implements AttivitaService {
   public List<Attivita> findAll() {
     return repository.findAll();
   }
-
 
 }

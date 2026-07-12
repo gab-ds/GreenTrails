@@ -13,21 +13,32 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-
+/*@ nullable_by_default @*/
 public class RecensioneServiceImpl implements RecensioneService {
 
+  /*@ spec_public @*/
   private final RecensioneRepository repository;
 
+  //@ public invariant repository != null;
+
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public Recensione saveRecensione(Recensione recensione) throws Exception {
+  public Recensione saveRecensione(/*@ nullable @*/ Recensione recensione) throws Exception {
     if (recensione == null) {
       throw new Exception("La recensione è vuota.");
     }
     return repository.save(recensione);
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public Recensione findById(Long id) throws Exception {
+  public Recensione findById(/*@ nullable @*/ Long id) throws Exception {
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
@@ -39,7 +50,7 @@ public class RecensioneServiceImpl implements RecensioneService {
   }
 
   @Override
-  public boolean deleteRecensione(Recensione recensione) throws Exception {
+  public boolean deleteRecensione(/*@ nullable @*/ Recensione recensione) throws Exception {
     if (recensione == null) {
       throw new Exception("La recensione è vuota.");
     }
@@ -48,16 +59,24 @@ public class RecensioneServiceImpl implements RecensioneService {
     return repository.findById(recensione.getId()).isEmpty();
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public List<Recensione> getRecensioniByAttivita(Attivita attivita) throws Exception {
+  public List<Recensione> getRecensioniByAttivita(/*@ nullable @*/ Attivita attivita) throws Exception {
     if (attivita == null) {
       throw new Exception("L'attività è vuota.");
     }
     return repository.findByAttivita(attivita.getId(), Pageable.unpaged()).toList();
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public List<Recensione> getAllRecensioniByVisitatore(Utente utente) throws Exception {
+  public List<Recensione> getAllRecensioniByVisitatore(/*@ nullable @*/ Utente utente) throws Exception {
     if (utente == null) {
       throw new Exception("L'utente è vuoto.");
     }

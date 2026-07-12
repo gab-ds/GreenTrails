@@ -12,13 +12,23 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+/*@ nullable_by_default @*/
 public class GestioneUtenzeServiceImpl implements GestioneUtenzeService {
 
+  /*@ spec_public @*/
   private final UtenteRepository repository;
+  /*@ spec_public @*/
   private final PreferenzeRepository preferenzeRepository;
 
+  //@ public invariant repository != null;
+  //@ public invariant preferenzeRepository != null;
+
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public Utente findById(Long id) throws Exception {
+  public Utente findById(/*@ nullable @*/ Long id) throws Exception {
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
@@ -29,29 +39,42 @@ public class GestioneUtenzeServiceImpl implements GestioneUtenzeService {
     return utente.get();
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public Utente saveUtente(Utente utente) throws Exception {
+  public Utente saveUtente(/*@ nullable @*/ Utente utente) throws Exception {
     if (utente == null) {
       throw new Exception("L'utente è vuoto.");
     }
     return repository.save(utente);
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public Preferenze savePreferenze(Preferenze preferenze) throws Exception {
+  public Preferenze savePreferenze(/*@ nullable @*/ Preferenze preferenze) throws Exception {
     if (preferenze == null) {
       throw new Exception("Le preferenze sono vuote.");
     }
     return preferenzeRepository.save(preferenze);
   }
 
+  /*@
+    @ also
+    @ assignable \nothing;
+    @ ensures \result != null;
+    @*/
   @Override
-  public Optional<Utente> findByEmail(String email) {
+  public Optional<Utente> findByEmail(/*@ nullable @*/ String email) {
     return repository.findOneByEmail(email);
   }
 
   @Override
-  public boolean deleteUtente(Utente utente) throws Exception {
+  public boolean deleteUtente(/*@ nullable @*/ Utente utente) throws Exception {
     if (utente == null) {
       throw new Exception("L'utente è vuoto.");
     }
@@ -60,8 +83,12 @@ public class GestioneUtenzeServiceImpl implements GestioneUtenzeService {
     return repository.findById(utente.getId()).isEmpty();
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public Preferenze getPreferenzeById(Long id) throws Exception {
+  public Preferenze getPreferenzeById(/*@ nullable @*/ Long id) throws Exception {
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
@@ -72,8 +99,12 @@ public class GestioneUtenzeServiceImpl implements GestioneUtenzeService {
     return preferenze.get();
   }
 
+  /*@
+    @ also
+    @ requires username != null;
+    @*/
   @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+  public UserDetails loadUserByUsername(/*@ nullable @*/ String username) throws UsernameNotFoundException {
     Optional<Utente> utente = findByEmail(username);
     if (utente.isEmpty()) {
       throw new UsernameNotFoundException(username);

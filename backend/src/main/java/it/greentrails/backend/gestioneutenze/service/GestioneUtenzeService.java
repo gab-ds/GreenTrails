@@ -5,17 +5,26 @@ import it.greentrails.backend.entities.Utente;
 import java.util.Optional;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+/*@ nullable_by_default @*/
 public interface GestioneUtenzeService extends UserDetailsService {
 
-  Utente findById(Long id) throws Exception;
+  /*@ ensures \result != null; @*/
+  Utente findById(/*@ nullable @*/ Long id) throws Exception;
 
-  Utente saveUtente(Utente utente) throws Exception;
+  /*@ ensures \result != null; @*/
+  Utente saveUtente(/*@ nullable @*/ Utente utente) throws Exception;
 
-  Preferenze savePreferenze(Preferenze preferenze) throws Exception;
+  /*@ ensures \result != null; @*/
+  Preferenze savePreferenze(/*@ nullable @*/ Preferenze preferenze) throws Exception;
 
-  Optional<Utente> findByEmail(String email);
+  /*@
+    @ assignable \nothing;
+    @ ensures \result != null;
+    @*/
+  Optional<Utente> findByEmail(/*@ nullable @*/ String email);
 
-  boolean deleteUtente(Utente utente) throws Exception;
+  boolean deleteUtente(/*@ nullable @*/ Utente utente) throws Exception;
 
-  Preferenze getPreferenzeById(Long id) throws Exception;
+  /*@ ensures \result != null; @*/
+  Preferenze getPreferenzeById(/*@ nullable @*/ Long id) throws Exception;
 }
