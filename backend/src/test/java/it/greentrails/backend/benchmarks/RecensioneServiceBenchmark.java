@@ -25,6 +25,7 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
+import org.openjdk.jmh.annotations.DynamicHalt;
 
 @State(Scope.Thread)
 @BenchmarkMode(Mode.AverageTime)
@@ -32,6 +33,7 @@ import org.openjdk.jmh.infra.Blackhole;
 @Fork(1)
 @Warmup(iterations = 3, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
+@DynamicHalt(model = "fcn")
 public class RecensioneServiceBenchmark {
 
     @Param({"1000", "10000", "50000"})
