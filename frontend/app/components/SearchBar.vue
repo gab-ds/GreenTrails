@@ -16,8 +16,8 @@ onMounted(async () => {
   try {
     const data = await activities.list() as Attivita[]
     allActivities.value = data
-  } catch {
-    // silently fail
+  } catch (err) {
+    console.error('Errore caricamento attività per searchbar:', err)
   }
 })
 

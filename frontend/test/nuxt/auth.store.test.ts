@@ -30,11 +30,14 @@ describe('useAuthStore', () => {
 
   it('login imposta utente e cookie', async () => {
     mockLogin.mockResolvedValue({
-      id: 1,
-      nome: 'Mario',
-      cognome: 'Rossi',
-      email: 'mario@test.it',
-      ruolo: 'VISITATORE',
+      status: 'success',
+      data: {
+        id: 1,
+        nome: 'Mario',
+        cognome: 'Rossi',
+        email: 'mario@test.it',
+        ruolo: 'VISITATORE',
+      },
     })
 
     const store = useAuthStore()
@@ -48,11 +51,14 @@ describe('useAuthStore', () => {
 
   it('logout resetta utente e cookie', async () => {
     mockLogin.mockResolvedValue({
-      id: 1,
-      nome: 'Mario',
-      cognome: 'Rossi',
-      email: 'mario@test.it',
-      ruolo: 'VISITATORE',
+      status: 'success',
+      data: {
+        id: 1,
+        nome: 'Mario',
+        cognome: 'Rossi',
+        email: 'mario@test.it',
+        ruolo: 'VISITATORE',
+      },
     })
 
     const store = useAuthStore()
@@ -66,11 +72,14 @@ describe('useAuthStore', () => {
 
   it('register imposta utente e cookie', async () => {
     mockRegister.mockResolvedValue({
-      id: 2,
-      nome: 'Luigi',
-      cognome: 'Verdi',
-      email: 'luigi@test.it',
-      ruolo: 'GESTORE_ATTIVITA',
+      status: 'success',
+      data: {
+        id: 2,
+        nome: 'Luigi',
+        cognome: 'Verdi',
+        email: 'luigi@test.it',
+        ruolo: 'GESTORE_ATTIVITA',
+      },
     })
 
     const store = useAuthStore()
@@ -86,11 +95,14 @@ describe('useAuthStore', () => {
 
   it('getter ruolo funzionano correttamente', async () => {
     mockLogin.mockResolvedValue({
-      id: 1,
-      nome: 'Admin',
-      cognome: 'User',
-      email: 'admin@test.it',
-      ruolo: 'AMMINISTRATORE',
+      status: 'success',
+      data: {
+        id: 1,
+        nome: 'Admin',
+        cognome: 'User',
+        email: 'admin@test.it',
+        ruolo: 'AMMINISTRATORE',
+      },
     })
 
     const store = useAuthStore()

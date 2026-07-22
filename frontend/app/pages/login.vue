@@ -74,8 +74,24 @@ async function onSubmit() {
             </button>
           </div>
         </div>
-        <div v-if="error" class="rounded-lg bg-red-50 p-3 text-sm text-red-600">
-          {{ error }}
+        <div
+          v-if="error"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+        >
+          <div class="mx-4 w-full max-w-sm rounded-xl bg-white p-8 text-center shadow-xl">
+            <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
+              <UIcon name="i-lucide-alert-circle" class="size-8 text-red-600" />
+            </div>
+            <h2 class="mb-2 text-xl font-bold text-gray-900">Errore di accesso</h2>
+            <p class="mb-6 text-sm text-gray-500">{{ error }}</p>
+            <button
+              type="button"
+              class="w-full rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-green-700"
+              @click="error = ''"
+            >
+              Chiudi
+            </button>
+          </div>
         </div>
         <UButton
           type="submit"

@@ -22,25 +22,27 @@ export const useAuthStore = defineStore('auth', () => {
   async function login(email: string, password: string) {
     try {
       const creds = btoa(`${email}:${password}`)
-      const res = await authApi.login(email, password) as Utente
-      user.value = res
+      const res = await authApi.login(email, password) as { status: string; data: Utente }
+      user.value = res.data
       credenziali.value = creds
       userCookie.value = JSON.stringify(user.value)
       return true
-    } catch {
+    } catch (err) {
+      console.error('Login error:', err)
       return false
     }
   }
 
   async function register(data: Record<string, unknown>, isGestore: boolean) {
     try {
-      const res = await authApi.register(data, isGestore) as Utente
-      user.value = res
+      const res = await authApi.register(data, isGestore) as { status: string; data: Utente }
+      user.value = res.data
       const creds = btoa(`${data.email}:${data.password}`)
       credenziali.value = creds
       userCookie.value = JSON.stringify(user.value)
       return true
-    } catch {
+    } catch (err) {
+      console.error('Register error:', err)
       return false
     }
   }
@@ -50,7 +52,8 @@ export const useAuthStore = defineStore('auth', () => {
     if (stored) {
       try {
         user.value = JSON.parse(stored)
-      } catch {
+      } catch (err) {
+        console.error('Restore user error:', err)
         logout()
       }
     }
