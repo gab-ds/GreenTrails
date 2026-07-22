@@ -22,6 +22,7 @@ const items = ref<{ key: string; label: string; value: boolean | null }[]>([])
 const loading = ref(true)
 const error = ref('')
 const success = ref(false)
+const chiarimenti = ref('')
 
 const labelMap: Record<string, string> = {
   politicheAntispreco: 'Politiche Antispreco',
@@ -50,9 +51,7 @@ onMounted(async () => {
     const a = res.data
     nome.value = a.nome
     valoriRaw.value = a.valoriEcosostenibilita
-    items.value = Object.entries(labelMap)
-      .filter(([key]) => a.valoriEcosostenibilita[key as keyof ValoriRaw] === true)
-      .map(([key, label]) => ({ key, label, value: true }))
+    items.value = Object.entries(labelMap).map(([key, label]) => ({ key, label, value: null }))
   } catch (err) {
     console.error('Errore durante il caricamento:', err)
     error.value = 'Errore durante il caricamento.'
@@ -66,10 +65,29 @@ function setValue(item: { key: string; value: boolean | null }, v: boolean) {
 
 async function submitForm() {
   if (!valoriRaw.value) return
-  const params: Record<string, boolean> = {}
-  for (const item of items.value) {
-    params[item.key] = item.value ?? true
+
+  const nullItem = items.value.find(item => item.value === null)
+  if (nullItem) {
+    error.value = `Il campo "${nullItem.label}" non è stato selezionato.`
+    return
   }
+
+  if (chiarimenti.value.length > 1000) {
+    error.value = 'Il campo Chiarimenti non può superare i 1000 caratteri.'
+    return
+  }
+
+  if (chiarimenti.value.length > 0 && !/^[A-Z0-9][A-Za-z0-9À-ú\s'-,.!?\d]*$/.test(chiarimenti.value)) {
+    error.value = 'Il formato del campo Chiarimenti non è valido.'
+    return
+  }
+
+  const params: Record<string, boolean | string> = {}
+  for (const item of items.value) {
+    params[item.key] = item.value!
+  }
+  params.chiarimenti = chiarimenti.value
+
   try {
     const res = await valori.update(valoriRaw.value.id, params) as { status: string }
     if (res.status === 'success') {
@@ -108,6 +126,13 @@ async function submitForm() {
           </label>
         </div>
       </div>
+
+      <UTextarea
+        v-model="chiarimenti"
+        label="Chiarimenti"
+        :maxlength="1000"
+        placeholder="Inserisci eventuali chiarimenti..."
+      />
 
       <div class="flex justify-between">
         <UButton color="neutral" variant="outline" @click="router.back()">

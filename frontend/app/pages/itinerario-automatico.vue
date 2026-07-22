@@ -92,6 +92,14 @@ async function genera() {
   }
   generating.value = false
 }
+
+function confermaItinerario() {
+  router.push('/area-riservata')
+}
+
+function annullaItinerario() {
+  router.push('/area-riservata')
+}
 </script>
 
 <template>
@@ -180,6 +188,18 @@ async function genera() {
 
         <div v-if="!itinerario.prenotazioniAlloggio.length && !itinerario.prenotazioniAttivitaTuristica.length" class="text-sm text-gray-500">
           Nessuna prenotazione inclusa nell'itinerario.
+        </div>
+
+        <div class="mt-6 flex flex-wrap justify-center gap-3">
+          <UButton color="primary" size="lg" @click="confermaItinerario">
+            Conferma
+          </UButton>
+          <UButton color="neutral" variant="outline" size="lg" @click="genera">
+            Generane un altro
+          </UButton>
+          <UButton color="neutral" variant="ghost" size="lg" @click="annullaItinerario">
+            Annulla
+          </UButton>
         </div>
       </div>
     </div>

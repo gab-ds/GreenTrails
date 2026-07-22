@@ -140,6 +140,26 @@ async function submitReview() {
     reviewError.value = 'Inserisci una descrizione per la recensione.'
     return
   }
+  if (reviewStars.value < 1 || reviewStars.value > 5) {
+    reviewError.value = 'Numero di stelle non valido.'
+    return
+  }
+  if (reviewDesc.value.length > 255) {
+    reviewError.value = 'Valutazione discorsiva troppo lunga.'
+    return
+  }
+  if (!/^[A-Z][A-Za-z0-9À-ú\s'-,.!?]*$/.test(reviewDesc.value)) {
+    reviewError.value = 'Formato della valutazione discorsiva non valido.'
+    return
+  }
+  if (reviewFile.value && !reviewFile.value.type.startsWith('image/')) {
+    reviewError.value = 'Tipo di file non supportato.'
+    return
+  }
+  if (reviewFile.value && reviewFile.value.size > 100 * 1024 * 1024) {
+    reviewError.value = 'File troppo grande.'
+    return
+  }
   submittingReview.value = true
   try {
     const valoriRes = await useApi().valori.create({

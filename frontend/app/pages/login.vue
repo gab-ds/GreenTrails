@@ -21,7 +21,7 @@ async function onSubmit() {
     error.value = "Il formato dell'email non è valido."
     return
   }
-  if (password.value.length < 8) {
+  if (password.value.length < 8 || password.value.length > 255) {
     error.value = 'La lunghezza della password non è corretta.'
     return
   }
