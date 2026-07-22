@@ -127,6 +127,10 @@ function prev() {
 async function invio() {
   error.value = ''
   success.value = ''
+  if (!answers.value[currentQuestion.value.key]) {
+    error.value = errorMessages[currentQuestion.value.key] || 'Seleziona un\'opzione per proseguire.'
+    return
+  }
   loading.value = true
   try {
     const res = await authApi.invioQuestionario(answers.value) as { status: string }

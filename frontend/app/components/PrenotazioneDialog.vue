@@ -73,10 +73,13 @@ function valida(): boolean {
   if (props.isAlloggio) {
     if (!cameraId.value) { fieldErrors.camera = 'Seleziona un tipo camera.'; ok = false } else fieldErrors.camera = ''
     if (numCamere.value < 1) { fieldErrors.camere = 'Almeno 1 camera.'; ok = false } else fieldErrors.camere = ''
+    if (numBambini.value < 0) { fieldErrors.bambini = 'Il numero di bambini non può essere negativo.'; ok = false } else fieldErrors.bambini = ''
   }
   if (numAdulti.value < 1 && props.isAlloggio) { fieldErrors.adulti = 'Almeno 1 adulto.'; ok = false } else if (props.isAlloggio) fieldErrors.adulti = ''
   if (numAdultiAtt.value < 1 && !props.isAlloggio) { fieldErrors.adultiAtt = 'Almeno 1 adulto.'; ok = false } else if (!props.isAlloggio) fieldErrors.adultiAtt = ''
+  if (numBambiniAtt.value < 0 && !props.isAlloggio) { fieldErrors.bambiniAtt = 'Il numero di bambini non può essere negativo.'; ok = false } else if (!props.isAlloggio) fieldErrors.bambiniAtt = ''
   if (dataFine.value <= dataInizio.value) { fieldErrors.date = 'La data fine deve essere dopo la data inizio.'; ok = false } else fieldErrors.date = ''
+  if (dataInizio.value.compare(today) < 0) { fieldErrors.date = 'La data di inizio non può essere precedente a oggi.'; ok = false }
   return ok
 }
 
@@ -291,6 +294,7 @@ const prezzoTotale = computed(() => {
             <div v-if="isAlloggio">
               <label class="mb-1 block text-sm font-medium text-gray-600">Bambini</label>
               <UInput v-model="numBambini" type="number" min="0" inputmode="numeric" />
+              <p v-if="fieldErrors.bambini" class="mt-1 text-xs text-red-500">{{ fieldErrors.bambini }}</p>
             </div>
             <div v-if="!isAlloggio">
               <label class="mb-1 block text-sm font-medium text-gray-600">Adulti</label>
@@ -300,6 +304,7 @@ const prezzoTotale = computed(() => {
             <div v-if="!isAlloggio">
               <label class="mb-1 block text-sm font-medium text-gray-600">Bambini</label>
               <UInput v-model="numBambiniAtt" type="number" min="0" inputmode="numeric" />
+              <p v-if="fieldErrors.bambiniAtt" class="mt-1 text-xs text-red-500">{{ fieldErrors.bambiniAtt }}</p>
             </div>
           </div>
 

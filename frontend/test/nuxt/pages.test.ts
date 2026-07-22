@@ -489,3 +489,89 @@ describe('ItinerarioAutomatico', () => {
     expect(wrapper.text()).toContain('Genera itinerario')
   })
 })
+
+describe('1.3 Questionario', () => {
+  async function navigateToStep(wrapper: any, targetStep: number) {
+    for (let i = 0; i < targetStep; i++) {
+      const opts = wrapper.findAll('button[type="button"]')
+      if (opts.length > 0) await opts[0].trigger('click')
+      const buttons = wrapper.findAll('button')
+      const avanti = buttons.filter((b: any) => b.text().includes('Avanti'))
+      if (avanti.length > 0) await avanti[0].trigger('click')
+      await new Promise(r => setTimeout(r, 30))
+    }
+  }
+
+  it('TC_1.3.1 — SRPV1: mostra errore se nessuna preferenza viaggio', async () => {
+    const wrapper = await mountSuspended(Questionario)
+    wrapper.vm.next()
+    await new Promise(r => setTimeout(r, 50))
+    expect(wrapper.text()).toContain('Nessuna preferenza indicata per i viaggi')
+  })
+
+  it('TC_1.3.2 — SRPA1: mostra errore se nessuna preferenza alloggio', async () => {
+    const wrapper = await mountSuspended(Questionario)
+    await navigateToStep(wrapper, 1)
+    wrapper.vm.next()
+    await new Promise(r => setTimeout(r, 50))
+    expect(wrapper.text()).toContain('Non risulta alcuna preferenza per l\'alloggio')
+  })
+
+  it('TC_1.3.3 — SRPAL1: mostra errore se nessuna preferenza alimentare', async () => {
+    const wrapper = await mountSuspended(Questionario)
+    await navigateToStep(wrapper, 2)
+    wrapper.vm.next()
+    await new Promise(r => setTimeout(r, 50))
+    expect(wrapper.text()).toContain('Non risulta inserita alcuna preferenza alimentare')
+  })
+
+  it('TC_1.3.4 — SRPAS1: mostra errore se nessuna preferenza attività', async () => {
+    const wrapper = await mountSuspended(Questionario)
+    await navigateToStep(wrapper, 3)
+    wrapper.vm.next()
+    await new Promise(r => setTimeout(r, 50))
+    expect(wrapper.text()).toContain('Non risulta indicata alcuna preferenza per le attività da svolgere')
+  })
+
+  it('TC_1.3.5 — SRCAD1: mostra errore se animale domestico non selezionato', async () => {
+    const wrapper = await mountSuspended(Questionario)
+    await navigateToStep(wrapper, 4)
+    wrapper.vm.next()
+    await new Promise(r => setTimeout(r, 50))
+    expect(wrapper.text()).toContain('Campo "Viaggiare con un animale domestico" non selezionato')
+  })
+
+  it('TC_1.3.6 — SRPB1: mostra errore se nessuna preferenza budget', async () => {
+    const wrapper = await mountSuspended(Questionario)
+    await navigateToStep(wrapper, 5)
+    wrapper.vm.next()
+    await new Promise(r => setTimeout(r, 50))
+    expect(wrapper.text()).toContain('Non risulta indicata alcuna preferenza riguardo il budget')
+  })
+
+  it('TC_1.3.7 — SRPSA1: mostra errore se nessuna preferenza souvenir', async () => {
+    const wrapper = await mountSuspended(Questionario)
+    await navigateToStep(wrapper, 6)
+    wrapper.vm.next()
+    await new Promise(r => setTimeout(r, 50))
+    expect(wrapper.text()).toContain('Nessuna preferenza indicata riguardo i souvenirs')
+  })
+
+  it('TC_1.3.8 — SRPS1: mostra errore se nessuna preferenza stagione', async () => {
+    const wrapper = await mountSuspended(Questionario)
+    await navigateToStep(wrapper, 7)
+    await wrapper.vm.invio()
+    await new Promise(r => setTimeout(r, 50))
+    expect(wrapper.text()).toContain('Nessuna preferenza indicata riguardo la stagione')
+  })
+
+  it('TC_1.3.9 — All OK: questionario completato con successo', async () => {
+    const wrapper = await mountSuspended(Questionario)
+    await navigateToStep(wrapper, 7)
+    const opts = wrapper.findAll('button[type="button"]')
+    await opts[0].trigger('click')
+    await wrapper.vm.invio()
+    await new Promise(r => setTimeout(r, 50))
+    expect(wrapper.text()).toContain('Questionario completato!')
+  })
+})

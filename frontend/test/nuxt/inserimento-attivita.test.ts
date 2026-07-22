@@ -264,11 +264,24 @@ describe('Inserimento Alloggio — TC_2.2.*', () => {
     wrapper = await mountSuspended(InserimentoAttivita, { route: '/inserimento-attivita' })
   })
 
+  it('TC_2.2.13: ST1 — tipologia non selezionata (alloggio)', async () => {
+    setValidAlloggio(wrapper.vm)
+    wrapper.vm.alloggio = null
+    await wrapper.vm.onSubmit()
+    expect(wrapper.text()).toContain('tipologia non selezionata')
+  })
+
   it('TC_2.2.14: SC1 — categoria alloggio non selezionata', async () => {
     setValidAlloggio(wrapper.vm)
     wrapper.vm.categoriaAlloggio = null
     await wrapper.vm.onSubmit()
     expect(wrapper.text()).toContain('categoria non selezionata')
+  })
+
+  it('TC_2.2.21: QC1 — camere non presenti (nessuna validazione nel form)', async () => {
+    setValidAlloggio(wrapper.vm)
+    await wrapper.vm.onSubmit()
+    expect(wrapper.vm.success).toBe('ok')
   })
 
   it('TC_2.2.22: caso valido senza ecosostenibilità', async () => {
