@@ -32,7 +32,8 @@ async function cerca() {
         );
         risultati.value = res as AttivitaResult[];
         await aggiornaMarker();
-    } catch {
+    } catch (err) {
+        console.error('Errore ricerca posizione:', err);
         risultati.value = [];
     }
     loading.value = false;

@@ -16,7 +16,7 @@ export function useApi() {
       touristActivities: (limite: number) => $fetch(`${BASE}/attivita/attivitaTuristiche`, { params: { limite } }),
       myActivities: () => $fetch(`${BASE}/attivita/perGestore`, { headers: authHeaders() }),
       create: (data: FormData) => $fetch(`${BASE}/attivita`, { method: 'POST', body: data, headers: authHeaders() }),
-      update: (id: number, data: Record<string, unknown>) => $fetch(`${BASE}/attivita/${id}`, { method: 'POST', body: data, headers: authHeaders() }),
+      update: (id: number, data: FormData) => $fetch(`${BASE}/attivita/${id}`, { method: 'POST', body: data, headers: authHeaders() }),
       delete: (id: number) => $fetch(`${BASE}/attivita/${id}`, { method: 'DELETE', headers: authHeaders() }),
     },
     camere: {
@@ -47,11 +47,12 @@ export function useApi() {
       list: () => $fetch(`${BASE}/itinerari`, { headers: authHeaders() }),
       get: (id: number) => $fetch(`${BASE}/itinerari/${id}`, { headers: authHeaders() }),
       create: () => $fetch(`${BASE}/itinerari`, { method: 'POST', headers: authHeaders() }),
-      genera: (userId: number) =>
-        $fetch(`${BASE}/itinerari/genera`, { method: 'POST', body: { param: userId }, headers: authHeaders() }),
+      genera: () => $fetch(`${BASE}/itinerari/genera`, { method: 'POST', headers: authHeaders() }),
       delete: (id: number) => $fetch(`${BASE}/itinerari/${id}`, { method: 'DELETE', headers: authHeaders() }),
     },
     prenotazioniAlloggio: {
+      miePrenotazioni: () => $fetch(`${BASE}/prenotazioni-alloggio`, { headers: authHeaders() }),
+      perAttivita: (idAttivita: number) => $fetch(`${BASE}/prenotazioni-alloggio/perAttivita/${idAttivita}`, { headers: authHeaders() }),
       create: (data: Record<string, unknown>) => $fetch(`${BASE}/prenotazioni-alloggio`, { method: 'POST', body: data, headers: authHeaders() }),
       confirm: (id: number, data: Record<string, unknown>) =>
         $fetch(`${BASE}/prenotazioni-alloggio/${id}`, { method: 'POST', body: data, headers: authHeaders() }),
@@ -61,6 +62,8 @@ export function useApi() {
           params: { idCamera, dataInizio, dataFine }, headers: authHeaders() }),
     },
     prenotazioniAttivita: {
+      miePrenotazioni: () => $fetch(`${BASE}/prenotazioni-attivita-turistica`, { headers: authHeaders() }),
+      perAttivita: (idAttivita: number) => $fetch(`${BASE}/prenotazioni-attivita-turistica/perAttivita/${idAttivita}`, { headers: authHeaders() }),
       create: (data: Record<string, unknown>) =>
         $fetch(`${BASE}/prenotazioni-attivita-turistica`, { method: 'POST', body: data, headers: authHeaders() }),
       confirm: (id: number, data: Record<string, unknown>) =>
@@ -75,6 +78,7 @@ export function useApi() {
       perAttivita: (idAttivita: number) => $fetch(`${BASE}/recensioni/perAttivita/${idAttivita}`),
       get: (id: number) => $fetch(`${BASE}/recensioni/${id}`),
       create: (data: FormData) => $fetch(`${BASE}/recensioni`, { method: 'POST', body: data, headers: authHeaders() }),
+      delete: (id: number) => $fetch(`${BASE}/recensioni/${id}`, { method: 'DELETE', headers: authHeaders() }),
     },
     segnalazioni: {
       list: (isForRecensione: boolean) =>
@@ -88,9 +92,6 @@ export function useApi() {
     upload: {
       list: (media: string) => $fetch(`${BASE}/file/${media}`),
       get: (media: string, filename: string) => $fetch(`${BASE}/file/${media}/${filename}`, { responseType: 'blob' }),
-    },
-    registrazione: {
-      register: (userData: Record<string, unknown>) => $fetch(`${BASE}/v1/greentrails`, { method: 'POST', body: userData }),
     },
     valori: {
       create: (params: Record<string, unknown>) =>

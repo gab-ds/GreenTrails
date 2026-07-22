@@ -12,10 +12,11 @@ const dataNascita = shallowRef<CalendarDate | null>(null)
 const ruolo = ref(false)
 const error = ref('')
 const loading = ref(false)
+const success = ref(false)
 
 const nomeRegex = /^[A-Za-zÀ-ÿ\s']+$/
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])/
 
 function validateDateOfBirth(dob: CalendarDate): string | null {
   if (!dob) return 'La data di nascita non è valida.'
@@ -54,7 +55,19 @@ function onSubmit() {
     error.value = "Il formato dell'email non è valido."
     return
   }
-  if (password.value.length < 8) {
+  if (nome.value.length > 50) {
+    error.value = 'La lunghezza del nome non è corretta.'
+    return
+  }
+  if (cognome.value.length > 50) {
+    error.value = 'La lunghezza del cognome non è corretta.'
+    return
+  }
+  if (email.value.length > 255) {
+    error.value = "La lunghezza dell'email non è corretta."
+    return
+  }
+  if (password.value.length < 8 || password.value.length > 255) {
     error.value = 'La lunghezza della password non è corretta.'
     return
   }
@@ -83,7 +96,7 @@ function onSubmit() {
   auth.register(data, ruolo.value).then((ok) => {
     loading.value = false
     if (ok) {
-      router.push('/')
+      success.value = true
     } else {
       error.value = 'Errore durante la registrazione.'
     }
@@ -169,6 +182,28 @@ function onSubmit() {
           </NuxtLink>
         </p>
       </form>
+    </div>
+
+    <div
+      v-if="success"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+    >
+      <div class="mx-4 w-full max-w-sm rounded-xl bg-white p-8 text-center shadow-xl">
+        <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+          <UIcon name="i-lucide-check" class="size-8 text-green-600" />
+        </div>
+        <h2 class="mb-2 text-xl font-bold text-gray-900">Registrazione completata!</h2>
+        <p class="mb-6 text-sm text-gray-500">
+          Il tuo account è stato creato con successo.
+        </p>
+        <button
+          type="button"
+          class="w-full rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-green-700"
+          @click="router.push('/')"
+        >
+          Vai alla home
+        </button>
+      </div>
     </div>
   </div>
 </template>
