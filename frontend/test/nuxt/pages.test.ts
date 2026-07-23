@@ -188,7 +188,7 @@ describe('Questionario', () => {
     const wrapper = await mountSuspended(Questionario)
     const firstOption = wrapper.findAll('button[type="button"]')[0]
     await firstOption.trigger('click')
-    const nextBtn = wrapper.findAll('span').find(el => el.text() === 'Avanti')
+    const _nextBtn = wrapper.findAll('span').find(el => el.text() === 'Avanti')
     // click on the parent button
     const buttons = wrapper.findAll('button')
     const avanti = buttons.filter(b => b.text().includes('Avanti'))
@@ -491,11 +491,13 @@ describe('ItinerarioAutomatico', () => {
 })
 
 describe('1.3 Questionario', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async function navigateToStep(wrapper: any, targetStep: number) {
     for (let i = 0; i < targetStep; i++) {
       const opts = wrapper.findAll('button[type="button"]')
       if (opts.length > 0) await opts[0].trigger('click')
       const buttons = wrapper.findAll('button')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const avanti = buttons.filter((b: any) => b.text().includes('Avanti'))
       if (avanti.length > 0) await avanti[0].trigger('click')
       await new Promise(r => setTimeout(r, 30))

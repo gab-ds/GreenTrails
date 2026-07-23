@@ -209,23 +209,23 @@ async function deletePrenotazione(p: PrenotazioneVisitatore) {
         </tbody>
       </table>
     </div>
+
+    <DettagliPrenotazioneDialog
+      v-if="selectedPrenotazione"
+      :prenotazione="selectedPrenotazione"
+      :type="detailType"
+      @close="selectedPrenotazione = null"
+    />
+
+    <ConfirmDialog
+      v-if="deleteConfirm"
+      title="Cancella prenotazione"
+      message="Annullare questa prenotazione?"
+      confirm-label="Elimina"
+      variant="danger"
+      :loading="deleting"
+      @confirm="deletePrenotazione(deleteConfirm)"
+      @cancel="deleteConfirm = null"
+    />
   </div>
-
-  <DettagliPrenotazioneDialog
-    v-if="selectedPrenotazione"
-    :prenotazione="selectedPrenotazione"
-    :type="detailType"
-    @close="selectedPrenotazione = null"
-  />
-
-  <ConfirmDialog
-    v-if="deleteConfirm"
-    title="Cancella prenotazione"
-    message="Annullare questa prenotazione?"
-    confirm-label="Elimina"
-    variant="danger"
-    :loading="deleting"
-    @confirm="deletePrenotazione(deleteConfirm)"
-    @cancel="deleteConfirm = null"
-  />
 </template>

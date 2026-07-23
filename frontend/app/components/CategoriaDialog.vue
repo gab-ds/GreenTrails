@@ -104,7 +104,7 @@ async function rimuoviCategoria(id: number) {
           <h3 class="text-sm font-medium text-gray-600">Categorie assegnate</h3>
           <div v-for="c in assignedCategorie" :key="c.id" class="flex items-center justify-between rounded-lg border border-green-100 bg-green-50 px-3 py-2">
             <span class="text-sm text-gray-800">{{ c.nome }}</span>
-            <button type="button" class="text-red-400 hover:text-red-600 transition" @click="confirmDeleteId = c.id" title="Rimuovi">
+            <button type="button" class="text-red-400 hover:text-red-600 transition" title="Rimuovi" @click="confirmDeleteId = c.id">
               <UIcon name="i-lucide-x" class="size-4" />
             </button>
           </div>

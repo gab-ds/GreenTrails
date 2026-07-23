@@ -243,7 +243,8 @@ const prezzoTotale = computed(() => {
         </div>
 
         <div class="mb-6 flex gap-1">
-          <div v-for="(s, idx) in ['Dati', 'Verifica', 'Riepilogo']" :key="s"
+          <div
+v-for="(s, idx) in ['Dati', 'Verifica', 'Riepilogo']" :key="s"
             class="flex-1 rounded-full py-1 text-center text-xs font-medium transition"
             :class="step > idx + 1 ? 'bg-green-600 text-white' : step === idx + 1 ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-400'"
           >
