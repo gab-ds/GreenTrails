@@ -372,6 +372,19 @@ pull request. L'analisi viene eseguita sia sul backend
 
 *Risultati:* la scansione non ha rilevato vulnerabilità ad alta o
 media severità nelle dipendenze del backend al momento dell'analisi.
+Durante scansioni precedenti, Snyk aveva segnalato vulnerabilità
+su `esbuild` (frontend), `spring-boot-starter-parent`, `checkstyle`,
+`maven-checkstyle-plugin` (backend) e `eclipse-temurin:21-ubi10-minimal`
+(Docker image backend). Le vulnerabilità sulle dipendenze Maven e npm
+sono state risolte aggiornando alle versioni correnti:
+`spring-boot-starter-parent` 3.2.1 → 3.5.16,
+`checkstyle` 10.12.7 → 10.25.0,
+`maven-checkstyle-plugin` 3.3.1 → 3.6.0, e aggiungendo un override
+per `esbuild` in `package.json` (`"esbuild": "^0.28.1"`). La
+vulnerabilità sull'immagine Docker di base `eclipse-temurin:21-ubi10-minimal`
+non è invece risolvibile: la remediation proposta da Snyk
+(`eclipse-temurin:21.0.11_10-jre-alpine-3.23`) è una JRE, mentre il
+progetto richiede un JDK per la build multi-stage.
 
 == GitGuardian — Secret Scanning
 
@@ -390,14 +403,20 @@ momento della scansione.
 
 == CI/CD — Sicurezza automatizzata
 
-La sicurezza è garantita da servizi esterni integrati a livello
-di repository GitHub, senza necessità di workflow dedicati:
+La sicurezza è garantita da una combinazione di servizi esterni
+e configurazioni di automazione:
 
+- *Dependabot*: configurato per mantenere aggiornate le dipendenze
+    GitHub Actions (hash pinning), Maven e npm con cadenza
+    settimanale, garantendo l'integrità degli artefatti tramite
+    SHA fissi nei workflow CI/CD.
+- *Gitleaks* (pre-commit hook): hook locale che previene il commit
+    di segreti prima che raggiungano il repository remoto,
+    affiancando la scansione automatica di GitGuardian.
 - *Snyk* (GitHub App): scansione automatica delle vulnerabilità
     nelle dipendenze a ogni push e pull request su `main`/`dev`.
 - *GitGuardian* (GitHub App): scansione automatica di segreti
-    sull'intero repository a ogni push e PR, affiancata dall'hook
-    pre-commit locale gitleaks.
+    sull'intero repository a ogni push e PR.
 - *SonarQube* (servizio esterno): analisi statica di sicurezza
     e qualità del codice, eseguita su Docker con il plugin
     Creedengo per regole di efficienza energetica.
