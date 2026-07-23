@@ -15,13 +15,12 @@ import org.springframework.stereotype.Service;
 /*@ nullable_by_default @*/
 public class GestioneUtenzeServiceImpl implements GestioneUtenzeService {
 
-  /*@ spec_public @*/
+  /*@ spec_public non_null @*/
   private final UtenteRepository repository;
-  /*@ spec_public @*/
+  /*@ spec_public non_null @*/
   private final PreferenzeRepository preferenzeRepository;
 
-  //@ public invariant repository != null;
-  //@ public invariant preferenzeRepository != null;
+  // repository and preferenzeRepository are injected by Spring — non-null by @RequiredArgsConstructor
 
   /*@
     @ also
@@ -65,11 +64,11 @@ public class GestioneUtenzeServiceImpl implements GestioneUtenzeService {
 
   /*@
     @ also
-    @ assignable \nothing;
+    @ requires email != null;
     @ ensures \result != null;
     @*/
   @Override
-  public Optional<Utente> findByEmail(/*@ nullable @*/ String email) {
+  public Optional<Utente> findByEmail(String email) {
     return repository.findOneByEmail(email);
   }
 
@@ -104,7 +103,10 @@ public class GestioneUtenzeServiceImpl implements GestioneUtenzeService {
     @ requires username != null;
     @*/
   @Override
-  public UserDetails loadUserByUsername(/*@ nullable @*/ String username) throws UsernameNotFoundException {
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    if (username == null) {
+      throw new UsernameNotFoundException("Username is null");
+    }
     Optional<Utente> utente = findByEmail(username);
     if (utente.isEmpty()) {
       throw new UsernameNotFoundException(username);

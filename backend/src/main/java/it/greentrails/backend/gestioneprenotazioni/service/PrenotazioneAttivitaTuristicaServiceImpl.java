@@ -22,10 +22,8 @@ import org.springframework.stereotype.Service;
 public class PrenotazioneAttivitaTuristicaServiceImpl implements
     PrenotazioneAttivitaTuristicaService {
 
-  /*@ spec_public @*/
+  /*@ spec_public non_null @*/
   private final PrenotazioneAttivitaTuristicaRepository repository;
-
-  //@ public invariant repository != null;
 
   /*@
     @ also
@@ -47,9 +45,10 @@ public class PrenotazioneAttivitaTuristicaServiceImpl implements
     return repository.save(prenotazioneAttivitaTuristica);
   }
 
+  /*@ requires prenotazioneAttivitaTuristica != null; @*/
   @Override
   public boolean deletePrenotazioneAttivitaTuristica(
-      /*@ nullable @*/ PrenotazioneAttivitaTuristica prenotazioneAttivitaTuristica) throws Exception {
+      PrenotazioneAttivitaTuristica prenotazioneAttivitaTuristica) throws Exception {
     if (prenotazioneAttivitaTuristica == null) {
       throw new Exception("La prenotazione dell'attività è vuota.");
     }
@@ -65,17 +64,18 @@ public class PrenotazioneAttivitaTuristicaServiceImpl implements
 
   /*@
     @ also
+    @ requires stato != null;
     @ ensures \result != null;
     @*/
   @Override
   public List<PrenotazioneAttivitaTuristica> getPrenotazioniAttivitaTuristicaByStato(
-      /*@ nullable @*/ StatoPrenotazione stato) throws Exception {
+      StatoPrenotazione stato) throws Exception {
     if (stato == null) {
       throw new Exception("Lo stato della prenotazione dell'attività è inesistente.");
     }
     List<PrenotazioneAttivitaTuristica> risultato = new ArrayList<>();
     getAllPrenotazioniAttivitaTuristica().forEach(p -> {
-      if (p.getStato().equals(stato)) {
+      if (stato.equals(p.getStato())) {
         risultato.add(p);
       }
     });
@@ -103,7 +103,8 @@ public class PrenotazioneAttivitaTuristicaServiceImpl implements
     @ ensures \result != null;
     @*/
   @Override
-  public List<PrenotazioneAttivitaTuristica> getPrenotazioniByAttivitaTuristica(/*@ nullable @*/ Attivita attivita)
+  /*@ requires attivita != null; @*/
+  public List<PrenotazioneAttivitaTuristica> getPrenotazioniByAttivitaTuristica(Attivita attivita)
       throws Exception {
     if (attivita == null) {
       throw new Exception("L'attività è vuota.");
@@ -113,10 +114,11 @@ public class PrenotazioneAttivitaTuristicaServiceImpl implements
 
   /*@
     @ also
+    @ requires visitatore != null;
     @ ensures \result != null;
     @*/
   @Override
-  public List<PrenotazioneAttivitaTuristica> getPrenotazioniByVisitatore(/*@ nullable @*/ Utente visitatore)
+  public List<PrenotazioneAttivitaTuristica> getPrenotazioniByVisitatore(Utente visitatore)
       throws Exception {
     if (visitatore == null) {
       throw new Exception("L'utente è vuoto.");
@@ -129,10 +131,11 @@ public class PrenotazioneAttivitaTuristicaServiceImpl implements
 
   /*@
     @ also
+    @ requires itinerario != null;
     @ ensures \result != null;
     @*/
   @Override
-  public List<PrenotazioneAttivitaTuristica> getPrenotazioniByItinerario(/*@ nullable @*/ Itinerario itinerario)
+  public List<PrenotazioneAttivitaTuristica> getPrenotazioniByItinerario(Itinerario itinerario)
       throws Exception {
     if (itinerario == null) {
       throw new Exception("L'itinerario è vuoto.");
@@ -140,8 +143,13 @@ public class PrenotazioneAttivitaTuristicaServiceImpl implements
     return repository.findByItinerario(itinerario.getId(), Pageable.unpaged()).toList();
   }
 
+  /*@
+    @ requires attivita != null;
+    @ requires attivita.getDisponibilita() != null;
+    @ requires attivita.getDisponibilita() >= 0;
+    @*/
   @Override
-  public int controllaDisponibilitaAttivitaTuristica(/*@ nullable @*/ Attivita attivita, /*@ nullable @*/ Date dataInizio)
+  public int controllaDisponibilitaAttivitaTuristica(Attivita attivita, /*@ nullable @*/ Date dataInizio)
       throws Exception {
     if (attivita == null) {
       throw new Exception("L'attività è vuota.");
@@ -149,8 +157,11 @@ public class PrenotazioneAttivitaTuristicaServiceImpl implements
     if (attivita.isAlloggio()) {
       throw new Exception("L'attività non può essere un alloggio.");
     }
-    return attivita.getDisponibilita() - repository.getPostiOccupatiIn(
-        attivita.getId(), dataInizio);
+    if (dataInizio == null) {
+      throw new Exception("Data non valida.");
+    }
+    return Math.max(0, attivita.getDisponibilita() - repository.getPostiOccupatiIn(
+        attivita.getId(), dataInizio));
   }
 
 }

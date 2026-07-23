@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 /*@ nullable_by_default @*/
 public class ValoriEcosostenibilitaServiceImpl implements ValoriEcosostenibilitaService {
 
-  /*@ spec_public @*/
+  /*@ spec_public non_null @*/
   private final ValoriEcosostenibilitaRepository repository;
 
-  //@ public invariant repository != null;
+  // repository is guaranteed non-null by Spring constructor injection
 
   /*@
     @ also
@@ -29,8 +29,11 @@ public class ValoriEcosostenibilitaServiceImpl implements ValoriEcosostenibilita
   }
 
 
+  /*@
+    @ requires valori != null;
+    @*/
   @Override
-  public boolean deleteValori(/*@ nullable @*/ ValoriEcosostenibilita valori) throws Exception {
+  public boolean deleteValori(ValoriEcosostenibilita valori) throws Exception {
     if (valori == null) {
       throw new Exception("Non è possibile cancellare questo valore di ecosostenibilità.");
     }

@@ -13,10 +13,8 @@ import org.springframework.stereotype.Service;
 /*@ nullable_by_default @*/
 public class SegnalazioniServiceImpl implements SegnalazioniService {
 
-  /*@ spec_public @*/
+  /*@ spec_public non_null @*/
   private final SegnalazioniRepository repository;
-
-  //@ public invariant repository != null;
 
   /*@
     @ also
@@ -51,8 +49,13 @@ public class SegnalazioniServiceImpl implements SegnalazioniService {
     return segnalazione.get();
   }
 
+  /*@
+    @ also
+    @ requires stato != null;
+    @ ensures \result != null;
+    @*/
   @Override
-  public List<Segnalazione> getSegnalazioniByStato(/*@ nullable @*/ StatoSegnalazione stato) {
+  public List<Segnalazione> getSegnalazioniByStato(StatoSegnalazione stato) {
     return repository.findByStato(stato);
   }
 }

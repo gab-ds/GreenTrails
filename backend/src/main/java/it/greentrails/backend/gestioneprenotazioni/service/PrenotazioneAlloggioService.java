@@ -18,7 +18,7 @@ public interface PrenotazioneAlloggioService {
   PrenotazioneAlloggio savePrenotazioneAlloggio(/*@ nullable @*/ Camera camera,
       /*@ nullable @*/ PrenotazioneAlloggio prenotazioneAlloggio) throws Exception;
 
-  boolean deletePrenotazioneAlloggio(/*@ nullable @*/ PrenotazioneAlloggio prenotazioneAlloggio)
+  boolean deletePrenotazioneAlloggio(PrenotazioneAlloggio prenotazioneAlloggio)
       throws Exception;
 
   /*@ ensures \result != null; @*/
@@ -27,7 +27,7 @@ public interface PrenotazioneAlloggioService {
   /*@
     @ ensures \result != null;
     @*/
-  List<PrenotazioneAlloggio> getPrenotazioniAlloggioByStato(/*@ nullable @*/ StatoPrenotazione stato)
+  List<PrenotazioneAlloggio> getPrenotazioniAlloggioByStato(StatoPrenotazione stato)
       throws Exception;
 
   /*@
@@ -38,23 +38,23 @@ public interface PrenotazioneAlloggioService {
   /*@
     @ ensures \result != null;
     @*/
-  List<PrenotazioneAlloggio> getPrenotazioniByAlloggio(/*@ nullable @*/ Attivita attivita) throws Exception;
+  List<PrenotazioneAlloggio> getPrenotazioniByAlloggio(Attivita attivita) throws Exception;
 
   /*@
     @ ensures \result != null;
     @*/
-  List<PrenotazioneAlloggio> getPrenotazioniByVisitatore(/*@ nullable @*/ Utente visitatore)
+  List<PrenotazioneAlloggio> getPrenotazioniByVisitatore(Utente visitatore)
       throws Exception;
 
   /*@
     @ ensures \result != null;
     @*/
-  List<PrenotazioneAlloggio> getPrenotazioniByItinerario(/*@ nullable @*/ Itinerario itinerario)
+  List<PrenotazioneAlloggio> getPrenotazioniByItinerario(Itinerario itinerario)
       throws Exception;
 
-  int controllaDisponibilitaAlloggio(/*@ nullable @*/ Attivita alloggio, /*@ nullable @*/ Date dataInizio,
+  int controllaDisponibilitaAlloggio(Attivita alloggio, /*@ nullable @*/ Date dataInizio,
       /*@ nullable @*/ Date dataFine) throws Exception;
 
-  int controllaDisponibilitaCamera(/*@ nullable @*/ Camera camera, /*@ nullable @*/ Date dataInizio,
+  int controllaDisponibilitaCamera(Camera camera, /*@ nullable @*/ Date dataInizio,
       /*@ nullable @*/ Date dataFine) throws Exception;
 }

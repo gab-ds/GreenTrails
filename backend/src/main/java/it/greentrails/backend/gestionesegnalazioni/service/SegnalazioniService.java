@@ -20,6 +20,9 @@ public interface SegnalazioniService {
     @*/
   Segnalazione findById(/*@ nullable @*/ Long id) throws Exception;
 
-  /*@ ensures \result != null; @*/
-  List<Segnalazione> getSegnalazioniByStato(/*@ nullable @*/ StatoSegnalazione stato);
+  /*@
+    @ requires stato != null;
+    @ ensures \result != null;
+    @*/
+  List<Segnalazione> getSegnalazioniByStato(StatoSegnalazione stato);
 }

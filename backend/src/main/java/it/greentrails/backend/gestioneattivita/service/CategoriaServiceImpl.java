@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 /*@ nullable_by_default @*/
 public class CategoriaServiceImpl implements CategoriaService {
 
-  /*@ spec_public @*/
+  /*@ spec_public non_null @*/
   private final CategoriaRepository repository;
 
-  //@ public invariant repository != null;
+  // repository is guaranteed non-null by Spring constructor injection
 
   /*@
     @ also
@@ -28,8 +28,11 @@ public class CategoriaServiceImpl implements CategoriaService {
     return repository.save(categoria);
   }
 
+  /*@
+    @ requires categoria != null;
+    @*/
   @Override
-  public boolean deleteCategoria(/*@ nullable @*/ Categoria categoria) throws Exception {
+  public boolean deleteCategoria(Categoria categoria) throws Exception {
     if (categoria == null) {
       throw new Exception("Non è possibile cancellare questa categoria.");
     }

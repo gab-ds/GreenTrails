@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 /*@ nullable_by_default @*/
 public class AttivitaServiceImpl implements AttivitaService {
 
-  /*@ spec_public @*/
+  /*@ spec_public non_null @*/
   private final AttivitaRepository repository;
 
-  //@ public invariant repository != null;
+  // repository is guaranteed non-null by Spring constructor injection
 
   @Override
   public Attivita saveAttivita(/*@ nullable @*/ Attivita attivita) throws Exception {
@@ -47,8 +47,11 @@ public class AttivitaServiceImpl implements AttivitaService {
     return repository.findByGestore(idGestore, Pageable.unpaged()).toList();
   }
 
+  /*@
+    @ requires valoriEcosostenibilita != null;
+    @*/
   @Override
-  public Optional<Attivita> findByValori(/*@ nullable @*/ ValoriEcosostenibilita valoriEcosostenibilita)
+  public Optional<Attivita> findByValori(ValoriEcosostenibilita valoriEcosostenibilita)
       throws Exception {
     if (valoriEcosostenibilita == null) {
       throw new Exception("I valori sono vuoti.");

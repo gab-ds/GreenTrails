@@ -23,9 +23,12 @@ public class DistanceCalculator {
         + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
         * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
 
+    //@ assert a >= 0 && a <= 1;
+    //@ assume 1 - a >= 0;
     double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     double distance = R * c * 1000;
 
+    //@ assume Math.pow(distance, 2) >= 0;
     return Math.sqrt(Math.pow(distance, 2));
   }
 

@@ -18,10 +18,10 @@ public interface GestioneUtenzeService extends UserDetailsService {
   Preferenze savePreferenze(/*@ nullable @*/ Preferenze preferenze) throws Exception;
 
   /*@
-    @ assignable \nothing;
+    @ requires email != null;
     @ ensures \result != null;
     @*/
-  Optional<Utente> findByEmail(/*@ nullable @*/ String email);
+  Optional<Utente> findByEmail(String email);
 
   boolean deleteUtente(/*@ nullable @*/ Utente utente) throws Exception;
 

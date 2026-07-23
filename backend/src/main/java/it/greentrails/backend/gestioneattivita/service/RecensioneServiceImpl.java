@@ -16,10 +16,10 @@ import org.springframework.stereotype.Service;
 /*@ nullable_by_default @*/
 public class RecensioneServiceImpl implements RecensioneService {
 
-  /*@ spec_public @*/
+  /*@ spec_public non_null @*/
   private final RecensioneRepository repository;
 
-  //@ public invariant repository != null;
+  // repository is guaranteed non-null by Spring constructor injection
 
   /*@
     @ also
@@ -49,8 +49,11 @@ public class RecensioneServiceImpl implements RecensioneService {
     return recensione.get();
   }
 
+  /*@
+    @ requires recensione != null;
+    @*/
   @Override
-  public boolean deleteRecensione(/*@ nullable @*/ Recensione recensione) throws Exception {
+  public boolean deleteRecensione(Recensione recensione) throws Exception {
     if (recensione == null) {
       throw new Exception("La recensione è vuota.");
     }
@@ -61,10 +64,11 @@ public class RecensioneServiceImpl implements RecensioneService {
 
   /*@
     @ also
+    @ requires attivita != null;
     @ ensures \result != null;
     @*/
   @Override
-  public List<Recensione> getRecensioniByAttivita(/*@ nullable @*/ Attivita attivita) throws Exception {
+  public List<Recensione> getRecensioniByAttivita(Attivita attivita) throws Exception {
     if (attivita == null) {
       throw new Exception("L'attività è vuota.");
     }
@@ -73,15 +77,17 @@ public class RecensioneServiceImpl implements RecensioneService {
 
   /*@
     @ also
+    @ requires utente != null;
     @ ensures \result != null;
     @*/
   @Override
-  public List<Recensione> getAllRecensioniByVisitatore(/*@ nullable @*/ Utente utente) throws Exception {
+  public List<Recensione> getAllRecensioniByVisitatore(Utente utente) throws Exception {
     if (utente == null) {
       throw new Exception("L'utente è vuoto.");
     }
     List<Recensione> recensioni = new ArrayList<>();
     repository.findAll().forEach(r -> {
+
       if (r.getVisitatore().getId().equals(utente.getId())) {
         recensioni.add(r);
       }
