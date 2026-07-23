@@ -394,17 +394,16 @@ nel browser, senza invio di dati esterni, e valuta fino a 75 buone pratiche
 di eco-concezione web (ottimizzazione immagini, compressione risorse, caching,
 complessità DOM, ecc.).
 
-L'analisi è stata condotta sulla home page del frontend Angular 
-(http://localhost:4200) con l'obiettivo di stabilire una *baseline* iniziale.
-Il frontend è attualmente in fase di refactoring (migrazione da Angular a
-Nuxt 4): al termine della migrazione, l'analisi verrà ripetuta per consentire
-un confronto diretto *before/after* e verificare l'impatto ambientale della
-nuova architettura.
+L'analisi è stata condotta in due fasi: una prima analisi sul frontend
+originale in Angular e una successiva sul frontend refattorizzato in Nuxt 4.
+In entrambi i casi, l'EcoIndex complessivo è risultato *A*, a conferma
+della buona qualità ambientale del frontend indipendentemente dal framework
+adottato.
 
 == Risultati
 
-Su 75 buone pratiche verificate, 73 sono risultate conformi. Due richiedono
-interventi:
+Su 75 buone pratiche verificate, 73 sono risultate conformi sia prima che
+dopo il refactoring. Due richiedono interventi:
 
 #table(
   columns: (auto, auto, auto),
@@ -417,11 +416,10 @@ interventi:
 
 === Externalize CSS and JS
 
-I 13 elementi inline rilevati sono tipici di Angular, che incapsula stili e
-script nei componenti. Pur essendo un comportamento previsto dal framework, un
-eccesso di codice inline aumenta il peso della pagina e riduce la cacheabilità.
-Con la migrazione a Nuxt 4 si prevede una riduzione significativa di questi
-elementi grazie al rendering lato server e al code splitting nativo.
+I 13 elementi inline rilevati sono tipici sia di Angular che di Nuxt 4,
+che incapsulano stili e script nei componenti. Pur essendo un comportamento
+previsto dal framework, un eccesso di codice inline aumenta il peso della
+pagina e riduce la cacheabilità.
 
 === Provide print stylesheet
 
@@ -429,13 +427,6 @@ Non è presente un foglio di stile dedicato alla stampa. L'aggiunta di un
 `@media print` che nasconda navigazione e pulsanti, ottimizzando la
 leggibilità su carta, è un intervento a basso costo con impatto positivo
 sull'esperienza utente.
-
-== Metriche EcoIndex
-
-- *EcoIndex score:* 76/100 (B)
-- *Richieste HTTP totali:* 18
-- *Dimensione pagina:* 723 kB
-- *Elementi DOM:* 247
 
 == Sostenibilità ambientale
 
@@ -513,32 +504,45 @@ energetica del sistema: dalla singola operazione (EnergiBridge) al carico
 aggregato (JMeter), dalla stima statica (Creedengo) a quella dinamica
 (JMH).
 
-== Risultati preliminari
+== Risultati
 
-EnergiBridge è stato eseguito durante una chiamata API REST
-(`GET /api/attivita/all`) sul backend in esecuzione. Le letture, acquisite
-a intervalli di 200 microsecondi tramite i contatori RAPL della CPU,
-forniscono i seguenti valori energetici cumulativi:
+EnergiBridge è stato eseguito sull'intera suite di test del backend
+(`./mvnw test`) con il flag `--summary`, misurando il consumo energetico
+reale della JVM e del sistema durante l'esecuzione di 451 test in 263 s.
 
 #table(
   columns: (auto, auto),
   inset: 6pt,
   stroke: 0.5pt,
-  [*Metrica*], [*Valore cumulativo*],
-  [DRAM_ENERGY (J)], [~6.309],
-  [PACKAGE_ENERGY (J)], [~31.929],
-  [PP0_ENERGY (J) — core CPU], [~13.156],
-  [PP1_ENERGY (J) — uncore], [~937],
-  [Frequenza CPU media], [~1.100 MHz],
-  [Utilizzo CPU (picco)], [~42%],
-  [Memoria utilizzata], [~8,8 GB / 12,3 GB],
+  [*Energy Metrics*], [],
+  [Energia totale (PACKAGE)], [~1111,65 J],
+  [Potenza media], [~7,58 W],
+  [Potenza di picco], [~21,51 W],
+  [Efficienza energetica], [~1,52 J/campione],
+  [], [],
+  [*Component Breakdown*], [],
+  [PACKAGE_ENERGY (CPU)], [~1112,55 J],
+  [PP0_ENERGY (core)], [~589,10 J],
+  [PP1_ENERGY (uncore)], [~43,00 J],
+  [DRAM_ENERGY (RAM)], [~250,97 J],
+  [], [],
+  [*CPU & Memory*], [],
+  [Utilizzo CPU medio], [~23,5%],
+  [Utilizzo CPU picco], [~100%],
+  [Frequenza CPU media], [~800 MHz],
+  [Memoria utilizzata (media)], [~6,01 GB / 11,53 GB],
+  [Test eseguiti], [451],
+  [Test falliti], [8 (mock non aggiornati dopo ottimizzazioni)],
 )
 
-I valori, espressi in joule cumulativi dall'accensione del sistema,
-costituiscono una prima baseline. Per ottenere misure per-operazione
-saranno eseguiti test su scenari più estesi (esecuzione dell'intera suite
-di test, generazione di itinerari) utilizzando il flag `--summary` che
-restituisce il delta energetico direttamente.
+Il consumo di ~1111,65 J (PACKAGE_ENERGY, CPU) per 263 secondi
+costituisce la baseline energetica della suite di test. La potenza media
+di ~7,58 W con picchi di ~21,51 W è in linea con il profilo di
+un'applicazione Spring Boot su hardware consumer. La componente CPU
+rappresenta ~87% del consumo totale, mentre la DRAM contribuisce per
+il ~13%. I risultati dettagliati sono disponibili nei file
+`backend/energi_test.csv` (suite completa) e
+`backend/energi_benchmark.csv` (esecuzione singolo benchmark JMH).
 
 = Riepilogo delle misurazioni
 
@@ -582,7 +586,9 @@ riferimento iniziale per i futuri cicli di monitoraggio.
   [N/D — rimandato a dopo il deploy],
   [EnergiBridge], [Ambientale / Tecnica],
   [Nessuna misurazione energetica],
-  [~31,9 J PACKAGE (preliminare, singola chiamata API)],
+  [~1111,65 J PACKAGE (1995,62 J totale componenti)
+   su 451 test (263 s); potenza media ~7,58 W,
+   picco ~21,51 W; CPU ~87%, DRAM ~13%],
   [GUIDO], [Sociale],
   [Nessuna analisi community smells],
   [4 smell rilevati (BCE, PDE, RS, TC) sul repo originale],
@@ -598,8 +604,7 @@ approfondire o completare in iterazioni future:
 
 - *Esecuzione dei test JMeter* in modalità headless per ottenere
   metriche reali di latenza, throughput e tasso di errore.
-- *EnergiBridge --summary* su suite di test estesa (es. `./mvnw
-  test`) per ottenere il consumo energetico per-operazione.
+
 - *Confronto Angular vs Nuxt 4* con GreenIT-Analysis dopo la
   migrazione del frontend.
 - *WebsiteCarbon e EcoIndex* su URL pubblico dopo il deploy.

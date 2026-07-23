@@ -1,6 +1,7 @@
 package it.greentrails.backend.gestioneattivita.repository;
 
 import it.greentrails.backend.entities.Recensione;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,9 @@ public interface RecensioneRepository extends JpaRepository<Recensione, Long> {
 
   @Query("SELECT r FROM Recensione r WHERE r.attivita.id = ?1")
   Page<Recensione> findByAttivita(Long idAttivita, Pageable pageable);
+
+  @Query("SELECT r FROM Recensione r WHERE r.visitatore.id = ?1")
+  List<Recensione> findByVisitatore(Long idVisitatore);
 
   @Query("SELECT r FROM Recensione r WHERE r.media = ?1")
   Optional<Recensione> findOneByMedia(String media);

@@ -9,6 +9,6 @@ spring:
     show-sql: false
     defer-datasource-initialization: true
   datasource:
-    url: jdbc:h2:mem:greentrails;DB_CLOSE_DELAY=-1
+    url: "jdbc:h2:mem:greentrails;DB_CLOSE_DELAY=-1;INIT=CREATE ALIAS IF NOT EXISTS H2GIS_SPATIAL FOR 'org.h2gis.functions.factory.H2GISFunctions.load'\\;CALL H2GIS_SPATIAL()"
     username: mock
     driver-class-name: org.h2.Driver

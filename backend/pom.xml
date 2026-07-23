@@ -61,6 +61,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.hibernate.orm</groupId>
+      <artifactId>hibernate-spatial</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
       <groupId>com.puppycrawl.tools</groupId>
       <artifactId>checkstyle</artifactId>
       <version>10.25.0</version>
@@ -81,12 +87,31 @@
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.orbisgis</groupId>
+      <artifactId>h2gis</artifactId>
+      <version>2.2.3</version>
+      <scope>test</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.jacoco</groupId>
       <artifactId>jacoco-maven-plugin</artifactId>
       <version>0.8.14</version>
       <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openjdk.jmh</groupId>
+      <artifactId>jmh-core</artifactId>
+      <version>1.37-extended</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openjdk.jmh</groupId>
+      <artifactId>jmh-generator-annprocess</artifactId>
+      <version>1.37</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -135,6 +160,7 @@
           </excludes>
         </configuration>
       </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
