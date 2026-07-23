@@ -9,7 +9,6 @@ import it.greentrails.backend.enums.RuoloUtente;
 import it.greentrails.backend.enums.StatoPrenotazione;
 import it.greentrails.backend.gestioneattivita.service.CameraService;
 import it.greentrails.backend.gestioneprenotazioni.repository.PrenotazioneAlloggioRepository;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -75,13 +74,7 @@ public class PrenotazioneAlloggioServiceImpl implements PrenotazioneAlloggioServ
     if (stato == null) {
       throw new Exception("Lo stato della prenotazione dell'alloggio è inesistente.");
     }
-    List<PrenotazioneAlloggio> risultato = new ArrayList<>();
-    getAllPrenotazioniAlloggio().forEach(p -> {
-      if (stato.equals(p.getStato())) {
-        risultato.add(p);
-      }
-    });
-    return risultato;
+    return repository.findByStato(stato);
   }
 
   /*@
