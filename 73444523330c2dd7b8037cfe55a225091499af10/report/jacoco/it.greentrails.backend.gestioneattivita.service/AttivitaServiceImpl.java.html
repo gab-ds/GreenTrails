@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AttivitaServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">it.greentrails.backend.gestioneattivita.service</a> &gt; <span class="el_source">AttivitaServiceImpl.java</span></div><h1>AttivitaServiceImpl.java</h1><pre class="source lang-java linenums">package it.greentrails.backend.gestioneattivita.service;
+
+import it.greentrails.backend.entities.Attivita;
+import it.greentrails.backend.entities.ValoriEcosostenibilita;
+import it.greentrails.backend.gestioneattivita.repository.AttivitaRepository;
+import java.util.List;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+@Service
+<span class="fc" id="L13">@RequiredArgsConstructor</span>
+/*@ nullable_by_default @*/
+public class AttivitaServiceImpl implements AttivitaService {
+
+  /*@ spec_public non_null @*/
+  private final AttivitaRepository repository;
+
+  // repository is guaranteed non-null by Spring constructor injection
+
+  @Override
+  public Attivita saveAttivita(/*@ nullable @*/ Attivita attivita) throws Exception {
+<span class="fc bfc" id="L24" title="All 2 branches covered.">    if (attivita == null) {</span>
+<span class="fc" id="L25">      throw new Exception(&quot;L'attività è vuota.&quot;);</span>
+    }
+<span class="fc" id="L27">    return repository.save(attivita);</span>
+  }
+
+  @Override
+  public Attivita findById(/*@ nullable @*/ Long id) throws Exception {
+<span class="fc bfc" id="L32" title="All 4 branches covered.">    if (id == null || id &lt; 0) {</span>
+<span class="fc" id="L33">      throw new Exception(&quot;L'id non è valido.&quot;);</span>
+    }
+<span class="fc" id="L35">    Optional&lt;Attivita&gt; attivita = repository.findById(id);</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">    if (attivita.isEmpty()) {</span>
+<span class="fc" id="L37">      throw new Exception(&quot;L'attività non è stata trovata.&quot;);</span>
+    }
+<span class="fc" id="L39">    return attivita.get();</span>
+  }
+
+  @Override
+  public List&lt;Attivita&gt; findAllAttivitaByGestore(/*@ nullable @*/ Long idGestore) throws Exception {
+<span class="fc bfc" id="L44" title="All 4 branches covered.">    if (idGestore == null || idGestore &lt; 0) {</span>
+<span class="fc" id="L45">      throw new Exception(&quot;L'id non è valido.&quot;);</span>
+    }
+<span class="fc" id="L47">    return repository.findByGestore(idGestore, Pageable.unpaged()).toList();</span>
+  }
+
+  /*@
+    @ requires valoriEcosostenibilita != null;
+    @*/
+  @Override
+  public Optional&lt;Attivita&gt; findByValori(ValoriEcosostenibilita valoriEcosostenibilita)
+      throws Exception {
+<span class="fc bfc" id="L56" title="All 2 branches covered.">    if (valoriEcosostenibilita == null) {</span>
+<span class="fc" id="L57">      throw new Exception(&quot;I valori sono vuoti.&quot;);</span>
+    }
+<span class="fc" id="L59">    return repository.findByValori(valoriEcosostenibilita.getId());</span>
+  }
+
+  @Override
+  public List&lt;Attivita&gt; getAttivitaTuristicheEconomiche(int limite) {
+<span class="fc" id="L64">    return repository.getAllByPrezzo(Pageable.ofSize(limite)).toList();</span>
+  }
+
+  @Override
+  public boolean deleteAttivita(/*@ nullable @*/ Attivita attivita) throws Exception {
+<span class="fc bfc" id="L69" title="All 2 branches covered.">    if (attivita == null) {</span>
+<span class="fc" id="L70">      throw new Exception(&quot;L'attività è vuota.&quot;);</span>
+    }
+<span class="fc" id="L72">    attivita.setEliminata(true);</span>
+    try {
+<span class="fc" id="L74">      saveAttivita(attivita);</span>
+<span class="fc" id="L75">      return true;</span>
+<span class="fc" id="L76">    } catch (Exception e) {</span>
+<span class="fc" id="L77">      return false;</span>
+    }
+  }
+
+  @Override
+  public List&lt;Attivita&gt; getAttivitaTuristiche(int limite) {
+<span class="fc" id="L83">    return repository.getAttivitaTuristiche(Pageable.ofSize(limite)).toList();</span>
+  }
+
+  @Override
+  public List&lt;Attivita&gt; getAlloggi(int limite) {
+<span class="fc" id="L88">    return repository.getAlloggi(Pageable.ofSize(limite)).toList();</span>
+  }
+
+  @Override
+  public List&lt;Attivita&gt; findAll() {
+<span class="fc" id="L93">    return repository.findAll();</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

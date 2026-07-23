@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GestioneUtenzeServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">it.greentrails.backend.gestioneutenze.service</a> &gt; <span class="el_source">GestioneUtenzeServiceImpl.java</span></div><h1>GestioneUtenzeServiceImpl.java</h1><pre class="source lang-java linenums">package it.greentrails.backend.gestioneutenze.service;
+
+import it.greentrails.backend.entities.Preferenze;
+import it.greentrails.backend.entities.Utente;
+import it.greentrails.backend.gestioneutenze.repository.PreferenzeRepository;
+import it.greentrails.backend.gestioneutenze.repository.UtenteRepository;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+@Service
+<span class="fc" id="L14">@RequiredArgsConstructor</span>
+/*@ nullable_by_default @*/
+public class GestioneUtenzeServiceImpl implements GestioneUtenzeService {
+
+  /*@ spec_public non_null @*/
+  private final UtenteRepository repository;
+  /*@ spec_public non_null @*/
+  private final PreferenzeRepository preferenzeRepository;
+
+  // repository and preferenzeRepository are injected by Spring — non-null by @RequiredArgsConstructor
+
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
+  @Override
+  public Utente findById(/*@ nullable @*/ Long id) throws Exception {
+<span class="fc bfc" id="L31" title="All 4 branches covered.">    if (id == null || id &lt; 0) {</span>
+<span class="fc" id="L32">      throw new Exception(&quot;L'id non è valido.&quot;);</span>
+    }
+<span class="fc" id="L34">    Optional&lt;Utente&gt; utente = repository.findById(id);</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">    if (utente.isEmpty()) {</span>
+<span class="fc" id="L36">      throw new Exception(&quot;L'utente non è stato trovato.&quot;);</span>
+    }
+<span class="fc" id="L38">    return utente.get();</span>
+  }
+
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
+  @Override
+  public Utente saveUtente(/*@ nullable @*/ Utente utente) throws Exception {
+<span class="fc bfc" id="L47" title="All 2 branches covered.">    if (utente == null) {</span>
+<span class="fc" id="L48">      throw new Exception(&quot;L'utente è vuoto.&quot;);</span>
+    }
+<span class="fc" id="L50">    return repository.save(utente);</span>
+  }
+
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
+  @Override
+  public Preferenze savePreferenze(/*@ nullable @*/ Preferenze preferenze) throws Exception {
+<span class="fc bfc" id="L59" title="All 2 branches covered.">    if (preferenze == null) {</span>
+<span class="fc" id="L60">      throw new Exception(&quot;Le preferenze sono vuote.&quot;);</span>
+    }
+<span class="fc" id="L62">    return preferenzeRepository.save(preferenze);</span>
+  }
+
+  /*@
+    @ also
+    @ requires email != null;
+    @ ensures \result != null;
+    @*/
+  @Override
+  public Optional&lt;Utente&gt; findByEmail(String email) {
+<span class="fc" id="L72">    return repository.findOneByEmail(email);</span>
+  }
+
+  @Override
+  public boolean deleteUtente(/*@ nullable @*/ Utente utente) throws Exception {
+<span class="fc bfc" id="L77" title="All 2 branches covered.">    if (utente == null) {</span>
+<span class="fc" id="L78">      throw new Exception(&quot;L'utente è vuoto.&quot;);</span>
+    }
+<span class="fc" id="L80">    repository.delete(utente);</span>
+<span class="fc" id="L81">    repository.flush();</span>
+<span class="fc" id="L82">    return repository.findById(utente.getId()).isEmpty();</span>
+  }
+
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
+  @Override
+  public Preferenze getPreferenzeById(/*@ nullable @*/ Long id) throws Exception {
+<span class="fc bfc" id="L91" title="All 4 branches covered.">    if (id == null || id &lt; 0) {</span>
+<span class="fc" id="L92">      throw new Exception(&quot;L'id non è valido.&quot;);</span>
+    }
+<span class="fc" id="L94">    Optional&lt;Preferenze&gt; preferenze = preferenzeRepository.findById(id);</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">    if (preferenze.isEmpty()) {</span>
+<span class="fc" id="L96">      throw new Exception(&quot;Le preferenze non sono state trovate.&quot;);</span>
+    }
+<span class="fc" id="L98">    return preferenze.get();</span>
+  }
+
+  /*@
+    @ also
+    @ requires username != null;
+    @*/
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">    if (username == null) {</span>
+<span class="nc" id="L108">      throw new UsernameNotFoundException(&quot;Username is null&quot;);</span>
+    }
+<span class="fc" id="L110">    Optional&lt;Utente&gt; utente = findByEmail(username);</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">    if (utente.isEmpty()) {</span>
+<span class="fc" id="L112">      throw new UsernameNotFoundException(username);</span>
+    }
+<span class="fc" id="L114">    return utente.get();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

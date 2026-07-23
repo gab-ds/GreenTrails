@@ -1,0 +1,2784 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>PrenotazioneAttivitaTuristicaServiceImpl.java</h1>
+
+<table class="src">
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package it.greentrails.backend.gestioneprenotazioni.service;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.entities.Attivita;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.entities.Itinerario;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.entities.PrenotazioneAttivitaTuristica;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.entities.Utente;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.enums.RuoloUtente;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.enums.StatoPrenotazione;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.gestioneprenotazioni.repository.PrenotazioneAttivitaTuristicaRepository;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.ArrayList;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.Date;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.List;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.Optional;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import lombok.RequiredArgsConstructor;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.data.domain.Pageable;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_16'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.stereotype.Service;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_17'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_18'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_19'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>@Service</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_20'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>@RequiredArgsConstructor</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>/*@ nullable_by_default @*/</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_22'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>public class PrenotazioneAttivitaTuristicaServiceImpl implements</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_23'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    PrenotazioneAttivitaTuristicaService {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_24'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  /*@ spec_public non_null @*/</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_26'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final PrenotazioneAttivitaTuristicaRepository repository;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_27'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_28'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  /*@</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_29'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @ also</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_30'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @ ensures \result != null;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_31'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @*/</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_32'/>
+32
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_32'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @Override</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_33'/>
+33
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_33'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public PrenotazioneAttivitaTuristica savePrenotazioneAttivitaTuristica(/*@ nullable @*/ Attivita attivita,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_34'/>
+34
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_34'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      /*@ nullable @*/ PrenotazioneAttivitaTuristica prenotazioneAttivitaTuristica) throws Exception {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_35'/>
+35
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_35'>1</a>
+<span>
+1. savePrenotazioneAttivitaTuristica : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (prenotazioneAttivitaTuristica == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_36'/>
+36
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_36'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      throw new Exception(&#34;La prenotazione dell&#39;attivit&#224; &#232; vuota.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_37'/>
+37
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_37'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_38'/>
+38
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_38'>1</a>
+<span>
+1. savePrenotazioneAttivitaTuristica : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (attivita == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_39'/>
+39
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_39'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      throw new Exception(&#34;L&#39;attivit&#224; &#232; vuota.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_40'/>
+40
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_40'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_41'/>
+41
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_41'>1</a>
+<span>
+1. savePrenotazioneAttivitaTuristica : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (attivita.isAlloggio()) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_42'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      throw new Exception(&#34;L&#39;attivit&#224; non pu&#242; essere un alloggio.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_43'/>
+43
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_43'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_44'/>
+44
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_44'>1</a>
+<span>
+1. savePrenotazioneAttivitaTuristica : removed call to it/greentrails/backend/entities/PrenotazioneAttivitaTuristica::setAttivitaTuristica &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>    prenotazioneAttivitaTuristica.setAttivitaTuristica(attivita);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_45'/>
+45
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_45'>1</a>
+<span>
+1. savePrenotazioneAttivitaTuristica : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl::savePrenotazioneAttivitaTuristica &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return repository.save(prenotazioneAttivitaTuristica);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_46'/>
+46
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_46'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_47'/>
+47
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_47'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_48'/>
+48
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_48'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  /*@ requires prenotazioneAttivitaTuristica != null; @*/</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_49'/>
+49
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_49'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @Override</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_50'/>
+50
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_50'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public boolean deletePrenotazioneAttivitaTuristica(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_51'/>
+51
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_51'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      PrenotazioneAttivitaTuristica prenotazioneAttivitaTuristica) throws Exception {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_52'/>
+52
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_52'>1</a>
+<span>
+1. deletePrenotazioneAttivitaTuristica : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (prenotazioneAttivitaTuristica == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_53'/>
+53
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_53'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      throw new Exception(&#34;La prenotazione dell&#39;attivit&#224; &#232; vuota.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_54'/>
+54
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_54'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_55'/>
+55
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_55'>1</a>
+<span>
+1. deletePrenotazioneAttivitaTuristica : removed call to it/greentrails/backend/gestioneprenotazioni/repository/PrenotazioneAttivitaTuristicaRepository::delete &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    repository.delete(prenotazioneAttivitaTuristica);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_56'/>
+56
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_56'>1</a>
+<span>
+1. deletePrenotazioneAttivitaTuristica : removed call to it/greentrails/backend/gestioneprenotazioni/repository/PrenotazioneAttivitaTuristicaRepository::flush &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    repository.flush();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_57'/>
+57
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_57'>2</a>
+<span>
+1. deletePrenotazioneAttivitaTuristica : replaced boolean return with false for it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl::deletePrenotazioneAttivitaTuristica &rarr; KILLED<br/>
+2. deletePrenotazioneAttivitaTuristica : replaced boolean return with true for it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl::deletePrenotazioneAttivitaTuristica &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return repository.findById(prenotazioneAttivitaTuristica.getId()).isEmpty();</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_58'/>
+58
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_58'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_59'/>
+59
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_59'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_60'/>
+60
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_60'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @Override</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_61'/>
+61
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_61'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public List&#60;PrenotazioneAttivitaTuristica&#62; getAllPrenotazioniAttivitaTuristica() {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_62'/>
+62
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_62'>1</a>
+<span>
+1. getAllPrenotazioniAttivitaTuristica : replaced return value with Collections.emptyList for it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl::getAllPrenotazioniAttivitaTuristica &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return repository.findAll();</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_63'/>
+63
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_63'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_64'/>
+64
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_64'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_65'/>
+65
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_65'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  /*@</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_66'/>
+66
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_66'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @ also</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_67'/>
+67
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_67'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @ requires stato != null;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_68'/>
+68
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_68'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @ ensures \result != null;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_69'/>
+69
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_69'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @*/</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_70'/>
+70
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_70'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @Override</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_71'/>
+71
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_71'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public List&#60;PrenotazioneAttivitaTuristica&#62; getPrenotazioniAttivitaTuristicaByStato(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_72'/>
+72
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_72'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      StatoPrenotazione stato) throws Exception {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_73'/>
+73
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_73'>1</a>
+<span>
+1. getPrenotazioniAttivitaTuristicaByStato : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (stato == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_74'/>
+74
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_74'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      throw new Exception(&#34;Lo stato della prenotazione dell&#39;attivit&#224; &#232; inesistente.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_75'/>
+75
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_75'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_76'/>
+76
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_76'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    List&#60;PrenotazioneAttivitaTuristica&#62; risultato = new ArrayList&#60;&#62;();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_77'/>
+77
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_77'>1</a>
+<span>
+1. getPrenotazioniAttivitaTuristicaByStato : removed call to java/util/List::forEach &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    getAllPrenotazioniAttivitaTuristica().forEach(p -&#62; {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_78'/>
+78
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_78'>1</a>
+<span>
+1. lambda$getPrenotazioniAttivitaTuristicaByStato$0 : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      if (stato.equals(p.getStato())) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_79'/>
+79
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_79'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        risultato.add(p);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_80'/>
+80
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_80'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_81'/>
+81
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_81'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    });</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_82'/>
+82
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_82'>1</a>
+<span>
+1. getPrenotazioniAttivitaTuristicaByStato : replaced return value with Collections.emptyList for it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl::getPrenotazioniAttivitaTuristicaByStato &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return risultato;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_83'/>
+83
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_83'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_84'/>
+84
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_84'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_85'/>
+85
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_85'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  /*@</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_86'/>
+86
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_86'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @ also</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_87'/>
+87
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_87'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @ ensures \result != null;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_88'/>
+88
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_88'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @*/</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_89'/>
+89
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_89'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @Override</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_90'/>
+90
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_90'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public PrenotazioneAttivitaTuristica findById(/*@ nullable @*/ Long id) throws Exception {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_91'/>
+91
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_91'>3</a>
+<span>
+1. findById : changed conditional boundary &rarr; SURVIVED<br/>
+2. findById : negated conditional &rarr; KILLED<br/>
+3. findById : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>    if (id == null || id &#60; 0) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_92'/>
+92
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_92'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      throw new Exception(&#34;L&#39;id non &#232; valido.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_93'/>
+93
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_93'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_94'/>
+94
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_94'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    Optional&#60;PrenotazioneAttivitaTuristica&#62; prenotazioneAttivitaTuristica = repository.findById(id);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_95'/>
+95
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_95'>1</a>
+<span>
+1. findById : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (prenotazioneAttivitaTuristica.isEmpty()) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_96'/>
+96
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_96'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      throw new Exception(&#34;La prenotazione non &#232; stata trovata.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_97'/>
+97
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_97'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_98'/>
+98
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_98'>1</a>
+<span>
+1. findById : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl::findById &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return prenotazioneAttivitaTuristica.get();</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_99'/>
+99
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_99'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_100'/>
+100
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_100'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_101'/>
+101
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_101'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  /*@</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_102'/>
+102
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_102'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @ also</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_103'/>
+103
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_103'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @ ensures \result != null;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_104'/>
+104
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_104'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @*/</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_105'/>
+105
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_105'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @Override</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_106'/>
+106
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_106'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  /*@ requires attivita != null; @*/</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_107'/>
+107
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_107'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public List&#60;PrenotazioneAttivitaTuristica&#62; getPrenotazioniByAttivitaTuristica(Attivita attivita)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_108'/>
+108
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_108'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      throws Exception {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_109'/>
+109
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_109'>1</a>
+<span>
+1. getPrenotazioniByAttivitaTuristica : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (attivita == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_110'/>
+110
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_110'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      throw new Exception(&#34;L&#39;attivit&#224; &#232; vuota.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_111'/>
+111
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_111'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_112'/>
+112
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_112'>1</a>
+<span>
+1. getPrenotazioniByAttivitaTuristica : replaced return value with Collections.emptyList for it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl::getPrenotazioniByAttivitaTuristica &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>    return repository.findByAttivitaTuristica(attivita.getId(), Pageable.unpaged()).toList();</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_113'/>
+113
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_113'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_114'/>
+114
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_114'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_115'/>
+115
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_115'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  /*@</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_116'/>
+116
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_116'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @ also</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_117'/>
+117
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_117'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @ requires visitatore != null;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_118'/>
+118
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_118'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @ ensures \result != null;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_119'/>
+119
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_119'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @*/</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_120'/>
+120
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_120'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @Override</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_121'/>
+121
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_121'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public List&#60;PrenotazioneAttivitaTuristica&#62; getPrenotazioniByVisitatore(Utente visitatore)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_122'/>
+122
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_122'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      throws Exception {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_123'/>
+123
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_123'>1</a>
+<span>
+1. getPrenotazioniByVisitatore : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (visitatore == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_124'/>
+124
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_124'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      throw new Exception(&#34;L&#39;utente &#232; vuoto.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_125'/>
+125
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_125'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_126'/>
+126
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_126'>1</a>
+<span>
+1. getPrenotazioniByVisitatore : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (visitatore.getRuolo() != RuoloUtente.VISITATORE) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_127'/>
+127
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_127'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      throw new Exception(&#34;L&#39;utente non &#232; un visitatore.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_128'/>
+128
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_128'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_129'/>
+129
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_129'>1</a>
+<span>
+1. getPrenotazioniByVisitatore : replaced return value with Collections.emptyList for it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl::getPrenotazioniByVisitatore &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>    return repository.findByVisitatore(visitatore.getId(), Pageable.unpaged()).toList();</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_130'/>
+130
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_130'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_131'/>
+131
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_131'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_132'/>
+132
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_132'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  /*@</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_133'/>
+133
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_133'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @ also</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_134'/>
+134
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_134'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @ requires itinerario != null;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_135'/>
+135
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_135'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @ ensures \result != null;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_136'/>
+136
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_136'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @*/</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_137'/>
+137
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_137'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @Override</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_138'/>
+138
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_138'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public List&#60;PrenotazioneAttivitaTuristica&#62; getPrenotazioniByItinerario(Itinerario itinerario)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_139'/>
+139
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_139'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      throws Exception {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_140'/>
+140
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_140'>1</a>
+<span>
+1. getPrenotazioniByItinerario : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (itinerario == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_141'/>
+141
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_141'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      throw new Exception(&#34;L&#39;itinerario &#232; vuoto.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_142'/>
+142
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_142'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_143'/>
+143
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_143'>1</a>
+<span>
+1. getPrenotazioniByItinerario : replaced return value with Collections.emptyList for it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl::getPrenotazioniByItinerario &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>    return repository.findByItinerario(itinerario.getId(), Pageable.unpaged()).toList();</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_144'/>
+144
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_144'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_145'/>
+145
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_145'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_146'/>
+146
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_146'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  /*@</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_147'/>
+147
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_147'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @ requires attivita != null;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_148'/>
+148
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_148'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @ requires attivita.getDisponibilita() != null;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_149'/>
+149
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_149'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @ requires attivita.getDisponibilita() &#62;= 0;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_150'/>
+150
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_150'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @*/</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_151'/>
+151
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_151'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @Override</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_152'/>
+152
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_152'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public int controllaDisponibilitaAttivitaTuristica(Attivita attivita, /*@ nullable @*/ Date dataInizio)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_153'/>
+153
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_153'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      throws Exception {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_154'/>
+154
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_154'>1</a>
+<span>
+1. controllaDisponibilitaAttivitaTuristica : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (attivita == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_155'/>
+155
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_155'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      throw new Exception(&#34;L&#39;attivit&#224; &#232; vuota.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_156'/>
+156
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_156'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_157'/>
+157
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_157'>1</a>
+<span>
+1. controllaDisponibilitaAttivitaTuristica : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (attivita.isAlloggio()) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_158'/>
+158
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_158'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      throw new Exception(&#34;L&#39;attivit&#224; non pu&#242; essere un alloggio.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_159'/>
+159
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_159'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_160'/>
+160
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_160'>1</a>
+<span>
+1. controllaDisponibilitaAttivitaTuristica : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (dataInizio == null) {</span></pre></td></tr>
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_161'/>
+161
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_161'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>      throw new Exception(&#34;Data non valida.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_162'/>
+162
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_162'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_163'/>
+163
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_163'>2</a>
+<span>
+1. controllaDisponibilitaAttivitaTuristica : replaced int return with 0 for it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl::controllaDisponibilitaAttivitaTuristica &rarr; KILLED<br/>
+2. controllaDisponibilitaAttivitaTuristica : Replaced integer subtraction with addition &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return Math.max(0, attivita.getDisponibilita() - repository.getPostiOccupatiIn(</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_164'/>
+164
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_164'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        attivita.getId(), dataInizio));</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_165'/>
+165
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_165'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_166'/>
+166
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_166'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_167'/>
+167
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_167'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_35'>35</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_35'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>savePrenotazioneAttivitaTuristica<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testSavePrenotazioneAttivitaTuristicaWithValidData()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_38'>38</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_38'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>savePrenotazioneAttivitaTuristica<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testSavePrenotazioneAttivitaTuristicaWithValidData()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_41'>41</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_41'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>savePrenotazioneAttivitaTuristica<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testSavePrenotazioneAttivitaTuristicaWithValidData()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_44'>44</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_44'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>savePrenotazioneAttivitaTuristica<br/><b>Killed by : </b>none</span></span> removed call to it/greentrails/backend/entities/PrenotazioneAttivitaTuristica::setAttivitaTuristica &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImpl,-method=savePrenotazioneAttivitaTuristica,-methodDesc=(Lit/greentrails/backend/entities/Attivita;Lit/greentrails/backend/entities/PrenotazioneAttivitaTuristica;)Lit/greentrails/backend/entities/PrenotazioneAttivitaTuristica;],-indexes=[42],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImpl,-method=savePrenotazioneAttivitaTuristica,-methodDesc=(Lit/greentrails/backend/entities/Attivita;Lit/greentrails/backend/entities/PrenotazioneAttivitaTuristica;)Lit/greentrails/backend/entities/PrenotazioneAttivitaTuristica;],-indexes=[42],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImpl,-method=savePrenotazioneAttivitaTuristica,-methodDesc=(Lit/greentrails/backend/entities/Attivita;Lit/greentrails/backend/entities/PrenotazioneAttivitaTuristica;)Lit/greentrails/backend/entities/PrenotazioneAttivitaTuristica;],-indexes=[42],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testSavePrenotazioneAttivitaTuristicaWithValidData()]</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_45'>45</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_45'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>savePrenotazioneAttivitaTuristica<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testSavePrenotazioneAttivitaTuristicaWithValidData()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl::savePrenotazioneAttivitaTuristica &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_52'>52</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_52'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>deletePrenotazioneAttivitaTuristica<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testDeletePrenotazioneAttivitaTuristicaFailed()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_55'>55</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_55'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>deletePrenotazioneAttivitaTuristica<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testDeletePrenotazioneAttivitaTuristicaSuccessful()]</span></span> removed call to it/greentrails/backend/gestioneprenotazioni/repository/PrenotazioneAttivitaTuristicaRepository::delete &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_56'>56</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_56'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>deletePrenotazioneAttivitaTuristica<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testDeletePrenotazioneAttivitaTuristicaSuccessful()]</span></span> removed call to it/greentrails/backend/gestioneprenotazioni/repository/PrenotazioneAttivitaTuristicaRepository::flush &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_57'>57</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_57'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>deletePrenotazioneAttivitaTuristica<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testDeletePrenotazioneAttivitaTuristicaSuccessful()]</span></span> replaced boolean return with false for it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl::deletePrenotazioneAttivitaTuristica &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>deletePrenotazioneAttivitaTuristica<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testDeletePrenotazioneAttivitaTuristicaFailed()]</span></span> replaced boolean return with true for it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl::deletePrenotazioneAttivitaTuristica &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_62'>62</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_62'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getAllPrenotazioniAttivitaTuristica<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetAllPrenotazioniAttivitaTuristica()]</span></span> replaced return value with Collections.emptyList for it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl::getAllPrenotazioniAttivitaTuristica &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_73'>73</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_73'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getPrenotazioniAttivitaTuristicaByStato<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetPrenotazioniAttivitaTuristicaByStatoWithNull()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_77'>77</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_77'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getPrenotazioniAttivitaTuristicaByStato<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetPrenotazioniAttivitaTuristicaByStatoWithValidStato()]</span></span> removed call to java/util/List::forEach &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_78'>78</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_78'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>lambda$getPrenotazioniAttivitaTuristicaByStato$0<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetPrenotazioniAttivitaTuristicaByStatoWithValidStato()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_82'>82</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_82'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getPrenotazioniAttivitaTuristicaByStato<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetPrenotazioniAttivitaTuristicaByStatoWithValidStato()]</span></span> replaced return value with Collections.emptyList for it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl::getPrenotazioniAttivitaTuristicaByStato &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_91'>91</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_91'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>findById<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testFindByIdNotFound()]</span></span> negated conditional &rarr; KILLED</span>
+</div> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>findById<br/><b>Killed by : </b>none</span></span> changed conditional boundary &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImpl,-method=findById,-methodDesc=(Ljava/lang/Long;)Lit/greentrails/backend/entities/PrenotazioneAttivitaTuristica;],-indexes=[9],-mutator=org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImpl,-method=findById,-methodDesc=(Ljava/lang/Long;)Lit/greentrails/backend/entities/PrenotazioneAttivitaTuristica;],-indexes=[9],-mutator=org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImpl,-method=findById,-methodDesc=(Ljava/lang/Long;)Lit/greentrails/backend/entities/PrenotazioneAttivitaTuristica;],-indexes=[9],-mutator=org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testFindByIdWithNegativeId()]</li> <li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testFindByIdNotFound()]</li> <li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testFindByIdWithValidId()]</li> 
+</ul>
+</div></div> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>findById<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testFindByIdNotFound()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_95'>95</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_95'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>findById<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testFindByIdWithValidId()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_98'>98</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_98'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>findById<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testFindByIdWithValidId()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl::findById &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_109'>109</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_109'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getPrenotazioniByAttivitaTuristica<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetPrenotazioniByAttivitaTuristicaWithValidAttivita()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_112'>112</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_112'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getPrenotazioniByAttivitaTuristica<br/><b>Killed by : </b>none</span></span> replaced return value with Collections.emptyList for it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl::getPrenotazioniByAttivitaTuristica &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImpl,-method=getPrenotazioniByAttivitaTuristica,-methodDesc=(Lit/greentrails/backend/entities/Attivita;)Ljava/util/List;],-indexes=[22],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.EmptyObjectReturnValsMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImpl,-method=getPrenotazioniByAttivitaTuristica,-methodDesc=(Lit/greentrails/backend/entities/Attivita;)Ljava/util/List;],-indexes=[22],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.EmptyObjectReturnValsMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImpl,-method=getPrenotazioniByAttivitaTuristica,-methodDesc=(Lit/greentrails/backend/entities/Attivita;)Ljava/util/List;],-indexes=[22],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.EmptyObjectReturnValsMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetPrenotazioniByAttivitaTuristicaWithValidAttivita()]</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_123'>123</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_123'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getPrenotazioniByVisitatore<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetPrenotazioniByVisitatoreWithValidVisitatore()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_126'>126</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_126'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getPrenotazioniByVisitatore<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetPrenotazioniByVisitatoreWithValidVisitatore()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_129'>129</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_129'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getPrenotazioniByVisitatore<br/><b>Killed by : </b>none</span></span> replaced return value with Collections.emptyList for it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl::getPrenotazioniByVisitatore &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImpl,-method=getPrenotazioniByVisitatore,-methodDesc=(Lit/greentrails/backend/entities/Utente;)Ljava/util/List;],-indexes=[36],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.EmptyObjectReturnValsMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImpl,-method=getPrenotazioniByVisitatore,-methodDesc=(Lit/greentrails/backend/entities/Utente;)Ljava/util/List;],-indexes=[36],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.EmptyObjectReturnValsMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImpl,-method=getPrenotazioniByVisitatore,-methodDesc=(Lit/greentrails/backend/entities/Utente;)Ljava/util/List;],-indexes=[36],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.EmptyObjectReturnValsMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetPrenotazioniByVisitatoreWithValidVisitatore()]</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_140'>140</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_140'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getPrenotazioniByItinerario<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetPrenotazioniByItinerarioWithValidItinerario()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_143'>143</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_143'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getPrenotazioniByItinerario<br/><b>Killed by : </b>none</span></span> replaced return value with Collections.emptyList for it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl::getPrenotazioniByItinerario &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImpl,-method=getPrenotazioniByItinerario,-methodDesc=(Lit/greentrails/backend/entities/Itinerario;)Ljava/util/List;],-indexes=[22],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.EmptyObjectReturnValsMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImpl,-method=getPrenotazioniByItinerario,-methodDesc=(Lit/greentrails/backend/entities/Itinerario;)Ljava/util/List;],-indexes=[22],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.EmptyObjectReturnValsMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImpl,-method=getPrenotazioniByItinerario,-methodDesc=(Lit/greentrails/backend/entities/Itinerario;)Ljava/util/List;],-indexes=[22],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.EmptyObjectReturnValsMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetPrenotazioniByItinerarioWithValidItinerario()]</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_154'>154</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_154'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>controllaDisponibilitaAttivitaTuristica<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testControllaDisponibilitaAttivitaTuristicaWithValidData()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_157'>157</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_157'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>controllaDisponibilitaAttivitaTuristica<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testControllaDisponibilitaAttivitaTuristicaWithValidData()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_160'>160</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_160'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>controllaDisponibilitaAttivitaTuristica<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testControllaDisponibilitaAttivitaTuristicaWithValidData()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@f5ec8eb_163'>163</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@f5ec8eb_163'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>controllaDisponibilitaAttivitaTuristica<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testControllaDisponibilitaAttivitaTuristicaWithValidData()]</span></span> replaced int return with 0 for it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl::controllaDisponibilitaAttivitaTuristica &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>controllaDisponibilitaAttivitaTuristica<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testControllaDisponibilitaAttivitaTuristicaWithValidData()]</span></span> Replaced integer subtraction with addition &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+<li class='mutator'>CONDITIONALS_BOUNDARY</li>
+<li class='mutator'>EMPTY_RETURNS</li>
+<li class='mutator'>FALSE_RETURNS</li>
+<li class='mutator'>INCREMENTS</li>
+<li class='mutator'>INVERT_NEGS</li>
+<li class='mutator'>MATH</li>
+<li class='mutator'>NEGATE_CONDITIONALS</li>
+<li class='mutator'>NULL_RETURNS</li>
+<li class='mutator'>PRIMITIVE_RETURNS</li>
+<li class='mutator'>TRUE_RETURNS</li>
+<li class='mutator'>VOID_METHOD_CALLS</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testControllaDisponibilitaAttivitaTuristicaWithAlloggio()] (0 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testControllaDisponibilitaAttivitaTuristicaWithValidData()] (0 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testSavePrenotazioneAttivitaTuristicaWithValidData()] (0 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testSavePrenotazioneAttivitaTuristicaWithAlloggio()] (3 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testDeletePrenotazioneAttivitaTuristicaWithNull()] (0 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testDeletePrenotazioneAttivitaTuristicaFailed()] (0 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testDeletePrenotazioneAttivitaTuristicaSuccessful()] (0 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetPrenotazioniAttivitaTuristicaByStatoWithValidStato()] (0 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetAllPrenotazioniAttivitaTuristica()] (0 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetPrenotazioniByAttivitaTuristicaWithValidAttivita()] (0 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testFindByIdNotFound()] (2 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testFindByIdWithValidId()] (1 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetPrenotazioniByVisitatoreWithNonVisitatore()] (0 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetPrenotazioniByVisitatoreWithValidVisitatore()] (0 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testFindByIdWithNegativeId()] (0 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetPrenotazioniByItinerarioWithValidItinerario()] (0 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetPrenotazioniByVisitatoreWithNullVisitatore()] (0 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetPrenotazioniByItinerarioWithNull()] (2 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetPrenotazioniAttivitaTuristicaByStatoWithNull()] (1 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testSavePrenotazioneAttivitaTuristicaWithNullAttivita()] (2 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testControllaDisponibilitaAttivitaTuristicaWithNull()] (2 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testSavePrenotazioneAttivitaTuristicaWithNullPrenotazione()] (3 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testGetPrenotazioniByAttivitaTuristicaWithNull()] (0 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaServiceImplTest]/[method:testFindByIdWithNull()] (1 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='https://pitest.org'>PIT</a> 1.22.1
+
+</body>
+</html>
