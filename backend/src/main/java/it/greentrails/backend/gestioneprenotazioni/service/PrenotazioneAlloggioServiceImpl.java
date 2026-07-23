@@ -19,14 +19,21 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+/*@ nullable_by_default @*/
 public class PrenotazioneAlloggioServiceImpl implements PrenotazioneAlloggioService {
 
+  /*@ spec_public non_null @*/
   private final PrenotazioneAlloggioRepository repository;
+  /*@ spec_public non_null @*/
   private final CameraService cameraService;
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public PrenotazioneAlloggio savePrenotazioneAlloggio(Camera camera,
-      PrenotazioneAlloggio prenotazioneAlloggio) throws Exception {
+  public PrenotazioneAlloggio savePrenotazioneAlloggio(/*@ nullable @*/ Camera camera,
+      /*@ nullable @*/ PrenotazioneAlloggio prenotazioneAlloggio) throws Exception {
     if (prenotazioneAlloggio == null) {
       throw new Exception("La prenotazione dell'attività è vuota.");
     }
@@ -40,6 +47,7 @@ public class PrenotazioneAlloggioServiceImpl implements PrenotazioneAlloggioServ
     return repository.save(prenotazioneAlloggio);
   }
 
+  /*@ requires prenotazioneAlloggio != null; @*/
   @Override
   public boolean deletePrenotazioneAlloggio(PrenotazioneAlloggio prenotazioneAlloggio)
       throws Exception {
@@ -56,6 +64,11 @@ public class PrenotazioneAlloggioServiceImpl implements PrenotazioneAlloggioServ
     return repository.findAll();
   }
 
+  /*@
+    @ also
+    @ requires stato != null;
+    @ ensures \result != null;
+    @*/
   @Override
   public List<PrenotazioneAlloggio> getPrenotazioniAlloggioByStato(StatoPrenotazione stato)
       throws Exception {
@@ -64,15 +77,19 @@ public class PrenotazioneAlloggioServiceImpl implements PrenotazioneAlloggioServ
     }
     List<PrenotazioneAlloggio> risultato = new ArrayList<>();
     getAllPrenotazioniAlloggio().forEach(p -> {
-      if (p.getStato().equals(stato)) {
+      if (stato.equals(p.getStato())) {
         risultato.add(p);
       }
     });
     return risultato;
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public PrenotazioneAlloggio findById(Long id) throws Exception {
+  public PrenotazioneAlloggio findById(/*@ nullable @*/ Long id) throws Exception {
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
@@ -83,8 +100,12 @@ public class PrenotazioneAlloggioServiceImpl implements PrenotazioneAlloggioServ
     return prenotazioneAlloggio.get();
   }
 
-
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
+  /*@ requires attivita != null; @*/
   public List<PrenotazioneAlloggio> getPrenotazioniByAlloggio(Attivita attivita) throws Exception {
     if (attivita == null) {
       throw new Exception("L'attività è vuota.");
@@ -95,6 +116,11 @@ public class PrenotazioneAlloggioServiceImpl implements PrenotazioneAlloggioServ
     return repository.findByAlloggio(attivita.getId(), Pageable.unpaged()).toList();
   }
 
+  /*@
+    @ also
+    @ requires visitatore != null;
+    @ ensures \result != null;
+    @*/
   @Override
   public List<PrenotazioneAlloggio> getPrenotazioniByVisitatore(Utente visitatore)
       throws Exception {
@@ -107,6 +133,11 @@ public class PrenotazioneAlloggioServiceImpl implements PrenotazioneAlloggioServ
     return repository.findByVisitatore(visitatore.getId(), Pageable.unpaged()).toList();
   }
 
+  /*@
+    @ also
+    @ requires itinerario != null;
+    @ ensures \result != null;
+    @*/
   @Override
   public List<PrenotazioneAlloggio> getPrenotazioniByItinerario(Itinerario itinerario)
       throws Exception {
@@ -116,35 +147,55 @@ public class PrenotazioneAlloggioServiceImpl implements PrenotazioneAlloggioServ
     return repository.findByItinerario(itinerario.getId(), Pageable.unpaged()).toList();
   }
 
+  /*@
+    @ requires alloggio != null;
+    @*/
   @Override
-  public int controllaDisponibilitaAlloggio(Attivita alloggio, Date dataInizio, Date dataFine)
-      throws Exception {
+  public int controllaDisponibilitaAlloggio(Attivita alloggio, /*@ nullable @*/ Date dataInizio,
+      /*@ nullable @*/ Date dataFine) throws Exception {
     if (alloggio == null) {
       throw new Exception("L'alloggio è vuoto.");
     }
     if (!alloggio.isAlloggio()) {
       throw new Exception("L'attività non è un alloggio.");
     }
+    if (dataInizio == null) {
+      throw new Exception("Data non valida.");
+    }
+    if (dataFine == null) {
+      throw new Exception("Data non valida.");
+    }
     if (dataFine.before(dataInizio)) {
       throw new Exception("La data di fine non può essere precedente alla data di inizio.");
     }
-    return cameraService
+    return Math.max(0, cameraService
         .getCamereByAlloggio(alloggio)
         .stream()
         .mapToInt(Camera::getDisponibilita)
-        .sum() - repository.getPostiOccupatiAlloggioTra(alloggio.getId(), dataInizio, dataFine);
+        .sum() - repository.getPostiOccupatiAlloggioTra(alloggio.getId(), dataInizio, dataFine));
   }
 
+  /*@
+    @ requires camera != null;
+    @ requires camera.getDisponibilita() != null;
+    @ requires camera.getDisponibilita() >= 0;
+    @*/
   @Override
-  public int controllaDisponibilitaCamera(Camera camera, Date dataInizio, Date dataFine)
-      throws Exception {
+  public int controllaDisponibilitaCamera(Camera camera, /*@ nullable @*/ Date dataInizio,
+      /*@ nullable @*/ Date dataFine) throws Exception {
     if (camera == null) {
       throw new Exception("La camera è vuota.");
+    }
+    if (dataInizio == null) {
+      throw new Exception("Data non valida.");
+    }
+    if (dataFine == null) {
+      throw new Exception("Data non valida.");
     }
     if (dataFine.before(dataInizio)) {
       throw new Exception("La data di fine non può essere precedente alla data di inizio.");
     }
-    return camera.getDisponibilita() - repository.getPostiOccupatiCameraTra(camera.getId(),
-        dataInizio, dataFine);
+    return Math.max(0, camera.getDisponibilita() - repository.getPostiOccupatiCameraTra(camera.getId(),
+        dataInizio, dataFine));
   }
 }

@@ -18,6 +18,7 @@ import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 
+/*@ nullable_by_default @*/
 @Getter
 @Setter
 @Entity

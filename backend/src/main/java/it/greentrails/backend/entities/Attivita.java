@@ -28,6 +28,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.data.geo.Point;
 
+/*@ nullable_by_default @*/
 @Getter
 @Setter
 @Entity

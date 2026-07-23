@@ -13,21 +13,32 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-
+/*@ nullable_by_default @*/
 public class RecensioneServiceImpl implements RecensioneService {
 
+  /*@ spec_public non_null @*/
   private final RecensioneRepository repository;
 
+  // repository is guaranteed non-null by Spring constructor injection
+
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public Recensione saveRecensione(Recensione recensione) throws Exception {
+  public Recensione saveRecensione(/*@ nullable @*/ Recensione recensione) throws Exception {
     if (recensione == null) {
       throw new Exception("La recensione è vuota.");
     }
     return repository.save(recensione);
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public Recensione findById(Long id) throws Exception {
+  public Recensione findById(/*@ nullable @*/ Long id) throws Exception {
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
@@ -38,6 +49,9 @@ public class RecensioneServiceImpl implements RecensioneService {
     return recensione.get();
   }
 
+  /*@
+    @ requires recensione != null;
+    @*/
   @Override
   public boolean deleteRecensione(Recensione recensione) throws Exception {
     if (recensione == null) {
@@ -48,6 +62,11 @@ public class RecensioneServiceImpl implements RecensioneService {
     return repository.findById(recensione.getId()).isEmpty();
   }
 
+  /*@
+    @ also
+    @ requires attivita != null;
+    @ ensures \result != null;
+    @*/
   @Override
   public List<Recensione> getRecensioniByAttivita(Attivita attivita) throws Exception {
     if (attivita == null) {
@@ -56,6 +75,11 @@ public class RecensioneServiceImpl implements RecensioneService {
     return repository.findByAttivita(attivita.getId(), Pageable.unpaged()).toList();
   }
 
+  /*@
+    @ also
+    @ requires utente != null;
+    @ ensures \result != null;
+    @*/
   @Override
   public List<Recensione> getAllRecensioniByVisitatore(Utente utente) throws Exception {
     if (utente == null) {
@@ -63,6 +87,7 @@ public class RecensioneServiceImpl implements RecensioneService {
     }
     List<Recensione> recensioni = new ArrayList<>();
     repository.findAll().forEach(r -> {
+
       if (r.getVisitatore().getId().equals(utente.getId())) {
         recensioni.add(r);
       }

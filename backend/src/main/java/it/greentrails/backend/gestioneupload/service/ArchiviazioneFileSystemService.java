@@ -21,10 +21,15 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+/*@ nullable_by_default @*/
 public class ArchiviazioneFileSystemService implements ArchiviazioneService {
 
+  /*@ spec_public non_null @*/
   private final Path rootLocation;
+  /*@ spec_public non_null @*/
   private static final String[] ALLOWED_CONTENT_TYPES = {"image/jpeg", "image/png", "video/mp4"};
+
+  // rootLocation is guaranteed non-null by Spring constructor injection
 
   @Autowired
   public ArchiviazioneFileSystemService(ArchiviazioneProperties properties) {
@@ -36,6 +41,7 @@ public class ArchiviazioneFileSystemService implements ArchiviazioneService {
     this.rootLocation = Paths.get(properties.getLocation());
   }
 
+  /*@ requires media != null; requires file != null; @*/
   @Override
   public void store(String media, MultipartFile file) {
     try {
@@ -68,6 +74,11 @@ public class ArchiviazioneFileSystemService implements ArchiviazioneService {
     }
   }
 
+  /*@
+    @ also
+    @ requires media != null;
+    @ ensures \result != null;
+    @*/
   @Override
   public List<String> loadAll(String media) {
     try {
@@ -83,11 +94,18 @@ public class ArchiviazioneFileSystemService implements ArchiviazioneService {
 
   }
 
+  /*@ requires media != null; requires filename != null; @*/
   @Override
   public Path load(String media, String filename) {
     return rootLocation.resolve(media).resolve(filename);
   }
 
+  /*@
+    @ also
+    @ requires media != null;
+    @ requires filename != null;
+    @ ensures \result != null;
+    @*/
   @Override
   public Resource loadAsResource(String media, String filename) {
     try {
@@ -105,6 +123,7 @@ public class ArchiviazioneFileSystemService implements ArchiviazioneService {
     }
   }
 
+  /*@ requires media != null; requires filename != null; @*/
   @Override
   public void delete(String media, String filename) {
     Path destinationDir = this.rootLocation.resolve(media);

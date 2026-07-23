@@ -8,12 +8,20 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+/*@ nullable_by_default @*/
 public class ValoriEcosostenibilitaServiceImpl implements ValoriEcosostenibilitaService {
 
+  /*@ spec_public non_null @*/
   private final ValoriEcosostenibilitaRepository repository;
 
+  // repository is guaranteed non-null by Spring constructor injection
+
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public ValoriEcosostenibilita saveValori(ValoriEcosostenibilita valori) throws Exception {
+  public ValoriEcosostenibilita saveValori(/*@ nullable @*/ ValoriEcosostenibilita valori) throws Exception {
     if (valori == null) {
       throw new Exception("Non è possibile salvare questo valore di ecosostenibilità.");
     }
@@ -21,6 +29,9 @@ public class ValoriEcosostenibilitaServiceImpl implements ValoriEcosostenibilita
   }
 
 
+  /*@
+    @ requires valori != null;
+    @*/
   @Override
   public boolean deleteValori(ValoriEcosostenibilita valori) throws Exception {
     if (valori == null) {
@@ -31,8 +42,12 @@ public class ValoriEcosostenibilitaServiceImpl implements ValoriEcosostenibilita
     return repository.findById(valori.getId()).isEmpty();
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public ValoriEcosostenibilita findById(Long id) throws Exception {
+  public ValoriEcosostenibilita findById(/*@ nullable @*/ Long id) throws Exception {
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }

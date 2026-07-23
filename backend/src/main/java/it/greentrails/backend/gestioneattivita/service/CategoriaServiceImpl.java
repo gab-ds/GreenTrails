@@ -8,18 +8,29 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+/*@ nullable_by_default @*/
 public class CategoriaServiceImpl implements CategoriaService {
 
+  /*@ spec_public non_null @*/
   private final CategoriaRepository repository;
 
+  // repository is guaranteed non-null by Spring constructor injection
+
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public Categoria saveCategoria(Categoria categoria) throws Exception {
+  public Categoria saveCategoria(/*@ nullable @*/ Categoria categoria) throws Exception {
     if (categoria == null) {
       throw new Exception("Non è possibile salvare questa categoria.");
     }
     return repository.save(categoria);
   }
 
+  /*@
+    @ requires categoria != null;
+    @*/
   @Override
   public boolean deleteCategoria(Categoria categoria) throws Exception {
     if (categoria == null) {
@@ -31,8 +42,12 @@ public class CategoriaServiceImpl implements CategoriaService {
 
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public Categoria findById(Long id) throws Exception {
+  public Categoria findById(/*@ nullable @*/ Long id) throws Exception {
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
