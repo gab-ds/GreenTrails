@@ -29,7 +29,6 @@ import org.openjdk.jmh.annotations.DynamicHalt;
 @Fork(1)
 @Warmup(iterations = 3, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
-@DynamicHalt(model = "fcn")
 public class ValoriEcosostenibilitaServiceImplBenchmark {
 
   private ValoriEcosostenibilitaService service;

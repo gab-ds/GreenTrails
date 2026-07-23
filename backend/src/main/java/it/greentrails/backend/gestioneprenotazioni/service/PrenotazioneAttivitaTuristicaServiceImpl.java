@@ -7,7 +7,6 @@ import it.greentrails.backend.entities.Utente;
 import it.greentrails.backend.enums.RuoloUtente;
 import it.greentrails.backend.enums.StatoPrenotazione;
 import it.greentrails.backend.gestioneprenotazioni.repository.PrenotazioneAttivitaTuristicaRepository;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -73,13 +72,7 @@ public class PrenotazioneAttivitaTuristicaServiceImpl implements
     if (stato == null) {
       throw new Exception("Lo stato della prenotazione dell'attività è inesistente.");
     }
-    List<PrenotazioneAttivitaTuristica> risultato = new ArrayList<>();
-    getAllPrenotazioniAttivitaTuristica().forEach(p -> {
-      if (stato.equals(p.getStato())) {
-        risultato.add(p);
-      }
-    });
-    return risultato;
+    return repository.findByStato(stato);
   }
 
   /*@
