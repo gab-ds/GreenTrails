@@ -55,5 +55,8 @@
     "@vue/test-utils": "^2.4.11",
     "happy-dom": "^20.10.6",
     "vitest": "^4.1.10"
+  },
+  "overrides": {
+    "esbuild": "^0.28.1"
   }
 }
