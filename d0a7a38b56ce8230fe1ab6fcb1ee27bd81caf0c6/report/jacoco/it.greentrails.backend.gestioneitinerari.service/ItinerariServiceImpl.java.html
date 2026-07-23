@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ItinerariServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">it.greentrails.backend.gestioneitinerari.service</a> &gt; <span class="el_source">ItinerariServiceImpl.java</span></div><h1>ItinerariServiceImpl.java</h1><pre class="source lang-java linenums">package it.greentrails.backend.gestioneitinerari.service;
+
+import it.greentrails.backend.entities.Itinerario;
+import it.greentrails.backend.entities.Preferenze;
+import it.greentrails.backend.entities.Utente;
+import it.greentrails.backend.enums.RuoloUtente;
+import it.greentrails.backend.gestioneitinerari.adapter.ItinerariAdapter;
+import it.greentrails.backend.gestioneitinerari.repository.ItinerariRepository;
+import it.greentrails.backend.gestioneprenotazioni.repository.PrenotazioneAlloggioRepository;
+import it.greentrails.backend.gestioneprenotazioni.repository.PrenotazioneAttivitaTuristicaRepository;
+import it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAlloggioService;
+import it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaService;
+import java.util.List;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+/*@ nullable_by_default @*/
+public class ItinerariServiceImpl implements ItinerariService {
+
+  /*@ spec_public non_null @*/
+  private final ItinerariRepository repository;
+  /*@ spec_public non_null @*/
+  private final PrenotazioneAlloggioService prenotazioneAlloggioService;
+  /*@ spec_public non_null @*/
+  private final PrenotazioneAttivitaTuristicaService prenotazioneAttivitaTuristicaService;
+  /*@ spec_public non_null @*/
+  private final PrenotazioneAlloggioRepository prenotazioneAlloggioRepository;
+  /*@ spec_public non_null @*/
+  private final PrenotazioneAttivitaTuristicaRepository prenotazioneAttivitaTuristicaRepository;
+  /*@ spec_public non_null @*/
+  private final ItinerariAdapter itinerariStubAdapter;
+
+  // Spring guarantees injection — removed JML invariants to fix InvariantExit errors
+
+  @Override
+  public Itinerario saveItinerario(/*@ nullable @*/ Itinerario itinerario) throws Exception {
+<span class="fc bfc" id="L41" title="All 2 branches covered.">    if (itinerario == null) {</span>
+<span class="fc" id="L42">      throw new Exception(&quot;L'itinerario è vuoto.&quot;);</span>
+    }
+<span class="fc" id="L44">    return repository.save(itinerario);</span>
+  }
+
+  @Override
+  public Itinerario createByPreferenze(/*@ nullable @*/ Preferenze preferenze) throws Exception {
+<span class="fc bfc" id="L49" title="All 2 branches covered.">    if (preferenze == null) {</span>
+<span class="fc" id="L50">      throw new Exception(&quot;Le preferenze sono vuote.&quot;);</span>
+    }
+<span class="fc" id="L52">    return itinerariStubAdapter.pianificazioneAutomatica(preferenze);</span>
+  }
+
+  /*@ requires utente != null; @*/
+  @Override
+  public List&lt;Itinerario&gt; findItinerariByUtente(Utente utente) throws Exception {
+<span class="fc bfc" id="L58" title="All 2 branches covered.">    if (utente == null) {</span>
+<span class="fc" id="L59">      throw new Exception(&quot;L'utente è vuoto.&quot;);</span>
+    }
+<span class="fc bfc" id="L61" title="All 2 branches covered.">    if (utente.getRuolo() != RuoloUtente.VISITATORE) {</span>
+<span class="fc" id="L62">      throw new Exception(&quot;L'utente non è un visitatore.&quot;);</span>
+    }
+<span class="fc" id="L64">    return repository.findByVisitatore(utente.getId(), Pageable.unpaged()).toList();</span>
+  }
+
+  /*@ requires itinerario != null; @*/
+  @Override
+  public boolean deleteItinerario(Itinerario itinerario) throws Exception {
+<span class="fc bfc" id="L70" title="All 2 branches covered.">    if (itinerario == null) {</span>
+<span class="fc" id="L71">      throw new Exception(&quot;L'itinerario è vuoto.&quot;);</span>
+    }
+<span class="fc" id="L73">    prenotazioneAlloggioRepository.deleteAllInBatch(</span>
+<span class="fc" id="L74">        prenotazioneAlloggioService.getPrenotazioniByItinerario(itinerario));</span>
+<span class="fc" id="L75">    prenotazioneAttivitaTuristicaRepository.deleteAllInBatch(</span>
+<span class="fc" id="L76">        prenotazioneAttivitaTuristicaService.getPrenotazioniByItinerario(itinerario));</span>
+<span class="fc" id="L77">    repository.delete(itinerario);</span>
+<span class="fc" id="L78">    prenotazioneAlloggioRepository.flush();</span>
+<span class="fc" id="L79">    prenotazioneAttivitaTuristicaRepository.flush();</span>
+<span class="fc" id="L80">    repository.flush();</span>
+<span class="fc" id="L81">    return repository.findById(itinerario.getId()).isEmpty();</span>
+  }
+
+  @Override
+  public Itinerario findById(/*@ nullable @*/ Long id) throws Exception {
+<span class="fc bfc" id="L86" title="All 4 branches covered.">    if (id == null || id &lt; 0) {</span>
+<span class="fc" id="L87">      throw new Exception(&quot;L'id non è valido.&quot;);</span>
+    }
+<span class="fc" id="L89">    Optional&lt;Itinerario&gt; itinerario = repository.findById(id);</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">    if (itinerario.isEmpty()) {</span>
+<span class="fc" id="L91">      throw new Exception(&quot;L'itinerario non è stato trovato.&quot;);</span>
+    }
+<span class="fc" id="L93">    return itinerario.get();</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
