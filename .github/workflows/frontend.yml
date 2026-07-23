@@ -1,0 +1,110 @@
+name: Frontend
+
+on:
+  push:
+    paths:
+      - 'frontend/**'
+    branches:
+      - main
+      - frontend-rework
+  pull_request:
+    paths:
+      - 'frontend/**'
+    branches:
+      - main
+      - frontend-rework
+
+env:
+  BUN_VERSION: '1'
+  WORKING_DIR: ./frontend
+
+defaults:
+  run:
+    working-directory: ./frontend
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            ${{ env.WORKING_DIR }}/node_modules
+          key: ${{ runner.os }}-bun-${{ hashFiles('frontend/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+      - run: bun install --frozen-lockfile
+      - run: bun run lint
+
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            ${{ env.WORKING_DIR }}/node_modules
+            ${{ env.WORKING_DIR }}/.nuxt
+          key: ${{ runner.os }}-bun-typecheck-${{ hashFiles('frontend/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-typecheck-
+            ${{ runner.os }}-bun-
+      - run: bun install --frozen-lockfile
+      - run: bunx nuxt prepare
+      - run: bun run typecheck
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            ${{ env.WORKING_DIR }}/node_modules
+          key: ${{ runner.os }}-bun-test-${{ hashFiles('frontend/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-test-
+            ${{ runner.os }}-bun-
+      - run: bun install --frozen-lockfile
+      - run: bun run test
+
+  docker:
+    name: Docker
+    needs: [lint, typecheck, test]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5
+        id: meta
+        with:
+          images: gabdis/greentrails-frontend
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix=main-
+      - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        with:
+          context: ./frontend
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
