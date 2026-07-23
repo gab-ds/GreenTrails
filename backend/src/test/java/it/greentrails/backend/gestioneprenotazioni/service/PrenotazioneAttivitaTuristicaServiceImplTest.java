@@ -187,7 +187,7 @@ class PrenotazioneAttivitaTuristicaServiceImplTest {
     prenotazioni.add(prenotazione1);
     prenotazioni.add(prenotazione2);
 
-    when(repositoryMock.findAll()).thenReturn(prenotazioni);
+    when(repositoryMock.findByStato(StatoPrenotazione.CREATA)).thenReturn(List.of(prenotazione1));
 
     List<PrenotazioneAttivitaTuristica> risultato =
         service.getPrenotazioniAttivitaTuristicaByStato(StatoPrenotazione.CREATA);

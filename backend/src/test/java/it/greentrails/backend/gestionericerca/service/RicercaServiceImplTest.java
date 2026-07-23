@@ -115,21 +115,16 @@ class RicercaServiceImplTest {
     attivita3.setId(3L);
     attivita3.setNome("Mountain Bike");
 
-    List<Attivita> listCategoria1 = Arrays.asList(attivita1, attivita2, attivita3);
-    List<Attivita> listCategoria2 = Arrays.asList(attivita1, attivita2);
-
-    when(repository.findByCategoria(1L)).thenReturn(listCategoria1);
-    when(repository.findByCategoria(2L)).thenReturn(listCategoria2);
-
+    List<Attivita> listCategoria = Arrays.asList(attivita1, attivita2, attivita3);
     List<Categoria> categorie = Arrays.asList(categoria1, categoria2);
+
+    when(repository.findByCategorie(categorie, categorie.size())).thenReturn(listCategoria);
+
     List<Attivita> result = ricercaService.findAttivitaByCategorie(categorie);
 
     assertNotNull(result);
-    assertEquals(2, result.size());
-    assertTrue(result.contains(attivita1));
-    assertTrue(result.contains(attivita2));
-    verify(repository).findByCategoria(1L);
-    verify(repository).findByCategoria(2L);
+    assertEquals(3, result.size());
+    verify(repository).findByCategorie(categorie, categorie.size());
   }
 
   @Test
@@ -176,13 +171,14 @@ class RicercaServiceImplTest {
 
     List<Attivita> allAttivita = Arrays.asList(attivita1, attivita2, attivita3);
 
-    when(repository.findAll()).thenReturn(allAttivita);
+    when(repository.findByPosizioneNative(coordinate.getY(), coordinate.getX(), raggio)).thenReturn(
+        Arrays.asList(attivita1, attivita2));
 
     List<Attivita> result = ricercaService.findAttivitaByPosizione(coordinate, raggio);
 
     assertNotNull(result);
     assertEquals(2, result.size());
-    verify(repository).findAll();
+    verify(repository).findByPosizioneNative(coordinate.getY(), coordinate.getX(), raggio);
   }
 
   @Test
@@ -226,14 +222,15 @@ class RicercaServiceImplTest {
 
     List<Attivita> allAttivita = Arrays.asList(attivita1, attivita2);
 
-    when(repository.findAll()).thenReturn(allAttivita);
+    when(repository.findByPosizioneNative(coordinate.getY(), coordinate.getX(), zeroRaggio)).thenReturn(
+        Arrays.asList(attivita1));
 
     List<Attivita> result = ricercaService.findAttivitaByPosizione(coordinate, zeroRaggio);
 
     assertNotNull(result);
     assertEquals(1, result.size());
     assertEquals("Stessa posizione", result.get(0).getNome());
-    verify(repository).findAll();
+    verify(repository).findByPosizioneNative(coordinate.getY(), coordinate.getX(), zeroRaggio);
   }
 
   @Test
@@ -256,17 +253,15 @@ class RicercaServiceImplTest {
 
     List<Attivita> listCategoria1 = Arrays.asList(attivita1);
     List<Attivita> listCategoria2 = Arrays.asList(attivita2);
-
-    when(repository.findByCategoria(1L)).thenReturn(listCategoria1);
-    when(repository.findByCategoria(2L)).thenReturn(listCategoria2);
-
     List<Categoria> categorie = Arrays.asList(categoria1, categoria2);
+
+    when(repository.findByCategorie(categorie, categorie.size())).thenReturn(new ArrayList<>());
+
     List<Attivita> result = ricercaService.findAttivitaByCategorie(categorie);
 
     assertNotNull(result);
     assertEquals(0, result.size());
-    verify(repository).findByCategoria(1L);
-    verify(repository).findByCategoria(2L);
+    verify(repository).findByCategorie(categorie, categorie.size());
   }
 
   @Test
@@ -281,13 +276,14 @@ class RicercaServiceImplTest {
 
     List<Attivita> allAttivita = Arrays.asList(attivita1);
 
-    when(repository.findAll()).thenReturn(allAttivita);
+    when(repository.findByPosizioneNative(coordinate.getY(), coordinate.getX(), raggio)).thenReturn(
+        new ArrayList<>());
 
     List<Attivita> result = ricercaService.findAttivitaByPosizione(coordinate, raggio);
 
     assertNotNull(result);
     assertEquals(0, result.size());
-    verify(repository).findAll();
+    verify(repository).findByPosizioneNative(coordinate.getY(), coordinate.getX(), raggio);
   }
 
 }
