@@ -9,32 +9,52 @@ import it.greentrails.backend.enums.StatoPrenotazione;
 import java.util.Date;
 import java.util.List;
 
+/*@ nullable_by_default @*/
 public interface PrenotazioneAlloggioService {
 
-  PrenotazioneAlloggio savePrenotazioneAlloggio(Camera camera,
-      PrenotazioneAlloggio prenotazioneAlloggio) throws Exception;
+  /*@
+    @ ensures \result != null;
+    @*/
+  PrenotazioneAlloggio savePrenotazioneAlloggio(/*@ nullable @*/ Camera camera,
+      /*@ nullable @*/ PrenotazioneAlloggio prenotazioneAlloggio) throws Exception;
 
   boolean deletePrenotazioneAlloggio(PrenotazioneAlloggio prenotazioneAlloggio)
       throws Exception;
 
+  /*@ ensures \result != null; @*/
   List<PrenotazioneAlloggio> getAllPrenotazioniAlloggio();
 
+  /*@
+    @ ensures \result != null;
+    @*/
   List<PrenotazioneAlloggio> getPrenotazioniAlloggioByStato(StatoPrenotazione stato)
       throws Exception;
 
-  PrenotazioneAlloggio findById(Long id) throws Exception;
+  /*@
+    @ ensures \result != null;
+    @*/
+  PrenotazioneAlloggio findById(/*@ nullable @*/ Long id) throws Exception;
 
+  /*@
+    @ ensures \result != null;
+    @*/
   List<PrenotazioneAlloggio> getPrenotazioniByAlloggio(Attivita attivita) throws Exception;
 
+  /*@
+    @ ensures \result != null;
+    @*/
   List<PrenotazioneAlloggio> getPrenotazioniByVisitatore(Utente visitatore)
       throws Exception;
 
+  /*@
+    @ ensures \result != null;
+    @*/
   List<PrenotazioneAlloggio> getPrenotazioniByItinerario(Itinerario itinerario)
       throws Exception;
 
-  int controllaDisponibilitaAlloggio(Attivita alloggio, Date dataInizio, Date dataFine)
-      throws Exception;
+  int controllaDisponibilitaAlloggio(Attivita alloggio, /*@ nullable @*/ Date dataInizio,
+      /*@ nullable @*/ Date dataFine) throws Exception;
 
-  int controllaDisponibilitaCamera(Camera camera, Date dataInizio, Date dataFine)
-      throws Exception;
+  int controllaDisponibilitaCamera(Camera camera, /*@ nullable @*/ Date dataInizio,
+      /*@ nullable @*/ Date dataFine) throws Exception;
 }

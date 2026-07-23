@@ -18,6 +18,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+/*@ nullable_by_default @*/
 @Getter
 @Setter
 @Entity

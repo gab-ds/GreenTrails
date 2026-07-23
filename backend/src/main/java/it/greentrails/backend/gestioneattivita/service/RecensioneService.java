@@ -5,15 +5,28 @@ import it.greentrails.backend.entities.Recensione;
 import it.greentrails.backend.entities.Utente;
 import java.util.List;
 
+/*@ nullable_by_default @*/
 public interface RecensioneService {
 
-  Recensione saveRecensione(Recensione recensione) throws Exception;
+  /*@
+    @ ensures \result != null;
+    @*/
+  Recensione saveRecensione(/*@ nullable @*/ Recensione recensione) throws Exception;
 
-  Recensione findById(Long id) throws Exception;
+  /*@
+    @ ensures \result != null;
+    @*/
+  Recensione findById(/*@ nullable @*/ Long id) throws Exception;
 
-  boolean deleteRecensione(Recensione recensione) throws Exception;
+  boolean deleteRecensione(/*@ nullable @*/ Recensione recensione) throws Exception;
 
-  List<Recensione> getRecensioniByAttivita(Attivita attivita) throws Exception;
+  /*@
+    @ ensures \result != null;
+    @*/
+  List<Recensione> getRecensioniByAttivita(/*@ nullable @*/ Attivita attivita) throws Exception;
 
-  List<Recensione> getAllRecensioniByVisitatore(Utente utente) throws Exception;
+  /*@
+    @ ensures \result != null;
+    @*/
+  List<Recensione> getAllRecensioniByVisitatore(/*@ nullable @*/ Utente utente) throws Exception;
 }

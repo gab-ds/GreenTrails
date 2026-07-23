@@ -10,12 +10,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+/*@ nullable_by_default @*/
 public class SegnalazioniServiceImpl implements SegnalazioniService {
 
+  /*@ spec_public non_null @*/
   private final SegnalazioniRepository repository;
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public Segnalazione saveSegnalazione(Segnalazione segnalazione) throws Exception {
+  public Segnalazione saveSegnalazione(/*@ nullable @*/ Segnalazione segnalazione) throws Exception {
     if (segnalazione == null) {
       throw new Exception("La segnalazione è vuota.");
     }
@@ -27,8 +33,12 @@ public class SegnalazioniServiceImpl implements SegnalazioniService {
     return repository.findByTipo(isForRecensione);
   }
 
+  /*@
+    @ also
+    @ ensures \result != null;
+    @*/
   @Override
-  public Segnalazione findById(Long id) throws Exception {
+  public Segnalazione findById(/*@ nullable @*/ Long id) throws Exception {
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
@@ -39,6 +49,11 @@ public class SegnalazioniServiceImpl implements SegnalazioniService {
     return segnalazione.get();
   }
 
+  /*@
+    @ also
+    @ requires stato != null;
+    @ ensures \result != null;
+    @*/
   @Override
   public List<Segnalazione> getSegnalazioniByStato(StatoSegnalazione stato) {
     return repository.findByStato(stato);

@@ -8,6 +8,7 @@ import org.springframework.data.geo.Point;
 
 public interface RicercaService {
 
+  //@ requires query != null;
   List<Attivita> findAttivita(String query) throws InvalidParameterException;
 
   List<Attivita> findAttivitaByCategorie(List<Categoria> categorie)

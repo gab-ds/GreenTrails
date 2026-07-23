@@ -2,11 +2,18 @@ package it.greentrails.backend.gestioneattivita.service;
 
 import it.greentrails.backend.entities.ValoriEcosostenibilita;
 
+/*@ nullable_by_default @*/
 public interface ValoriEcosostenibilitaService {
 
-  ValoriEcosostenibilita saveValori(ValoriEcosostenibilita valori) throws Exception;
+  /*@
+    @ ensures \result != null;
+    @*/
+  ValoriEcosostenibilita saveValori(/*@ nullable @*/ ValoriEcosostenibilita valori) throws Exception;
 
-  boolean deleteValori(ValoriEcosostenibilita valori) throws Exception;
+  boolean deleteValori(/*@ nullable @*/ ValoriEcosostenibilita valori) throws Exception;
 
-  ValoriEcosostenibilita findById(Long id) throws Exception;
+  /*@
+    @ ensures \result != null;
+    @*/
+  ValoriEcosostenibilita findById(/*@ nullable @*/ Long id) throws Exception;
 }
