@@ -5,9 +5,7 @@ import it.greentrails.backend.entities.Categoria;
 import it.greentrails.backend.gestioneattivita.repository.AttivitaRepository;
 import it.greentrails.backend.utils.DistanceCalculator;
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Service;
 public class RicercaServiceImpl implements RicercaService {
 
   private final AttivitaRepository repository;
-
 
   @Override
   public List<Attivita> findAttivita(String query) throws InvalidParameterException {
@@ -33,13 +30,7 @@ public class RicercaServiceImpl implements RicercaService {
     if (categorie == null || categorie.isEmpty()) {
       throw new InvalidParameterException("La lista delle categorie è vuota");
     }
-    List<Attivita> result = repository.findByCategoria(categorie.get(0).getId());
-    for (int i = 1; i < categorie.size(); i++) {
-      List<Attivita> byCat = repository.findByCategoria(categorie.get(i).getId());
-      result = result.stream().filter(byCat::contains).collect(Collectors.toList());
-    }
-    //@ assert result != null;
-    return result;
+    return repository.findByCategorie(categorie, categorie.size());
   }
 
   @Override
@@ -51,13 +42,12 @@ public class RicercaServiceImpl implements RicercaService {
     if (raggio < 0) {
       throw new InvalidParameterException("Il raggio non è valido.");
     }
-    List<Attivita> result = repository
-        .findAll()
-        .stream()
-        .filter(a -> a.getCoordinate() != null
-            && DistanceCalculator.distance(coordinate, a.getCoordinate()) <= raggio)
-        .toList();
-    //@ assert result != null;
-    return result;
+    try {
+      return repository.findByPosizioneNative(coordinate.getY(), coordinate.getX(), raggio);
+    } catch (Exception e) {
+      return repository.findAll().stream()
+          .filter(a -> DistanceCalculator.distance(coordinate, a.getCoordinate()) <= raggio)
+          .toList();
+    }
   }
 }

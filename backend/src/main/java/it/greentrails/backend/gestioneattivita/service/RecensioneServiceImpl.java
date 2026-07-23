@@ -4,7 +4,6 @@ import it.greentrails.backend.entities.Attivita;
 import it.greentrails.backend.entities.Recensione;
 import it.greentrails.backend.entities.Utente;
 import it.greentrails.backend.gestioneattivita.repository.RecensioneRepository;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -85,13 +84,6 @@ public class RecensioneServiceImpl implements RecensioneService {
     if (utente == null) {
       throw new Exception("L'utente è vuoto.");
     }
-    List<Recensione> recensioni = new ArrayList<>();
-    repository.findAll().forEach(r -> {
-
-      if (r.getVisitatore().getId().equals(utente.getId())) {
-        recensioni.add(r);
-      }
-    });
-    return recensioni;
+    return repository.findByVisitatore(utente.getId());
   }
 }

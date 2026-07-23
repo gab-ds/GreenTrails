@@ -1,7 +1,9 @@
 package it.greentrails.backend.gestioneprenotazioni.repository;
 
 import it.greentrails.backend.entities.PrenotazioneAttivitaTuristica;
+import it.greentrails.backend.enums.StatoPrenotazione;
 import java.util.Date;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,6 +21,9 @@ public interface PrenotazioneAttivitaTuristicaRepository extends
 
   @Query("SELECT p FROM PrenotazioneAttivitaTuristica p WHERE p.itinerario.id = ?1")
   Page<PrenotazioneAttivitaTuristica> findByItinerario(Long idItinerario, Pageable pageable);
+
+  @Query("SELECT p FROM PrenotazioneAttivitaTuristica p WHERE p.stato = ?1")
+  List<PrenotazioneAttivitaTuristica> findByStato(StatoPrenotazione stato);
 
   @Query("""
       SELECT COALESCE(SUM(p.numAdulti) + SUM(p.numBambini), 0)
