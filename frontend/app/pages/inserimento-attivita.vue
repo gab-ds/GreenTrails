@@ -345,7 +345,8 @@ async function onSubmit() {
       <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <h2 class="mb-4 text-lg font-semibold text-gray-800">Politiche eco-sostenibili</h2>
         <div class="flex flex-wrap gap-2">
-          <label v-for="p in [
+          <label
+v-for="p in [
             { key: 'politicheAntispreco', label: 'Antispreco', val: politicheAntispreco },
             { key: 'prodottiLocali', label: 'Prodotti Locali', val: prodottiLocali },
             { key: 'energiaVerde', label: 'Energia Verde', val: energiaVerde },
@@ -361,7 +362,7 @@ async function onSubmit() {
 
       <div v-if="!isEdit" class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <h2 class="mb-4 text-lg font-semibold text-gray-800">Immagine</h2>
-        <input type="file" accept="image/*,video/*" @change="onFileChange" class="text-sm text-gray-500 file:mr-3 file:rounded file:border-0 file:bg-green-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-green-700 hover:file:bg-green-100">
+        <input type="file" accept="image/*,video/*" class="text-sm text-gray-500 file:mr-3 file:rounded file:border-0 file:bg-green-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-green-700 hover:file:bg-green-100" @change="onFileChange">
       </div>
 
       <div v-if="error" class="rounded-lg bg-red-50 p-4 text-sm text-red-600">{{ error }}</div>

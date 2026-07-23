@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CalendarDate } from '@internationalized/date'
+import type { CalendarDate } from '@internationalized/date'
 
 const auth = useAuthStore()
 const router = useRouter()

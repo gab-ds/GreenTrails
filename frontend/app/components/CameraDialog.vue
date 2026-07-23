@@ -117,7 +117,7 @@ async function eliminaCamera(id: number) {
               <p class="text-xs text-gray-500">Capienza: {{ c.capienza }} | Disponibilità: {{ c.disponibilita }} | {{ c.prezzo }}€/notte</p>
               <p v-if="c.descrizione" class="mt-1 text-xs text-gray-500">{{ c.descrizione }}</p>
             </div>
-            <button type="button" class="ml-2 text-red-400 hover:text-red-600 transition" @click="confirmDeleteId = c.id" title="Elimina camera">
+            <button type="button" class="ml-2 text-red-400 hover:text-red-600 transition" title="Elimina camera" @click="confirmDeleteId = c.id">
               <UIcon name="i-lucide-trash-2" class="size-4" />
             </button>
           </div>

@@ -1,6 +1,8 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 
+import InserimentoAttivita from '~/pages/inserimento-attivita.vue'
+
 vi.mock('~/composables/useApi', () => ({
   useApi: () => ({
     activities: {
@@ -24,8 +26,7 @@ vi.mock('~/stores/auth', () => ({
   })),
 }))
 
-import InserimentoAttivita from '~/pages/inserimento-attivita.vue'
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function setValidAttivitaTuristica(w: any) {
   w.nome = 'Escursione in montagna'
   w.alloggio = false
@@ -48,6 +49,7 @@ function setValidAttivitaTuristica(w: any) {
   w.contattoConNatura = true
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function setValidAlloggio(w: any) {
   w.nome = 'Hotel Belvedere'
   w.alloggio = true

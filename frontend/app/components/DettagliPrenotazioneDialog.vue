@@ -23,7 +23,7 @@ interface PrenotazioneAttivitaFull {
   prezzo: number
 }
 
-const props = defineProps<{
+defineProps<{
   prenotazione: PrenotazioneAlloggioFull | PrenotazioneAttivitaFull
   type: 'alloggio' | 'attivita'
 }>()

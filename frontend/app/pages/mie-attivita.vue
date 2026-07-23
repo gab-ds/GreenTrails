@@ -11,7 +11,6 @@ interface Attivita {
 }
 
 const { activities } = useApi()
-const router = useRouter()
 
 const lista = ref<Attivita[]>([])
 const loading = ref(true)
@@ -92,9 +91,9 @@ async function elimina(id: number) {
             <td class="px-4 py-3">
               <div class="flex gap-1">
                 <UButton color="primary" variant="ghost" size="sm" icon="i-lucide-pencil" :to="`/inserimento-attivita?id=${a.id}`" title="Modifica" />
-                <UButton color="error" variant="ghost" size="sm" icon="i-lucide-trash-2" :loading="deleting === a.id" @click="confirmDeleteId = a.id" title="Elimina" />
-                <UButton v-if="a.alloggio" color="neutral" variant="ghost" size="sm" icon="i-lucide-bed-double" @click="cameraDialogId = a.id" title="Camere" />
-                <UButton v-else color="neutral" variant="ghost" size="sm" icon="i-lucide-tags" @click="categoriaDialogId = a.id" title="Categorie" />
+                <UButton color="error" variant="ghost" size="sm" icon="i-lucide-trash-2" :loading="deleting === a.id" title="Elimina" @click="confirmDeleteId = a.id" />
+                <UButton v-if="a.alloggio" color="neutral" variant="ghost" size="sm" icon="i-lucide-bed-double" title="Camere" @click="cameraDialogId = a.id" />
+                <UButton v-else color="neutral" variant="ghost" size="sm" icon="i-lucide-tags" title="Categorie" @click="categoriaDialogId = a.id" />
                 <UButton color="neutral" variant="ghost" size="sm" icon="i-lucide-settings" :to="`/modifica-valori/${a.id}`" title="Valori" />
               </div>
             </td>

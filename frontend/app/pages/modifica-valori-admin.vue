@@ -14,7 +14,6 @@ interface ValoriRaw {
 const { activities, valori } = useApi()
 const route = useRoute()
 const router = useRouter()
-const { $toast } = useNuxtApp() || {}
 
 const idAttivita = computed(() => Number(route.query.id))
 const nome = ref('')
