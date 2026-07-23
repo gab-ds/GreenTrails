@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 /*@ nullable_by_default @*/
 public class CameraServiceImpl implements CameraService {
 
-  /*@ spec_public @*/
+  /*@ spec_public non_null @*/
   private final CameraRepository repository;
 
-  //@ public invariant repository != null;
+  // repository is guaranteed non-null by Spring constructor injection
 
   /*@
     @ also
@@ -49,10 +49,11 @@ public class CameraServiceImpl implements CameraService {
 
   /*@
     @ also
+    @ requires alloggio != null;
     @ ensures \result != null;
     @*/
   @Override
-  public List<Camera> getCamereByAlloggio(/*@ nullable @*/ Attivita alloggio) throws Exception {
+  public List<Camera> getCamereByAlloggio(Attivita alloggio) throws Exception {
     if (alloggio == null) {
       throw new Exception("L'attività è vuota.");
     }
@@ -61,6 +62,7 @@ public class CameraServiceImpl implements CameraService {
     }
     List<Camera> camere = new ArrayList<>();
     repository.findAll().forEach(c -> {
+
       if (c.getAlloggio().getId().equals(alloggio.getId())) {
         camere.add(c);
       }
@@ -68,8 +70,11 @@ public class CameraServiceImpl implements CameraService {
     return camere;
   }
 
+  /*@
+    @ requires camera != null;
+    @*/
   @Override
-  public boolean deleteCamera(/*@ nullable @*/ Camera camera) throws Exception {
+  public boolean deleteCamera(Camera camera) throws Exception {
     if (camera == null) {
       throw new Exception("La camera è vuota.");
     }

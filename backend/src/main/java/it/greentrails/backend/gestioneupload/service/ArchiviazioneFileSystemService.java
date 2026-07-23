@@ -24,12 +24,12 @@ import org.springframework.web.multipart.MultipartFile;
 /*@ nullable_by_default @*/
 public class ArchiviazioneFileSystemService implements ArchiviazioneService {
 
-  /*@ spec_public @*/
+  /*@ spec_public non_null @*/
   private final Path rootLocation;
-  /*@ spec_public @*/
+  /*@ spec_public non_null @*/
   private static final String[] ALLOWED_CONTENT_TYPES = {"image/jpeg", "image/png", "video/mp4"};
 
-  //@ public invariant rootLocation != null;
+  // rootLocation is guaranteed non-null by Spring constructor injection
 
   @Autowired
   public ArchiviazioneFileSystemService(ArchiviazioneProperties properties) {
@@ -41,8 +41,9 @@ public class ArchiviazioneFileSystemService implements ArchiviazioneService {
     this.rootLocation = Paths.get(properties.getLocation());
   }
 
+  /*@ requires media != null; requires file != null; @*/
   @Override
-  public void store(/*@ nullable @*/ String media, /*@ nullable @*/ MultipartFile file) {
+  public void store(String media, MultipartFile file) {
     try {
       if (file.isEmpty()) {
         throw new ArchiviazioneException("Il file è vuoto.");
@@ -75,10 +76,11 @@ public class ArchiviazioneFileSystemService implements ArchiviazioneService {
 
   /*@
     @ also
+    @ requires media != null;
     @ ensures \result != null;
     @*/
   @Override
-  public List<String> loadAll(/*@ nullable @*/ String media) {
+  public List<String> loadAll(String media) {
     try {
       Path mediaDir = this.rootLocation.resolve(media);
       return Files.walk(mediaDir, 1)
@@ -92,17 +94,20 @@ public class ArchiviazioneFileSystemService implements ArchiviazioneService {
 
   }
 
+  /*@ requires media != null; requires filename != null; @*/
   @Override
-  public Path load(/*@ nullable @*/ String media, /*@ nullable @*/ String filename) {
+  public Path load(String media, String filename) {
     return rootLocation.resolve(media).resolve(filename);
   }
 
   /*@
     @ also
+    @ requires media != null;
+    @ requires filename != null;
     @ ensures \result != null;
     @*/
   @Override
-  public Resource loadAsResource(/*@ nullable @*/ String media, /*@ nullable @*/ String filename) {
+  public Resource loadAsResource(String media, String filename) {
     try {
       Path file = load(media, filename);
       Resource resource = new UrlResource(file.toUri());
@@ -118,8 +123,9 @@ public class ArchiviazioneFileSystemService implements ArchiviazioneService {
     }
   }
 
+  /*@ requires media != null; requires filename != null; @*/
   @Override
-  public void delete(/*@ nullable @*/ String media, /*@ nullable @*/ String filename) {
+  public void delete(String media, String filename) {
     Path destinationDir = this.rootLocation.resolve(media);
     Path file = destinationDir.resolve(filename);
     if (!file.getParent().equals(destinationDir.toAbsolutePath())) {

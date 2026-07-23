@@ -15,9 +15,9 @@ public interface ItinerariService {
   Itinerario createByPreferenze(/*@ nullable @*/ Preferenze preferenze) throws Exception;
 
   /*@ ensures \result != null; @*/
-  List<Itinerario> findItinerariByUtente(/*@ nullable @*/ Utente utente) throws Exception;
+  List<Itinerario> findItinerariByUtente(Utente utente) throws Exception;
 
-  boolean deleteItinerario(/*@ nullable @*/ Itinerario itinerario) throws Exception;
+  boolean deleteItinerario(Itinerario itinerario) throws Exception;
 
   /*@ ensures \result != null; @*/
   Itinerario findById(/*@ nullable @*/ Long id) throws Exception;

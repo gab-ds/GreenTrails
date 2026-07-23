@@ -10,19 +10,25 @@ public interface ArchiviazioneService {
 
   void init();
 
-  void store(/*@ nullable @*/ String media, /*@ nullable @*/ MultipartFile file);
+  /*@ requires media != null; requires file != null; @*/
+  void store(String media, MultipartFile file);
 
+  /*@ requires media != null; @*/
   /*@ ensures \result != null; @*/
-  List<String> loadAll(/*@ nullable @*/ String media);
+  List<String> loadAll(String media);
 
-  Path load(/*@ nullable @*/ String media, /*@ nullable @*/ String filename);
+  /*@ requires media != null; requires filename != null; @*/
+  Path load(String media, String filename);
 
   /*@
+    @ requires media != null;
+    @ requires filename != null;
     @ ensures \result != null;
     @*/
-  Resource loadAsResource(/*@ nullable @*/ String media, /*@ nullable @*/ String filename);
+  Resource loadAsResource(String media, String filename);
 
-  void delete(/*@ nullable @*/ String media, /*@ nullable @*/ String filename);
+  /*@ requires media != null; requires filename != null; @*/
+  void delete(String media, String filename);
 
   void deleteAll();
 

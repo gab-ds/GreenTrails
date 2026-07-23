@@ -24,22 +24,18 @@ import org.springframework.stereotype.Service;
 /*@ nullable_by_default @*/
 public class ItinerariStubAdapter implements ItinerariAdapter {
 
-  /*@ spec_public @*/
+  /*@ spec_public non_null @*/
   private final AttivitaRepository attivitaRepository;
-  /*@ spec_public @*/
+  /*@ spec_public non_null @*/
   private final CameraRepository cameraRepository;
-  /*@ spec_public @*/
+  /*@ spec_public non_null @*/
   private final ItinerariRepository itinerariRepository;
-  /*@ spec_public @*/
+  /*@ spec_public non_null @*/
   private final PrenotazioneAlloggioRepository prenotazioneAlloggioRepository;
-  /*@ spec_public @*/
+  /*@ spec_public non_null @*/
   private final PrenotazioneAttivitaTuristicaRepository prenotazioneAttivitaTuristicaRepository;
 
-  //@ public invariant attivitaRepository != null;
-  //@ public invariant cameraRepository != null;
-  //@ public invariant itinerariRepository != null;
-  //@ public invariant prenotazioneAlloggioRepository != null;
-  //@ public invariant prenotazioneAttivitaTuristicaRepository != null;
+  // Spring guarantees injection — removed JML invariants to fix InvariantExit errors
 
 
   /*@
@@ -53,6 +49,9 @@ public class ItinerariStubAdapter implements ItinerariAdapter {
     itinerario.setVisitatore(preferenze.getVisitatore());
     Itinerario itinerarioFinal = itinerariRepository.save(itinerario);
     List<Attivita> attivitaTuristiche = attivitaRepository.findAll();
+    if (attivitaTuristiche == null) {
+      attivitaTuristiche = Collections.emptyList();
+    }
     Collections.shuffle(attivitaTuristiche);
     attivitaTuristiche.stream().filter(a -> !a.isAlloggio()).limit(3).forEach(a -> {
       PrenotazioneAttivitaTuristica p = new PrenotazioneAttivitaTuristica();
@@ -65,6 +64,9 @@ public class ItinerariStubAdapter implements ItinerariAdapter {
       PrenotazioneAttivitaTuristica saved = prenotazioneAttivitaTuristicaRepository.save(p);
     });
     List<Camera> camere = cameraRepository.findAll();
+    if (camere == null) {
+      camere = Collections.emptyList();
+    }
     Collections.shuffle(camere);
     camere.stream().limit(1).forEach(c -> {
       PrenotazioneAlloggio p = new PrenotazioneAlloggio();

@@ -33,11 +33,13 @@ public class RicercaServiceImpl implements RicercaService {
     if (categorie == null || categorie.isEmpty()) {
       throw new InvalidParameterException("La lista delle categorie è vuota");
     }
-    return categorie.stream().map(c -> repository.findByCategoria(c.getId())).reduce(
-        (l1, l2) -> l1.stream()
-            .filter(l2::contains)
-            .collect(Collectors.toList())
-    ).orElse(new ArrayList<Attivita>());
+    List<Attivita> result = repository.findByCategoria(categorie.get(0).getId());
+    for (int i = 1; i < categorie.size(); i++) {
+      List<Attivita> byCat = repository.findByCategoria(categorie.get(i).getId());
+      result = result.stream().filter(byCat::contains).collect(Collectors.toList());
+    }
+    //@ assert result != null;
+    return result;
   }
 
   @Override
@@ -49,10 +51,13 @@ public class RicercaServiceImpl implements RicercaService {
     if (raggio < 0) {
       throw new InvalidParameterException("Il raggio non è valido.");
     }
-    return repository
+    List<Attivita> result = repository
         .findAll()
         .stream()
-        .filter(a -> DistanceCalculator.distance(coordinate, a.getCoordinate()) <= raggio)
+        .filter(a -> a.getCoordinate() != null
+            && DistanceCalculator.distance(coordinate, a.getCoordinate()) <= raggio)
         .toList();
+    //@ assert result != null;
+    return result;
   }
 }

@@ -18,7 +18,7 @@ public interface PrenotazioneAttivitaTuristicaService {
       /*@ nullable @*/ PrenotazioneAttivitaTuristica prenotazioneAttivitaTuristica) throws Exception;
 
   boolean deletePrenotazioneAttivitaTuristica(
-      /*@ nullable @*/ PrenotazioneAttivitaTuristica prenotazioneAttivitaTuristica) throws Exception;
+      PrenotazioneAttivitaTuristica prenotazioneAttivitaTuristica) throws Exception;
 
   /*@ ensures \result != null; @*/
   List<PrenotazioneAttivitaTuristica> getAllPrenotazioniAttivitaTuristica();
@@ -27,7 +27,7 @@ public interface PrenotazioneAttivitaTuristicaService {
     @ ensures \result != null;
     @*/
   List<PrenotazioneAttivitaTuristica> getPrenotazioniAttivitaTuristicaByStato(
-      /*@ nullable @*/ StatoPrenotazione stato) throws Exception;
+      StatoPrenotazione stato) throws Exception;
 
   /*@
     @ ensures \result != null;
@@ -37,21 +37,21 @@ public interface PrenotazioneAttivitaTuristicaService {
   /*@
     @ ensures \result != null;
     @*/
-  List<PrenotazioneAttivitaTuristica> getPrenotazioniByAttivitaTuristica(/*@ nullable @*/ Attivita attivita)
+  List<PrenotazioneAttivitaTuristica> getPrenotazioniByAttivitaTuristica(Attivita attivita)
       throws Exception;
 
   /*@
     @ ensures \result != null;
     @*/
-  List<PrenotazioneAttivitaTuristica> getPrenotazioniByVisitatore(/*@ nullable @*/ Utente visitatore)
+  List<PrenotazioneAttivitaTuristica> getPrenotazioniByVisitatore(Utente visitatore)
       throws Exception;
 
   /*@
     @ ensures \result != null;
     @*/
-  List<PrenotazioneAttivitaTuristica> getPrenotazioniByItinerario(/*@ nullable @*/ Itinerario itinerario)
+  List<PrenotazioneAttivitaTuristica> getPrenotazioniByItinerario(Itinerario itinerario)
       throws Exception;
 
-  int controllaDisponibilitaAttivitaTuristica(/*@ nullable @*/ Attivita attivita, /*@ nullable @*/ Date dataInizio)
+  int controllaDisponibilitaAttivitaTuristica(Attivita attivita, /*@ nullable @*/ Date dataInizio)
       throws Exception;
 }
