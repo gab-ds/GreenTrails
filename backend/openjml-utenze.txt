@@ -1,0 +1,157 @@
+Picked up _JAVA_OPTIONS: -Djava.util.prefs.userRoot=/home/sys-001/.config/java
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< it.greentrails:backend >-----------------------
+[INFO] Building backend 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- lombok:1.18.20.0:delombok (delombok) @ backend ---
+[INFO] Delombok complete.
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ backend ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ backend ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 82 source files with javac [debug release 21] to target/classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[WARNING] Supported source version 'RELEASE_6' from annotation processor 'org.eclipse.sisu.scanners.index.SisuIndexAPT6' less than -source '21'
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ backend ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ backend ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 29 source files with javac [debug release 21] to target/test-classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[WARNING] Supported source version 'RELEASE_6' from annotation processor 'org.eclipse.sisu.scanners.index.SisuIndexAPT6' less than -source '21'
+[INFO] /home/sys-001/IdeaProjects/GreenTrails/backend/src/test/java/it/greentrails/backend/gestioneattivita/service/CameraServiceImplTest.java: Some input files use or override a deprecated API.
+[INFO] /home/sys-001/IdeaProjects/GreenTrails/backend/src/test/java/it/greentrails/backend/gestioneattivita/service/CameraServiceImplTest.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- jacoco:0.8.14:prepare-agent (jacoco-initialize) @ backend ---
+[INFO] argLine set to -javaagent:/home/sys-001/.m2/repository/org/jacoco/org.jacoco.agent/0.8.14/org.jacoco.agent-0.8.14-runtime.jar=destfile=/home/sys-001/IdeaProjects/GreenTrails/backend/target/coverage-reports/jacoco-unit.exec,append=true,excludes=*MethodAccess:it/greentrails/backend/entities/*:it/greentrails/backend/enums/*:**/*Exception.class:it/greentrails/backend/utils/ArchiviazioneProperties.class:it/greentrails/backend/BackendApplication.class,output=file
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ backend ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.3.0:jar (default-jar) @ backend ---
+[INFO] Building jar: /home/sys-001/IdeaProjects/GreenTrails/backend/target/backend-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:3.2.1:repackage (repackage) @ backend ---
+[INFO] Replacing main artifact /home/sys-001/IdeaProjects/GreenTrails/backend/target/backend-0.0.1-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /home/sys-001/IdeaProjects/GreenTrails/backend/target/backend-0.0.1-SNAPSHOT.jar.original
+[INFO] 
+[INFO] --- jacoco:0.8.14:report (jacoco-site) @ backend ---
+[INFO] Loading execution data file /home/sys-001/IdeaProjects/GreenTrails/backend/target/coverage-reports/jacoco-unit.exec
+[INFO] Analyzed bundle 'backend' with 43 classes
+[WARNING] Classes in bundle 'backend' do not match with execution data. For report generation the same class files must be used as at runtime.
+[WARNING] Execution data for class it/greentrails/backend/gestioneattivita/service/RecensioneServiceImpl does not match.
+[WARNING] Execution data for class it/greentrails/backend/gestioneutenze/service/GestioneUtenzeServiceImpl does not match.
+[WARNING] Execution data for class it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl does not match.
+[WARNING] Execution data for class it/greentrails/backend/gestioneattivita/service/AttivitaServiceImpl does not match.
+[WARNING] Execution data for class it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl does not match.
+[WARNING] Execution data for class it/greentrails/backend/gestionesegnalazioni/service/SegnalazioniServiceImpl does not match.
+[WARNING] Execution data for class it/greentrails/backend/gestioneupload/service/ArchiviazioneFileSystemService does not match.
+[WARNING] Execution data for class it/greentrails/backend/gestionericerca/service/RicercaServiceImpl does not match.
+[WARNING] Execution data for class it/greentrails/backend/gestioneattivita/service/CameraServiceImpl does not match.
+[WARNING] Execution data for class it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAlloggioServiceImpl does not match.
+[WARNING] Execution data for class it/greentrails/backend/gestioneitinerari/adapter/ItinerariStubAdapter does not match.
+[INFO] 
+[INFO] --- exec:3.1.1:exec (openjml-check) @ backend ---
+Picked up _JAVA_OPTIONS: -Djava.util.prefs.userRoot=/home/sys-001/.config/java
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneutenze/service/GestioneUtenzeService.java:21: warning: Method findByEmail(java.lang.String) has 'assignable \everything', making its caller likely impossible to verify
+    @ requires email != null;
+      ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneutenze/service/GestioneUtenzeServiceImpl.java:106: warning: Associated declaration: /home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneutenze/service/GestioneUtenzeService.java:21:
+    Optional<Utente> utente = findByEmail(username);
+                                         ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneutenze/service/GestioneUtenzeServiceImpl.java:63: warning: Method findByEmail(java.lang.String) has 'assignable \everything', making its caller likely impossible to verify
+    @ requires email != null;
+      ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneutenze/service/GestioneUtenzeServiceImpl.java:106: warning: Associated declaration: /home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneutenze/service/GestioneUtenzeServiceImpl.java:63:
+    Optional<Utente> utente = findByEmail(username);
+                                         ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneutenze/service/GestioneUtenzeServiceImpl.java:116: verify: The prover cannot establish an assertion (PossiblyNullAssignment) in method GestioneUtenzeServiceImpl
+    this.preferenzeRepository = preferenzeRepository;
+                              ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneutenze/service/GestioneUtenzeServiceImpl.java:115: verify: The prover cannot establish an assertion (PossiblyNullAssignment) in method GestioneUtenzeServiceImpl
+    this.repository = repository;
+                    ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneutenze/service/GestioneUtenzeServiceImpl.java:108: verify: The prover cannot establish an assertion (InvariantEntrance: /home/sys-001/.local/share/openjml/specs/java/lang/CharSequence.jml:30:) in method loadUserByUsername: (Caller: it.greentrails.backend.gestioneutenze.service.GestioneUtenzeServiceImpl.loadUserByUsername(String), Callee: org.springframework.security.core.userdetails.UsernameNotFoundException.UsernameNotFoundException(String))
+      throw new UsernameNotFoundException(username);
+                                          ^
+/home/sys-001/.local/share/openjml/specs/java/lang/CharSequence.jml:30: verify: Associated declaration: /home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneutenze/service/GestioneUtenzeServiceImpl.java:108:
+	//-RAC@ public invariant charArray != null; // FIXME - why this when there is a non_null declaration
+	               ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneutenze/service/GestioneUtenzeServiceImpl.java:102: verify: The prover cannot establish an assertion (InvariantExceptionExit: /home/sys-001/.local/share/openjml/specs/java/lang/CharSequence.jml:30:) in method loadUserByUsername: it.greentrails.backend.gestioneutenze.service.GestioneUtenzeServiceImpl.loadUserByUsername(String) (parameter username)
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+                                               ^
+/home/sys-001/.local/share/openjml/specs/java/lang/CharSequence.jml:30: verify: Associated declaration: /home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneutenze/service/GestioneUtenzeServiceImpl.java:102:
+	//-RAC@ public invariant charArray != null; // FIXME - why this when there is a non_null declaration
+	               ^
+4 warnings
+6 verification failures
+[ERROR] Command execution failed.
+org.apache.commons.exec.ExecuteException: Process exited with an error: 6 (Exit value: 6)
+    at org.apache.commons.exec.DefaultExecutor.executeInternal (DefaultExecutor.java:404)
+    at org.apache.commons.exec.DefaultExecutor.execute (DefaultExecutor.java:166)
+    at org.codehaus.mojo.exec.ExecMojo.executeCommandLine (ExecMojo.java:881)
+    at org.codehaus.mojo.exec.ExecMojo.executeCommandLine (ExecMojo.java:841)
+    at org.codehaus.mojo.exec.ExecMojo.execute (ExecMojo.java:447)
+    at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:126)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute2 (MojoExecutor.java:328)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute (MojoExecutor.java:316)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:212)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:174)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.access$000 (MojoExecutor.java:75)
+    at org.apache.maven.lifecycle.internal.MojoExecutor$1.run (MojoExecutor.java:162)
+    at org.apache.maven.plugin.DefaultMojosExecutionStrategy.execute (DefaultMojosExecutionStrategy.java:39)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:159)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:105)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:73)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:53)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:118)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:261)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:173)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:101)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:906)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:283)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:206)
+    at jdk.internal.reflect.DirectMethodHandleAccessor.invoke (DirectMethodHandleAccessor.java:103)
+    at java.lang.reflect.Method.invoke (Method.java:580)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:283)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:226)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:407)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:348)
+    at jdk.internal.reflect.DirectMethodHandleAccessor.invoke (DirectMethodHandleAccessor.java:103)
+    at java.lang.reflect.Method.invoke (Method.java:580)
+    at org.apache.maven.wrapper.BootstrapMainStarter.start (BootstrapMainStarter.java:52)
+    at org.apache.maven.wrapper.WrapperExecutor.execute (WrapperExecutor.java:161)
+    at org.apache.maven.wrapper.MavenWrapperMain.main (MavenWrapperMain.java:73)
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:02 min
+[INFO] Finished at: 2026-07-23T18:40:39+02:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.codehaus.mojo:exec-maven-plugin:3.1.1:exec (openjml-check) on project backend: Command execution failed.: Process exited with an error: 6 (Exit value: 6) -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

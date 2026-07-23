@@ -1,0 +1,93 @@
+Picked up _JAVA_OPTIONS: -Djava.util.prefs.userRoot=/home/sys-001/.config/java
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< it.greentrails:backend >-----------------------
+[INFO] Building backend 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ backend ---
+[INFO] Deleting /home/sys-001/IdeaProjects/GreenTrails/backend/target
+[INFO] 
+[INFO] --- lombok:1.18.20.0:delombok (delombok) @ backend ---
+[INFO] Delombok complete.
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ backend ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ backend ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 82 source files with javac [debug release 21] to target/classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[WARNING] Supported source version 'RELEASE_6' from annotation processor 'org.eclipse.sisu.scanners.index.SisuIndexAPT6' less than -source '21'
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ backend ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ backend ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 29 source files with javac [debug release 21] to target/test-classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[WARNING] Supported source version 'RELEASE_6' from annotation processor 'org.eclipse.sisu.scanners.index.SisuIndexAPT6' less than -source '21'
+[INFO] /home/sys-001/IdeaProjects/GreenTrails/backend/src/test/java/it/greentrails/backend/gestioneattivita/service/CameraServiceImplTest.java: Some input files use or override a deprecated API.
+[INFO] /home/sys-001/IdeaProjects/GreenTrails/backend/src/test/java/it/greentrails/backend/gestioneattivita/service/CameraServiceImplTest.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- jacoco:0.8.14:prepare-agent (jacoco-initialize) @ backend ---
+[INFO] argLine set to -javaagent:/home/sys-001/.m2/repository/org/jacoco/org.jacoco.agent/0.8.14/org.jacoco.agent-0.8.14-runtime.jar=destfile=/home/sys-001/IdeaProjects/GreenTrails/backend/target/coverage-reports/jacoco-unit.exec,append=true,excludes=*MethodAccess:it/greentrails/backend/entities/*:it/greentrails/backend/enums/*:**/*Exception.class:it/greentrails/backend/utils/ArchiviazioneProperties.class:it/greentrails/backend/BackendApplication.class,output=file
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ backend ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.3.0:jar (default-jar) @ backend ---
+[INFO] Building jar: /home/sys-001/IdeaProjects/GreenTrails/backend/target/backend-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:3.2.1:repackage (repackage) @ backend ---
+[INFO] Replacing main artifact /home/sys-001/IdeaProjects/GreenTrails/backend/target/backend-0.0.1-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /home/sys-001/IdeaProjects/GreenTrails/backend/target/backend-0.0.1-SNAPSHOT.jar.original
+[INFO] 
+[INFO] --- jacoco:0.8.14:report (jacoco-site) @ backend ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO] 
+[INFO] --- exec:3.1.1:exec (openjml-check) @ backend ---
+Picked up _JAVA_OPTIONS: -Djava.util.prefs.userRoot=/home/sys-001/.config/java
+warning: Option -dirs is deprecated in favor of --dirs
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/entities/Attivita.java:107: verify: The prover cannot establish an assertion (ExceptionalPostcondition: /home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/entities/Attivita.java:32:) in method Attivita
+  private Set<Categoria> categorie = new LinkedHashSet<>();
+                                     ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/entities/Attivita.java:32: verify: Associated declaration: /home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/entities/Attivita.java:107:
+public class Attivita {
+       ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/entities/Attivita.java:107: verify: The prover cannot establish an assertion (Assignable: /home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/entities/Attivita.java:32:) in method Attivita: \everything
+  private Set<Categoria> categorie = new LinkedHashSet<>();
+                                     ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/entities/Attivita.java:32: verify: Associated declaration: /home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/entities/Attivita.java:107:
+public class Attivita {
+       ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/entities/Utente.java:60: verify: The prover cannot establish an assertion (PossiblyNullDeReference) in method getAuthorities
+    return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + ruolo.name()));
+                                                                           ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneattivita/controller/AttivitaController.java:156: verify: The prover cannot establish an assertion (NullFormal: /home/sys-001/.local/share/openjml/specs/java/lang/Long.jml:313:) in method cancellaAttivita: arg0 in equals(Object)
+      if (!attivita.getGestore().getId().equals(utente.getId())) {
+                                                            ^
+/home/sys-001/.local/share/openjml/specs/java/lang/Long.jml:313: verify: Associated declaration: /home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneattivita/controller/AttivitaController.java:156:
+    public boolean equals(Object obj);
+                          ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneattivita/controller/AttivitaController.java:38: verify: The prover cannot establish an assertion (NullFormal: /home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneutenze/service/GestioneUtenzeService.java:10:) in method creaAttivita: id in findById(Long)
+      Utente gestore = gestioneUtenzeService.findById(utente.getId());
+                                                                  ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneutenze/service/GestioneUtenzeService.java:10: verify: Associated declaration: /home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneattivita/controller/AttivitaController.java:38:
+  Utente findById(Long id) throws Exception;
+                  ^

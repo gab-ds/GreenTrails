@@ -25,7 +25,6 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.TearDown;
 import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
-import org.openjdk.jmh.annotations.DynamicHalt;
 import org.springframework.web.multipart.MultipartFile;
 
 @State(Scope.Thread)

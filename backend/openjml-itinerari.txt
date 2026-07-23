@@ -1,0 +1,178 @@
+Picked up _JAVA_OPTIONS: -Djava.util.prefs.userRoot=/home/sys-001/.config/java
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< it.greentrails:backend >-----------------------
+[INFO] Building backend 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- lombok:1.18.20.0:delombok (delombok) @ backend ---
+[INFO] Delombok complete.
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ backend ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ backend ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ backend ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ backend ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- jacoco:0.8.14:prepare-agent (jacoco-initialize) @ backend ---
+[INFO] argLine set to -javaagent:/home/sys-001/.m2/repository/org/jacoco/org.jacoco.agent/0.8.14/org.jacoco.agent-0.8.14-runtime.jar=destfile=/home/sys-001/IdeaProjects/GreenTrails/backend/target/coverage-reports/jacoco-unit.exec,append=true,excludes=*MethodAccess:it/greentrails/backend/entities/*:it/greentrails/backend/enums/*:**/*Exception.class:it/greentrails/backend/utils/ArchiviazioneProperties.class:it/greentrails/backend/BackendApplication.class,output=file
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ backend ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.3.0:jar (default-jar) @ backend ---
+[INFO] 
+[INFO] --- spring-boot:3.2.1:repackage (repackage) @ backend ---
+[INFO] Replacing main artifact /home/sys-001/IdeaProjects/GreenTrails/backend/target/backend-0.0.1-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /home/sys-001/IdeaProjects/GreenTrails/backend/target/backend-0.0.1-SNAPSHOT.jar.original
+[INFO] 
+[INFO] --- jacoco:0.8.14:report (jacoco-site) @ backend ---
+[INFO] Loading execution data file /home/sys-001/IdeaProjects/GreenTrails/backend/target/coverage-reports/jacoco-unit.exec
+[INFO] Analyzed bundle 'backend' with 43 classes
+[WARNING] Classes in bundle 'backend' do not match with execution data. For report generation the same class files must be used as at runtime.
+[WARNING] Execution data for class it/greentrails/backend/gestioneattivita/service/RecensioneServiceImpl does not match.
+[WARNING] Execution data for class it/greentrails/backend/gestioneutenze/service/GestioneUtenzeServiceImpl does not match.
+[WARNING] Execution data for class it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl does not match.
+[WARNING] Execution data for class it/greentrails/backend/gestioneattivita/service/AttivitaServiceImpl does not match.
+[WARNING] Execution data for class it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAttivitaTuristicaServiceImpl does not match.
+[WARNING] Execution data for class it/greentrails/backend/gestionesegnalazioni/service/SegnalazioniServiceImpl does not match.
+[WARNING] Execution data for class it/greentrails/backend/gestioneupload/service/ArchiviazioneFileSystemService does not match.
+[WARNING] Execution data for class it/greentrails/backend/gestionericerca/service/RicercaServiceImpl does not match.
+[WARNING] Execution data for class it/greentrails/backend/gestioneattivita/service/CameraServiceImpl does not match.
+[WARNING] Execution data for class it/greentrails/backend/gestioneprenotazioni/service/PrenotazioneAlloggioServiceImpl does not match.
+[WARNING] Execution data for class it/greentrails/backend/gestioneitinerari/adapter/ItinerariStubAdapter does not match.
+[INFO] 
+[INFO] --- exec:3.1.1:exec (openjml-check) @ backend ---
+Picked up _JAVA_OPTIONS: -Djava.util.prefs.userRoot=/home/sys-001/.config/java
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl.java:51: warning: Method findItinerariByUtente overrides parent class methods and so its specification should begin with 'also' (it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImpl.findItinerariByUtente(it.greentrails.backend.entities.Utente) overrides it.greentrails.backend.gestioneitinerari.service.ItinerariService.findItinerariByUtente(it.greentrails.backend.entities.Utente))
+  /*@ requires utente != null; @*/
+      ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl.java:63: warning: Method deleteItinerario overrides parent class methods and so its specification should begin with 'also' (it.greentrails.backend.gestioneitinerari.service.ItinerariServiceImpl.deleteItinerario(it.greentrails.backend.entities.Itinerario) overrides it.greentrails.backend.gestioneitinerari.service.ItinerariService.deleteItinerario(it.greentrails.backend.entities.Itinerario))
+  /*@ requires itinerario != null; @*/
+      ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/entities/Utente.java:60: verify: The prover cannot establish an assertion (PossiblyNullDeReference) in method getAuthorities
+    return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + ruolo.name()));
+                                                                           ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl.java:97: verify: The prover cannot establish an assertion (PossiblyNullAssignment) in method ItinerariServiceImpl
+    this.itinerariStubAdapter = itinerariStubAdapter;
+                              ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl.java:95: verify: The prover cannot establish an assertion (PossiblyNullAssignment) in method ItinerariServiceImpl
+    this.prenotazioneAlloggioRepository = prenotazioneAlloggioRepository;
+                                        ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl.java:94: verify: The prover cannot establish an assertion (PossiblyNullAssignment) in method ItinerariServiceImpl
+    this.prenotazioneAttivitaTuristicaService = prenotazioneAttivitaTuristicaService;
+                                              ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl.java:93: verify: The prover cannot establish an assertion (PossiblyNullAssignment) in method ItinerariServiceImpl
+    this.prenotazioneAlloggioService = prenotazioneAlloggioService;
+                                     ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl.java:92: verify: The prover cannot establish an assertion (PossiblyNullAssignment) in method ItinerariServiceImpl
+    this.repository = repository;
+                    ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl.java:96: verify: The prover cannot establish an assertion (PossiblyNullAssignment) in method ItinerariServiceImpl
+    this.prenotazioneAttivitaTuristicaRepository = prenotazioneAttivitaTuristicaRepository;
+                                                 ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl.java:75: verify: The prover cannot establish an assertion (NullFormal: /home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl.java:75:) in method deleteItinerario: arg0 in findById(ID)
+    return repository.findById(itinerario.getId()).isEmpty();
+                                               ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl.java:75: verify: Associated declaration: /home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl.java:75:
+    return repository.findById(itinerario.getId()).isEmpty();
+                              ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl.java:60: verify: The prover cannot establish an assertion (NullFormal: /home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/repository/ItinerariRepository.java:12:) in method findItinerariByUtente: idVisitatore in findByVisitatore(Long,org.springframework.data.domain.Pageable)
+    return repository.findByVisitatore(utente.getId(), Pageable.unpaged()).toList();
+                                                   ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/repository/ItinerariRepository.java:12: verify: Associated declaration: /home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/service/ItinerariServiceImpl.java:60:
+  Page<Itinerario> findByVisitatore(Long idVisitatore, Pageable pageable);
+                                    ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/entities/Attivita.java:107: verify: The prover cannot establish an assertion (Assignable: /home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/entities/Attivita.java:32:) in method Attivita: \everything
+  private Set<Categoria> categorie = new LinkedHashSet<>();
+                                     ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/entities/Attivita.java:32: verify: Associated declaration: /home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/entities/Attivita.java:107:
+public class Attivita {
+       ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/entities/Attivita.java:107: verify: The prover cannot establish an assertion (ExceptionalPostcondition: /home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/entities/Attivita.java:32:) in method Attivita
+  private Set<Categoria> categorie = new LinkedHashSet<>();
+                                     ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/entities/Attivita.java:32: verify: Associated declaration: /home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/entities/Attivita.java:107:
+public class Attivita {
+       ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/adapter/ItinerariStubAdapter.java:87: verify: The prover cannot establish an assertion (PossiblyNullAssignment) in method ItinerariStubAdapter
+    this.prenotazioneAttivitaTuristicaRepository = prenotazioneAttivitaTuristicaRepository;
+                                                 ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/adapter/ItinerariStubAdapter.java:86: verify: The prover cannot establish an assertion (PossiblyNullAssignment) in method ItinerariStubAdapter
+    this.prenotazioneAlloggioRepository = prenotazioneAlloggioRepository;
+                                        ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/adapter/ItinerariStubAdapter.java:84: verify: The prover cannot establish an assertion (PossiblyNullAssignment) in method ItinerariStubAdapter
+    this.cameraRepository = cameraRepository;
+                          ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/adapter/ItinerariStubAdapter.java:83: verify: The prover cannot establish an assertion (PossiblyNullAssignment) in method ItinerariStubAdapter
+    this.attivitaRepository = attivitaRepository;
+                            ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/adapter/ItinerariStubAdapter.java:85: verify: The prover cannot establish an assertion (PossiblyNullAssignment) in method ItinerariStubAdapter
+    this.itinerariRepository = itinerariRepository;
+                             ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/adapter/ItinerariStubAdapter.java:51: verify: The prover cannot establish an assertion (PossiblyNullDeReference) in method pianificazioneAutomatica
+    attivitaTuristiche.stream().filter(a -> !a.isAlloggio()).limit(3).forEach(a -> {
+                                                                     ^
+/home/sys-001/IdeaProjects/GreenTrails/backend/target/delombok/it/greentrails/backend/gestioneitinerari/adapter/ItinerariStubAdapter.java:66: verify: The prover cannot establish an assertion (PossiblyNullDeReference) in method pianificazioneAutomatica
+    camere.stream().limit(1).forEach(c -> {
+                            ^
+2 warnings
+22 verification failures
+[ERROR] Command execution failed.
+org.apache.commons.exec.ExecuteException: Process exited with an error: 6 (Exit value: 6)
+    at org.apache.commons.exec.DefaultExecutor.executeInternal (DefaultExecutor.java:404)
+    at org.apache.commons.exec.DefaultExecutor.execute (DefaultExecutor.java:166)
+    at org.codehaus.mojo.exec.ExecMojo.executeCommandLine (ExecMojo.java:881)
+    at org.codehaus.mojo.exec.ExecMojo.executeCommandLine (ExecMojo.java:841)
+    at org.codehaus.mojo.exec.ExecMojo.execute (ExecMojo.java:447)
+    at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:126)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute2 (MojoExecutor.java:328)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute (MojoExecutor.java:316)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:212)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:174)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.access$000 (MojoExecutor.java:75)
+    at org.apache.maven.lifecycle.internal.MojoExecutor$1.run (MojoExecutor.java:162)
+    at org.apache.maven.plugin.DefaultMojosExecutionStrategy.execute (DefaultMojosExecutionStrategy.java:39)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:159)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:105)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:73)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:53)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:118)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:261)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:173)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:101)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:906)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:283)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:206)
+    at jdk.internal.reflect.DirectMethodHandleAccessor.invoke (DirectMethodHandleAccessor.java:103)
+    at java.lang.reflect.Method.invoke (Method.java:580)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:283)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:226)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:407)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:348)
+    at jdk.internal.reflect.DirectMethodHandleAccessor.invoke (DirectMethodHandleAccessor.java:103)
+    at java.lang.reflect.Method.invoke (Method.java:580)
+    at org.apache.maven.wrapper.BootstrapMainStarter.start (BootstrapMainStarter.java:52)
+    at org.apache.maven.wrapper.WrapperExecutor.execute (WrapperExecutor.java:161)
+    at org.apache.maven.wrapper.MavenWrapperMain.main (MavenWrapperMain.java:73)
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  39:36 min
+[INFO] Finished at: 2026-07-23T20:22:31+02:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.codehaus.mojo:exec-maven-plugin:3.1.1:exec (openjml-check) on project backend: Command execution failed.: Process exited with an error: 6 (Exit value: 6) -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
