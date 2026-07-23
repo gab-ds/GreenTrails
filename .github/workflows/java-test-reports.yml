@@ -70,7 +70,7 @@ jobs:
           keep_files: true
       - name: Carica report come artifact per PR
         if: github.event_name == 'pull_request' && steps.check.outputs.ok == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-reports-${{ github.event.pull_request.number }}
           path: |
@@ -110,7 +110,7 @@ jobs:
           echo "| :chart_with_upwards_trend: Linee Totali | ${{ steps.jacoco_reporter.outputs.total_lines }} |" >> $GITHUB_STEP_SUMMARY
       - name: Carica JaCoCo Report come Artifact
         if: always() && steps.check.outputs.ok == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: jacoco-coverage-report
           path: ./backend/target/site/jacoco/
