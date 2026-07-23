@@ -284,7 +284,7 @@ class RecensioneServiceImplTest {
     recensione3.setValutazioneStelleEsperienza(3);
     recensione3.setValoriEcosostenibilita(valoriEcosostenibilita);
 
-    when(repository.findAll()).thenReturn(List.of(recensione, recensione2, recensione3));
+    when(repository.findByVisitatore(visitatore.getId())).thenReturn(List.of(recensione, recensione2));
 
     // When
     List<Recensione> result = service.getAllRecensioniByVisitatore(visitatore);
@@ -294,8 +294,7 @@ class RecensioneServiceImplTest {
     assertEquals(2, result.size());
     assertTrue(result.contains(recensione));
     assertTrue(result.contains(recensione2));
-    assertFalse(result.contains(recensione3));
-    verify(repository, times(1)).findAll();
+    verify(repository, times(1)).findByVisitatore(visitatore.getId());
   }
 
   @Test
@@ -305,7 +304,7 @@ class RecensioneServiceImplTest {
     altroVisitatore.setId(2L);
     altroVisitatore.setRuolo(RuoloUtente.VISITATORE);
 
-    when(repository.findAll()).thenReturn(List.of(recensione));
+    when(repository.findByVisitatore(altroVisitatore.getId())).thenReturn(new ArrayList<>());
 
     // When
     List<Recensione> result = service.getAllRecensioniByVisitatore(altroVisitatore);
@@ -321,13 +320,13 @@ class RecensioneServiceImplTest {
     Exception exception = assertThrows(Exception.class, () ->
         service.getAllRecensioniByVisitatore(null));
     assertEquals("L'utente è vuoto.", exception.getMessage());
-    verify(repository, never()).findAll();
+    verify(repository, never()).findByVisitatore(any());
   }
 
   @Test
   void testGetAllRecensioniByVisitatore_ListaVuota() throws Exception {
     // Given
-    when(repository.findAll()).thenReturn(new ArrayList<>());
+    when(repository.findByVisitatore(visitatore.getId())).thenReturn(new ArrayList<>());
 
     // When
     List<Recensione> result = service.getAllRecensioniByVisitatore(visitatore);

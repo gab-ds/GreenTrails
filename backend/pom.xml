@@ -17,6 +17,7 @@
   <properties>
     <java.version>21</java.version>
     <revision>0.0.1-SNAPSHOT</revision>
+    <argLine>-Dh2gis.functions.comments=false</argLine>
   </properties>
   <dependencies>
     <dependency>

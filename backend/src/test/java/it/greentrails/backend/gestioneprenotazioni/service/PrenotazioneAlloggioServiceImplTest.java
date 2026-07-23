@@ -201,7 +201,7 @@ class PrenotazioneAlloggioServiceImplTest {
   @Test
   void testGetPrenotazioniAlloggioByStato_Success() throws Exception {
     // Given
-    when(repository.findAll()).thenReturn(List.of(prenotazione));
+    when(repository.findByStato(StatoPrenotazione.CREATA)).thenReturn(List.of(prenotazione));
 
     // When
     List<PrenotazioneAlloggio> result = service.getPrenotazioniAlloggioByStato(
@@ -216,7 +216,7 @@ class PrenotazioneAlloggioServiceImplTest {
   @Test
   void testGetPrenotazioniAlloggioByStato_NessunRisultato() throws Exception {
     // Given
-    when(repository.findAll()).thenReturn(List.of(prenotazione));
+    when(repository.findByStato(StatoPrenotazione.COMPLETATA)).thenReturn(new ArrayList<>());
 
     // When
     List<PrenotazioneAlloggio> result = service.getPrenotazioniAlloggioByStato(

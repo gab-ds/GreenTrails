@@ -10,6 +10,7 @@ import it.greentrails.backend.gestioneattivita.repository.RecensioneRepository;
 import it.greentrails.backend.gestionesegnalazioni.repository.SegnalazioniRepository;
 import it.greentrails.backend.gestioneupload.exceptions.FileNonTrovatoException;
 import it.greentrails.backend.gestioneupload.service.ArchiviazioneService;
+import it.greentrails.backend.utils.DataSeeder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,9 @@ class GestioneUploadControllerTest {
 
   @MockBean
   private SegnalazioniRepository segnalazioniRepository;
+
+  @MockBean
+  private DataSeeder dataSeeder;
 
   private Utente visitatore;
   private Utente gestore;
