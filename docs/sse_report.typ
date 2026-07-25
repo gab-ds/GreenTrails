@@ -1,5 +1,7 @@
 = Introduzione
 
+#link("https://github.com/gab-ds/GreenTrails")
+
 Il presente documento fornisce una sintesi delle attività di
 manutenzione perfettiva dell'applicativo web GreenTrails dal punto
 di vista della sostenibilità del software. L'applicativo è già oggetto
