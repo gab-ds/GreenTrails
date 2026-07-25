@@ -13,6 +13,9 @@
         ),
     ),
     abstract: [
+        #link("https://github.com/gab-ds/GreenTrails")
+        #v(0.5cm)
+
         Il presente documento fornisce una sintesi delle attività di
         manutenzione perfettiva dell'applicativo web GreenTrails dal
         punto di vista della Software Dependability, illustrando le
@@ -602,7 +605,7 @@ combinata da ~13 secondi a ~100 ms per le operazioni critiche.
     [37 file annotati; 258 failure (baseline) -> 188 (6 moduli); Utenze 16->6, Attivita 37->32, Itinerari 33->22, Ricerca 42->42, Segnalazioni 9->6, Upload 93->80; Prenotazioni crasha (bug OpenJML); 3 cause strutturali non risolvibili],
     [JMeter], [Affidabilità / Disponibilità],
     [Nessun test di carico],
-    [4 piani (Load, Stress, Spike, Soak); latenza <100 ms],
+    [4 piani (Load, Stress, Spike, Soak); latenza \<100 ms],
     [JMH], [Affidabilità (performance)],
     [Nessun benchmark],
     [72 benchmark eseguiti; DistanceCalculator ~9,4M ops/s;
