@@ -475,6 +475,16 @@ raggiungibile da internet. Per questo motivo non è stato possibile applicarlo
 a GreenTrails, attualmente accessibile solo su localhost. Il suo impiego è
 previsto nella *sfera ambientale* una volta che l'applicazione sarà
 deployata su un ambiente pubblico.
+Dalle misurazioni effettuate con WebsiteCarbon, l'applicativo ottiene un punteggio
+di sostenibilità di grado B (86/100), registrando un trasferimento dati medio di ~723 kB
+e un'impronta carbonica stimata di ~0,08 g di CO#sub[2] per pagina visitata. Sebbene il
+risultato sia positivo, le metriche evidenziano margini di miglioramento legati al peso della
+pagina e all'ottimizzazione delle risorse inline. Riguardo all'infrastruttura, il tool rileva
+la mancanza di un hosting ad alta efficienza energetica; tuttavia, va precisato che la
+configurazione attuale si appoggia a un servizio di tunneling esterno temporaneo e non a
+un hosting definitivo. In linea con le best practice di Green Software Engineering, nelle fasi
+successive del progetto si valuterà la migrazione verso un provider con certificazione Green Hosting
+o l'adozione di un'architettura serverless, così da ridurre ulteriormente l'impatto ambientale complessivo.
 
 ==== EcoIndex
 
