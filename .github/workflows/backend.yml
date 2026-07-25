@@ -6,52 +6,126 @@ on:
       - 'backend/**'
     branches:
       - main
-      - dev
   pull_request:
     paths:
       - 'backend/**'
     branches:
       - main
-      - dev
+  workflow_dispatch:
 
 jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/setup-java@17f84c3641ba7b8f6deff6309fc4c864478f5d62 # v3
         with:
           java-version: '21'
           distribution: 'temurin'
-      - run: mvn test --batch-mode --fail-at-end
-        working-directory: ./backend
-
-  coverage:
-    name: Coverage
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - uses: actions/setup-java@17f84c3641ba7b8f6deff6309fc4c864478f5d62 # v3
+      - name: Cache dipendenze Maven
+        uses: actions/cache@v4
         with:
-          java-version: '21'
-          distribution: 'temurin'
-      - run: mvn verify
-        working-directory: ./backend
-      - uses: cicirello/jacoco-badge-generator@72266185b7ee48a6fd74eaf0238395cc8b14fef8 # v2
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+      - name: Cache PIT history
+        uses: actions/cache@v4
+        with:
+          path: ./backend/target/pit-history
+          key: ${{ runner.os }}-pit-history-${{ github.ref_name }}-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-pit-history-${{ github.ref_name }}-
+            ${{ runner.os }}-pit-history-
+      - name: Checkstyle
+        run: mvn checkstyle:check --batch-mode
+      - name: Esegui test
+        id: test
+        continue-on-error: ${{ github.event_name != 'pull_request' }}
+        run: mvn test jacoco:report surefire-report:report pitest:mutationCoverage -Dthreads=4 -DhistoryInputFile=target/pit-history/history.bin -DhistoryOutputFile=target/pit-history/history.bin -DmutationThreshold=80 --batch-mode
+      - name: Verifica report
+        id: check
+        run: |
+          if [ -d "target/reports" ] && [ -f "target/site/jacoco/jacoco.xml" ] && [ -d "target/pit-reports" ]; then
+            echo "ok=true" >> $GITHUB_OUTPUT
+          fi
+      - name: Genera badge coverage
+        if: steps.check.outputs.ok == 'true'
+        uses: cicirello/jacoco-badge-generator@72266185b7ee48a6fd74eaf0238395cc8b14fef8 # v2
         with:
           badges-directory: badges
           generate-branches-badge: true
           generate-summary: true
           jacoco-csv-file: backend/target/site/jacoco/jacoco.csv
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Prepara e Carica su gh-pages
+        if: github.event_name != 'pull_request' && steps.check.outputs.ok == 'true'
+        run: |
+          mkdir -p ../public/surefire ../public/jacoco ../public/pit
+          cp -r ./target/reports/* ../public/surefire/
+          cp -r ./target/site/jacoco/* ../public/jacoco/
+          cp -r ./target/pit-reports/* ../public/pit/
+      - name: Pubblica su gh-pages
+        if: github.event_name != 'pull_request' && steps.check.outputs.ok == 'true'
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          name: jacoco-report
-          path: backend/target/site/jacoco/
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          destination_dir: ${{ github.sha }}/report
+          keep_files: true
+      - name: Carica report come artifact per PR
+        if: github.event_name == 'pull_request' && steps.check.outputs.ok == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: test-reports-${{ github.event.pull_request.number }}
+          path: |
+            ./backend/target/site/jacoco/
+            ./backend/target/reports/
+            ./backend/target/pit-reports/
+          retention-days: 30
+      - name: Pubblica Test Report
+        if: always() && steps.check.outputs.ok == 'true'
+        uses: scacap/action-surefire-report@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          report_paths: './backend/target/surefire-reports/TEST-*.xml'
+      - name: JaCoCo Code Coverage Report
+        id: jacoco_reporter
+        if: always() && steps.check.outputs.ok == 'true'
+        uses: PavanMudigonda/jacoco-reporter@v5.0
+        with:
+          coverage_results_path: ./backend/target/site/jacoco/jacoco.xml
+          coverage_report_name: Coverage
+          coverage_report_title: JaCoCo
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          skip_check_run: false
+          minimum_coverage: 80
+          fail_below_threshold: ${{ github.event_name == 'pull_request' }}
+          publish_only_summary: false
+      - name: Aggiungi report JaCoCo al workflow summary
+        if: steps.jacoco_reporter.outcome == 'success'
+        run: |
+          echo "## :bar_chart: JaCoCo Code Coverage" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metrica | Valore |" >> $GITHUB_STEP_SUMMARY
+          echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
+          echo "| Code Coverage % | ${{ steps.jacoco_reporter.outputs.coverage_percentage }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| :heavy_check_mark: Linee Coperte | ${{ steps.jacoco_reporter.outputs.covered_lines }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| :x: Linee Non Coperte | ${{ steps.jacoco_reporter.outputs.missed_lines }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| :chart_with_upwards_trend: Linee Totali | ${{ steps.jacoco_reporter.outputs.total_lines }} |" >> $GITHUB_STEP_SUMMARY
+      - name: Carica JaCoCo Report come Artifact
+        if: always() && steps.check.outputs.ok == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: jacoco-coverage-report
+          path: ./backend/target/site/jacoco/
+          retention-days: 30
 
   docker:
     name: Docker
-    needs: [test, coverage]
+    needs: [test]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
@@ -73,3 +147,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+defaults:
+  run:
+    working-directory: ./backend
