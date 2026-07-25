@@ -1,4 +1,18 @@
 repos:
+  - repo: local
+    hooks:
+      - id: checkstyle
+        name: Checkstyle
+        entry: ./mvnw checkstyle:check -q
+        language: system
+        files: ^backend/.*\.java$
+        pass_filenames: false
+      - id: bun-gate
+        name: Bun Gate
+        entry: bash -c 'cd frontend && bun run gate'
+        language: system
+        files: ^frontend/
+        pass_filenames: false
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
