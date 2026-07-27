@@ -1,11 +1,11 @@
-FROM oven/bun:1 AS builder
+FROM dhi.io/bun:1-alpine-dev AS builder
 WORKDIR /app
 COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 COPY . .
 RUN bun run build
 
-FROM node:22-alpine AS runtime
+FROM dhi.io/node:22-alpine3.23 AS runtime
 WORKDIR /app
 COPY --from=builder /app/.output ./.output
 ENV HOST=0.0.0.0

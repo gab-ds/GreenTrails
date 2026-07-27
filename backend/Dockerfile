@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-ubi10-minimal AS builder
+FROM dhi.io/eclipse-temurin:21-jdk-alpine-dev AS builder
 WORKDIR /build
 
 # copia solo i file maven che cambiano raramente per sfruttare la cache
@@ -10,7 +10,7 @@ COPY . .
 ARG revision=0.0.1-SNAPSHOT
 RUN ./mvnw -B -DskipTests -Drevision=${revision} clean package
 
-FROM eclipse-temurin:21-ubi10-minimal AS runtime
+FROM dhi.io/eclipse-temurin:21-alpine AS runtime
 WORKDIR /app
 COPY --from=builder /build/target/backend*.jar ./backend.jar
 EXPOSE 8080
