@@ -1,19 +1,35 @@
 version: 2
+
+registries:
+  docker-hardened:
+    type: docker-registry
+    url: dhi.io
+    replaces-base: true
+    username: ${{ secrets.DOCKER_USERNAME }}
+    password: ${{ secrets.DOCKER_PASSWORD }}
+
 updates:
+  - package-ecosystem: docker
+    directory: /backend
+    registries:
+      - docker-hardened
+    schedule:
+      interval: weekly
+    ignore:
+      - dependency-name: eclipse-temurin
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: docker
+    directory: /frontend
+    registries:
+      - docker-hardened
+    schedule:
+      interval: weekly
+    ignore:
+      - dependency-name: node
+        update-types: ["version-update:semver-major"]
+
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
-    open-pull-requests-limit: 10
-
-  - package-ecosystem: maven
-    directory: /backend
-    schedule:
-      interval: weekly
-    open-pull-requests-limit: 10
-
-  - package-ecosystem: npm
-    directory: /frontend
-    schedule:
-      interval: weekly
-    open-pull-requests-limit: 10
