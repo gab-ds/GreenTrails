@@ -488,6 +488,19 @@ progressivo hardening:
 - *SonarQube* (servizio esterno): analisi statica di sicurezza
     e qualità del codice, eseguita su Docker con il plugin
     Creedengo per regole di efficienza energetica.
+- *CodeCov:* l'action `codecov/codecov-action` (pinnata per SHA)
+    carica a ogni run del job `test` del backend, tramite il token
+    `CODECOV_TOKEN` configurato nei secret del repository, due tipi
+    di report: la copertura JaCoCo (`target/site/jacoco/jacoco.xml`,
+    `report_type: coverage`, caricata solo a report generati) e i
+    risultati dei test Surefire (`target/surefire-reports/TEST-*.xml`,
+    `report_type: test_results` per le Test Analytics). L'upload
+    dei test_results usa `if: always()`: viene eseguito anche in
+    caso di fallimento dei test, come raccomandato da CodeCov, per
+    garantire la visibilità dei fallimenti in Test Analytics. CodeCov
+    fornisce una visione storica e per-PR della copertura del
+    backend (84% medio) e delle performance/fallimenti dei test,
+    complementare ai report generati in CI.
 - *Branch protection su \`main\`:* protezione server-side che
     impone il passaggio obbligatorio da pull request con almeno
     una review umana prima del merge, blocca i force push e
@@ -707,6 +720,7 @@ combinata da ~13 secondi a ~100 ms per le operazioni critiche.
     stroke: 0.5pt,
     [*Strumento*], [*Attributo*], [*Baseline*], [*Risultato*],
     [JaCoCo], [Affidabilità], [Nessuna misura di copertura], [84% copertura media (92% service layer)],
+    [CodeCov], [Affidabilità (monitoraggio copertura e test)], [Nessuna piattaforma di copertura], [Copertura JaCoCo e risultati Surefire caricati a ogni run del job test backend; storico e commenti per-PR],
     [Pitest], [Affidabilità], [Nessun mutation testing], [Mutation coverage >80%, 0 mutazioni sopravvissute],
     [Checkstyle], [Manutenibilità], [Nessun controllo stile], [0 violazioni Google Java Style],
     [Buildabilità],

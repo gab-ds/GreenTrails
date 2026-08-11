@@ -129,6 +129,20 @@ jobs:
           name: jacoco-coverage-report
           path: ./backend/target/site/jacoco/
           retention-days: 30
+      - name: Upload coverage to CodeCov
+        if: steps.check.outputs.ok == 'true'
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          files: ./backend/target/site/jacoco/jacoco.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Upload test results to CodeCov
+        if: always()
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          files: './backend/target/surefire-reports/TEST-*.xml'
+          report_type: test_results
+          token: ${{ secrets.CODECOV_TOKEN }}
+          handle_no_reports_found: true
 
   deploy-reports:
     name: Deploy Reports
