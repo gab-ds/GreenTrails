@@ -29,6 +29,18 @@ updates:
       - dependency-name: node
         update-types: ["version-update:semver-major"]
 
+  - package-ecosystem: maven
+    directory: /backend
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: npm
+    directory: /frontend
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+
   - package-ecosystem: github-actions
     directory: /
     schedule:
