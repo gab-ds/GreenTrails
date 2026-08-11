@@ -488,6 +488,21 @@ progressivo hardening:
 - *SonarQube* (servizio esterno): analisi statica di sicurezza
     e qualità del codice, eseguita su Docker con il plugin
     Creedengo per regole di efficienza energetica.
+- *Branch protection su \`main\`:* protezione server-side che
+    impone il passaggio obbligatorio da pull request con almeno
+    una review umana prima del merge, blocca i force push e
+    revoca le approvazioni stale a ogni nuovo commit. I *required
+    status checks* sono stati volutamente *non* abilitati: i
+    workflow CI sono filtrati per path (backend/** e frontend/**),
+    e imporre il check meccanicamente bloccherebbe in modo
+    irreversibile le pull request che toccano solo documentazione,
+    configurazione o workflow, perché i check non riportati da
+    workflow skippati restano nello stato "Expected — Waiting for
+    status to be reported". La scelta di demandare il giudizio
+    finale a un reviewer umano è quindi consapevole: la protezione
+    è garantita a livello di server, mentre l'esito visibile dei
+    check CI (verde/rosso) guida la decisione dell'approvatore
+    senza vincolare il merge in modo meccanico.
 
 == DevSecOps — Pre-commit Hooks
 
@@ -518,9 +533,19 @@ Il progetto utilizza pre-commit con i seguenti hook, configurati in
     [docker-compose-check], [Validazione sintattica dei compose file],
     [Modifiche a docker-compose\*.yml],
     [Hook generici], [EOF, trailing whitespace, YAML/XML validi,
-     file grandi (>1 MB), merge conflict, blocco commit su main],
+     file grandi (>1 MB), merge conflict, blocco di commit e push su main],
     [Sempre / per tipo file],
 )
+
+L'hook `no-commit-to-branch` protegge la branch `main` sia in
+fase di *commit* sia in fase di *push* (stage `pre-commit` e
+`pre-push`), bloccando modifiche dirette prima che raggiungano
+il repository remoto. Va notato che gli hook pre-commit sono
+controlli *client-side*: sono aggirabili con `SKIP=` o
+`--no-verify` e operano solo su chi ha installato gli hook. La
+garanzia effettiva contro modifiche dirette a `main` è quindi la
+*branch protection server-side* descritta nella sezione CI/CD,
+che resta attiva anche per gli amministratori del repository.
 
 == Riepilogo della Sicurezza
 
