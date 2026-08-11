@@ -207,6 +207,17 @@ L'applicazione è buildabile sia in CI/CD sia localmente:
       `docker` separato su push a `main`.
     + *Hadolint:* linting dei Dockerfile aggiunto in entrambi i
       workflow.
+    + *Caching multi-livello delle build Docker:* i job `docker`
+      riusano i layer delle build precedenti tramite la cache
+      di GitHub Actions (`cache-from`/`cache-to: type=gha` con
+      `mode=max`, che include anche lo stage builder). Inoltre i
+      `RUN --mount=type=cache` di BuildKit (`/root/.m2` per Maven,
+      la cache di `bun install` per il frontend) persistono le
+      dipendenze scaricate tra build diverse: quando cambia solo
+      `pom.xml`/`bun.lock` si scarica solo il delta, non l'intero
+      set di dipendenze. L'action `buildkit-cache-dance`, infine,
+      garantisce che la mount cache venga persistita su GitHub,
+      estraendo e iniettandone il contenuto.
     + *Supply chain security:* tutte le GitHub Actions sono pinnate
       per SHA con commento di versione; ogni workflow dichiara
       `permissions: {}` come permessi di default, e concede solo i
