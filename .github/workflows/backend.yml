@@ -13,14 +13,19 @@ on:
       - main
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     permissions:
+      contents: read
       checks: write
-      contents: write
       pull-requests: write
+    outputs:
+      reports_ok: ${{ steps.check.outputs.ok }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Lint Dockerfile
@@ -33,12 +38,12 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
       - name: Cache dipendenze Maven
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
       - name: Cache PIT history
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ./backend/target/pit-history
           key: ${{ runner.os }}-pit-history-${{ github.ref_name }}-${{ hashFiles('**/pom.xml') }}
@@ -65,21 +70,16 @@ jobs:
           generate-branches-badge: true
           generate-summary: true
           jacoco-csv-file: backend/target/site/jacoco/jacoco.csv
-      - name: Prepara e Carica su gh-pages
+      - name: Carica report come artifact per deploy
         if: github.event_name != 'pull_request' && steps.check.outputs.ok == 'true'
-        run: |
-          mkdir -p ../public/surefire ../public/jacoco ../public/pit
-          cp -r ./target/reports/* ../public/surefire/
-          cp -r ./target/site/jacoco/* ../public/jacoco/
-          cp -r ./target/pit-reports/* ../public/pit/
-      - name: Pubblica su gh-pages
-        if: github.event_name != 'pull_request' && steps.check.outputs.ok == 'true'
-        uses: peaceiris/actions-gh-pages@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          destination_dir: ${{ github.sha }}/report
-          keep_files: true
+          name: test-reports
+          path: |
+            ./backend/target/site/jacoco/
+            ./backend/target/reports/
+            ./backend/target/pit-reports/
+          retention-days: 30
       - name: Carica report come artifact per PR
         if: github.event_name == 'pull_request' && steps.check.outputs.ok == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -92,14 +92,14 @@ jobs:
           retention-days: 30
       - name: Pubblica Test Report
         if: always() && steps.check.outputs.ok == 'true'
-        uses: scacap/action-surefire-report@v1
+        uses: scacap/action-surefire-report@3dacff26879cd2a7f2160d101254032a3707fe6f # v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           report_paths: './backend/target/surefire-reports/TEST-*.xml'
       - name: JaCoCo Code Coverage Report
         id: jacoco_reporter
         if: always() && steps.check.outputs.ok == 'true'
-        uses: PavanMudigonda/jacoco-reporter@v5.0
+        uses: PavanMudigonda/jacoco-reporter@64fa5a142a874e1deb636cffd882cecf86a2b9e7 # v5.0
         with:
           coverage_results_path: ./backend/target/site/jacoco/jacoco.xml
           coverage_report_name: Coverage
@@ -130,11 +130,42 @@ jobs:
           path: ./backend/target/site/jacoco/
           retention-days: 30
 
+  deploy-reports:
+    name: Deploy Reports
+    needs: [test]
+    if: github.event_name != 'pull_request' && needs.test.outputs.reports_ok == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: test-reports
+          path: .
+      - name: Prepara le cartelle per il deploy
+        working-directory: .
+        run: |
+          mkdir -p public/surefire public/jacoco public/pit
+          cp -r ./backend/target/reports/* ./public/surefire/
+          cp -r ./backend/target/site/jacoco/* ./public/jacoco/
+          cp -r ./backend/target/pit-reports/* ./public/pit/
+      - uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          destination_dir: ${{ github.sha }}/report
+          keep_files: true
+
   docker:
     name: Docker
     needs: [test]
+    permissions:
+      contents: read
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
