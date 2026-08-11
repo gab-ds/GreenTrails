@@ -156,26 +156,73 @@ manutenzione evolutiva:
 
 == Infrastruttura e Distribuzione
 
-Docker multi-stage (eclipse-temurin:21 per backend,
-oven/bun:1 + node:22-alpine per frontend) con configurazione
-multi-ambiente: sviluppo (docker-compose.yml orchesta backend,
-frontend Nuxt 4, MySQL) e produzione (docker-compose.prod.yml
-con policy di riavvio e limiti risorse).
-Health check su /actuator/health per monitoraggio della disponibilità.
+La configurazione iniziale utilizzava immagini Docker pubbliche
+upstream (eclipse-temurin:21 per backend, oven/bun:1 +
+node:22-alpine per frontend) senza alcun controllo di sicurezza
+sulle immagini di base.
 
-Le immagini Docker sono taggate con il namespace `gabdis/` su
-DockerHub (`gabdis/greentrails-backend:latest`) e pronte per essere
-pubblicate e orchestrate tramite Docker Compose o Swarm.
+Nel corso dell'hardening CI/CD sono state applicate le seguenti
+ottimizzazioni:
+
+- *Immagini hardened:* le immagini pubbliche sono state sostituite
+    con le corrispondenti versioni dhi.io (Docker Hardened Images):
+    + Backend builder: dhi.io/eclipse-temurin:21-jdk-alpine-dev
+    + Backend runtime: dhi.io/eclipse-temurin:21-alpine
+    + Frontend builder: dhi.io/bun:1-alpine-dev
+    + Frontend runtime: dhi.io/node:22-alpine3.23
+    Tali immagini includono vulnerability scanning integrato e
+    riducono la superficie d'attacco rispetto alle upstream. Ogni
+    immagine è pinnata per SHA nei Dockerfile per garantire build
+    riproducibili; Dependabot aggiorna automaticamente i digest
+    alla scansione settimanale.
+- *Hadolint:* linting statico dei Dockerfile sia in CI/CD
+    (tramite hadolint-action nei workflow backend.yml e
+    frontend.yml) sia localmente come pre-commit hook, con soglia
+    `warning` per garantire best practice nella scrittura dei Dockerfile.
+
+La configurazione multi-ambiente rimane invariata: sviluppo
+(docker-compose.yml orchesta backend, frontend Nuxt 4, MySQL) e
+produzione (docker-compose.prod.yml con policy di riavvio e limiti
+risorse). Health check su `/actuator/health` per monitoraggio della
+disponibilità del backend.
 
 == Buildabilità
 
 L'applicazione è buildabile sia in CI/CD sia localmente:
 
-- *CI/CD:* il workflow `backend.yml` esegue `mvn test`, `mvn verify`
-    e, su push a `main`, build e pubblicazione dell'immagine Docker
-    su Docker Hub — i job `test` e `coverage` sono prerequisiti per
-    il job `docker`. Il workflow `frontend.yml` esegue lint, typecheck
-    e test, con build Docker su push a `main`.
+- *CI/CD — configurazione iniziale:* il workflow `backend.yml`
+    eseguiva i job separati `test` e `coverage` come prerequisiti
+    per il job `docker`; il workflow `frontend.yml` eseguiva lint,
+    typecheck e test come job distinti. Non erano presenti controlli
+    di supply chain security.
+- *CI/CD — hardening applicato:*
+    + *Backend:* i job `test` e `coverage` sono unificati in un unico
+      job `test` che esegue Checkstyle, `mvn test`, JaCoCo e Pitest
+      in sequenza, con timeout massimo di 45 minuti. Un nuovo job
+      `deploy-reports` pubblica i report su GitHub Pages (con solo
+      permesso `contents: write`). Il job `docker` rimane separato
+      su push a `main`.
+    + *Frontend:* lint, typecheck e test sono unificati in un unico
+      job `gate` (`bun run gate`) con timeout di 10 minuti. Job
+      `docker` separato su push a `main`.
+    + *Hadolint:* linting dei Dockerfile aggiunto in entrambi i
+      workflow.
+    + *Caching multi-livello delle build Docker:* i job `docker`
+      riusano i layer delle build precedenti tramite la cache
+      di GitHub Actions (`cache-from`/`cache-to: type=gha` con
+      `mode=max`, che include anche lo stage builder). Inoltre i
+      `RUN --mount=type=cache` di BuildKit (`/root/.m2` per Maven,
+      la cache di `bun install` per il frontend) persistono le
+      dipendenze scaricate tra build diverse: quando cambia solo
+      `pom.xml`/`bun.lock` si scarica solo il delta, non l'intero
+      set di dipendenze. L'action `buildkit-cache-dance`, infine,
+      garantisce che la mount cache venga persistita su GitHub,
+      estraendo e iniettandone il contenuto.
+    + *Supply chain security:* tutte le GitHub Actions sono pinnate
+      per SHA con commento di versione; ogni workflow dichiara
+      `permissions: {}` come permessi di default, e concede solo i
+      permessi strettamente necessari per job; ogni job definisce un
+      timeout-massimo per prevenire esecuzioni troppo lunghe.
 - *Locale:* Maven Wrapper (`./mvnw`) disponibile, comandi standard
     `./mvnw compile`, `./mvnw package`, `./mvnw verify`. Docker
     multi-stage per build containerizzato da zero.
@@ -210,7 +257,7 @@ significativa.
 
 === Pitest — Mutation Testing
 
-*Pitest* (PiTest) è un framework di mutation testing che valuta
+*Pitest* è un framework di mutation testing che valuta
 l'efficacia dei test introducendo sistematicamente piccole modifiche
 (mutazioni) nel codice sorgente e verificando se i test esistenti
 le rilevano. Una mutazione "sopravvissuta" indica una lacuna nella
@@ -407,22 +454,111 @@ momento della scansione.
 == CI/CD — Sicurezza automatizzata
 
 La sicurezza è garantita da una combinazione di servizi esterni
-e configurazioni di automazione:
+e una pipeline CI/CD (sia locale che remota), che hanno subito un
+progressivo hardening:
 
-- *Dependabot*: configurato per mantenere aggiornate le dipendenze
-    GitHub Actions (hash pinning), Maven e npm con cadenza
-    settimanale, garantendo l'integrità degli artefatti tramite
-    SHA fissi nei workflow CI/CD.
+- *Dependabot — configurazione iniziale:* aggiornamento settimanale
+    di GitHub Actions (hash pinning), Maven e npm.
+- *Dependabot — hardening applicato:*
+    + Aggiunto il registro `dhi.io` per immagini Docker hardened.
+    + Ignorati major update per eclipse-temurin e node per garantire
+      stabilità LTS in ambiente containerizzato.
+- *SHA pinning:* tutte le GitHub Actions nei workflow sono ora
+    pinnate per SHA, accompagnato dal pinning automatico di Dependabot
+    con un controllo esplicito e versionato.
+    Anche le immagini Docker nei Dockerfile sono pinnate per SHA,
+    con Dependabot incaricato di aggiornare i digest settimanalmente.
+- *Privilegi minimi:* entrambi i workflow dichiarano `permissions: {}`;
+    ogni job concede solo i permessi strettamente necessari
+    (es. `contents: read` per test e gate, `contents: write` solo
+    per deploy-reports su gh-pages, `checks: write` e
+    `pull-requests: write` per pubblicare i report di test su PR).
+- *Timeout massimi:* ogni job definisce un timeout-massimo esplicito
+    (45 min backend, 10 min frontend, 3 min deploy, 10 min docker)
+    per prevenire job troppo lunghi e consumo eccessivo di risorse.
+- *Hadolint:* linting statico dei Dockerfile inserito nei workflow
+    CI con soglia `warning`.
 - *Gitleaks* (pre-commit hook): hook locale che previene il commit
     di segreti prima che raggiungano il repository remoto,
     affiancando la scansione automatica di GitGuardian.
 - *Snyk* (GitHub App): scansione automatica delle vulnerabilità
-    nelle dipendenze a ogni push e pull request su `main`/`dev`.
+    nelle dipendenze a ogni push e pull request su `main`.
 - *GitGuardian* (GitHub App): scansione automatica di segreti
     sull'intero repository a ogni push e PR.
 - *SonarQube* (servizio esterno): analisi statica di sicurezza
     e qualità del codice, eseguita su Docker con il plugin
     Creedengo per regole di efficienza energetica.
+- *CodeCov:* l'action `codecov/codecov-action` (pinnata per SHA)
+    carica a ogni run del job `test` del backend, tramite il token
+    `CODECOV_TOKEN` configurato nei secret del repository, due tipi
+    di report: la copertura JaCoCo (`target/site/jacoco/jacoco.xml`,
+    `report_type: coverage`, caricata solo a report generati) e i
+    risultati dei test Surefire (`target/surefire-reports/TEST-*.xml`,
+    `report_type: test_results` per le Test Analytics). L'upload
+    dei test_results usa `if: always()`: viene eseguito anche in
+    caso di fallimento dei test, come raccomandato da CodeCov, per
+    garantire la visibilità dei fallimenti in Test Analytics. CodeCov
+    fornisce una visione storica e per-PR della copertura del
+    backend (84% medio) e delle performance/fallimenti dei test,
+    complementare ai report generati in CI.
+- *Branch protection su \`main\`:* protezione server-side che
+    impone il passaggio obbligatorio da pull request con almeno
+    una review umana prima del merge, blocca i force push e
+    revoca le approvazioni stale a ogni nuovo commit. I *required
+    status checks* sono stati volutamente *non* abilitati: i
+    workflow CI sono filtrati per path (backend/** e frontend/**),
+    e imporre il check meccanicamente bloccherebbe in modo
+    irreversibile le pull request che toccano solo documentazione,
+    configurazione o workflow, perché i check non riportati da
+    workflow skippati restano nello stato "Expected — Waiting for
+    status to be reported". La scelta di demandare il giudizio
+    finale a un reviewer umano è quindi consapevole: la protezione
+    è garantita a livello di server, mentre l'esito visibile dei
+    check CI (verde/rosso) guida la decisione dell'approvatore
+    senza vincolare il merge in modo meccanico.
+
+== DevSecOps — Pre-commit Hooks
+
+I pre-commit hook costituiscono la prima linea di difesa nel workflow,
+bloccando commit non conformi prima che raggiungano il repository
+remoto o attivino la pipeline CI/CD.
+
+Il progetto utilizza pre-commit con i seguenti hook, configurati in
+`.pre-commit-config.yaml`:
+
+#table(
+    columns: (auto, auto, auto),
+    inset: 6pt,
+    stroke: 0.5pt,
+    [*Hook*], [*Cosa verifica*], [*Attivazione*],
+    [Checkstyle], [Conformità Google Java Style su tutto il backend],
+    [Staged .java in backend/],
+    [Bun Lint], [ESLint sui file staged del frontend (JS/TS/Vue)],
+    [Staged .js/.ts/.vue in frontend/],
+    [Bun Typecheck], [vue-tsc type checking full-project],
+    [Qualunque file in frontend/],
+    [Hadolint], [Best practice di container security nei Dockerfile],
+    [Modifiche a Dockerfile\*],
+    [Gitleaks], [Scansione di segreti accidentalmente committati],
+    [Sempre],
+    [Actionlint], [Validazione sintattica dei workflow GitHub Actions],
+    [Modifiche a .github/workflows/\*.yml],
+    [docker-compose-check], [Validazione sintattica dei compose file],
+    [Modifiche a docker-compose\*.yml],
+    [Hook generici], [EOF, trailing whitespace, YAML/XML validi,
+     file grandi (>1 MB), merge conflict, blocco di commit e push su main],
+    [Sempre / per tipo file],
+)
+
+L'hook `no-commit-to-branch` protegge la branch `main` sia in
+fase di *commit* sia in fase di *push* (stage `pre-commit` e
+`pre-push`), bloccando modifiche dirette prima che raggiungano
+il repository remoto. Va notato che gli hook pre-commit sono
+controlli *client-side*: sono aggirabili con `SKIP=` o
+`--no-verify` e operano solo su chi ha installato gli hook. La
+garanzia effettiva contro modifiche dirette a `main` è quindi la
+*branch protection server-side* descritta nella sezione CI/CD,
+che resta attiva anche per gli amministratori del repository.
 
 == Riepilogo della Sicurezza
 
@@ -431,7 +567,8 @@ web *non presenta vulnerabilità note*: Snyk ha rilevato 0 CVE,
 SonarQube ha riportato 0 vulnerabilità e 0 bug, GitGuardian ha
 identificato 0 segreti esposti. Il modello di autenticazione e
 autorizzazione (HTTP Basic + BCrypt + ruoli granulari + CORS)
-completa il perimetro di sicurezza.
+completa il perimetro di sicurezza, sebbene JWT potrebbe
+rappresentare la naturale evoluzione più sicura del sistema attuale.
 
 = Test di Performance per l'Affidabilità
 
@@ -583,6 +720,7 @@ combinata da ~13 secondi a ~100 ms per le operazioni critiche.
     stroke: 0.5pt,
     [*Strumento*], [*Attributo*], [*Baseline*], [*Risultato*],
     [JaCoCo], [Affidabilità], [Nessuna misura di copertura], [84% copertura media (92% service layer)],
+    [CodeCov], [Affidabilità (monitoraggio copertura e test)], [Nessuna piattaforma di copertura], [Copertura JaCoCo e risultati Surefire caricati a ogni run del job test backend; storico e commenti per-PR],
     [Pitest], [Affidabilità], [Nessun mutation testing], [Mutation coverage >80%, 0 mutazioni sopravvissute],
     [Checkstyle], [Manutenibilità], [Nessun controllo stile], [0 violazioni Google Java Style],
     [Buildabilità],
