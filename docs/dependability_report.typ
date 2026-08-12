@@ -202,6 +202,19 @@ L'applicazione è buildabile sia in CI/CD sia localmente:
       `deploy-reports` pubblica i report su GitHub Pages (con solo
       permesso `contents: write`). Il job `docker` rimane separato
       su push a `main`.
+    + *Fix del deploy dei report (bug critico upload-artifact):*
+      `actions/upload-artifact@v4` taglia dalle cartelle caricate il
+      "least common ancestor" dei path, quindi con i tre path multipli
+      (`target/site/jacoco/`, `target/reports/`, `target/pit-reports/`)
+      l'artifact arrivava al job `deploy-reports` senza il prefisso
+      `backend/target/`, facendo fallire la pubblicazione su GitHub
+      Pages con `cp: cannot stat './backend/target/reports/*'`. Il
+      job `test` ora assembla esplicitamente la cartella `public/`
+      (con `surefire/`, `jacoco/`, `pit/` già in posizione) e carica
+      un singolo path `./public`; `deploy-reports` scarica l'artifact
+      e pubblica senza passaggi di copia, rendendo la struttura del
+      deploy esplicita e indipendente dalla semantica implicita
+      dell'LCA.
     + *Frontend:* lint, typecheck e test sono unificati in un unico
       job `gate` (`bun run gate`) con timeout di 10 minuti. Job
       `docker` separato su push a `main`.
