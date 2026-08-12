@@ -70,25 +70,27 @@ jobs:
           generate-branches-badge: true
           generate-summary: true
           jacoco-csv-file: backend/target/site/jacoco/jacoco.csv
+      - name: Prepara cartella public per deploy
+        if: steps.check.outputs.ok == 'true'
+        working-directory: .
+        run: |
+          mkdir -p public/surefire public/jacoco public/pit
+          cp -r ./backend/target/reports/* ./public/surefire/
+          cp -r ./backend/target/site/jacoco/* ./public/jacoco/
+          cp -r ./backend/target/pit-reports/* ./public/pit/
       - name: Carica report come artifact per deploy
         if: github.event_name != 'pull_request' && steps.check.outputs.ok == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: test-reports
-          path: |
-            ./backend/target/site/jacoco/
-            ./backend/target/reports/
-            ./backend/target/pit-reports/
+          path: ./public
           retention-days: 30
       - name: Carica report come artifact per PR
         if: github.event_name == 'pull_request' && steps.check.outputs.ok == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: test-reports-${{ github.event.pull_request.number }}
-          path: |
-            ./backend/target/site/jacoco/
-            ./backend/target/reports/
-            ./backend/target/pit-reports/
+          path: ./public
           retention-days: 30
       - name: Pubblica Test Report
         if: always() && steps.check.outputs.ok == 'true'
@@ -157,14 +159,7 @@ jobs:
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: test-reports
-          path: .
-      - name: Prepara le cartelle per il deploy
-        working-directory: .
-        run: |
-          mkdir -p public/surefire public/jacoco public/pit
-          cp -r ./backend/target/reports/* ./public/surefire/
-          cp -r ./backend/target/site/jacoco/* ./public/jacoco/
-          cp -r ./backend/target/pit-reports/* ./public/pit/
+          path: ./public
       - uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
