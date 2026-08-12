@@ -80,14 +80,14 @@ jobs:
           cp -r ./backend/target/pit-reports/* ./public/pit/
       - name: Carica report come artifact per deploy
         if: github.event_name != 'pull_request' && steps.check.outputs.ok == 'true'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: test-reports
           path: ./public
           retention-days: 30
       - name: Carica report come artifact per PR
         if: github.event_name == 'pull_request' && steps.check.outputs.ok == 'true'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: test-reports-${{ github.event.pull_request.number }}
           path: ./public
@@ -126,7 +126,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Carica JaCoCo Report come Artifact
         if: always() && steps.check.outputs.ok == 'true'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: jacoco-coverage-report
           path: ./backend/target/site/jacoco/
