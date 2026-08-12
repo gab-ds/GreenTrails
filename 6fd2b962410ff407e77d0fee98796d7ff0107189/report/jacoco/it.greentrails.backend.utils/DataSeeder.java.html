@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DataSeeder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">it.greentrails.backend.utils</a> &gt; <span class="el_source">DataSeeder.java</span></div><h1>DataSeeder.java</h1><pre class="source lang-java linenums">package it.greentrails.backend.utils;
+
+import it.greentrails.backend.entities.Attivita;
+import it.greentrails.backend.entities.Camera;
+import it.greentrails.backend.entities.Categoria;
+import it.greentrails.backend.entities.Itinerario;
+import it.greentrails.backend.entities.Preferenze;
+import it.greentrails.backend.entities.PrenotazioneAlloggio;
+import it.greentrails.backend.entities.PrenotazioneAttivitaTuristica;
+import it.greentrails.backend.entities.Recensione;
+import it.greentrails.backend.entities.Segnalazione;
+import it.greentrails.backend.entities.Utente;
+import it.greentrails.backend.entities.ValoriEcosostenibilita;
+import it.greentrails.backend.enums.CategorieAlloggio;
+import it.greentrails.backend.enums.CategorieAttivitaTuristica;
+import it.greentrails.backend.enums.PreferenzeAlimentari;
+import it.greentrails.backend.enums.PreferenzeAlloggio;
+import it.greentrails.backend.enums.PreferenzeAttivita;
+import it.greentrails.backend.enums.PreferenzeBudget;
+import it.greentrails.backend.enums.PreferenzeStagione;
+import it.greentrails.backend.enums.PreferenzeViaggio;
+import it.greentrails.backend.enums.RuoloUtente;
+import it.greentrails.backend.enums.StatoItinerario;
+import it.greentrails.backend.enums.StatoPrenotazione;
+import it.greentrails.backend.enums.StatoSegnalazione;
+import it.greentrails.backend.gestioneattivita.repository.AttivitaRepository;
+import it.greentrails.backend.gestioneattivita.repository.CameraRepository;
+import it.greentrails.backend.gestioneattivita.repository.CategoriaRepository;
+import it.greentrails.backend.gestioneattivita.repository.RecensioneRepository;
+import it.greentrails.backend.gestioneattivita.repository.ValoriEcosostenibilitaRepository;
+import it.greentrails.backend.gestioneutenze.repository.PreferenzeRepository;
+import it.greentrails.backend.gestioneutenze.repository.UtenteRepository;
+import it.greentrails.backend.gestionesegnalazioni.repository.SegnalazioniRepository;
+import it.greentrails.backend.gestioneitinerari.repository.ItinerariRepository;
+import it.greentrails.backend.gestioneprenotazioni.repository.PrenotazioneAlloggioRepository;
+import it.greentrails.backend.gestioneprenotazioni.repository.PrenotazioneAttivitaTuristicaRepository;
+import java.util.Date;
+import java.util.Set;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
+import org.springframework.data.geo.Point;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+@Component
+@Profile({&quot;dev&quot;, &quot;test&quot;})
+@RequiredArgsConstructor
+public class DataSeeder implements CommandLineRunner {
+
+  private final UtenteRepository utenteRepository;
+  private final CategoriaRepository categoriaRepository;
+  private final ValoriEcosostenibilitaRepository valoriRepository;
+  private final AttivitaRepository attivitaRepository;
+  private final CameraRepository cameraRepository;
+  private final RecensioneRepository recensioneRepository;
+  private final PreferenzeRepository preferenzeRepository;
+  private final ItinerariRepository itinerarioRepository;
+  private final SegnalazioniRepository segnalazioneRepository;
+  private final PrenotazioneAlloggioRepository prenotazioneAlloggioRepository;
+  private final PrenotazioneAttivitaTuristicaRepository prenotazioneAttivitaTuristicaRepository;
+
+  private final PasswordEncoder encoder = new BCryptPasswordEncoder();
+
+  @Override
+  public void run(String... args) throws Exception {
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">    if (utenteRepository.count() &gt; 0) {</span>
+<span class="nc" id="L69">      return;</span>
+    }
+
+<span class="fc" id="L72">    Utente mario = utenteRepository.save(createUtente(&quot;Mario&quot;, &quot;Rossi&quot;, &quot;1980-05-15&quot;,</span>
+        &quot;mario@test.it&quot;, RuoloUtente.GESTORE_ATTIVITA));
+<span class="fc" id="L74">    Utente lucia = utenteRepository.save(createUtente(&quot;Lucia&quot;, &quot;Verdi&quot;, &quot;1985-03-20&quot;,</span>
+        &quot;lucia@test.it&quot;, RuoloUtente.GESTORE_ATTIVITA));
+<span class="fc" id="L76">    Utente marco = utenteRepository.save(createUtente(&quot;Marco&quot;, &quot;Bianchi&quot;, &quot;1995-07-10&quot;,</span>
+        &quot;marco@test.it&quot;, RuoloUtente.VISITATORE));
+<span class="fc" id="L78">    Utente anna = utenteRepository.save(createUtente(&quot;Anna&quot;, &quot;Neri&quot;, &quot;2000-01-25&quot;,</span>
+        &quot;anna@test.it&quot;, RuoloUtente.VISITATORE));
+<span class="fc" id="L80">    Utente admin = utenteRepository.save(createUtente(&quot;Admin&quot;, &quot;System&quot;, &quot;1990-01-01&quot;,</span>
+        &quot;admin@test.it&quot;, RuoloUtente.AMMINISTRATORE));
+
+<span class="fc" id="L83">    Categoria natura = categoriaRepository.save(</span>
+<span class="fc" id="L84">        createCategoria(&quot;Natura e Paesaggio&quot;, &quot;Attività all'aria aperta a contatto con la natura&quot;));</span>
+<span class="fc" id="L85">    Categoria cultura = categoriaRepository.save(</span>
+<span class="fc" id="L86">        createCategoria(&quot;Cultura e Storia&quot;, &quot;Visite a siti storici, musei e monumenti&quot;));</span>
+<span class="fc" id="L87">    Categoria gastro = categoriaRepository.save(</span>
+<span class="fc" id="L88">        createCategoria(&quot;Gastronomia&quot;, &quot;Esperienze culinarie e degustazioni&quot;));</span>
+<span class="fc" id="L89">    Categoria relax = categoriaRepository.save(</span>
+<span class="fc" id="L90">        createCategoria(&quot;Relax e Benessere&quot;, &quot;Spa, centri benessere e attività rilassanti&quot;));</span>
+<span class="fc" id="L91">    Categoria sport = categoriaRepository.save(</span>
+<span class="fc" id="L92">        createCategoria(&quot;Sport e Avventura&quot;, &quot;Attività sportive e avventurose&quot;));</span>
+<span class="fc" id="L93">    Categoria ecosostenibilita = categoriaRepository.save(</span>
+<span class="fc" id="L94">        createCategoria(&quot;Eco-Sostenibilità&quot;, &quot;Attività con attenzione all'ambiente&quot;));</span>
+
+<span class="fc" id="L96">    ValoriEcosostenibilita v1 = valoriRepository.save(createValori(true, true, true, true, true, true));</span>
+<span class="fc" id="L97">    ValoriEcosostenibilita v2 = valoriRepository.save(createValori(true, true, false, true, false, true));</span>
+<span class="fc" id="L98">    ValoriEcosostenibilita v3 = valoriRepository.save(createValori(false, true, true, true, true, false));</span>
+<span class="fc" id="L99">    ValoriEcosostenibilita v4 = valoriRepository.save(createValori(true, false, true, true, false, true));</span>
+<span class="fc" id="L100">    ValoriEcosostenibilita v5 = valoriRepository.save(createValori(true, true, true, true, false, true));</span>
+<span class="fc" id="L101">    ValoriEcosostenibilita v6 = valoriRepository.save(createValori(false, true, false, true, true, true));</span>
+
+<span class="fc" id="L103">    Attivita ecoHotel = attivitaRepository.save(createAlloggio(mario,</span>
+        &quot;EcoHotel Roma Verde&quot;, &quot;Via dei Fori Imperiali 1&quot;, &quot;00100&quot;, &quot;Roma&quot;, &quot;RM&quot;,
+        new Point(41.9028, 12.4964), 120.00,
+        &quot;Hotel ecosostenibile nel cuore di Roma&quot;,
+        &quot;Hotel con pannelli solari, raccolta differenziata e prodotti locali.&quot;,
+        v1, CategorieAlloggio.HOTEL, 50));
+
+<span class="fc" id="L110">    Attivita bbFirenze = attivitaRepository.save(createAlloggio(mario,</span>
+        &quot;B And B Fiorentino Bio&quot;, &quot;Via della Vigna Nuova 10&quot;, &quot;50123&quot;, &quot;Firenze&quot;, &quot;FI&quot;,
+        new Point(43.7696, 11.2558), 85.00,
+        &quot;Bed &amp; Breakfast biologico a Firenze&quot;,
+        &quot;B&amp;B con colazione biologica a base di prodotti toscani.&quot;,
+        v2, CategorieAlloggio.BED_AND_BREAKFAST, 20));
+
+<span class="fc" id="L117">    Attivita agriturismo = attivitaRepository.save(createAlloggio(lucia,</span>
+        &quot;Agriturismo Costa Blu&quot;, &quot;Via Marina 5&quot;, &quot;84010&quot;, &quot;Amalfi&quot;, &quot;SA&quot;,
+        new Point(40.6333, 14.6000), 95.00,
+        &quot;Agriturismo sostenibile sulla Costiera&quot;,
+        &quot;Prodotti a km0 dall'orto, energia solare e recupero acque.&quot;,
+        v3, CategorieAlloggio.VILLAGGIO_TURISTICO, 30));
+
+<span class="fc" id="L124">    Attivita vesuvio = attivitaRepository.save(createAttivitaTuristica(lucia,</span>
+        &quot;Escursione Vesuvio&quot;, &quot;Piazza Duomo 1&quot;, &quot;80013&quot;, &quot;Caserta&quot;, &quot;CE&quot;,
+        new Point(41.2341, 14.4321), 25.00,
+        &quot;Escursione guidata al Vesuvio&quot;,
+        &quot;Camminata guidata nei sentieri del Vesuvio.&quot;,
+        v4, CategorieAttivitaTuristica.ALL_APERTO, 100));
+
+<span class="fc" id="L131">    Attivita tourGastro = attivitaRepository.save(createAttivitaTuristica(mario,</span>
+        &quot;Tour Gastronomico Roma&quot;, &quot;Via del Corso 100&quot;, &quot;00100&quot;, &quot;Roma&quot;, &quot;RM&quot;,
+        new Point(41.9030, 12.4760), 55.00,
+        &quot;Tour enogastronomico a Roma&quot;,
+        &quot;Degustazione vini, formaggi e cooking class.&quot;,
+        v5, CategorieAttivitaTuristica.VISITE_CULTURALI_STORICHE, 40));
+
+<span class="fc" id="L138">    Attivita pompei = attivitaRepository.save(createAttivitaTuristica(lucia,</span>
+        &quot;Visita Guidata Pompei&quot;, &quot;Via Villa dei Misteri 2&quot;, &quot;80045&quot;, &quot;Pompei&quot;, &quot;NA&quot;,
+        new Point(40.7500, 14.4897), 35.00,
+        &quot;Visita guidata eco-sostenibile a Pompei&quot;,
+        &quot;Tour a piedi con guida, focus su storia e ambiente.&quot;,
+        v6, CategorieAttivitaTuristica.VISITE_CULTURALI_STORICHE, 80));
+
+<span class="fc" id="L145">    vesuvio.getCategorie().addAll(Set.of(natura, sport));</span>
+<span class="fc" id="L146">    tourGastro.getCategorie().addAll(Set.of(gastro, ecosostenibilita));</span>
+<span class="fc" id="L147">    pompei.getCategorie().addAll(Set.of(cultura, ecosostenibilita));</span>
+<span class="fc" id="L148">    attivitaRepository.saveAll(Set.of(vesuvio, tourGastro, pompei));</span>
+
+<span class="fc" id="L150">    Camera c1 = cameraRepository.save(createCamera(ecoHotel,</span>
+        &quot;Camera Doppia&quot;, 120.00, 20, &quot;Letto matrimoniale e bagno privato&quot;, 2));
+<span class="fc" id="L152">    cameraRepository.save(createCamera(ecoHotel,</span>
+        &quot;Camera Singola&quot;, 80.00, 15, &quot;Singola con bagno privato&quot;, 1));
+<span class="fc" id="L154">    cameraRepository.save(createCamera(ecoHotel,</span>
+        &quot;Suite&quot;, 200.00, 5, &quot;Suite con terrazzo vista Fori Imperiali&quot;, 3));
+<span class="fc" id="L156">    cameraRepository.save(createCamera(bbFirenze,</span>
+        &quot;Camera Doppia&quot;, 85.00, 8, &quot;Letto matrimoniale e vista Duomo&quot;, 2));
+<span class="fc" id="L158">    cameraRepository.save(createCamera(bbFirenze,</span>
+        &quot;Camera Tripla&quot;, 110.00, 4, &quot;Camera per famiglia con 3 letti&quot;, 3));
+<span class="fc" id="L160">    Camera cAgriDoppia = cameraRepository.save(createCamera(agriturismo,</span>
+        &quot;Camera Doppia&quot;, 95.00, 10, &quot;Vista mare e balcone&quot;, 2));
+<span class="fc" id="L162">    cameraRepository.save(createCamera(agriturismo,</span>
+        &quot;Appartamento&quot;, 150.00, 3, &quot;Con cucina&quot;, 4));
+
+<span class="fc" id="L165">    Itinerario it1 = itinerarioRepository.save(createItinerario(marco, StatoItinerario.PIANIFICATO, 0.0));</span>
+<span class="fc" id="L166">    Itinerario it2 = itinerarioRepository.save(createItinerario(marco, StatoItinerario.PIANIFICATO, 0.0));</span>
+<span class="fc" id="L167">    Itinerario it3 = itinerarioRepository.save(createItinerario(anna, StatoItinerario.PIANIFICATO, 0.0));</span>
+
+<span class="fc" id="L169">    recensioneRepository.save(createRecensione(marco, ecoHotel, 5,</span>
+        &quot;Hotel meraviglioso, attento all'ambiente!&quot;, v1));
+<span class="fc" id="L171">    recensioneRepository.save(createRecensione(marco, tourGastro, 4,</span>
+        &quot;Tour interessante, cibo ottimo.&quot;, v5));
+<span class="fc" id="L173">    recensioneRepository.save(createRecensione(anna, agriturismo, 5,</span>
+        &quot;Agriturismo da sogno, tutto biologico!&quot;, v3));
+<span class="fc" id="L175">    recensioneRepository.save(createRecensione(anna, pompei, 3,</span>
+        &quot;Visita interessante ma lunga per bambini.&quot;, v6));
+
+<span class="fc" id="L178">    preferenzeRepository.save(createPreferenze(marco,</span>
+        PreferenzeViaggio.CITTA, PreferenzeAlloggio.HOTEL,
+        PreferenzeAlimentari.VEGETARIAN, PreferenzeAttivita.GASTRONOMIA,
+        false, PreferenzeBudget.ALTO, true, PreferenzeStagione.PRIMAVERA_ESTATE));
+<span class="fc" id="L182">    preferenzeRepository.save(createPreferenze(anna,</span>
+        PreferenzeViaggio.MARE, PreferenzeAlloggio.OSTELLO,
+        PreferenzeAlimentari.GLUTEN_FREE, PreferenzeAttivita.ALL_APERTO,
+        true, PreferenzeBudget.BASSO, false, PreferenzeStagione.AUTUNNO_INVERNO));
+
+<span class="fc" id="L187">    segnalazioneRepository.save(createSegnalazione(marco,</span>
+<span class="fc" id="L188">        &quot;Camera non corrisponde alla descrizione&quot;, true, 1L, null));</span>
+<span class="fc" id="L189">    segnalazioneRepository.save(createSegnalazione(anna,</span>
+<span class="fc" id="L190">        &quot;Attività sospesa per maltempo&quot;, false, null, 6L));</span>
+
+<span class="fc" id="L192">    Date now = new Date(System.currentTimeMillis() + 86_400_000L);</span>
+<span class="fc" id="L193">    prenotazioneAlloggioRepository.save(createPrenotazioneAlloggio(it1, c1,</span>
+        2, 0, now, now, 1, StatoPrenotazione.COMPLETATA, 240.0));
+<span class="fc" id="L195">    prenotazioneAlloggioRepository.save(createPrenotazioneAlloggio(it1, cAgriDoppia,</span>
+        2, 1, now, now, 1, StatoPrenotazione.CREATA, 190.0));
+
+<span class="fc" id="L198">    prenotazioneAttivitaTuristicaRepository.save(createPrenotazioneAttivita(it1, tourGastro,</span>
+        2, 0, now, now, StatoPrenotazione.COMPLETATA, 110.0));
+<span class="fc" id="L200">    prenotazioneAttivitaTuristicaRepository.save(createPrenotazioneAttivita(it2, vesuvio,</span>
+        1, 0, now, null, StatoPrenotazione.CREATA, 25.0));
+<span class="fc" id="L202">  }</span>
+
+  private Utente createUtente(String nome, String cognome, String dataNascita,
+      String email, RuoloUtente ruolo) {
+<span class="fc" id="L206">    Utente u = new Utente();</span>
+<span class="fc" id="L207">    u.setNome(nome);</span>
+<span class="fc" id="L208">    u.setCognome(cognome);</span>
+<span class="fc" id="L209">    u.setDataNascita(java.sql.Date.valueOf(dataNascita));</span>
+<span class="fc" id="L210">    u.setEmail(email);</span>
+<span class="fc" id="L211">    u.setPassword(encoder.encode(&quot;password&quot;));</span>
+<span class="fc" id="L212">    u.setRuolo(ruolo);</span>
+<span class="fc" id="L213">    return u;</span>
+  }
+
+  private Categoria createCategoria(String nome, String descrizione) {
+<span class="fc" id="L217">    Categoria c = new Categoria();</span>
+<span class="fc" id="L218">    c.setNome(nome);</span>
+<span class="fc" id="L219">    c.setDescrizione(descrizione);</span>
+<span class="fc" id="L220">    return c;</span>
+  }
+
+  private ValoriEcosostenibilita createValori(boolean politiche, boolean prodotti,
+      boolean energia, boolean raccolta, boolean emissioni, boolean contatto) {
+<span class="fc" id="L225">    ValoriEcosostenibilita v = new ValoriEcosostenibilita();</span>
+<span class="fc" id="L226">    v.setPoliticheAntispreco(politiche);</span>
+<span class="fc" id="L227">    v.setProdottiLocali(prodotti);</span>
+<span class="fc" id="L228">    v.setEnergiaVerde(energia);</span>
+<span class="fc" id="L229">    v.setRaccoltaDifferenziata(raccolta);</span>
+<span class="fc" id="L230">    v.setLimiteEmissioneCO2(emissioni);</span>
+<span class="fc" id="L231">    v.setContattoConNatura(contatto);</span>
+<span class="fc" id="L232">    return v;</span>
+  }
+
+  private Attivita createAlloggio(Utente gestore, String nome, String indirizzo,
+      String cap, String citta, String provincia, Point coordinate, double prezzo,
+      String descrizioneBreve, String descrizioneLunga,
+      ValoriEcosostenibilita valori, CategorieAlloggio categoria, int disponibilita) {
+<span class="fc" id="L239">    Attivita a = new Attivita();</span>
+<span class="fc" id="L240">    a.setGestore(gestore);</span>
+<span class="fc" id="L241">    a.setNome(nome);</span>
+<span class="fc" id="L242">    a.setIndirizzo(indirizzo);</span>
+<span class="fc" id="L243">    a.setCap(cap);</span>
+<span class="fc" id="L244">    a.setCitta(citta);</span>
+<span class="fc" id="L245">    a.setProvincia(provincia);</span>
+<span class="fc" id="L246">    a.setCoordinate(coordinate);</span>
+<span class="fc" id="L247">    a.setPrezzo(prezzo);</span>
+<span class="fc" id="L248">    a.setDescrizioneBreve(descrizioneBreve);</span>
+<span class="fc" id="L249">    a.setDescrizioneLunga(descrizioneLunga);</span>
+<span class="fc" id="L250">    a.setValoriEcosostenibilita(valori);</span>
+<span class="fc" id="L251">    a.setCategoriaAlloggio(categoria);</span>
+<span class="fc" id="L252">    a.setDisponibilita(disponibilita);</span>
+<span class="fc" id="L253">    a.setAlloggio(true);</span>
+<span class="fc" id="L254">    a.setMedia(java.util.UUID.randomUUID().toString());</span>
+<span class="fc" id="L255">    return a;</span>
+  }
+
+  private Attivita createAttivitaTuristica(Utente gestore, String nome, String indirizzo,
+      String cap, String citta, String provincia, Point coordinate, double prezzo,
+      String descrizioneBreve, String descrizioneLunga,
+      ValoriEcosostenibilita valori, CategorieAttivitaTuristica categoria, int disponibilita) {
+<span class="fc" id="L262">    Attivita a = new Attivita();</span>
+<span class="fc" id="L263">    a.setGestore(gestore);</span>
+<span class="fc" id="L264">    a.setNome(nome);</span>
+<span class="fc" id="L265">    a.setIndirizzo(indirizzo);</span>
+<span class="fc" id="L266">    a.setCap(cap);</span>
+<span class="fc" id="L267">    a.setCitta(citta);</span>
+<span class="fc" id="L268">    a.setProvincia(provincia);</span>
+<span class="fc" id="L269">    a.setCoordinate(coordinate);</span>
+<span class="fc" id="L270">    a.setPrezzo(prezzo);</span>
+<span class="fc" id="L271">    a.setDescrizioneBreve(descrizioneBreve);</span>
+<span class="fc" id="L272">    a.setDescrizioneLunga(descrizioneLunga);</span>
+<span class="fc" id="L273">    a.setValoriEcosostenibilita(valori);</span>
+<span class="fc" id="L274">    a.setCategoriaAttivitaTuristica(categoria);</span>
+<span class="fc" id="L275">    a.setDisponibilita(disponibilita);</span>
+<span class="fc" id="L276">    a.setAlloggio(false);</span>
+<span class="fc" id="L277">    a.setMedia(java.util.UUID.randomUUID().toString());</span>
+<span class="fc" id="L278">    return a;</span>
+  }
+
+  private Camera createCamera(Attivita alloggio, String tipoCamera, double prezzo,
+      int disponibilita, String descrizione, int capienza) {
+<span class="fc" id="L283">    Camera c = new Camera();</span>
+<span class="fc" id="L284">    c.setAlloggio(alloggio);</span>
+<span class="fc" id="L285">    c.setTipoCamera(tipoCamera);</span>
+<span class="fc" id="L286">    c.setPrezzo(prezzo);</span>
+<span class="fc" id="L287">    c.setDisponibilita(disponibilita);</span>
+<span class="fc" id="L288">    c.setDescrizione(descrizione);</span>
+<span class="fc" id="L289">    c.setCapienza(capienza);</span>
+<span class="fc" id="L290">    return c;</span>
+  }
+
+  private Itinerario createItinerario(Utente visitatore, StatoItinerario stato, double totale) {
+<span class="fc" id="L294">    Itinerario i = new Itinerario();</span>
+<span class="fc" id="L295">    i.setVisitatore(visitatore);</span>
+<span class="fc" id="L296">    i.setStato(stato);</span>
+<span class="fc" id="L297">    i.setTotale(totale);</span>
+<span class="fc" id="L298">    return i;</span>
+  }
+
+  private Recensione createRecensione(Utente visitatore, Attivita attivita,
+      int valutazione, String descrizione, ValoriEcosostenibilita valori) {
+<span class="fc" id="L303">    Recensione r = new Recensione();</span>
+<span class="fc" id="L304">    r.setVisitatore(visitatore);</span>
+<span class="fc" id="L305">    r.setAttivita(attivita);</span>
+<span class="fc" id="L306">    r.setValutazioneStelleEsperienza(valutazione);</span>
+<span class="fc" id="L307">    r.setDescrizione(descrizione);</span>
+<span class="fc" id="L308">    r.setValoriEcosostenibilita(valori);</span>
+<span class="fc" id="L309">    return r;</span>
+  }
+
+  private Preferenze createPreferenze(Utente visitatore, PreferenzeViaggio viaggio,
+      PreferenzeAlloggio alloggio, PreferenzeAlimentari alimentare,
+      PreferenzeAttivita attivita, boolean animale, PreferenzeBudget budget,
+      boolean souvenir, PreferenzeStagione stagione) {
+<span class="fc" id="L316">    Preferenze p = new Preferenze();</span>
+<span class="fc" id="L317">    p.setId(visitatore.getId());</span>
+<span class="fc" id="L318">    p.setVisitatore(visitatore);</span>
+<span class="fc" id="L319">    p.setViaggioPreferito(viaggio);</span>
+<span class="fc" id="L320">    p.setAlloggioPreferito(alloggio);</span>
+<span class="fc" id="L321">    p.setPreferenzaAlimentare(alimentare);</span>
+<span class="fc" id="L322">    p.setAttivitaPreferita(attivita);</span>
+<span class="fc" id="L323">    p.setAnimaleDomestico(animale);</span>
+<span class="fc" id="L324">    p.setBudgetPreferito(budget);</span>
+<span class="fc" id="L325">    p.setSouvenir(souvenir);</span>
+<span class="fc" id="L326">    p.setStagioniPreferite(stagione);</span>
+<span class="fc" id="L327">    return p;</span>
+  }
+
+  private Segnalazione createSegnalazione(Utente utente, String descrizione,
+      boolean isPerRecensione, Long idRecensione, Long idAttivita) {
+<span class="fc" id="L332">    Segnalazione s = new Segnalazione();</span>
+<span class="fc" id="L333">    s.setDataSegnalazione(new Date());</span>
+<span class="fc" id="L334">    s.setDescrizione(descrizione);</span>
+<span class="fc" id="L335">    s.setStato(StatoSegnalazione.CREATA);</span>
+<span class="fc" id="L336">    s.setForRecensione(isPerRecensione);</span>
+<span class="fc" id="L337">    s.setUtente(utente);</span>
+<span class="fc bfc" id="L338" title="All 2 branches covered.">    if (idRecensione != null) {</span>
+<span class="fc" id="L339">      Recensione r = new Recensione();</span>
+<span class="fc" id="L340">      r.setId(idRecensione);</span>
+<span class="fc" id="L341">      s.setRecensione(r);</span>
+    }
+<span class="fc bfc" id="L343" title="All 2 branches covered.">    if (idAttivita != null) {</span>
+<span class="fc" id="L344">      Attivita a = new Attivita();</span>
+<span class="fc" id="L345">      a.setId(idAttivita);</span>
+<span class="fc" id="L346">      s.setAttivita(a);</span>
+    }
+<span class="fc" id="L348">    return s;</span>
+  }
+
+  private PrenotazioneAlloggio createPrenotazioneAlloggio(Itinerario itinerario,
+      Camera camera, int adulti, int bambini, Date dataInizio, Date dataFine,
+      int numCamere, StatoPrenotazione stato, double prezzo) {
+<span class="fc" id="L354">    PrenotazioneAlloggio p = new PrenotazioneAlloggio();</span>
+<span class="fc" id="L355">    p.setItinerario(itinerario);</span>
+<span class="fc" id="L356">    p.setCamera(camera);</span>
+<span class="fc" id="L357">    p.setNumAdulti(adulti);</span>
+<span class="fc" id="L358">    p.setNumBambini(bambini);</span>
+<span class="fc" id="L359">    p.setDataInizio(dataInizio);</span>
+<span class="fc" id="L360">    p.setDataFine(dataFine);</span>
+<span class="fc" id="L361">    p.setNumCamere(numCamere);</span>
+<span class="fc" id="L362">    p.setStato(stato);</span>
+<span class="fc" id="L363">    p.setPrezzo(prezzo);</span>
+<span class="fc" id="L364">    return p;</span>
+  }
+
+  private PrenotazioneAttivitaTuristica createPrenotazioneAttivita(Itinerario itinerario,
+      Attivita attivita, int adulti, int bambini, Date dataInizio, Date dataFine,
+      StatoPrenotazione stato, double prezzo) {
+<span class="fc" id="L370">    PrenotazioneAttivitaTuristica p = new PrenotazioneAttivitaTuristica();</span>
+<span class="fc" id="L371">    p.setItinerario(itinerario);</span>
+<span class="fc" id="L372">    p.setAttivitaTuristica(attivita);</span>
+<span class="fc" id="L373">    p.setNumAdulti(adulti);</span>
+<span class="fc" id="L374">    p.setNumBambini(bambini);</span>
+<span class="fc" id="L375">    p.setDataInizio(dataInizio);</span>
+<span class="fc" id="L376">    p.setDataFine(dataFine);</span>
+<span class="fc" id="L377">    p.setStato(stato);</span>
+<span class="fc" id="L378">    p.setPrezzo(prezzo);</span>
+<span class="fc" id="L379">    return p;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
