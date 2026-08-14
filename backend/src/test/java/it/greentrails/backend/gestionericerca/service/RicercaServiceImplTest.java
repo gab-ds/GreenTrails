@@ -171,14 +171,14 @@ class RicercaServiceImplTest {
 
     List<Attivita> allAttivita = Arrays.asList(attivita1, attivita2, attivita3);
 
-    when(repository.findByPosizioneNative(coordinate.getY(), coordinate.getX(), raggio)).thenReturn(
+    when(repository.findByPosizione(coordinate.getY(), coordinate.getX(), raggio)).thenReturn(
         Arrays.asList(attivita1, attivita2));
 
     List<Attivita> result = ricercaService.findAttivitaByPosizione(coordinate, raggio);
 
     assertNotNull(result);
     assertEquals(2, result.size());
-    verify(repository).findByPosizioneNative(coordinate.getY(), coordinate.getX(), raggio);
+    verify(repository).findByPosizione(coordinate.getY(), coordinate.getX(), raggio);
   }
 
   @Test
@@ -222,7 +222,7 @@ class RicercaServiceImplTest {
 
     List<Attivita> allAttivita = Arrays.asList(attivita1, attivita2);
 
-    when(repository.findByPosizioneNative(coordinate.getY(), coordinate.getX(), zeroRaggio)).thenReturn(
+    when(repository.findByPosizione(coordinate.getY(), coordinate.getX(), zeroRaggio)).thenReturn(
         Arrays.asList(attivita1));
 
     List<Attivita> result = ricercaService.findAttivitaByPosizione(coordinate, zeroRaggio);
@@ -230,7 +230,7 @@ class RicercaServiceImplTest {
     assertNotNull(result);
     assertEquals(1, result.size());
     assertEquals("Stessa posizione", result.get(0).getNome());
-    verify(repository).findByPosizioneNative(coordinate.getY(), coordinate.getX(), zeroRaggio);
+    verify(repository).findByPosizione(coordinate.getY(), coordinate.getX(), zeroRaggio);
   }
 
   @Test
@@ -276,14 +276,14 @@ class RicercaServiceImplTest {
 
     List<Attivita> allAttivita = Arrays.asList(attivita1);
 
-    when(repository.findByPosizioneNative(coordinate.getY(), coordinate.getX(), raggio)).thenReturn(
+    when(repository.findByPosizione(coordinate.getY(), coordinate.getX(), raggio)).thenReturn(
         new ArrayList<>());
 
     List<Attivita> result = ricercaService.findAttivitaByPosizione(coordinate, raggio);
 
     assertNotNull(result);
     assertEquals(0, result.size());
-    verify(repository).findByPosizioneNative(coordinate.getY(), coordinate.getX(), raggio);
+    verify(repository).findByPosizione(coordinate.getY(), coordinate.getX(), raggio);
   }
 
 }
