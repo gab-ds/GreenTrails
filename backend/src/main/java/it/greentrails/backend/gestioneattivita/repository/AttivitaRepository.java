@@ -46,6 +46,6 @@ public interface AttivitaRepository extends JpaRepository<Attivita, Long> {
 
   @Query(value = "SELECT * FROM attivita WHERE "
       + "ST_Distance_Sphere(coordinate, POINT(?2, ?1)) <= ?3", nativeQuery = true)
-  List<Attivita> findByPosizioneNative(double lat, double lon, double raggio);
+  List<Attivita> findByPosizione(double lat, double lon, double raggio);
 
 }

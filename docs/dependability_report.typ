@@ -149,10 +149,8 @@ manutenzione evolutiva:
     AttivitaServiceImpl (CRUD e filtri attività), ItinerariServiceImpl
     (pianificazione itinerari con adattatore AI in stub),
     PrenotazioneAlloggioServiceImpl / PrenotazioneAttivitaTuristicaServiceImpl
-    (ciclo di vita prenotazioni), RicercaServiceImpl (filtri spaziali
-    Haversine).
-- *Utility:* DistanceCalculator (Haversine, ~4.4M op/s), CorsConfig,
-    ResponseGenerator.
+    (ciclo di vita prenotazioni), RicercaServiceImpl (filtri spaziali).
+- *Utility:* CorsConfig, ResponseGenerator.
 
 == Infrastruttura e Distribuzione
 
@@ -644,16 +642,13 @@ CI/CD.
 = Microbenchmark delle Performance
 
 *JMH* (Java Microbenchmark Harness) è stato utilizzato per misurare
-le performance dei componenti critici del backend, con 18 classi di
-benchmark che coprono DistanceCalculator, servizi core, crittografia
+le performance dei componenti critici del backend, con 16 classi di
+benchmark che coprono servizi core, crittografia
 password (BCrypt), pianificazione itinerari e filtraggio in memoria.
-La suite completa conta 72 benchmark, eseguiti con 1 fork, 3
+La suite completa conta 44 benchmark, eseguiti con 1 fork, 3
 iterazioni di warm-up e 5 di misurazione (1 s ciascuna).
 
 *Risultati principali:*
-- *DistanceCalculator (Haversine):* ~9,4 milioni di operazioni al
-  secondo ±0,97M — quasi il doppio della stima iniziale, a
-  conferma dell'efficienza dell'implementazione.
 - *BCryptPasswordEncoder:* ~66,4 ms per encoding e ~65,4 ms per
   matching con work factor 10 — costo voluto per l'hardening delle
   password.
@@ -662,7 +657,7 @@ iterazioni di warm-up e 5 di misurazione (1 s ciascuna).
 - *Filtraggio su larga scala:* latenza da 100 μs a 500 ms per
   operazioni di filtro in memoria su 10.000-50.000 elementi
   (categorie, recensioni, prenotazioni).
-- *Ricerca spaziale Haversine:* ~19 μs su piccoli dataset, fino a
+- *Ricerca spaziale:* ~19 μs su piccoli dataset, fino a
   1,2 s su set estesi.
 - *Pianificazione itinerari (stub):* ~52 μs per itinerari semplici,
   fino a 537 μs per scenari complessi.
@@ -710,9 +705,9 @@ quattro colli di bottiglia principali, tutti causati da `findAll()`
 *Modifiche apportate (10 file):*
 - *AttivitaRepository:* fix Cartesian join (`JOIN Categoria c` →
   `JOIN a.categorie c`); nuova query `findByCategorie` con GROUP BY;
-  nuova query `findByPosizioneNative` con `ST_Distance_Sphere`
+  nuova query `findByPosizione` con `ST_Distance_Sphere`
 - *RicercaServiceImpl:* sostituiti stream/reduce e `findAll()`+
-  Haversine con le nuove query (con fallback per H2)
+  Haversine con le nuove query
 - *RecensioneRepository/Service:* nuova query `findByVisitatore`;
   eliminato `findAll()`+loop
 - *PrenotazioneAlloggioRepository/Service:* nuova query `findByStato`;
@@ -724,6 +719,28 @@ quattro colli di bottiglia principali, tutti causati da `findAll()`
 
 L'impatto complessivo stimato è una riduzione della latenza
 combinata da ~13 secondi a ~100 ms per le operazioni critiche.
+
+== Rimozione del Fallback In-Memory e di DistanceCalculator
+
+La ricerca per posizione è stata ulteriormente semplificata rimuovendo
+il *fallback* in `RicercaServiceImpl.findAttivitaByPosizione`: in caso
+di errore della query nativa, un `catch (Exception)` ripristinava
+`findAll()` + filtraggio Haversine in memoria (`DistanceCalculator`).
+
+- *Fail-fast:* il `catch (Exception)` mascherava gli errori del DB e
+  rispondeva con dati calcolati in memoria. Oggi l'errore si propaga
+  esplicitamente (HTTP 500).
+- *Una sola fonte di verità:* calcolo distanze delegato a
+  `ST_Distance_Sphere`, eliminando la doppia implementazione
+  (Haversine in Java vs query spaziale).
+- *Codice morto:* il ramo non era mai esercitato (dev/prod usano
+  MySQL). Di fatto dead code, è stato rimosso anziché testato.
+- *Cleanup:* eliminati `DistanceCalculator`, i suoi 4 unit test e i 2
+  benchmark JMH; `findByPosizioneNative` rinominato in
+  `findByPosizione`.
+
+Risultato: nessun mutante residuo sul metodo e nessuna regressione
+funzionale in dev/prod.
 
 = Riepilogo delle Misurazioni
 
@@ -759,7 +776,7 @@ combinata da ~13 secondi a ~100 ms per le operazioni critiche.
     [4 piani (Load, Stress, Spike, Soak); latenza \<100 ms],
     [JMH], [Affidabilità (performance)],
     [Nessun benchmark],
-    [72 benchmark eseguiti; DistanceCalculator ~9,4M ops/s;
+    [44 benchmark eseguiti;
      BCrypt ~66 ms; servizi core 6-8 μs],
     [Ottimizzazioni bottleneck], [Affidabilità (performance)],
     [Nessuna — findAll() in memoria],
