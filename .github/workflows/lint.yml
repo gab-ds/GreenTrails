@@ -1,0 +1,39 @@
+name: CI/CD pipeline checks
+
+permissions: {}
+
+on:
+  push:
+    paths:
+      - '.github/workflows/**'
+    branches:
+      - main
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: Lint GitHub Actions
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check workflow files
+        id: actionlint
+        uses: raven-actions/actionlint@3d39aea434753780c3b3d4a1a31c854b4dbf49d7  # v2.2.0
+      - name: Check summary (on failure)
+        if: failure() && steps.actionlint.outcome == 'failure'
+        run: |
+          {
+            echo "### :x: actionlint: Trovati errori nei workflow"
+            echo "- **Errori totali:** ${{ steps.actionlint.outputs.total-errors }}"
+            echo "- **File controllati:** ${{ steps.actionlint.outputs.total-files }}"
+            echo "- **Versione:** ${{ steps.actionlint.outputs.version-semver }}"
+            echo "- **Messaggio:** ${{ steps.actionlint.outputs.exit-message }}"
+          } >> "$GITHUB_STEP_SUMMARY"
