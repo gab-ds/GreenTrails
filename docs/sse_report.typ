@@ -103,8 +103,8 @@ Il backend segue un'architettura a *layers* propria di Spring: Presentation Laye
 == Componenti Principali
 
 - *Sicurezza*: HTTP Basic Authentication, BCryptPasswordEncoder (work factor 10, ~130 ms per hash), controllo accessi basato su ruoli (VISITATORE, GESTORE_ATTIVITA, AMMINISTRATORE), CORS configurato per frontend su localhost:4200 e :9000.
-- *Servizi Core*: GestioneUtenzeServiceImpl (UserDetailsService), AttivitaServiceImpl (CRUD e filtri attività), ItinerariServiceImpl (pianificazione con adattatore AI — attualmente stub con shuffle casuale), PrenotazioneAlloggioServiceImpl / PrenotazioneAttivitaTuristicaServiceImpl (ciclo di vita prenotazioni), RicercaServiceImpl (filtri spaziali Haversine).
-- *Utility*: DistanceCalculator (Haversine, ~4.4M op/s), CorsConfig, ResponseGenerator.
+- *Servizi Core*: GestioneUtenzeServiceImpl (UserDetailsService), AttivitaServiceImpl (CRUD e filtri attività), ItinerariServiceImpl (pianificazione con adattatore AI — attualmente stub con shuffle casuale), PrenotazioneAlloggioServiceImpl / PrenotazioneAttivitaTuristicaServiceImpl (ciclo di vita prenotazioni), RicercaServiceImpl (filtri spaziali).
+- *Utility*: CorsConfig, ResponseGenerator.
 
 == Infrastruttura e Distribuzione
 
@@ -130,10 +130,9 @@ Docker multi-stage (eclipse-temurin:21) con configurazione multi-ambiente: svilu
 scrittura di microbenchmark affidabili in Java, progettato per evitare
 le insidie comuni della misurazione delle performance (warming up
 della JVM, ottimizzazioni del JIT compiler, code elimination). Nel
-progetto sono definite 18 classi di benchmark (72 benchmark totali)
-che coprono i componenti critici: DistanceCalculator (calcolo
-Haversine), servizi core (CRUD, crittografia, pianificazione),
-filtraggio in memoria e archiviazione file.
+progetto sono definite 16 classi di benchmark (44 benchmark totali)
+che coprono i componenti critici: servizi core (CRUD, crittografia,
+pianificazione), filtraggio in memoria e archiviazione file.
 
 *Risultati* (1 fork, 3 warm-up + 5 misurazioni da 1 s):
 
@@ -142,15 +141,13 @@ filtraggio in memoria e archiviazione file.
   inset: 6pt,
   stroke: 0.5pt,
   [*Componente*], [*Operazione*], [*Risultato*],
-  [DistanceCalculator], [Calcolo Haversine],
-  [~9,4 milioni ops/s ±0,97M],
   [BCryptPasswordEncoder], [Encoding], [~66,4 ms],
   [BCryptPasswordEncoder], [Matching], [~65,4 ms],
   [Servizi core], [CRUD, ricerca testuale],
   [6-8 μs per operazione (piccoli dataset)],
   [Filtro in memoria], [Recensioni, prenotazioni, stato],
   [da 11 μs (100 elem.) a ~500 ms (50.000 elem.)],
-  [Ricerca spaziale], [Haversine su coordinate],
+  [Ricerca spaziale], [Filtro su coordinate],
   [da 19 μs a ~1,2 s (dip. da dimensione dataset)],
   [Pianificazione itinerari], [Stub AI],
   [da 52 μs a ~537 μs],
@@ -160,8 +157,7 @@ filtraggio in memoria e archiviazione file.
   [1,4 μs / 17 μs / 68 μs],
 )
 
-I valori evidenziano l'efficienza del DistanceCalculator (~9,4M op/s,
-notevolmente superiore ai 4,4M stimati inizialmente) e il costo
+I valori evidenziano il costo
 voluto di BCrypt (~66 ms per hash con work factor 10). Le
 operazioni su larga scala (intersezione categorie, ricerca spaziale,
 filtraggio su 50.000 elementi) mostrano latenze in secondi che
@@ -218,6 +214,22 @@ I benchmark sono stati eseguiti con warm-up a iterazioni fisse (3
 warm-up + 5 misurazioni da 1 s), senza l'ausilio del dynamic halt
 AI-driven di AMBER per problematiche relative all'utilizzo di tale
 strumento.
+
+=== Rimozione del Fallback In-Memory e di DistanceCalculator
+
+La ricerca per posizione è stata ulteriormente semplificata rimuovendo
+il *fallback* in `RicercaServiceImpl.findAttivitaByPosizione`: un
+`catch (Exception)` ripristinava `findAll()` + filtraggio Haversine in
+memoria ad ogni errore della query nativa.
+
+- *No full table scans:* eliminato il caricamento dell'intera tabella
+  `attivita` in memoria, coerente con l'ottimizzazione JMH già
+  documentata (~98%); il calcolo spaziale resta ora esclusivamente nel
+  DB (`ST_Distance_Sphere`), senza doppio algoritmo Haversine in Java.
+- *Cleanup:* eliminato `DistanceCalculator` (dead code) con i suoi 4
+  unit test e 2 benchmark JMH; `findByPosizioneNative` → `findByPosizione`.
+
+Risultato: nessuna regressione, minore consumo CPU/memoria.
 
 = Sostenibilità Sociale
 
@@ -565,7 +577,7 @@ riferimento iniziale per i futuri cicli di monitoraggio.
   [84% copertura media (92% nei service layer)],
   [JMH], [Tecnica],
   [Nessun benchmark delle performance],
-  [72 benchmark; DistanceCalculator ~9,4M ops/s;
+  [44 benchmark;
    BCrypt ~66 ms; servizi core 6-8 μs],
   [AMBER], [Tecnica / Ambientale],
   [N/D — non utilizzato],

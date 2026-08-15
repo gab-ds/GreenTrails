@@ -3,7 +3,6 @@ package it.greentrails.backend.gestionericerca.service;
 import it.greentrails.backend.entities.Attivita;
 import it.greentrails.backend.entities.Categoria;
 import it.greentrails.backend.gestioneattivita.repository.AttivitaRepository;
-import it.greentrails.backend.utils.DistanceCalculator;
 import java.security.InvalidParameterException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -42,12 +41,6 @@ public class RicercaServiceImpl implements RicercaService {
     if (raggio < 0) {
       throw new InvalidParameterException("Il raggio non è valido.");
     }
-    try {
-      return repository.findByPosizioneNative(coordinate.getY(), coordinate.getX(), raggio);
-    } catch (Exception e) {
-      return repository.findAll().stream()
-          .filter(a -> DistanceCalculator.distance(coordinate, a.getCoordinate()) <= raggio)
-          .toList();
-    }
+    return repository.findByPosizione(coordinate.getY(), coordinate.getX(), raggio);
   }
 }
