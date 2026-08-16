@@ -99,7 +99,7 @@ jobs:
       - name: JaCoCo Code Coverage Report
         id: jacoco_reporter
         if: always() && steps.check.outputs.ok == 'true'
-        uses: PavanMudigonda/jacoco-reporter@64fa5a142a874e1deb636cffd882cecf86a2b9e7 # v5.0
+        uses: PavanMudigonda/jacoco-reporter@865836ba1c886171b18ca8c19e49807882a434e6 # v5.2
         with:
           coverage_results_path: ./backend/target/site/jacoco/jacoco.xml
           coverage_report_name: Coverage
