@@ -194,7 +194,7 @@ jobs:
           cache-dir: m2-cache
           dockerfile: backend/Dockerfile
           skip-extraction: ${{ steps.cache-m2.outputs.cache-hit }}
-      - uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5
+      - uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         id: meta
         with:
           images: gabdis/greentrails-backend
