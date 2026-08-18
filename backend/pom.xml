@@ -242,6 +242,10 @@
             <!-- Temporaneamente escluso, verrà incluso a seguito della manutenzione evolutiva -->
             <param>it.greentrails.backend.gestioneitinerari.adapter.ItinerariAiAdapterTest</param>
           </excludedTestClasses>
+          <outputFormats>
+            <param>HTML</param>
+            <param>XML</param>
+          </outputFormats>
         </configuration>
         <dependencies>
           <dependency>
