@@ -2,7 +2,7 @@
 """Helper CI/CD: legge il report JaCoCo (jacoco.xml) e stampa il coverage in markdown.
 
 Utilizzo:
-    python3 scripts/jacoco_coverage.py [path] [--emojify]
+    python3 scripts/jacoco_coverage.py [path] [--emojify] [--fail-below PCT] [--metric METRIC]
 
 Il path è posizionale; di default punta a backend/target/site/jacoco/jacoco.xml
 risolto rispetto alla posizione di questo script (funziona da root, da backend/ e in CI).
@@ -50,6 +50,18 @@ def parse_args() -> argparse.Namespace:
         "--emojify",
         action="store_true",
         help="Abilita le emoji GitHub-style nelle intestazioni e nelle etichette.",
+    )
+    parser.add_argument(
+        "--fail-below",
+        type=float,
+        metavar="PCT",
+        help="Esce con codice 2 se la coverage della metrica è sotto PCT (gate CI).",
+    )
+    parser.add_argument(
+        "--metric",
+        choices=[m for m, _ in METRIC_ORDER],
+        default="LINE",
+        help="Metrica verificata con --fail-below (default: LINE).",
     )
     return parser.parse_args()
 
@@ -130,6 +142,24 @@ def package_table(root: etree.Element) -> list[str]:
     return lines
 
 
+def enforce_gate(
+    counters: dict[str, tuple[int, int]], metric: str, min_pct: float
+) -> None:
+    missed, covered = counters.get(metric, (0, 0))
+    total = missed + covered
+    if total == 0:
+        print(f"Errore: nessun contatore '{metric}' nel report.", file=sys.stderr)
+        sys.exit(1)
+    pct = covered / total * 100
+    label = dict(METRIC_ORDER)[metric]
+    if pct < min_pct:
+        print(
+            f"Errore: coverage {label} {pct:.1f}% inferiore alla soglia {min_pct:.1f}%.",
+            file=sys.stderr,
+        )
+        sys.exit(2)
+
+
 def main() -> None:
     args = parse_args()
     root = load_report(args.path)
@@ -142,6 +172,9 @@ def main() -> None:
     print(report_header("Coverage per Package", args.emojify))
     print()
     print("\n".join(package_table(root)))
+
+    if args.fail_below is not None:
+        enforce_gate(counters, args.metric, args.fail_below)
 
 
 if __name__ == "__main__":

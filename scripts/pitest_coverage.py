@@ -2,7 +2,7 @@
 """Helper CI/CD: legge il report PIT (mutations.xml) e stampa la mutation coverage in markdown.
 
 Utilizzo:
-    python3 scripts/pitest_coverage.py [path] [--emojify]
+    python3 scripts/pitest_coverage.py [path] [--emojify] [--fail-below PCT]
 
 Il path è posizionale; di default punta a backend/target/pit-reports/mutations.xml
 risolto rispetto alla posizione di questo script (funziona da root, da backend/ e in CI).
@@ -53,6 +53,12 @@ def parse_args() -> argparse.Namespace:
         "--emojify",
         action="store_true",
         help="Abilita le emoji GitHub-style nelle intestazioni e nelle etichette.",
+    )
+    parser.add_argument(
+        "--fail-below",
+        type=float,
+        metavar="PCT",
+        help="Esce con codice 2 se la mutation coverage è sotto PCT (gate CI).",
     )
     return parser.parse_args()
 
@@ -135,6 +141,14 @@ def main() -> None:
     if survivors:
         print()
         print("\n".join(survivors))
+
+    if args.fail_below is not None and coverage < args.fail_below:
+        print(
+            f"Errore: mutation coverage {coverage:.1f}% inferiore alla soglia "
+            f"{args.fail_below:.1f}%.",
+            file=sys.stderr,
+        )
+        sys.exit(2)
 
 
 if __name__ == "__main__":
