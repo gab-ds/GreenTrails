@@ -459,9 +459,12 @@ miglioramento continuo dell'efficienza ambientale del frontend.
 === Strumenti complementari per la sostenibilità ambientale
 
 Oltre a GreenIT-Analysis, il progetto ha preso in considerazione due
-strumenti aggiuntivi per la misurazione dell'impatto ambientale, il cui
-utilizzo è stato rimandato in attesa di un deployment pubblico
-dell'applicazione.
+strumenti aggiuntivi per la misurazione dell'impatto ambientale. Poiché
+WebsiteCarbon richiede un URL pubblico raggiungibile da internet,
+GreenTrails è stato esposto temporaneamente tramite un servizio di
+tunneling esterno (Pinggy) per la relativa misurazione; l'analisi con
+EcoIndex è stata invece eseguita localmente tramite la CLI ufficiale
+(`ecoindex-cli`), che non richiede un deployment pubblico.
 
 ==== WebsiteCarbon
 
@@ -471,20 +474,28 @@ dati, il tipo di hosting e il consumo energetico stimato. Restituisce metriche
 quali grammi di CO2 per pagina visitata, emissioni annuali stimate e un
 confronto percentile con altri siti web. A differenza di GreenIT-Analysis,
 che opera localmente nel browser, WebsiteCarbon richiede un URL pubblico
-raggiungibile da internet. Per questo motivo non è stato possibile applicarlo
-a GreenTrails, attualmente accessibile solo su localhost. Il suo impiego è
-previsto nella *sfera ambientale* una volta che l'applicazione sarà
-deployata su un ambiente pubblico.
-Dalle misurazioni effettuate con WebsiteCarbon, l'applicativo ottiene un punteggio
-di sostenibilità di grado B (86/100), registrando un trasferimento dati medio di ~723 kB
-e un'impronta carbonica stimata di ~0,08 g di CO#sub[2] per pagina visitata. Sebbene il
-risultato sia positivo, le metriche evidenziano margini di miglioramento legati al peso della
-pagina e all'ottimizzazione delle risorse inline. Riguardo all'infrastruttura, il tool rileva
-la mancanza di un hosting ad alta efficienza energetica; tuttavia, va precisato che la
-configurazione attuale si appoggia a un servizio di tunneling esterno temporaneo e non a
-un hosting definitivo. In linea con le best practice di Green Software Engineering, nelle fasi
-successive del progetto si valuterà la migrazione verso un provider con certificazione Green Hosting
-o l'adozione di un'architettura serverless, così da ridurre ulteriormente l'impatto ambientale complessivo.
+raggiungibile da internet. Per questo motivo GreenTrails, attualmente
+accessibile solo su localhost, è stato esposto temporaneamente tramite un
+servizio di tunneling esterno (Pinggy) per consentire la misurazione.
+
+La misurazione, effettuata l'11 agosto 2026 sull'URL pubblico generato dal
+tunnel, ha restituito un punteggio di sostenibilità di grado *A+*, con
+un'impronta carbonica stimata *inferiore a 0,01 g di CO#sub[2]* per ogni
+visita alla pagina. Si tratta di un risultato eccellente, tra i migliori
+classificati dallo strumento, che conferma l'efficacia delle ottimizzazioni
+del frontend (migrazione Angular → Nuxt 4) e della riduzione del peso delle
+risorse trasferite: un trasferimento dati così contenuto si traduce in un
+consumo energetico minimo sia lato client sia lato server. L'unico aspetto
+migliorabile rilevato dal tool riguarda l'infrastruttura: il sito è servito
+da un hosting a *energia standard* ("bog standard energy") e non da un
+hosting green. Se l'applicazione fosse ospitata su un provider ad alta
+efficienza energetica, le emissioni si ridurrebbero di un ulteriore ~9%.
+Va infine precisato che la misurazione è avvenuta attraverso un servizio di
+tunneling esterno temporaneo e non su un hosting definitivo; in linea con
+le best practice di Green Software Engineering, nelle fasi successive del
+progetto si valuterà la migrazione verso un provider con certificazione
+Green Hosting o l'adozione di un'architettura serverless, così da ridurre
+ulteriormente l'impatto ambientale complessivo.
 
 ==== EcoIndex
 
@@ -493,11 +504,24 @@ valutazione completa dell'impatto ambientale di una pagina web, calcolando
 un punteggio da 0 a 100 (più alto è meglio) basato su numero di richieste
 HTTP, dimensione della pagina e complessità del DOM. Restituisce anche il
 consumo idrico equivalente in litri e le emissioni di gas serra in grammi di
-CO2. Al pari di WebsiteCarbon, necessita di un URL pubblico e non è stato
-quindi utilizzabile su localhost. Si colloca nella *sfera ambientale* della
-sostenibilità e sarà integrato nelle analisi future. Il suo algoritmo di
-calcolo è lo stesso alla base del punteggio EcoIndex fornito da
-GreenIT-Analysis, garantendo coerenza tra le misurazioni.
+CO2. Il suo algoritmo di calcolo è lo stesso alla base del punteggio
+EcoIndex fornito da GreenIT-Analysis, garantendo coerenza tra le
+misurazioni.
+
+La misurazione è stata effettuata con la CLI ufficiale `ecoindex-cli`
+(algoritmo versione 5.10.0), che esegue l'analisi localmente tramite un
+browser headless, senza necessità di URL pubblico. L'analisi della homepage
+(risoluzione desktop 1920×1080), condotta l'11 agosto 2026, ha restituito
+un punteggio EcoIndex di *88/100 (grado A)*, un peso della pagina di
+*~758 kB*, *58 elementi DOM* e *14 richieste HTTP*. Le emissioni di gas
+serra risultano pari a *~1,24 g di CO#sub[2]e* per visualizzazione, con un
+consumo idrico equivalente di *~1,86 cl* di acqua blu. Il grado A conferma
+l'eccellente stato di sostenibilità ambientale del frontend, in linea con
+il grado A+ rilevato da WebsiteCarbon; i parametri tecnici (peso,
+complessità del DOM e numero di richieste) si collocano nettamente al di
+sotto della mediana dei siti web analizzati dallo strumento, evidenziando
+l'efficacia della migrazione Angular → Nuxt 4. EcoIndex si colloca nella
+*sfera ambientale* della sostenibilità.
 
 = Misurazione del Consumo Energetico con EnergiBridge
 
@@ -611,10 +635,14 @@ riferimento iniziale per i futuri cicli di monitoraggio.
   [73/75 buone pratiche; EcoIndex 76/100 B],
   [WebsiteCarbon], [Ambientale],
   [N/D — richiede URL pubblico],
-  [N/D — rimandato a dopo il deploy],
+  [A+; < 0,01 g CO#sub[2]/visita (11/08/2026);
+   hosting non green (potenziale ~9% in meno
+   con green hosting)],
   [EcoIndex], [Ambientale],
-  [N/D — richiede URL pubblico],
-  [N/D — rimandato a dopo il deploy],
+  [Nessuna analisi EcoIndex del frontend],
+  [A; 88/100; ~758 kB; 58 elementi DOM; 14 richieste
+   HTTP; ~1,24 g CO#sub[2]e; ~1,86 cl acqua (11/08/2026,
+   ecoindex-cli 5.10.0, desktop 1920×1080)],
   [EnergiBridge], [Ambientale / Tecnica],
   [Nessuna misurazione energetica],
   [~1111,65 J PACKAGE (1995,62 J totale componenti)
@@ -638,7 +666,10 @@ approfondire o completare in iterazioni future:
 
 - *Confronto Angular vs Nuxt 4* con GreenIT-Analysis dopo la
   migrazione del frontend.
-- *WebsiteCarbon e EcoIndex* su URL pubblico dopo il deploy.
+- *WebsiteCarbon* applicato su URL pubblico tramite tunnel: grado A+,
+  < 0,01 g di CO#sub[2] per visita; da ripetere su hosting definitivo.
+- *EcoIndex* applicato con ecoindex-cli locale (88/100 A); da ripetere
+  con più pagine e risoluzioni, e confrontare dopo ulteriori ottimizzazioni.
 - *Riesecuzione dei benchmark* con warm-up dinamico (es. AMBER)
   per confrontare i consumi rispetto al warm-up fisso.
 - *Integrazione FOSSA* per la conformità delle licenze open-source.

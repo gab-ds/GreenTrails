@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -81,9 +82,9 @@ public class ArchiviazioneFileSystemService implements ArchiviazioneService {
     @*/
   @Override
   public List<String> loadAll(String media) {
-    try {
+    try (Stream<Path> paths = Files.walk(this.rootLocation.resolve(media), 1)) {
       Path mediaDir = this.rootLocation.resolve(media);
-      return Files.walk(mediaDir, 1)
+      return paths
           .filter(path -> !path.equals(mediaDir))
           .map(mediaDir::relativize)
           .map(Path::toString)

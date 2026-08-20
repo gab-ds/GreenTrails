@@ -37,6 +37,7 @@ import it.greentrails.backend.gestioneprenotazioni.repository.PrenotazioneAttivi
 import java.util.Date;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.geo.Point;
@@ -62,6 +63,9 @@ public class DataSeeder implements CommandLineRunner {
   private final PrenotazioneAttivitaTuristicaRepository prenotazioneAttivitaTuristicaRepository;
 
   private final PasswordEncoder encoder = new BCryptPasswordEncoder();
+
+  @Value("${greentrails.seed.password}")
+  private String seedPassword;
 
   @Override
   public void run(String... args) throws Exception {
@@ -208,7 +212,7 @@ public class DataSeeder implements CommandLineRunner {
     u.setCognome(cognome);
     u.setDataNascita(java.sql.Date.valueOf(dataNascita));
     u.setEmail(email);
-    u.setPassword(encoder.encode("password"));
+    u.setPassword(encoder.encode(seedPassword));
     u.setRuolo(ruolo);
     return u;
   }

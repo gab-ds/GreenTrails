@@ -493,6 +493,63 @@ non è invece risolvibile: la remediation proposta da Snyk
 (`eclipse-temurin:21.0.11_10-jre-alpine-3.23`) è una JRE, mentre il
 progetto richiede un JDK per la build multi-stage.
 
+== esbuild — Vulnerabilità e risoluzione
+
+Nel corso delle scansioni di sicurezza è stata rilevata una
+vulnerabilità nel pacchetto *esbuild*, utilizzato in modo transitivo
+dal frontend Nuxt 4 per la trasformazione dei sorgenti.
+
+=== Descrizione della vulnerabilità
+
+L'avviso di sicurezza #link(
+  "https://github.com/evanw/esbuild/security/advisories/GHSA-g7r4-m6w7-qqqr"
+)[*GHSA-g7r4-m6w7-qqqr*] riguarda una vulnerabilità di *path
+traversal* (CWE-22) nel development server di esbuild: sfruttando
+separatori di percorso a backslash (`\`), un attaccante può aggirare
+i controlli di contenimento della directory `servedir` e leggere
+*file arbitrari* dal filesystem. La causa risiede nell'uso di
+`path.Clean()`, che normalizza solo i separatori forward-slash (`/`),
+invece di una funzione di normalizzazione consapevole di Windows. La
+vulnerabilità colpisce le versioni `>= 0.27.3` e `< 0.28.1` ed è
+corretta a partire dalla versione *0.28.1*.
+
+=== Stato riscontrato nel progetto
+
+La vulnerabilità si manifestava in una forma peculiare: il file di
+lock di Bun (`bun.lock`) risultava già allineato alla versione sicura
+(unica occorrenza di `esbuild@0.28.1`) e l'override
+`"esbuild": "^0.28.1"` era già presente in `package.json`. Tuttavia,
+la cartella `node_modules` locale conteneva una versione obsoleta ed
+esposta (*esbuild 0.15.5*), residuo di una precedente installazione
+basata su npm antecedente alla migrazione a Bun. Poiché lo strumento
+di scansione analizza l'albero delle dipendenze realmente installate
+su disco, esso rilevava ancora la versione vulnerabile.
+
+=== Intervento di risoluzione
+
+L'intervento ha previsto i seguenti passaggi:
+
+- Installazione esplicita di *Bun* 1.3.14 (package manager del
+  progetto, già utilizzato dal `Dockerfile` `oven/bun:1` per il
+  frontend);
+- rimozione della `node_modules` obsoleta contenente la versione
+  vulnerabile;
+- rigenerazione dell'albero delle dipendenze con `bun install`,
+  che ha ricostruito i pacchetti a partire da `bun.lock`;
+- verifica della risoluzione con `bun pm ls --all`, che ha confermato
+  la presenza della *sola* versione *0.28.1* di `esbuild` (e delle
+  relative piattaforme `@esbuild/*`) nell'intero albero delle
+  dipendenze.
+
+=== Esito
+
+La vulnerabilità è stata eliminata: tutte le istanze di `esbuild`
+presenti nel frontend sono ora alla versione *0.28.1*, e nessuna
+versione interessata dall'avviso risulta più presente nell'albero
+delle dipendenze. Il build Docker (`bun install --frozen-lockfile`)
+utilizza il lockfile corretto, garantendo che anche le immagini di
+produzione rimangano protette dalla stessa vulnerabilità.
+
 == GitGuardian — Secret Scanning
 
 *GitGuardian* (tramite la CLI `ggshield`) esegue la scansione del

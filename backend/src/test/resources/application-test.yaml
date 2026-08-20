@@ -2,6 +2,10 @@ server:
   error:
     include-message: always
 
+greentrails:
+  seed:
+    password: password
+
 spring:
   jpa:
     hibernate:

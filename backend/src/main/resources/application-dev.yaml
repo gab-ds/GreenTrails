@@ -11,6 +11,10 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASS}
 
+greentrails:
+  seed:
+    password: ${SEED_PASSWORD:password}
+
 server:
   error:
     include-message: always
