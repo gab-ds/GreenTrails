@@ -101,8 +101,8 @@ jobs:
         if: ${{ !cancelled() }}
         working-directory: .
         run: |
-          python3 scripts/jacoco_coverage.py --emojify > "$RUNNER_TEMP/coverage.md" || true
-          python3 scripts/pitest_coverage.py --emojify >> "$RUNNER_TEMP/coverage.md" || true
+          python3 scripts/jacoco_coverage.py --markdownify > "$RUNNER_TEMP/coverage.md" || true
+          python3 scripts/pitest_coverage.py --markdownify >> "$RUNNER_TEMP/coverage.md" || true
           if [ -s "$RUNNER_TEMP/coverage.md" ]; then
             echo "has_report=true" >> "$GITHUB_OUTPUT"
             cat "$RUNNER_TEMP/coverage.md" >> "$GITHUB_STEP_SUMMARY"

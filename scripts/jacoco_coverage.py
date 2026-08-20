@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-"""Helper CI/CD: legge il report JaCoCo (jacoco.xml) e stampa il coverage in markdown.
+"""Helper CI/CD: legge il report JaCoCo (jacoco.xml) e stampa il coverage.
 
 Utilizzo:
-    python3 scripts/jacoco_coverage.py [path] [--emojify] [--fail-below PCT] [--metric METRIC]
+    python3 scripts/jacoco_coverage.py [path] [--markdownify] [--fail-below PCT] [--metric METRIC]
 
 Il path è posizionale; di default punta a backend/target/site/jacoco/jacoco.xml
 risolto rispetto alla posizione di questo script (funziona da root, da backend/ e in CI).
+
+Con --markdownify l'output è in Markdown (tabelle ed emoji), pensato per gli step
+summary e i commenti PR; senza, viene stampata una lista in testo semplice per
+l'uso locale da CLI.
 """
 
 import argparse
@@ -37,7 +41,7 @@ ICONS = {
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Stampa il coverage JaCoCo in markdown a partire dal report XML."
+        description="Stampa il coverage JaCoCo a partire dal report XML."
     )
     parser.add_argument(
         "path",
@@ -47,9 +51,9 @@ def parse_args() -> argparse.Namespace:
         help="Percorso del report jacoco.xml (default: %(default)s)",
     )
     parser.add_argument(
-        "--emojify",
+        "--markdownify",
         action="store_true",
-        help="Abilita le emoji GitHub-style nelle intestazioni e nelle etichette.",
+        help="Rende l'output in Markdown (tabelle ed emoji); senza, testo semplice per CLI.",
     )
     parser.add_argument(
         "--fail-below",
@@ -96,31 +100,37 @@ def counters_by_type(element: etree.Element) -> dict[str, tuple[int, int]]:
 def fmt_cell(missed: int, covered: int) -> str:
     total = missed + covered
     if total == 0:
-        return f" ({covered}/{total})"
+        return f"({covered}/{total})"
     return f"{covered / total * 100:.1f}% ({covered}/{total})"
 
 
-def report_header(title: str, emojify: bool) -> str:
-    icon = " :bar_chart:" if emojify else ""
-    return f"## {title}{icon}"
+def report_header(title: str, markdown: bool) -> str:
+    if not markdown:
+        return title
+    return f"## {title} :bar_chart:"
 
 
-def project_table(counters: dict[str, tuple[int, int]], emojify: bool) -> list[str]:
-    lines = [
-        "| Metrica | Coperto | Mancato | Totale | Percentuale |",
-        "| --- | --- | --- | --- | --- |",
-    ]
+def project_lines(counters: dict[str, tuple[int, int]], markdown: bool) -> list[str]:
+    if markdown:
+        lines = [
+            "| Metrica | Coperto | Mancato | Totale | Percentuale |",
+            "| --- | --- | --- | --- | --- |",
+        ]
+        for metric, label in METRIC_ORDER:
+            missed, covered = counters.get(metric, (0, 0))
+            lines.append(
+                f"| :{ICONS[metric]}: {label} | {covered} | {missed} | "
+                f"{missed + covered} | {fmt_cell(missed, covered)} |"
+            )
+        return lines
+    lines = []
     for metric, label in METRIC_ORDER:
         missed, covered = counters.get(metric, (0, 0))
-        icon = f"{ICONS[metric]} " if emojify else ""
-        lines.append(
-            f"| {icon}{label} | {covered} | {missed} | {missed + covered} | "
-            f"{fmt_cell(missed, covered)} |"
-        )
+        lines.append(f"{label}: {fmt_cell(missed, covered)}")
     return lines
 
 
-def package_table(root: etree.Element) -> list[str]:
+def package_lines(root: etree.Element, markdown: bool) -> list[str]:
     packages = []
     for package in root.findall("package"):
         counters = counters_by_type(package)
@@ -133,12 +143,17 @@ def package_table(root: etree.Element) -> list[str]:
         )
     packages.sort(key=lambda item: item[0])
 
-    lines = [
-        "| Package | Linee | Rami |",
-        "| --- | --- | --- |",
-    ]
+    if markdown:
+        lines = [
+            "| Package | Linee | Rami |",
+            "| --- | --- | --- |",
+        ]
+        for name, line, branch in packages:
+            lines.append(f"| `{name}` | {fmt_cell(*line)} | {fmt_cell(*branch)} |")
+        return lines
+    lines = []
     for name, line, branch in packages:
-        lines.append(f"| `{name}` | {fmt_cell(*line)} | {fmt_cell(*branch)} |")
+        lines.append(f"{name}: Linee {fmt_cell(*line)}, Rami {fmt_cell(*branch)}")
     return lines
 
 
@@ -165,13 +180,13 @@ def main() -> None:
     root = load_report(args.path)
     counters = counters_by_type(root)
 
-    print(report_header("Riepilogo Coverage JaCoCo", args.emojify))
+    print(report_header("Riepilogo Coverage JaCoCo", args.markdownify))
     print()
-    print("\n".join(project_table(counters, args.emojify)))
+    print("\n".join(project_lines(counters, args.markdownify)))
     print()
-    print(report_header("Coverage per Package", args.emojify))
+    print(report_header("Coverage per Package", args.markdownify))
     print()
-    print("\n".join(package_table(root)))
+    print("\n".join(package_lines(root, args.markdownify)))
 
     if args.fail_below is not None:
         enforce_gate(counters, args.metric, args.fail_below)
