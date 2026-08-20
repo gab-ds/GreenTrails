@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-"""Helper CI/CD: legge il report PIT (mutations.xml) e stampa la mutation coverage in markdown.
+"""Helper CI/CD: legge il report PIT (mutations.xml) e stampa la mutation coverage.
 
 Utilizzo:
-    python3 scripts/pitest_coverage.py [path] [--emojify] [--fail-below PCT]
+    python3 scripts/pitest_coverage.py [path] [--markdownify] [--fail-below PCT]
 
 Il path è posizionale; di default punta a backend/target/pit-reports/mutations.xml
 risolto rispetto alla posizione di questo script (funziona da root, da backend/ e in CI).
+
+Con --markdownify l'output è in Markdown (tabelle, emoji e sezioni collassabili),
+pensato per gli step summary e i commenti PR; senza, viene stampata una lista in
+testo semplice per l'uso locale da CLI.
 """
 
 import argparse
@@ -40,7 +44,7 @@ STATUS_LABELS = {
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Stampa la mutation coverage (Pitest) in markdown a partire dal report XML."
+        description="Stampa la mutation coverage (Pitest) a partire dal report XML."
     )
     parser.add_argument(
         "path",
@@ -50,9 +54,9 @@ def parse_args() -> argparse.Namespace:
         help="Percorso del report mutations.xml (default: %(default)s)",
     )
     parser.add_argument(
-        "--emojify",
+        "--markdownify",
         action="store_true",
-        help="Abilita le emoji GitHub-style nelle intestazioni e nelle etichette.",
+        help="Rende l'output in Markdown (tabelle, emoji e details); senza, testo semplice per CLI.",
     )
     parser.add_argument(
         "--fail-below",
@@ -83,34 +87,56 @@ def fmt_pct(value: float) -> str:
     return f"{value:.1f}%"
 
 
-def status_table(counts: Counter) -> list[str]:
-    lines = [
-        "| Stato | Numero |",
-        "| --- | --- |",
+def status_lines(counts: Counter, markdown: bool) -> list[str]:
+    entries = [
+        (STATUS_LABELS.get(status, status), counts.get(status, 0))
+        for status in STATUS_ORDER
+        if counts.get(status)
     ]
-    for status in STATUS_ORDER:
-        count = counts.get(status, 0)
-        if count:
-            lines.append(f"| {STATUS_LABELS.get(status, status)} | {count} |")
-    return lines
+    if markdown:
+        lines = [
+            "| Stato | Numero |",
+            "| --- | --- |",
+        ]
+        for label, count in entries:
+            lines.append(f"| {label} | {count} |")
+        return lines
+    return [f"{label}: {count}" for label, count in entries]
 
 
-def survivors_table(mutations: list[etree.Element], emojify: bool) -> list[str]:
+def survivors_lines(mutations: list[etree.Element], markdown: bool) -> list[str]:
     survivors = [m for m in mutations if m.get("status") == "SURVIVED"]
     if not survivors:
         return []
-    icon = " :white_check_mark:" if emojify else ""
-    lines = [f"### Mutazioni sopravvissute{icon}", ""]
-    if emojify:
-        lines.append(":x: Da controllare:")
-        lines.append("")
-    lines.append("| Classe :: Metodo | Riga |")
-    lines.append("| --- | --- |")
+    rows = []
     for m in survivors:
         cls = m.findtext("mutatedClass") or "?"
         method = m.findtext("mutatedMethod") or "?"
         line = m.findtext("lineNumber") or "?"
-        lines.append(f"| `{cls}::{method}` | {line} |")
+        try:
+            line_key = int(line)
+        except ValueError:
+            line_key = line
+        rows.append((cls, line_key, line, f"{cls}::{method}"))
+    rows.sort(key=lambda r: (r[0], r[1]))
+
+    title = f"Mutazioni sopravvissute ({len(rows)}) — da controllare"
+    if markdown:
+        lines = [
+            "<details>",
+            f"<summary>:x: {title}</summary>",
+            "",
+            "| Classe :: Metodo | Riga |",
+            "| --- | --- |",
+        ]
+        for _, _, line, label in rows:
+            lines.append(f"| `{label}` | {line} |")
+        lines.append("")
+        lines.append("</details>")
+        return lines
+    lines = [title]
+    for _, _, line, label in rows:
+        lines.append(f"{label} riga {line}")
     return lines
 
 
@@ -125,19 +151,29 @@ def main() -> None:
     viable = len(mutations) - excluded
     coverage = detected / viable * 100 if viable else 0.0
 
-    icon = " :dart:" if args.emojify else ""
-    print(f"## Coverage mutazionale (Pitest){icon}")
+    markdown = args.markdownify
+    icon = " :dart:" if markdown else ""
+    if markdown:
+        print(f"## Coverage mutazionale (Pitest){icon}")
+    else:
+        print("Coverage mutazionale (Pitest)")
     print()
-    coverage_line = (
-        f"**Mutation coverage:** {fmt_pct(coverage)} "
-        f"({detected} mutazioni rilevate su {viable} valide)"
-    )
+    if markdown:
+        coverage_line = (
+            f"**Mutation coverage:** {fmt_pct(coverage)} "
+            f"({detected} mutazioni rilevate su {viable} valide)"
+        )
+    else:
+        coverage_line = (
+            f"Mutation coverage: {fmt_pct(coverage)} "
+            f"({detected} mutazioni rilevate su {viable} valide)"
+        )
     if excluded:
         coverage_line += f" — escluse {excluded} non valide/non eseguite"
     print(coverage_line)
     print()
-    print("\n".join(status_table(counts)))
-    survivors = survivors_table(mutations, args.emojify)
+    print("\n".join(status_lines(counts, markdown)))
+    survivors = survivors_lines(mutations, markdown)
     if survivors:
         print()
         print("\n".join(survivors))
