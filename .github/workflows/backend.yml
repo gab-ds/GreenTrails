@@ -92,7 +92,7 @@ jobs:
           retention-days: 30
       - name: Pubblica Test Report
         if: always() && steps.check.outputs.ok == 'true'
-        uses: scacap/action-surefire-report@3dacff26879cd2a7f2160d101254032a3707fe6f # v1
+        uses: scacap/action-surefire-report@c38a2d74b9840ae8950a4387ae02b637421d0f39 # v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           report_paths: './backend/target/surefire-reports/TEST-*.xml'
