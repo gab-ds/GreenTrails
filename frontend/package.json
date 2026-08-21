@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@formkit/auto-animate": "0.10.0",
-    "@formkit/nuxt": "2.1.0",
+    "@formkit/nuxt": "2.1.2",
     "@nuxt/eslint": "1.16.0",
     "@nuxt/fonts": "^0.14.0",
     "@nuxt/image": "2.0.0",
