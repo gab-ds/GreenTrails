@@ -123,10 +123,11 @@ gestionericerca, gestionesegnalazioni, gestioneupload e utils.
 
 == Stack Tecnologico
 
-Il backend è sviluppato in *Java 21* con *Spring Boot 3.2.1*, moduli
-Web MVC, Data JPA, Security (HTTP Basic + BCrypt), Actuator,
-Validation. Dipendenze gestite con Maven, profiling per ambienti
-dev/prod/test. Database MySQL 8 (produzione) / H2 embedded (test).
+Il backend è sviluppato in *Java 21* con *Spring Boot 3.5.16*
+(aggiornato da 3.2.1), moduli Web MVC, Data JPA, Security
+(HTTP Basic + BCrypt), Actuator, Validation. Dipendenze gestite con
+Maven, profiling per ambienti dev/prod/test. Database MySQL 8
+(produzione) / H2 embedded (test).
 
 Il frontend è stato oggetto di un'importante migrazione durante la
 manutenzione evolutiva:
@@ -198,8 +199,39 @@ L'applicazione è buildabile sia in CI/CD sia localmente:
       job `test` che esegue Checkstyle, `mvn test`, JaCoCo e Pitest
       in sequenza, con timeout massimo di 45 minuti. Un nuovo job
       `deploy-reports` pubblica i report su GitHub Pages (con solo
-      permesso `contents: write`). Il job `docker` rimane separato
-      su push a `main`.
+      permesso `contents: write`).
+      + *Reporting coverage in CI:* due script Python
+        (`scripts/jacoco_coverage.py` e `scripts/pitest_coverage.py`)
+        leggono i report XML generati (jacoco.xml, mutations.xml) e
+        stampano un riepilogo del coverage. Con `--markdownify`
+        l'output è in Markdown (tabelle ed emoji) e viene mostrato
+        nello step summary e come commento sulla pull request (via
+        `thollander/actions-comment-pull-request`); senza flag, una
+        lista in testo semplice per l'uso locale da CLI. Le mutazioni
+        sopravvissute di Pitest sono raggruppate in una sezione
+        collassabile `<details>`. Gli stessi script implementano i
+        gate `--fail-below 80` (JaCoCo linee e Pitest) sulle pull
+        request, sostituendo la precedente action
+        `PavanMudigonda/jacoco-reporter`.
+      + *Report conservati anche a test falliti:* gli step di
+        pubblicazione (badge, report, summary, deploy) usano
+        `if: !cancelled()` invece di `continue-on-error`, quindi il
+        riepilogo e i report vengono generati anche quando i test
+        falliscono; la pubblicazione su Docker Hub resta comunque
+        bloccata a cascata perché il job `docker-push` dipende dal
+        job `test` via `needs`.
+      + *Test report:* l'azione `scacap/action-surefire-report` v1 è
+        stata migrata al successore
+        `ScalableCapital/action-surefire-report` v2.0.5, che
+        pubblica l'esito dei test Surefire sulla PR.
+      + *Docker:* il job `docker` ora esegue la build dell'immagine
+        anche su pull request (`push: false`), non solo su main. Un
+        nuovo job `docker-push`, separato, pubblica l'immagine su
+        Docker Hub solo su push a `main`, vincolato all'`environment:
+        production` — protetto da *required reviewers*: la
+        pubblicazione richiede una review manuale prima
+        dell'esecuzione — e genera l'SBOM (`sbom: true`) con
+        `provenance: mode=max`.
     + *Fix del deploy dei report (bug critico upload-artifact):*
       `actions/upload-artifact@v4` taglia dalle cartelle caricate il
       "least common ancestor" dei path, quindi con i tre path multipli
@@ -214,8 +246,11 @@ L'applicazione è buildabile sia in CI/CD sia localmente:
       deploy esplicita e indipendente dalla semantica implicita
       dell'LCA.
     + *Frontend:* lint, typecheck e test sono unificati in un unico
-      job `gate` (`bun run gate`) con timeout di 10 minuti. Job
-      `docker` separato su push a `main`.
+      job `gate` (`bun run gate`) con timeout di 10 minuti. La stessa
+      struttura a due job di Docker del backend vale anche per
+      l'immagine frontend: build su pull request (`push: false`) e
+      `docker-push` solo su push a `main` con `environment:
+      production`, SBOM e provenance.
     + *Hadolint:* linting dei Dockerfile aggiunto in entrambi i
       workflow.
     + *Caching multi-livello delle build Docker:* i job `docker`
@@ -233,7 +268,10 @@ L'applicazione è buildabile sia in CI/CD sia localmente:
       per SHA con commento di versione; ogni workflow dichiara
       `permissions: {}` come permessi di default, e concede solo i
       permessi strettamente necessari per job; ogni job definisce un
-      timeout-massimo per prevenire esecuzioni troppo lunghe.
+      timeout-massimo per prevenire esecuzioni troppo lunghe. Le
+      immagini pubblicate su Docker Hub includono l'SBOM
+      (`sbom: true`) e le attestazioni di provenance
+      (`provenance: mode=max`).
 - *Locale:* Maven Wrapper (`./mvnw`) disponibile, comandi standard
     `./mvnw compile`, `./mvnw package`, `./mvnw verify`. Docker
     multi-stage per build containerizzato da zero.
@@ -258,13 +296,18 @@ garantire ciascun attributo della dependability.
 *JaCoCo* (Java Code Coverage) misura la percentuale di codice
 sorgente eseguita durante i test, analizzando copertura di linee,
 rami, metodi e classi. Nel progetto è integrato come plugin Maven
-con soglia minima dell'80%: se la copertura scende sotto tale
-valore, la build fallisce.
+con soglia minima dell'80%. Inizialmente la soglia era applicata
+direttamente nella build: se la copertura scendeva sotto tale
+valore, la build falliva. Nel corso della manutenzione il controllo
+è stato spostato in CI/CD tramite lo script
+`scripts/jacoco_coverage.py --fail-below 80`, eseguito sulle pull
+request al posto della precedente action `PavanMudigonda/jacoco-reporter`.
 
-*Risultati:* la copertura attuale si attesta all'84% medio, con
-punte del 92% nei service layer. Le entity e le enum sono escluse
-dal computo in quanto non contenenti logica di business
-significativa.
+*Risultati:* la copertura attuale si attesta al 97,5% sulle linee,
+97,2% sui rami e 100% sulle classi (30/30), con i service layer al
+100%. Le esclusioni agent/report sono state allineate: entity, enum,
+utility, eccezioni di gestioneupload, security e BackendApplication,
+classi senza logica di business significativa.
 
 === Pitest — Mutation Testing
 
@@ -277,10 +320,13 @@ suite di test.
 Nel progetto è integrato come plugin Maven con versione 1.22.1,
 configurato per escludere entity, enum, classi di configurazione e
 l'AI adapter (esclusione temporanea). Il test viene eseguito in
-fase `verify` con soglia minima dell'80% di mutation coverage.
+fase `verify` con soglia minima dell'80% di mutation coverage,
+verificata in CI/CD tramite lo script
+`scripts/pitest_coverage.py --fail-below 80` sulle pull request.
 
-*Risultati:* la mutation coverage si attesta sopra la soglia
-dell'80%, con 0 mutazioni sopravvissute nei service layer core.
+*Risultati:* la mutation coverage si attesta all'89,6%
+(583 mutazioni uccise su 651 valide), con 68 mutazioni
+sopravvissute riportate nella sezione collassabile dei commenti PR.
 I report HTML vengono generati nella directory `target/pit-reports/`.
 
 === Checkstyle — Stile del Codice
@@ -510,13 +556,19 @@ progressivo hardening:
     caso di fallimento dei test, come raccomandato da CodeCov, per
     garantire la visibilità dei fallimenti in Test Analytics. CodeCov
     fornisce una visione storica e per-PR della copertura del
-    backend (84% medio) e delle performance/fallimenti dei test,
-    complementare ai report generati in CI.
-- *Branch protection su \`main\`:* protezione server-side che
-    impone il passaggio obbligatorio da pull request con almeno
-    una review umana prima del merge, blocca i force push e
-    revoca le approvazioni stale a ogni nuovo commit. I *required
-    status checks* sono stati volutamente *non* abilitati: i
+    backend (97,5% medio sulle linee) e delle performance/fallimenti
+    dei test, complementare ai report generati in CI.
+- *Branch protection su \`main\`:* protezione server-side attiva sul
+    repository che impone il passaggio obbligatorio da pull request
+    per ogni modifica a `main` — nessun commit diretto è consentito
+    — con almeno una review umana prima del merge, blocca i force
+    push e revoca le approvazioni stale a ogni nuovo commit. Il
+    flusso di code review è obbligatorio e alternato tra i due
+    manutentori: chi scrive una modifica non può approvare la
+    propria pull request, quindi la review è demandata all'altro
+    reviewer e il ruolo si inverte a ogni modifica (es. io pusho,
+    Bob revisiona; Bob pusha, io revisiono). I *required status
+    checks* sono stati volutamente *non* abilitati: i
     workflow CI sono filtrati per path (backend/** e frontend/**),
     e imporre il check meccanicamente bloccherebbe in modo
     irreversibile le pull request che toccano solo documentazione,
@@ -749,9 +801,10 @@ funzionale in dev/prod.
     inset: 6pt,
     stroke: 0.5pt,
     [*Strumento*], [*Attributo*], [*Baseline*], [*Risultato*],
-    [JaCoCo], [Affidabilità], [Nessuna misura di copertura], [84% copertura media (92% service layer)],
+    [JaCoCo], [Affidabilità], [Nessuna misura di copertura], [97,5% linee / 97,2% rami / 100% classi (30/30); esclusioni agent/report allineate],
     [CodeCov], [Affidabilità (monitoraggio copertura e test)], [Nessuna piattaforma di copertura], [Copertura JaCoCo e risultati Surefire caricati a ogni run del job test backend; storico e commenti per-PR],
-    [Pitest], [Affidabilità], [Nessun mutation testing], [Mutation coverage >80%, 0 mutazioni sopravvissute],
+    [Pitest], [Affidabilità], [Nessun mutation testing], [Mutation coverage 89,6% (583/651); 68 sopravvissute],
+    [Gate coverage CI], [Affidabilità], [Soglia 80% nella build], [Gate `--fail-below 80` su PR via script (JaCoCo e Pitest), al posto di PavanMudigonda/jacoco-reporter],
     [Checkstyle], [Manutenibilità], [Nessun controllo stile], [0 violazioni Google Java Style],
     [Buildabilità],
     [Dependability (generale)],

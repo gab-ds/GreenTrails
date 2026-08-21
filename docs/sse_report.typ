@@ -98,7 +98,7 @@ Il backend segue un'architettura a *layers* propria di Spring: Presentation Laye
 
 == Stack Tecnologico
 
-*Java 21* con *Spring Boot 3.2.1*, moduli Web MVC, Data JPA, Security (HTTP Basic + BCrypt), Actuator, Validation. Dipendenze gestite con Maven, profiling per ambienti dev/prod/test. Database MySQL 8 (produzione) / H2 embedded (test).
+*Java 21* con *Spring Boot 3.5.16* (aggiornato da 3.2.1), moduli Web MVC, Data JPA, Security (HTTP Basic + BCrypt), Actuator, Validation. Dipendenze gestite con Maven, profiling per ambienti dev/prod/test. Database MySQL 8 (produzione) / H2 embedded (test).
 
 == Componenti Principali
 
@@ -118,9 +118,9 @@ Docker multi-stage (eclipse-temurin:21) con configurazione multi-ambiente: svilu
 
 === JaCoCo — Code Coverage
 
-*JaCoCo* (Java Code Coverage) è uno strumento che misura la percentuale di codice sorgente effettivamente eseguita durante i test, analizzando copertura di linee, rami, metodi e classi. Nel progetto è integrato come plugin Maven con soglia minima dell'80%: se la copertura scende sotto tale valore, la build fallisce.
+*JaCoCo* (Java Code Coverage) è uno strumento che misura la percentuale di codice sorgente effettivamente eseguita durante i test, analizzando copertura di linee, rami, metodi e classi. Nel progetto è integrato come plugin Maven con soglia minima dell'80%. Inizialmente la soglia era applicata direttamente nella build: se la copertura scendeva sotto tale valore, la build falliva. Nel corso della manutenzione il controllo è stato spostato in CI/CD tramite lo script `scripts/jacoco_coverage.py --fail-below 80`, eseguito sulle pull request al posto della precedente action `PavanMudigonda/jacoco-reporter`.
 
-*Risultati*: la copertura attuale si attesta all'84% medio sui modelli esaminati, con punte del 92% nei service layer. I report HTML vengono generati in fase `verify` e pubblicati su GitHub Pages per una consultazione continuativa.
+*Risultati*: la copertura attuale si attesta al 97,5% sulle linee, 97,2% sui rami e 100% sulle classi (30/30), con i service layer al 100%. Le esclusioni agent/report sono state allineate: entity, enum, utility, eccezioni di gestioneupload, security e BackendApplication, classi senza logica di business significativa. I report HTML vengono generati in fase `verify` e pubblicati su GitHub Pages per una consultazione continuativa.
 
 *Importanza per la sostenibilità tecnica*: una copertura adeguata riduce il rischio di regressioni e abbassa il costo di manutenzione nel tempo. Codice non testato è codice che degrada — richiede più tempo per essere modificato con sicurezza e tende ad accumulare debito tecnico. Mantenere una copertura elevata significa preservare la *manutenibilità* del sistema, un pilastro della sostenibilità del software a lungo termine.
 
@@ -318,6 +318,8 @@ corrente.
 === CI/CD e Qualità del Codice
 
 I workflow GitHub Actions coprono build, test, coverage, mutation, style check (Checkstyle Google) e benchmark JMH. La qualità del codice è garantita da Checkstyle con regole Google, dall'uso di Lombok per ridurre il boilerplate e dall'esclusione mirata di entità, enum e classi di configurazione dalle metriche di copertura in quanto non contenenti logica di business significativa.
+
+Nel corso della manutenzione la pipeline CI/CD è stata estesa con un reporting automatizzato della copertura: gli script `scripts/jacoco_coverage.py` e `scripts/pitest_coverage.py` leggono i report XML (jacoco.xml, mutations.xml) e producono un riepilogo del coverage — in Markdown (`--markdownify`) per lo step summary e il commento sulla pull request, con le mutazioni sopravvissute raggruppate in una sezione collassabile `<details>`, oppure in testo semplice per l'uso locale da CLI. Gli stessi script implementano i gate `--fail-below 80` (JaCoCo linee e Pitest) sulle pull request, sostituendo la precedente action `PavanMudigonda/jacoco-reporter`. I report vengono conservati anche a test falliti: gli step di pubblicazione usano `if: !cancelled()` invece di `continue-on-error`. L'azione di pubblicazione dei test Surefire è stata migrata da `scacap/action-surefire-report` v1 al successore `ScalableCapital/action-surefire-report` v2.0.5. Le immagini Docker sono buildate anche su pull request (`push: false`) e pubblicate su Docker Hub solo su push a `main`, con `environment: production` (protetto da review manuale), SBOM e provenance.
 
 === Creedengo — Analisi Statica per l'Efficienza Energetica
 
@@ -574,7 +576,12 @@ riferimento iniziale per i futuri cicli di monitoraggio.
   [*Strumento*], [*Sfera*], [*Baseline*], [*Risultato*],
   [JaCoCo], [Tecnica],
   [Nessuna misurazione di copertura],
-  [84% copertura media (92% nei service layer)],
+  [97,5% linee / 97,2% rami / 100% classi (30/30);
+   gate `--fail-below 80` su PR via script],
+  [CI/CD coverage reporting], [Tecnica],
+  [Nessun reporting automatizzato in CI],
+  [Script jacoco/pitest con `--markdownify` in step summary e commento PR;
+   gate 80% su PR; report conservati a test falliti],
   [JMH], [Tecnica],
   [Nessun benchmark delle performance],
   [44 benchmark;
