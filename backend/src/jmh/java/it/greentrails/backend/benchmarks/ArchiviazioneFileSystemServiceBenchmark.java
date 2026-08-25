@@ -1,12 +1,8 @@
 package it.greentrails.backend.benchmarks;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import it.greentrails.backend.gestioneupload.service.ArchiviazioneFileSystemService;
 import it.greentrails.backend.gestioneupload.service.ArchiviazioneService;
 import it.greentrails.backend.utils.ArchiviazioneProperties;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,6 +21,7 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.TearDown;
 import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 @State(Scope.Thread)
@@ -51,12 +48,8 @@ public class ArchiviazioneFileSystemServiceBenchmark {
 
     fileContent = ("immagine di test per il benchmark di upload, circa 100 byte.".repeat(5)
         + System.currentTimeMillis()).getBytes();
-    testFile = mock(MultipartFile.class);
-    when(testFile.isEmpty()).thenReturn(false);
-    when(testFile.getContentType()).thenReturn("image/jpeg");
-    when(testFile.getOriginalFilename()).thenReturn("test.jpg");
-    when(testFile.getInputStream()).thenAnswer(
-        inv -> new ByteArrayInputStream(fileContent));
+    testFile = new MockMultipartFile(
+        "test.jpg", "test.jpg", "image/jpeg", fileContent);
 
     Files.createDirectories(tempDir.resolve(media));
     Files.writeString(tempDir.resolve(media).resolve("file1.jpg"), "contenuto1");

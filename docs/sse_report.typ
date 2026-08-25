@@ -130,11 +130,14 @@ Docker multi-stage (eclipse-temurin:21) con configurazione multi-ambiente: svilu
 scrittura di microbenchmark affidabili in Java, progettato per evitare
 le insidie comuni della misurazione delle performance (warming up
 della JVM, ottimizzazioni del JIT compiler, code elimination). Nel
-progetto sono definite 16 classi di benchmark (44 benchmark totali)
-che coprono i componenti critici: servizi core (CRUD, crittografia,
-pianificazione), filtraggio in memoria e archiviazione file.
+progetto i benchmark sono stati inizialmente definiti in 16 classi
+(44 benchmark totali) coprendo i componenti critici: servizi core
+(CRUD, crittografia, pianificazione), filtraggio in memoria e
+archiviazione file; la suite è stata successivamente consolidata in
+4 classi (9 benchmark).
 
-*Risultati* (1 fork, 3 warm-up + 5 misurazioni da 1 s):
+*Risultati — baseline storica, suite originale*
+(1 fork, 3 warm-up + 5 misurazioni da 1 s):
 
 #table(
   columns: (auto, auto, auto),
@@ -230,6 +233,31 @@ memoria ad ogni errore della query nativa.
   unit test e 2 benchmark JMH; `findByPosizioneNative` → `findByPosizione`.
 
 Risultato: nessuna regressione, minore consumo CPU/memoria.
+
+=== Consolidamento della Suite
+
+Come intervento più recente, la suite di benchmark è stata
+consolidata da *16 classi (44 benchmark)* a *4 classi (9 benchmark)*,
+con benefici diretti sulla sostenibilità tecnica della base di
+codice:
+
+- *Rimozione dei benchmark pass-through:* dodici classi misuravano
+  esclusivamente operazioni su repository simulati con Mockito
+  (`save`, `findById`, filtri su liste fittizie generate in memoria),
+  senza esercitare logica applicativa reale: codice di misura privo
+  di valore informativo, mantenuto a costo di debito tecnico e di
+  tempo di esecuzione della suite.
+- *Eliminazione dell'errata inclusione di Mockito nei benchmark:*
+  la reflection del framework introduceva nel percorso misurato un
+  overhead assente in produzione, falsando i risultati. Mockito è
+  stato sostituito da fake in-memory scritti a mano
+  (`FakeJpaRepository` e specializzazioni concrete, basate su sole
+  chiamate virtuali) e da `MockMultipartFile` (spring-test) per la
+  simulazione degli upload. In occasione dell'intervento è stato
+  anche corretto il packaging del jar eseguibile `benchmarks.jar`.
+
+// TODO: rieseguire i benchmark sulla macchina di riferimento e
+// aggiornare i valori alla suite consolidata (4 classi, 9 benchmark).
 
 = Sostenibilità Sociale
 
@@ -584,8 +612,8 @@ riferimento iniziale per i futuri cicli di monitoraggio.
    gate 80% su PR; report conservati a test falliti],
   [JMH], [Tecnica],
   [Nessun benchmark delle performance],
-  [44 benchmark;
-   BCrypt ~66 ms; servizi core 6-8 μs],
+  [Suite consolidata: 9 benchmark (da 44);
+   BCrypt ~66 ms (baseline storica); aggiornamento valori in corso],
   [AMBER], [Tecnica / Ambientale],
   [N/D — non utilizzato],
   [Warm-up fisso 3 iterazioni

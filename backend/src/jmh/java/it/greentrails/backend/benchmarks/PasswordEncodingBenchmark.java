@@ -47,4 +47,3 @@ public class PasswordEncodingBenchmark {
         bh.consume(match);
     }
 }
-
