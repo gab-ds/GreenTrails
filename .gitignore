@@ -55,3 +55,4 @@ local.properties
 .worksheet
 .vscode/settings.json
 backend/src/main/resources/META-INF/additional-spring-configuration-metadata.json
+**/*.pkrvars.hcl

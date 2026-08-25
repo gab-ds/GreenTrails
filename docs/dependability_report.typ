@@ -569,7 +569,7 @@ progressivo hardening:
     reviewer e il ruolo si inverte a ogni modifica (es. io pusho,
     Bob revisiona; Bob pusha, io revisiono). I *required status
     checks* sono stati volutamente *non* abilitati: i
-    workflow CI sono filtrati per path (backend/** e frontend/**),
+    workflow CI sono filtrati per path (backend\/\*\* e frontend\/\*\*),
     e imporre il check meccanicamente bloccherebbe in modo
     irreversibile le pull request che toccano solo documentazione,
     configurazione o workflow, perché i check non riportati da
@@ -694,13 +694,13 @@ CI/CD.
 = Microbenchmark delle Performance
 
 *JMH* (Java Microbenchmark Harness) è stato utilizzato per misurare
-le performance dei componenti critici del backend, con 16 classi di
-benchmark che coprono servizi core, crittografia
-password (BCrypt), pianificazione itinerari e filtraggio in memoria.
-La suite completa conta 44 benchmark, eseguiti con 1 fork, 3
-iterazioni di warm-up e 5 di misurazione (1 s ciascuna).
+le performance dei componenti critici del backend. La suite conta
+in origine 16 classi di benchmark (44 benchmark totali) che coprivano
+servizi core, crittografia password (BCrypt), pianificazione
+itinerari e filtraggio in memoria, eseguiti con 1 fork, 3 iterazioni
+di warm-up e 5 di misurazione (1 s ciascuna).
 
-*Risultati principali:*
+*Baseline storica (suite originale, 44 benchmark):*
 - *BCryptPasswordEncoder:* ~66,4 ms per encoding e ~65,4 ms per
   matching con work factor 10 — costo voluto per l'hardening delle
   password.
@@ -719,11 +719,6 @@ iterazioni di warm-up e 5 di misurazione (1 s ciascuna).
   quadraticamente con il numero di categorie — da 18 ms (piccolo
   dataset) a ~10 s per combinazioni estreme, evidenziando un
   potenziale collo di bottiglia.
-
-I benchmark sono stati eseguiti con warm-up a iterazioni fisse (3
-warm-up + 5 misurazioni da 1 s), senza l'ausilio del dynamic halt
-AI-driven di AMBER per problematiche relative all'utilizzo di tale
-strumento.
 
 == Ottimizzazioni Post-Benchmark
 
@@ -794,6 +789,29 @@ di errore della query nativa, un `catch (Exception)` ripristinava
 Risultato: nessun mutante residuo sul metodo e nessuna regressione
 funzionale in dev/prod.
 
+== Consolidamento della Suite
+
+Come intervento più recente, la suite di benchmark è stata
+consolidata da *16 classi (44 benchmark)* a *4 classi (9 benchmark)*,
+tramite una manutenzione evolutiva mirata alla qualità della misura:
+
+- *Rimozione dei benchmark pass-through:* dodici classi misuravano
+  esclusivamente operazioni su repository simulati con Mockito
+  (`save`, `findById`, filtri su liste fittizie generate in memoria),
+  senza esercitare logica applicativa reale né accesso ai dati: i
+  valori prodotti non erano indicativi del comportamento del sistema.
+- *Eliminazione dell'errata inclusione di Mockito nei benchmark:*
+  la reflection del framework introduceva nel percorso misurato un
+  overhead assente in produzione, falsando i risultati. Mockito è
+  stato sostituito da fake in-memory scritti a mano
+  (`FakeJpaRepository` e specializzazioni concrete, basate su sole
+  chiamate virtuali) e da `MockMultipartFile` (spring-test) per la
+  simulazione degli upload. In occasione dell'intervento è stato
+  anche corretto il packaging del jar eseguibile `benchmarks.jar`.
+
+// TODO: rieseguire i benchmark sulla macchina di riferimento e
+// aggiornare i valori alla suite consolidata (4 classi, 9 benchmark).
+
 = Riepilogo delle Misurazioni
 
 #table(
@@ -829,8 +847,8 @@ funzionale in dev/prod.
     [4 piani (Load, Stress, Spike, Soak); latenza \<100 ms],
     [JMH], [Affidabilità (performance)],
     [Nessun benchmark],
-    [44 benchmark eseguiti;
-     BCrypt ~66 ms; servizi core 6-8 μs],
+    [Suite consolidata: 9 benchmark (da 44);
+     BCrypt ~66 ms (baseline storica); aggiornamento valori in corso],
     [Ottimizzazioni bottleneck], [Affidabilità (performance)],
     [Nessuna — findAll() in memoria],
     [10 file modificati; latenza combinata da ~13 s a ~100 ms
