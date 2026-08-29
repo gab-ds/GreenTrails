@@ -1035,6 +1035,46 @@ sessionStorage.getItem('acceptedCookies')
 sessionStorage.setItem('acceptedCookies', 'true')
 ```
 
+== V-05 — Forzatura HTTPS per l'URL API
+
+=== Problema
+
+L'URL dell'API di default era `http://localhost:8080` sia
+nel runtime config server-side che in quello client-side. Se
+non sovrascritto via variabile d'ambiente in produzione, le
+richieste avvengono in HTTP non cifrato, trasmettendo
+credenziali e dati personali in chiaro sulla rete.
+
+*CWE:* CWE-319 (Cleartext Communication of Sensitive
+Information)
+*OWASP:* A02:2021 Cryptographic Failures
+
+=== Soluzione
+
+Una funzione `enforceHttps` viene applicata all'URL API
+nel composable `useApi`. Se il server non è localhost e il
+protocollo è `http://`, viene forzato automaticamente a
+`https://`. Questo garantisce che in produzione (dove
+l'URL è esterno) le comunicazioni avvengano sempre via
+HTTPS, anche in caso di mancata configurazione della
+variabile d'ambiente.
+
+```typescript
+function enforceHttps(url: string): string {
+  if (import.meta.server
+      && url.startsWith('http://')
+      && !url.includes('localhost')) {
+    return url.replace('http://', 'https://')
+  }
+  return url
+}
+```
+
+La funzione viene applicata sia all'URL server-side
+(`config.apiBaseUrl`) che a quello client-side
+(`config.public.apiBaseUrl`), con fallback a
+`http://localhost:8080/api` per lo sviluppo locale.
+
 = Test di Performance per l'Affidabilità
 
 I test di performance verificano che il sistema mantenga la
@@ -1255,8 +1295,9 @@ seguenti aspetti da approfondire o completare:
     (migrazione da HTTP Basic a JWT), V-02 risolta (rimozione
     cookie plaintext, dati utente nei claim JWT), V-03 risolta
     (sanitizzazione output Leaflet con DOM), V-04 risolta
-    (migrazione da localStorage a sessionStorage); V-05–V-07
-    ancora da implementare.
+    (migrazione da localStorage a sessionStorage), V-05 risolta
+    (forzatura HTTPS in produzione); V-06–V-07 ancora da
+    implementare.
 - *Integrazione CI/CD continua* delle scansioni Snyk e GitGuardian
     per mantenere la security posture nel tempo.
 - *Riesecuzione periodica dei benchmark JMH* per monitorare
