@@ -1,0 +1,213 @@
+---
+- name: Volatile Host Tuning and Benchmark Execution
+  hosts: proxmox_host
+  become: true
+
+  module_defaults:
+    group/community.proxmox.proxmox:
+      api_host: "{{ proxmox_api_host }}"
+      api_user: "{{ proxmox_api_user }}"
+      api_token_id: "{{ proxmox_api_token_id }}"
+      api_token_secret: "{{ proxmox_api_token_secret }}"
+      validate_certs: "{{ proxmox_validate_certs }}"
+      ca_path: "{{ proxmox_ca_path if proxmox_ca_path | length > 0 else omit }}"
+
+  vars:
+    amber_smoke_payload: "{{ range(100) | list | to_json }}"
+    pve_node_name: "{{ hostvars['pve_node']['node'] }}"
+    template_vmid: "{{ hostvars['vm_template']['proxmox_vmid'] }}"
+    worker_vmid: "{{ hostvars['vm_worker']['proxmox_vmid'] }}"
+    amber_vmid: "{{ hostvars['amber_server']['proxmox_vmid'] }}"
+    worker_ip: "{{ hostvars['vm_worker']['worker_vm_ip'] }}"
+    amber_ip: "{{ hostvars['amber_server']['amber_lxc_ip'] }}"
+    benchmark_run_id: "{{ lookup('pipe', 'date -u +%Y%m%dT%H%M%SZ') }}"
+    benchmark_lock_path: "/var/lock/greentrails-benchmark"
+    host_cpu_affinity: "{{ host_cpu_set | replace(',', ' ') }}"
+
+  pre_tasks:
+    - name: Validate Proxmox API configuration
+      ansible.builtin.include_tasks: "{{ playbook_dir }}/../tasks/validate_proxmox_credentials.yml"
+
+    - name: Verify benchmark bridge and gateway on the Proxmox host
+      ansible.builtin.command: ip -4 addr show dev "{{ benchmark_bridge }}"
+      register: benchmark_bridge_status
+      changed_when: false
+      failed_when: benchmark_bridge_status.rc != 0 or benchmark_gateway not in benchmark_bridge_status.stdout
+
+    - name: Verify benchmark host CPU layout
+      ansible.builtin.command: cat /sys/devices/system/cpu/online
+      register: online_cpus
+      changed_when: false
+      failed_when: online_cpus.stdout | trim != '0-3'
+
+    - name: Verify cpufreq-set is already installed
+      ansible.builtin.shell: command -v cpufreq-set
+      register: cpufreq_set_binary
+      changed_when: false
+      failed_when: cpufreq_set_binary.rc != 0
+
+    - name: Verify systemd host affinity
+      ansible.builtin.command: systemctl show -p CPUAffinity
+      register: cpu_affinity
+      changed_when: false
+      failed_when: host_cpu_affinity not in cpu_affinity.stdout
+
+    - name: Validate stale worker policy
+      ansible.builtin.assert:
+        that:
+          - benchmark_stale_worker_policy in ['fail', 'destroy']
+        fail_msg: >-
+          GT_STALE_WORKER_POLICY must be either 'fail' (the safe default) or
+          'destroy', got '{{ benchmark_stale_worker_policy }}'.
+
+  tasks:
+    - name: Run managed benchmark phase with guaranteed cleanup
+      block:
+        - name: Acquire benchmark execution lock
+          ansible.builtin.command:
+            argv:
+              - mkdir
+              - -m
+              - '0755'
+              - "{{ benchmark_lock_path }}"
+          register: benchmark_lock_result
+          changed_when: true
+          failed_when: benchmark_lock_result.rc != 0
+
+        - name: Mark benchmark lock as owned by this run
+          ansible.builtin.set_fact:
+            benchmark_lock_acquired: true
+
+        - name: Record benchmark run identifier
+          ansible.builtin.debug:
+            msg: "Starting GreenTrails benchmark run {{ benchmark_run_id }}."
+
+        - name: Verify the managed benchmark template exists
+          community.proxmox.proxmox_vm_info:
+            node: "{{ pve_node_name }}"
+            type: qemu
+            vmid: "{{ template_vmid }}"
+          register: template_info
+
+        - name: Require exactly one managed benchmark template
+          ansible.builtin.assert:
+            that:
+              - template_info.proxmox_vms | length == 1
+            fail_msg: "Managed benchmark template VMID {{ template_vmid }} is absent."
+
+        - name: Require the managed template to be a Proxmox template
+          ansible.builtin.assert:
+            that:
+              - (template_info.proxmox_vms | first).template | bool
+            fail_msg: "Managed VMID {{ template_vmid }} exists but is not marked as a template."
+
+        - name: Check the managed worker VMID for stale resources
+          community.proxmox.proxmox_vm_info:
+            node: "{{ pve_node_name }}"
+            type: qemu
+            vmid: "{{ worker_vmid }}"
+          register: worker_info
+
+        - name: Fail safely when a stale worker exists
+          ansible.builtin.fail:
+            msg: >-
+              Managed worker VMID {{ worker_vmid }} already exists with status
+              {{ (worker_info.proxmox_vms | first).status }}. Remove it with the
+              teardown playbook or set GT_STALE_WORKER_POLICY=destroy explicitly.
+          when:
+            - worker_info.proxmox_vms | length > 0
+            - benchmark_stale_worker_policy == 'fail'
+
+        - name: Stop a stale worker before explicit replacement
+          community.proxmox.proxmox_kvm:
+            node: "{{ pve_node_name }}"
+            vmid: "{{ worker_vmid }}"
+            state: stopped
+          when:
+            - worker_info.proxmox_vms | length > 0
+            - benchmark_stale_worker_policy == 'destroy'
+            - (worker_info.proxmox_vms | first).status == 'running'
+
+        - name: Destroy a stale worker after explicit policy confirmation
+          community.proxmox.proxmox_kvm:
+            node: "{{ pve_node_name }}"
+            vmid: "{{ worker_vmid }}"
+            state: absent
+          when:
+            - worker_info.proxmox_vms | length > 0
+            - benchmark_stale_worker_policy == 'destroy'
+
+        - name: Verify the managed AMBER LXC exists
+          community.proxmox.proxmox_vm_info:
+            node: "{{ pve_node_name }}"
+            type: lxc
+            vmid: "{{ amber_vmid }}"
+          register: amber_info
+
+        - name: Require the managed AMBER LXC
+          ansible.builtin.assert:
+            that:
+              - amber_info.proxmox_vms | length == 1
+            fail_msg: "Managed AMBER LXC VMID {{ amber_vmid }} is absent."
+
+        - name: Capture original AMBER LXC state
+          ansible.builtin.set_fact:
+            amber_initial_status: "{{ (amber_info.proxmox_vms | first).status }}"
+
+        - name: Capture original AMBER service state
+          ansible.builtin.command:
+            argv:
+              - pct
+              - exec
+              - "{{ amber_vmid }}"
+              - --
+              - systemctl
+              - is-active
+              - amber.service
+          register: amber_service_initial_status
+          changed_when: false
+          failed_when: false
+          when: amber_initial_status == 'running'
+
+        - name: Capture original host background-service states
+          ansible.builtin.command: systemctl is-active "{{ item }}"
+          loop:
+            - ksmtuned
+            - irqbalance
+          register: background_service_states
+          changed_when: false
+          failed_when: false
+
+        - name: Capture original CPU governor
+          ansible.builtin.command: cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+          register: original_cpu_governor
+          changed_when: false
+          failed_when: false
+
+        - name: Capture original Intel Turbo Boost state
+          ansible.builtin.command: cat /sys/devices/system/cpu/intel_pstate/no_turbo
+          register: original_turbo_state
+          changed_when: false
+          failed_when: false
+
+        - name: Execute benchmark workload
+          ansible.builtin.include_tasks: "{{ playbook_dir }}/../tasks/run_benchmark_phase.yml"
+
+      rescue:
+        - name: Report benchmark failure before cleanup
+          ansible.builtin.debug:
+            msg: >-
+              Benchmark run {{ benchmark_run_id }} failed in task
+              '{{ ansible_failed_task.name | default('unknown') }}':
+              {{ ansible_failed_result.msg | default(ansible_failed_result.stderr | default('no details')) }}
+
+        - name: Preserve the original benchmark failure status
+          ansible.builtin.fail:
+            msg: >-
+              Benchmark run {{ benchmark_run_id }} failed. Cleanup was attempted
+              by the always section.
+
+      always:
+        - name: Restore benchmark host and guest state
+          ansible.builtin.include_tasks: "{{ playbook_dir }}/../tasks/cleanup_benchmark_phase.yml"
+          when: benchmark_lock_acquired | default(false)

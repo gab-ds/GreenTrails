@@ -1,0 +1,78 @@
+---
+- name: Stop AMBER LXC after benchmark execution
+  community.proxmox.proxmox:
+    node: "{{ pve_node_name }}"
+    vmid: "{{ amber_vmid }}"
+    state: stopped
+  when:
+    - amber_initial_status | default('stopped') != 'running'
+  failed_when: false
+
+- name: Restore original AMBER service state
+  ansible.builtin.command:
+    argv:
+      - pct
+      - exec
+      - "{{ amber_vmid }}"
+      - --
+      - systemctl
+      - "{{ 'start' if amber_service_initial_status.stdout | default('inactive') | trim == 'active' else 'stop' }}"
+      - amber.service
+  when:
+    - amber_initial_status | default('stopped') == 'running'
+    - amber_service_initial_status.rc | default(1) == 0 or amber_service_initial_status.stdout | default('') | trim in ['active', 'inactive', 'failed']
+  changed_when: true
+  failed_when: false
+
+- name: Restore originally running AMBER LXC
+  community.proxmox.proxmox:
+    node: "{{ pve_node_name }}"
+    vmid: "{{ amber_vmid }}"
+    state: started
+  when: amber_initial_status | default('stopped') == 'running'
+  failed_when: false
+
+- name: Stop worker VM after benchmark execution
+  community.proxmox.proxmox_kvm:
+    node: "{{ pve_node_name }}"
+    vmid: "{{ worker_vmid }}"
+    state: stopped
+  failed_when: false
+
+- name: Restore original Intel Turbo Boost state
+  ansible.builtin.shell: >-
+    echo {{ original_turbo_state.stdout | trim }}
+    > /sys/devices/system/cpu/intel_pstate/no_turbo
+  when:
+    - original_turbo_state.rc | default(1) == 0
+    - original_turbo_state.stdout | trim in ['0', '1']
+  changed_when: false
+  failed_when: false
+
+- name: Restore original CPU governor
+  ansible.builtin.command:
+    argv:
+      - cpufreq-set
+      - -r
+      - -g
+      - "{{ original_cpu_governor.stdout | trim }}"
+  when:
+    - original_cpu_governor.rc | default(1) == 0
+    - original_cpu_governor.stdout | trim | length > 0
+  changed_when: false
+  failed_when: false
+
+- name: Restore original host background-service states
+  ansible.builtin.systemd:
+    name: "{{ item.item }}"
+    state: "{{ 'started' if item.stdout | trim == 'active' else 'stopped' }}"
+  loop: "{{ background_service_states.results | default([]) }}"
+  when:
+    - item.rc | default(1) == 0 or item.stdout | trim in ['active', 'inactive', 'failed']
+  failed_when: false
+
+- name: Release benchmark execution lock
+  ansible.builtin.file:
+    path: "{{ benchmark_lock_path }}"
+    state: absent
+  failed_when: false

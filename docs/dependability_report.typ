@@ -185,6 +185,28 @@ produzione (docker-compose.prod.yml con policy di riavvio e limiti
 risorse). Health check su `/actuator/health` per monitoraggio della
 disponibilità del backend.
 
+== Piattaforma di Benchmark e Riproducibilità
+
+Le nuove misurazioni relative alla configurazione raffinata vengono eseguite
+su un host Proxmox dedicato, un Lenovo
+ThinkCentre M700 SFF equipaggiato con CPU Intel(R) Core(TM) i5-6500 @ 3.20 GHz,
+16 GB di RAM DDR4 (2 moduli da 8 GB a 2133 MT/s, 1,2 V) e un SSD da 1 TB
+(WDC WDS100T1R0A-68A4W0, famiglia WD Blue/Red/Green SSDs). Il sistema esegue
+Proxmox VE `pve-manager/9.2.10/43df2e01f27a1a19`, kernel Linux
+`7.0.14-11-pve` e QEMU `11.0.3` (`pve-qemu-kvm_11.0.3-2`). La connettività
+verso la rete esterna usa Ethernet collegata direttamente al router.
+
+Le impostazioni di affinità CPU, governor, Turbo Boost, memoria delle VM e
+configurazione della rete vengono applicate e verificate dai playbook; non
+sono quindi ripetute qui come caratteristiche hardware statiche. JMeter viene
+eseguito da un laptop esterno tramite il port-forward configurato su Proxmox:
+le specifiche hardware del laptop non fanno parte della piattaforma sotto
+misurazione e non vengono incluse nel report.
+
+Questa piattaforma costituisce il riferimento per le nuove esecuzioni; le
+metriche storiche riportate nelle sezioni precedenti non vengono
+retroattivamente attribuite a questo hardware.
+
 == Buildabilità
 
 L'applicazione è buildabile sia in CI/CD sia localmente:
@@ -641,39 +663,70 @@ di carico, contribuendo direttamente all'affidabilità del servizio.
 
 *JMeter* è stato utilizzato per definire quattro tipi di test:
 
+La configurazione è stata poi raffinata rispetto alla prima versione descritta
+nei paragrafi seguenti. Il workflow prepara un database inizialmente vuoto e
+mantiene MySQL disabilitato durante JMH, che non avvia il backend applicativo.
+Per le misurazioni energetiche e di carico il backend viene avviato con il
+profilo `dev`; prima che l'health check diventi disponibile, `DataSeeder` crea
+automaticamente gli utenti e i dati di dominio necessari. In caso di crash,
+l'ipotesi operativa è che l'operatore completi il teardown e riparta da una
+nuova infrastruttura, evitando database parzialmente popolati.
+
+I quattro piani JMeter attuali esercitano esclusivamente endpoint pubblici e
+non includono ancora richieste con autenticazione HTTP Basic. Le misure
+rappresentano quindi il percorso di consultazione anonimo; i flussi autenticati
+per visitatori, gestori e amministratori costituiscono un'estensione futura e
+dovranno usare account e dati predisposti fuori dalla finestra temporizzata.
+
 == Load Test
 
 Il *Load Test* simula un carico utente normale e costante per
 verificare che il sistema gestisca il traffico atteso senza
-degradazione delle performance. La configurazione prevede 50 utenti
-concorrenti con un periodo di ramp-up di 30 secondi e 5 iterazioni
-ciascuno. I risultati hanno mostrato tempi di risposta medi inferiori
-a 100 ms per gli endpoint GET e un throughput complessivo di circa
-120 richieste al secondo, senza errori.
+degradazione delle performance. La configurazione storica prevedeva 50
+utenti concorrenti con un periodo di ramp-up di 30 secondi e 5
+iterazioni ciascuno. I risultati storici hanno mostrato tempi di
+risposta medi inferiori a 100 ms per gli endpoint GET e un throughput
+complessivo di circa 120 richieste al secondo, senza errori.
+
+Il piano attuale mantiene 50 utenti e 30 secondi di ramp-up, ma usa una
+durata complessiva configurabile di 300 secondi, una navigazione per
+iterazione e 500 ms di think time con una componente casuale fino a 250
+ms. I dati storici sono mantenuti come baseline, ma devono essere
+riconfermati dopo questa modifica.
 
 == Stress Test
 
 Lo *Stress Test* spinge il sistema oltre il limite operativo previsto
 per identificare il punto di rottura — ovvero il carico massimo oltre
 il quale il servizio inizia a rifiutare richieste o a rispondere con
-errori. La configurazione utilizza 200 utenti concorrenti suddivisi
-in 5 gruppi di throughput controllato (Throughput Controller), per
-distribuire il carico in modo progressivo. Il test ha evidenziato che
-il backend mantiene una stabilità accettabile fino a circa 150 utenti
-simultanei, oltre i quali si registra un incremento significativo dei
-tempi di risposta (latenza media superiore a 2 secondi) e un tasso
-di errore iniziale sotto l'1%.
+errori. La configurazione storica utilizzava 200 utenti concorrenti
+suddivisi in 5 gruppi di throughput controllato (Throughput Controller),
+per distribuire il carico in modo progressivo. Il test storico ha
+evidenziato che il backend mantiene una stabilità accettabile fino a
+circa 150 utenti simultanei, oltre i quali si registra un incremento
+significativo dei tempi di risposta (latenza media superiore a 2
+secondi) e un tasso di errore iniziale sotto l'1%.
+
+Il piano raffinato mantiene 200 utenti a concorrenza costante per 600
+secondi di default. Cinque stadi da 60 secondi riducono progressivamente
+il think time da 2 s a 0 s, dopo di che viene mantenuto il livello
+massimo. Il punto di esaurimento dovrà essere ricavato da errori,
+latenza e metriche delle risorse, non dai risultati storici.
 
 == Spike Test
 
 Il *Spike Test* valuta la resilienza del sistema a incrementi
 improvvisi e repentini del carico, simulando scenari di traffico a
 picco (es. campagne promozionali o eventi virali). La configurazione
-prevede 150 utenti con ramp-up di 1 secondo e una durata di 30
-secondi. Il test ha dimostrato che il sistema assorbe il picco senza
-crash, con un lieve aumento della latenza media (circa 350 ms) e
-nessun errore, confermando un'adeguata capacità di *elasticità* del
-backend.
+storica prevedeva 150 utenti con ramp-up di 1 secondo e una durata di
+30 secondi. Il test storico aveva dimostrato che il sistema assorbiva
+il picco senza crash, con un lieve aumento della latenza media (circa
+350 ms) e nessun errore.
+
+Il piano attuale divide i 30 secondi in baseline di 10 secondi, burst di
+10 secondi e recovery finale. La fase burst riduce il think time e
+aumenta la frequenza di richieste offerte, mantenendo fissi i 150
+utenti; non simula quindi l'aggiunta dinamica di thread.
 
 == Soak Test
 
@@ -681,10 +734,16 @@ Il *Soak Test* (o Endurance Test) mantiene un carico moderato per un
 periodo prolungato — 20 utenti per 600 secondi (10 minuti) — per
 rilevare degradationi lente come memory leak, saturazione delle
 connessioni al database o frammentazione della memoria. I risultati
-hanno mostrato un comportamento stabile per tutta la durata del test:
-la latenza media è rimasta costante (intorno a 80 ms), il throughput
-non ha subito cali progressivi e non si sono verificati errori,
-indicando l'assenza di degradationi significative nel backend.
+storici hanno mostrato un comportamento stabile per tutta la durata del
+test: la latenza media è rimasta costante (intorno a 80 ms), il
+throughput non ha subito cali progressivi e non si sono verificati
+errori, indicando l'assenza di degradationi significative nel backend.
+
+Il piano attuale mantiene 20 utenti per 600 secondi, con una sola
+navigazione per iterazione e think time di 500 ms più una componente
+casuale fino a 250 ms. È un test di endurance a concorrenza costante,
+non un generatore a RPS fisso; le metriche storiche dovranno essere
+riconfermate con la configurazione raffinata.
 
 I test di performance sono integrati nella suite di verifica del
 progetto e possono essere eseguiti tramite l'interfaccia grafica di
@@ -844,7 +903,7 @@ tramite una manutenzione evolutiva mirata alla qualità della misura:
     [37 file annotati; 258 failure (baseline) -> 188 (6 moduli); Utenze 16->6, Attivita 37->32, Itinerari 33->22, Ricerca 42->42, Segnalazioni 9->6, Upload 93->80; Prenotazioni crasha (bug OpenJML); 3 cause strutturali non risolvibili],
     [JMeter], [Affidabilità / Disponibilità],
     [Nessun test di carico],
-    [4 piani (Load, Stress, Spike, Soak); latenza \<100 ms],
+    [4 piani raffinati (Load, Stress, Spike, Soak); validazione live ancora da eseguire],
     [JMH], [Affidabilità (performance)],
     [Nessun benchmark],
     [Suite consolidata: 9 benchmark (da 44);

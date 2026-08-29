@@ -57,6 +57,11 @@ public class ArchiviazioneFileSystemServiceBenchmark {
     Files.writeString(tempDir.resolve(media).resolve("file3.png"), "contenuto3");
   }
 
+  @Setup(Level.Invocation)
+  public void setupDeleteFile() throws IOException {
+    Files.writeString(tempDir.resolve(media).resolve("file1.jpg"), "contenuto1");
+  }
+
   @TearDown(Level.Trial)
   public void tearDown() throws IOException {
     if (tempDir != null && tempDir.toFile().exists()) {

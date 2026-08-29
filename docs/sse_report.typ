@@ -110,6 +110,28 @@ Il backend segue un'architettura a *layers* propria di Spring: Presentation Laye
 
 Docker multi-stage (eclipse-temurin:21) con configurazione multi-ambiente: sviluppo (docker-compose.yml orchesta backend, frontend Angular su Nginx, MySQL), produzione (docker-compose.prod.yml con policy di riavvio e limiti risorse), test (docker-compose.test.yml). Health check su /actuator/health.
 
+== Piattaforma di Benchmark e Riproducibilità
+
+Le nuove misurazioni relative alla configurazione raffinata vengono eseguite
+su un host Proxmox dedicato, un Lenovo
+ThinkCentre M700 SFF equipaggiato con CPU Intel(R) Core(TM) i5-6500 @ 3.20 GHz,
+16 GB di RAM DDR4 (2 moduli da 8 GB a 2133 MT/s, 1,2 V) e un SSD da 1 TB
+(WDC WDS100T1R0A-68A4W0, famiglia WD Blue/Red/Green SSDs). Il sistema esegue
+Proxmox VE `pve-manager/9.2.10/43df2e01f27a1a19`, kernel Linux
+`7.0.14-11-pve` e QEMU `11.0.3` (`pve-qemu-kvm_11.0.3-2`). La connettività
+verso la rete esterna usa Ethernet collegata direttamente al router.
+
+Le impostazioni di affinità CPU, governor, Turbo Boost, memoria delle VM e
+configurazione della rete vengono applicate e verificate dai playbook; non
+sono quindi ripetute qui come caratteristiche hardware statiche. JMeter viene
+eseguito da un laptop esterno tramite il port-forward configurato su Proxmox:
+le specifiche hardware del laptop non fanno parte della piattaforma sotto
+misurazione e non vengono incluse nel report.
+
+Questa piattaforma costituisce il riferimento per le nuove esecuzioni; le
+metriche storiche riportate nelle sezioni precedenti non vengono
+retroattivamente attribuite a questo hardware.
+
 == Verifica e Qualità del Software
 
 - *Test Unitari*: ~14 classi con Mockito per service layer.
@@ -411,21 +433,68 @@ energetico.
 
 Sono stati definiti quattro tipi di test, ciascuno mirato a verificare un aspetto specifico del comportamento del sistema sotto stress:
 
+La configurazione dei test è stata successivamente raffinata rispetto alla
+prima versione descritta sotto. I dati necessari vengono predisposti dal
+workflow di benchmark: il template contiene un database inizialmente vuoto,
+MySQL resta disabilitato durante la fase JMH e il backend viene avviato con il
+profilo `dev` solo per le misurazioni energetiche e di carico. In occasione del
+primo avvio, `DataSeeder` crea automaticamente utenti, attività, alloggi,
+camere, recensioni, preferenze, itinerari, prenotazioni e segnalazioni. Questo
+presuppone che, dopo un arresto anomalo, l'operatore completi il teardown prima
+di ripetere l'esecuzione, così da ottenere una nuova infrastruttura di
+benchmark.
+
+I quattro piani JMeter attuali esercitano esclusivamente endpoint pubblici e
+non includono ancora richieste con autenticazione HTTP Basic. Le misure
+descritte rappresentano quindi il comportamento del percorso di consultazione
+anonimo; i flussi autenticati per visitatori, gestori e amministratori potranno
+essere aggiunti in una successiva estensione, usando account e dati predisposti
+fuori dalla finestra temporizzata del test.
+
 == Load Test
 
-Il *Load Test* simula un carico utente normale e costante per verificare che il sistema gestisca il traffico atteso senza degradazione delle performance. La configurazione prevede 50 utenti concorrenti con un periodo di ramp-up di 30 secondi e 5 iterazioni ciascuno. Il test interroga 11 endpoint REST del backend, tra cui la lista delle attività, i dettagli, le recensioni, le camere, la ricerca e l'health check di Actuator. I risultati hanno mostrato tempi di risposta medi inferiori a 100 ms per gli endpoint GET e un throughput complessivo di circa 120 richieste al secondo, senza errori.
+Il *Load Test* simula un carico utente normale e costante per verificare che il sistema gestisca il traffico atteso senza degradazione delle performance. La configurazione storica prevedeva 50 utenti concorrenti con un periodo di ramp-up di 30 secondi e 5 iterazioni ciascuno. Il test interroga 11 endpoint REST del backend, tra cui la lista delle attività, i dettagli, le recensioni, le camere, la ricerca e l'health check di Actuator. I risultati storici hanno mostrato tempi di risposta medi inferiori a 100 ms per gli endpoint GET e un throughput complessivo di circa 120 richieste al secondo, senza errori.
+
+Come raffinamento, il piano attuale esegue una singola navigazione per iterazione
+all'interno di una durata complessiva configurabile (300 secondi di default),
+con 50 utenti e ramp-up di 30 secondi. Un timer casuale introduce 500 ms di
+think time più un intervallo casuale di 0--250 ms. Il piano rappresenta quindi
+un carico nominale a concorrenza costante; i valori quantitativi storici non
+sono automaticamente attribuibili alla versione raffinata e dovranno essere
+riconfermati con un'esecuzione live.
 
 == Stress Test
 
-Lo *Stress Test* spinge il sistema oltre il limite operativo previsto per identificare il punto di rottura — ovvero il carico massimo oltre il quale il servizio inizia a rifiutare richieste o a rispondere con errori. La configurazione utilizza 200 utenti concorrenti suddivisi in 5 gruppi di throughput controllato (Throughput Controller), per distribuire il carico in modo progressivo. Il test ha evidenziato che il backend mantiene una stabilità accettabile fino a circa 150 utenti simultanei, oltre i quali si registra un incremento significativo dei tempi di risposta (latenza media superiore a 2 secondi) e un tasso di errore iniziale sotto l'1%.
+Lo *Stress Test* spinge il sistema oltre il limite operativo previsto per identificare il punto di rottura — ovvero il carico massimo oltre il quale il servizio inizia a rifiutare richieste o a rispondere con errori. La configurazione storica utilizzava 200 utenti concorrenti suddivisi in 5 gruppi di throughput controllato (Throughput Controller), per distribuire il carico in modo progressivo. Il test storico ha evidenziato che il backend mantiene una stabilità accettabile fino a circa 150 utenti simultanei, oltre i quali si registra un incremento significativo dei tempi di risposta (latenza media superiore a 2 secondi) e un tasso di errore iniziale sotto l'1%.
+
+Nel piano attuale, 200 utenti sono mantenuti a concorrenza costante per 600
+secondi di default, con cinque stadi da 60 secondi: il think time viene ridotto
+progressivamente da 2 s a 0 s, mantenendo poi il livello massimo. I cinque
+Throughput Controller continuano a distribuire il mix funzionale 30/25/20/15/10%.
+Il punto di esaurimento deve essere determinato osservando errori, latenza e
+risorse del backend durante l'esecuzione, non assunto dai risultati storici.
 
 == Spike Test
 
-Il *Spike Test* valuta la resilienza del sistema a incrementi improvvisi e repentini del carico, simulando scenari di traffico a picco (es. campagne promozionali o eventi virali). La configurazione prevede 150 utenti con ramp-up di 1 secondo e una durata di 30 secondi, con tutti gli endpoint richiamati in sequenza. Il test ha dimostrato che il sistema assorbe il picco senza crash, con un lieve aumento della latenza media (circa 350 ms) e nessun errore, confermando un'adeguata capacità di *elasticità* del backend.
+Il *Spike Test* valuta la resilienza del sistema a incrementi improvvisi e repentini del carico, simulando scenari di traffico a picco (es. campagne promozionali o eventi virali). La configurazione storica prevedeva 150 utenti con ramp-up di 1 secondo e una durata di 30 secondi, con tutti gli endpoint richiamati in sequenza. Il test storico aveva dimostrato che il sistema assorbiva il picco senza crash, con un lieve aumento della latenza media (circa 350 ms) e nessun errore.
+
+Il piano raffinato mantiene 150 utenti e la durata predefinita di 30 secondi,
+ma distingue una fase baseline di 10 secondi, una fase burst di 10 secondi e
+una fase recovery finale. La variazione è ottenuta riducendo il think time nella
+fase burst, mentre il numero di utenti resta fisso: si misura quindi uno spike
+della frequenza di richieste offerte, non l'aggiunta dinamica di thread del
+sistema operativo. Anche questi risultati devono essere riconfermati dal run
+live.
 
 == Soak Test
 
-Il *Soak Test* (o Endurance Test) mantiene un carico moderato per un periodo prolungato — 20 utenti per 600 secondi (10 minuti) — per rilevare degradationi lente come memory leak, saturazione delle connessioni al database o frammentazione della memoria. I risultati hanno mostrato un comportamento stabile per tutta la durata del test: la latenza media è rimasta costante (intorno a 80 ms), il throughput non ha subito cali progressivi e non si sono verificati errori, indicando l'assenza di degradationi significative nel backend. La variabilità dei tempi di risposta ($sigma$) è risultata contenuta, con un massimo registrato di 450 ms per le richieste di ricerca che coinvolgono filtri spaziali.
+Il *Soak Test* (o Endurance Test) mantiene un carico moderato per un periodo prolungato — 20 utenti per 600 secondi (10 minuti) — per rilevare degradationi lente come memory leak, saturazione delle connessioni al database o frammentazione della memoria. I risultati storici hanno mostrato un comportamento stabile per tutta la durata del test: la latenza media è rimasta costante (intorno a 80 ms), il throughput non ha subito cali progressivi e non si sono verificati errori, indicando l'assenza di degradationi significative nel backend. La variabilità dei tempi di risposta ($sigma$) è risultata contenuta, con un massimo registrato di 450 ms per le richieste di ricerca che coinvolgono filtri spaziali.
+
+Il piano attuale mantiene 20 utenti per 600 secondi di default, esegue una sola
+navigazione per iterazione e applica 500 ms di think time più 0--250 ms casuali.
+È quindi un test di endurance a concorrenza costante, non un generatore a RPS
+fisso. Le metriche storiche restano rilevanti come confronto, ma non
+costituiscono ancora la validazione della versione raffinata.
 
 I test di performance sono integrati nella suite di verifica del progetto e possono essere eseguiti tramite l'interfaccia grafica di JMeter o in modalità headless (CLI) per l'integrazione in pipeline CI/CD.
 
@@ -623,7 +692,7 @@ riferimento iniziale per i futuri cicli di monitoraggio.
   [0 bug, 0 vulnerabilità, 3 code smell GCI1],
   [JMeter], [Economica / Tecnica],
   [Nessun test di carico],
-  [4 piani definiti (Load, Stress, Spike, Soak) — da eseguire],
+  [4 piani definiti e raffinati (Load, Stress, Spike, Soak); validazione live ancora da eseguire],
   [GreenIT-Analysis], [Ambientale],
   [Nessuna analisi del frontend],
   [73/75 buone pratiche; EcoIndex 76/100 B],
