@@ -871,22 +871,85 @@ sessione stateless.
 
 #table(
     columns: (auto, auto, auto),
-    inset: 6pt,
+    inset: 4pt,
     stroke: 0.5pt,
     [*Aspetto*], [*Prima (V-01)*], [*Dopo*],
-    [Credenziali nel cookie], [Base64(email:password)],
+    [Credenziali nel cookie], [Base64 (email : password)],
         [JWT firmato (HMAC-SHA)],
-    [Header HTTP], [Authorization: Basic],
-        [Authorization: Bearer],
+    [Header HTTP], [#raw("Authorization: Basic")],
+        [#raw("Authorization: Bearer")],
     [Scadenza credenziali], [Nessuna], [1 ora (configurabile)],
-    [Mechanismo backend], [httpBasic()],
+    [Mechanismo backend], [#raw(".httpBasic()")],
         [JWT filter + STATELESS],
-    [Endpoint login], [GET /api/utenti],
-        [POST /api/auth/login],
+    [Endpoint login], [#raw("GET /api/utenti")],
+        [#raw("POST /api/auth/login")],
+    [Protezione cookie], [Nessuna],
+        [#raw("secure, sameSite=strict, maxAge")],
+    [Segreto lato server], [N/A (BCrypt solo)],
+        [#raw("HMAC-SHA key (jwt.secret)")],
+)
+
+== V-02 — Rimozione dei Dati Personali dal Cookie
+
+=== Problema
+
+Il cookie `user` memorizzava l'intero oggetto utente
+(nome, cognome, email, ruolo) come JSON in chiaro, senza
+alcuna protezione: mancavano gli attributi `secure`,
+`sameSite` e `maxAge`. Un attaccante con accesso al
+dispositivo poteva leggere i dati personali identificabili
+dall'Store del browser.
+
+*CWE:* CWE-312 (Cleartext Storage of Sensitive Information),
+CWE-614 (Sensitive Cookie in HTTPS Session Without Secure
+Attribute)
+
+=== Soluzione Backend
+
+Il metodo `generateToken` di `JwtUtil` è stato esteso per
+accettare i parametri `id`, `nome` e `cognome`, che vengono
+inseriti come claim aggiuntivi nel JWT. In questo modo tutti
+i dati utente necessari al frontend sono contenuti nel token
+firmato, eliminando la necessità di un cookie separato.
+
+=== Soluzione Frontend
+
++ *Rimozione di `userCookie`:* il cookie `user` (JSON in
+    chiaro) è stato eliminato completamente.
+
++ *Decodifica JWT lato client:* la funzione `decodeJwtPayload`
+    estrae i claim `id`, `nome`, `cognome`, `email`, `ruolo`
+    direttamente dal payload del token JWT usando `atob()`.
+    La validazione della firma e della scadenza è affidata
+    al backend; il frontend verifica solo `exp` per decidere
+    se il token è ancora valido.
+
++ *`restore()`:* al caricamento della pagina, il store
+    decodifica il JWT dal cookie `token` per ricostruire
+    l'oggetto `user`, senza ricorrere a cookie aggiuntivi.
+
++ *`login()`:* dopo il login, il token JWT viene memorizzato
+    nel cookie `token` (protetto con `secure`, `sameSite`,
+    `maxAge: 3600`) e l'oggetto `user` viene popolato dalla
+    risposta del backend.
+
+=== Differenze Chiave
+
+#table(
+    columns: (auto, auto, auto),
+    inset: 6pt,
+    stroke: 0.5pt,
+    [*Aspetto*], [*Prima (V-02)*], [*Dopo*],
+    [Cookie dati utente], [JSON in chiaro (`user`)],
+        [Nessuno (dati nel JWT)],
     [Protezione cookie], [Nessuna],
         [secure, sameSite=strict, maxAge],
-    [Segreto lato server], [N/A (BCrypt solo)],
-        [HMAC-SHA key (jwt.secret)],
+    [Formato dati], [JSON plaintext],
+        [JWT firmato (HMAC-SHA)],
+    [Contenuto], [nome, cognome, email, ruolo],
+        [id, nome, cognome, email, ruolo (nei claim JWT)],
+    [Persistenza], [Indefinita],
+        [1 ora (scadenza JWT)],
 )
 
 = Test di Performance per l'Affidabilità
@@ -1106,9 +1169,11 @@ seguenti aspetti da approfondire o completare:
     per ridurre il debito tecnico e migliorare l'affidabilità del
     data access layer.
 - *Remediation delle vulnerabilità frontend:* V-01 risolta
-    (migrazione da HTTP Basic a JWT); V-02–V-07 ancora da
-    implementare: sanitizzazione output Leaflet, configurazione CSP,
-    validazione path nel tile proxy e migrazione da localStorage.
+    (migrazione da HTTP Basic a JWT), V-02 risolta (rimozione
+    cookie plaintext, dati utente nei claim JWT); V-03–V-07
+    ancora da implementare: sanitizzazione output Leaflet,
+    configurazione CSP, validazione path nel tile proxy e
+    migrazione da localStorage.
 - *Integrazione CI/CD continua* delle scansioni Snyk e GitGuardian
     per mantenere la security posture nel tempo.
 - *Riesecuzione periodica dei benchmark JMH* per monitorare

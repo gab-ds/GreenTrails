@@ -31,8 +31,9 @@ public class AuthController {
           new UsernamePasswordAuthenticationToken(request.email(), request.password()));
 
       final Utente utente = (Utente) authentication.getPrincipal();
-      final String token = jwtUtil.generateToken(utente.getEmail(),
-          utente.getRuolo().name());
+      final String token = jwtUtil.generateToken(utente.getId(),
+          utente.getEmail(), utente.getNome(),
+          utente.getCognome(), utente.getRuolo().name());
 
       return ResponseGenerator.generateResponse(HttpStatus.OK,
           Map.of("token", token, "utente", utente));

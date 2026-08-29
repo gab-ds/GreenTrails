@@ -24,11 +24,15 @@ public class JwtUtil {
     this.expirationMs = expirationMs;
   }
 
-  public String generateToken(final String email, final String ruolo) {
+  public String generateToken(final Long id, final String email,
+      final String nome, final String cognome, final String ruolo) {
     final Date now = new Date();
     final Date expiry = new Date(now.getTime() + expirationMs);
     return Jwts.builder()
         .subject(email)
+        .claim("id", id)
+        .claim("nome", nome)
+        .claim("cognome", cognome)
         .claim("ruolo", ruolo)
         .issuedAt(now)
         .expiration(expiry)
@@ -38,6 +42,18 @@ public class JwtUtil {
 
   public String extractEmail(final String token) {
     return parseClaims(token).getSubject();
+  }
+
+  public Long extractId(final String token) {
+    return parseClaims(token).get("id", Long.class);
+  }
+
+  public String extractNome(final String token) {
+    return parseClaims(token).get("nome", String.class);
+  }
+
+  public String extractCognome(final String token) {
+    return parseClaims(token).get("cognome", String.class);
   }
 
   public String extractRuolo(final String token) {
