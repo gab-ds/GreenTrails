@@ -1120,6 +1120,34 @@ in `nuxt.config.ts`. Le direttive principali:
     frame-ancestors 'none'" />
 ```
 
+== V-07 — Validazione Path nel Tile Proxy
+
+=== Problema
+
+Il server proxy per i tile map utilizzava direttamente il
+parametro path nella richiesta upstream verso OpenStreetMap
+senza alcuna validazione. Un path malevolo poteva causare
+un path traversal e accedere a risorse non autorizzate.
+
+*CWE:* CWE-22 (Improper Limitation of a Pathname to a
+Restricted Directory)
+*OWASP:* A01:2021 Broken Access Control
+
+=== Soluzione
+
+Il path viene validato con una regex stricta che accetta
+esclusivamente il formato `z/x/y.png` dove z, x, y sono
+numeri interi (1-2 cifre). Qualsiasi altro formato viene
+respinto con errore 400.
+
+```javascript
+const TILE_PATTERN = /^\d{1,2}\/\d{1,2}\/\d{1,2}\.png$/
+if (!path || !TILE_PATTERN.test(path)) {
+  throw createError({ statusCode: 400,
+    message: 'Invalid tile path' })
+}
+```
+
 = Test di Performance per l'Affidabilità
 
 I test di performance verificano che il sistema mantenga la
@@ -1336,13 +1364,10 @@ seguenti aspetti da approfondire o completare:
 - *Risoluzione dei 3 code smell GCI1* (repository call in stream)
     per ridurre il debito tecnico e migliorare l'affidabilità del
     data access layer.
-- *Remediation delle vulnerabilità frontend:* V-01 risolta
-    (migrazione da HTTP Basic a JWT), V-02 risolta (rimozione
-    cookie plaintext, dati utente nei claim JWT), V-03 risolta
-    (sanitizzazione output Leaflet con DOM), V-04 risolta
-    (migrazione da localStorage a sessionStorage), V-05 risolta
-    (forzatura HTTPS in produzione), V-06 risolta (CSP
-    restrittiva configurata); V-07 ancora da implementare.
+- *Remediation delle vulnerabilità frontend:* tutte e 7 le
+    vulnerabilità risolte: V-01 (JWT), V-02 (cookie plaintext),
+    V-03 (XSS Leaflet), V-04 (localStorage), V-05 (HTTPS),
+    V-06 (CSP), V-07 (path traversal tile proxy).
 - *Integrazione CI/CD continua* delle scansioni Snyk e GitGuardian
     per mantenere la security posture nel tempo.
 - *Riesecuzione periodica dei benchmark JMH* per monitorare
