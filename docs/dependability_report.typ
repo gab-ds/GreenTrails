@@ -57,7 +57,9 @@ Software Dependability hanno riguardato:
     e pubblicazione di immagini Docker su Docker Hub.
 - *Security hardening:* configurazione di autenticazione HTTP Basic
     con BCryptPasswordEncoder, autorizzazione basata su ruoli, CORS,
-    vulnerability scanning (Snyk) e secret scanning (GitGuardian).
+    vulnerability scanning (Snyk), secret scanning (GitGuardian) e
+    analisi delle vulnerabilità del frontend (7 vulnerabilità CWE/OWASP
+    identificate e documentate).
 - *DevSecOps:* integrazione di scansioni di sicurezza nei workflow
     CI/CD per garantire verifiche continue su dipendenze, segreti e
     qualità del codice.
@@ -569,7 +571,7 @@ progressivo hardening:
     reviewer e il ruolo si inverte a ogni modifica (es. io pusho,
     Bob revisiona; Bob pusha, io revisiono). I *required status
     checks* sono stati volutamente *non* abilitati: i
-    workflow CI sono filtrati per path (backend/** e frontend/**),
+    workflow CI sono filtrati per path (`backend/**` e `frontend/**`),
     e imporre il check meccanicamente bloccherebbe in modo
     irreversibile le pull request che toccano solo documentazione,
     configurazione o workflow, perché i check non riportati da
@@ -625,13 +627,267 @@ che resta attiva anche per gli amministratori del repository.
 
 == Riepilogo della Sicurezza
 
-L'analisi combinata dei tre strumenti mostra che l'applicazione
-web *non presenta vulnerabilità note*: Snyk ha rilevato 0 CVE,
+L'analisi combinata dei tre strumenti mostra che il backend
+*non presenta vulnerabilità note*: Snyk ha rilevato 0 CVE,
 SonarQube ha riportato 0 vulnerabilità e 0 bug, GitGuardian ha
 identificato 0 segreti esposti. Il modello di autenticazione e
 autorizzazione (HTTP Basic + BCrypt + ruoli granulari + CORS)
-completa il perimetro di sicurezza, sebbene JWT potrebbe
-rappresentare la naturale evoluzione più sicura del sistema attuale.
+completa il perimetro di sicurezza backend.
+
+L'analisi del frontend (Nuxt 4 / Vue 3) ha invece identificato
+*7 vulnerabilità* (V-01–V-07), di cui 1 HIGH, 2 MEDIUM e 4 LOW.
+La più critica (V-01) riguarda credenziali Basic Auth codificate
+in Base64 nel cookie. La sezione successiva documenta ciascuna
+vulnerabilità con riferimenti CWE/OWASP e le remediation proposte.
+
+
+== Analisi della Sicurezza del Frontend
+
+L'analisi di sicurezza del frontend (Nuxt 4 / Vue 3) ha identificato
+sette vulnerabilità concrete, classificate secondo il modello DREAD
+e mappate ai CWE/OWASP corrispondenti.
+
+=== V-01 — Autenticazione Basic in Base64 nel Cookie (HIGH)
+
+*Fonte:* `app/stores/auth.ts:24,40`, `app/composables/useApi.ts:3`
+*CWE:* CWE-522 (Insufficiently Protected Credentials), CWE-312
+(Cleartext Storage of Sensitive Information), CWE-614
+(Sensitive Cookie in HTTPS Session Without Secure Attribute)
+*OWASP:* A02:2021 Cryptographic Failures
+
+Le credenziali utente (email + password) vengono codificate in
+Base64 e memorizzate nel cookie `auth_token`. Il Base64 non è
+una cifratura: qualsiasi interceptore (MITM, browser extension,
+log) può decodificarle in chiaro. Il composable `useApi` invia
+questo cookie come header `Authorization: Basic` ad ogni richiesta
+API.
+
+*Rischio:* compromissione delle credenziali utente tramite
+intercettazione del cookie o accesso diretto al browser.
+
+*Remediation:* adottare JWT firmati con refresh token rotazione,
+o sessioni lato server con cookie `HttpOnly; Secure; SameSite=Strict`.
+
+=== V-02 — Dati Personali in Cookie in Chiaro (MEDIUM)
+
+*Fonte:* `app/stores/auth.ts:24,40`
+*CWE:* CWE-312 (Cleartext Storage of Sensitive Information),
+CWE-614 (Sensitive Cookie in HTTPS Session Without Secure
+Attribute)
+*OWASP:* A04:2021 Insecure Design
+
+Oltre alle credenziali, il cookie `auth_token` contiene anche
+nome, cognome e ruolo dell'utente in formato Base64. Anche in
+assenza di interceptazione HTTP, un attaccante con accesso al
+dispositivo può leggere il cookie dal filesystem del browser.
+
+*Rischio:* esposizione di dati personali identificabili.
+
+*Remediation:* limitare i dati nel cookie al session ID; i
+dati utente devono risiedere solo lato server o in un token
+firmato.
+
+=== V-03 — XSS tramite Leaflet bindPopup (MEDIUM)
+
+*Fonte:* `app/pages/ricerca/posizione.vue:51`
+*CWE:* CWE-79 (Cross-site Scripting), CWE-116 (Improper
+Encoding or Escaping of Output)
+*OWASP:* A03:2021 Injection
+
+Il nome dell'attività viene inserito direttamente in un
+`bindPopup()` di Leaflet senza sanitizzazione. Se un gestore
+inserisce codice HTML/JavaScript nel nome attività (campo
+testo libero), questo viene eseguito nel browser di ogni
+visitatore che visualizza la mappa.
+
+*Rischio:* session hijacking, defacement, reindirizzamento
+a siti malevoli.
+
+*Remediation:* usare `L.DomUtil.create` con testo.textContent
+oppure sanitizzare con DOMPurify prima del bindPopup.
+
+=== V-04 — Dati Sensibili in localStorage (LOW-MEDIUM)
+
+*Fonte:* `app/components/PrenotazioneDialog.vue:63,145`,
+`app/components/CookieConsent.vue:5,12`
+*CWE:* CWE-693 (Protection Mechanism Failure), CWE-1021
+(Restriction of UI Display)
+*OWASP:* A05:2021 Security Misconfiguration
+
+`localStorage` persiste senza scadenza e non ha protezione
+HttpOnly. Dati come token o preferenze restano accessibili
+a qualsiasi script (anche compromesso via XSS).
+
+*Remediation:* privilegiare sessionStorage, cookie HttpOnly,
+o memoria solo a runtime.
+
+=== V-05 — URL API in HTTP di Default (LOW)
+
+*Fonte:* `app/composables/useApi.ts:3`, `nuxt.config.ts`,
+`frontend/Dockerfile`
+*CWE:* CWE-319 (Cleartext Communication of Sensitive
+Information)
+*OWASP:* A02:2021 Cryptographic Failures
+
+L'URL dell'API di default è `http://localhost:8080`. Se non
+sovrascritto via variabile d'ambiente in produzione, le
+richieste avvengono in HTTP non cifrato.
+
+*Rischio:* trasmissione di credenziali e dati personali in
+chiaro sulla rete.
+
+*Remediation:* forzare `https://` come default in produzione
+e validare il protocollo all'avvio.
+
+=== V-06 — Assenza di Content Security Policy (LOW)
+
+*Fonte:* `nuxt.config.ts` (nessuna configurazione CSP)
+*CWE:* CWE-693 (Protection Mechanism Failure)
+*OWASP:* A05:2021 Security Misconfiguration
+
+Non è configurata nessuna Content Security Policy. Il browser
+carica script, fogli di stile e font da qualsiasi origine,
+amplificando l'impatto di eventuali XSS.
+
+*Remediation:* configurare CSP restrittiva in `nuxt.config.ts`
+con `default-src 'self'` e whitelist esplicite.
+
+=== V-07 — Path Traversal nel Tile Proxy (LOW)
+
+*Fonte:* `server/api/tiles/[...path].ts`
+*CWE:* CWE-22 (Improper Limitation of a Pathname to a
+Restricted Directory)
+*OWASP:* A01:2021 Broken Access Control
+
+Il server proxy per i tile map proxyizza direttamente il path
+nella richiesta upstream senza validazione. Un path malevolo
+potrebbe accedere a risorse non autorizzate sull'origine.
+
+*Rischio:* accesso a dati o servizi interni sull'origine tile.
+
+*Remediation:* validare e normalizzare il path, applicare
+whitelist di origine, limitare la profondità.
+
+=== Riepilogo Frontend
+
+#table(
+    columns: (auto, auto, auto, auto),
+    inset: 6pt,
+    stroke: 0.5pt,
+    [*ID*], [*Titolo*], [*Gravità*], [*CWE*],
+    [V-01], [Basic Auth in Base64 cookie], [HIGH],
+        [CWE-522/312/614],
+    [V-02], [Dati personali in cookie chiaro], [MEDIUM],
+        [CWE-312/614],
+    [V-03], [XSS via Leaflet bindPopup], [MEDIUM],
+        [CWE-79/116],
+    [V-04], [Dati in localStorage], [LOW-MEDIUM],
+        [CWE-693/1021],
+    [V-05], [URL HTTP di default], [LOW],
+        [CWE-319],
+    [V-06], [Nessuna CSP], [LOW],
+        [CWE-693],
+    [V-07], [Path traversal tile proxy], [LOW],
+        [CWE-22],
+)
+
+= Risoluzione delle Vulnerabilità del Frontend
+
+Di seguito si descrive l'intervento di risoluzione della
+vulnerabilità V-01, la più critica tra quelle identificate.
+
+== V-01 — Migrazione da HTTP Basic a JWT
+
+=== Problema
+
+L'autenticazione originale utilizzava HTTP Basic Authentication:
+le credenziali (email + password) venivano codificate in Base64
+e memorizzate nel cookie `credenziali`. Ad ogni richiesta API,
+il composable `useApi` leggeva il cookie e costruiva l'header
+`Authorization: Basic <base64>`.
+
+Il Base64 non è una cifratura: qualsiasi interceptore (MITM,
+browser extension, log) poteva decodificarle in chiaro. Il
+cookie persisteva indefinitamente senza scadenza, esponendo le
+credenziali per l'intera durata della sessione.
+
+Il backend configurava esclusivamente `.httpBasic()` nello
+`SecurityFilterChain`, senza alcun meccanismo di token o
+sessione stateless.
+
+=== Soluzione Backend
+
+#set enum(numbering: "1)")
++ *Dipendenza jjwt:* aggiunta la libreria `io.jsonwebtoken`
+    (jjwt-api, jjwt-impl, jjwt-jackson versione 0.12.6) nel
+    `pom.xml`.
+
++ *JwtUtil:* classe `JwtUtil.java` che gestisce la generazione,
+    il parsing e la validazione dei JWT. Utilizza HMAC-SHA
+    (`Keys.hmacShaKeyFor`) con chiave segreta configurata via
+    `jwt.secret` in `application.yaml`. Il token contiene
+    subject (email), claim `ruolo`, data di emissione e
+    scadenza (default 1 ora).
+
++ *JwtAuthenticationFilter:* filtro `OncePerRequestFilter` che
+    intercetta ogni richiesta, estrae il token dall'header
+    `Authorization: Bearer <token>`, lo valida e popola il
+    `SecurityContext` con l'`Utente` e il suo ruolo.
+
++ *Endpoint di login:* `POST /api/auth/login` che accetta
+    `{ email, password }` come body JSON, autentica tramite
+    `AuthenticationManager` (che delega a Spring Security
+    con BCrypt), e restituisce `{ token, utente }`.
+
++ *SecurityConfig:* `.httpBasic()` è stato sostituito con
+    `SessionCreationPolicy.STATELESS` e `addFilterBefore`
+    del `JwtAuthenticationFilter` prima di
+    `UsernamePasswordAuthenticationFilter`. L'endpoint
+    `/api/auth/**` è concesso a tutti (`permitAll()`).
+
++ *Configurazione:* le proprietà `jwt.secret` e
+    `jwt.expiration-ms` sono definite in `application.yaml`
+    con valori di default overridden via variabili d'ambiente.
+
+=== Soluzione Frontend
+
++ *auth.ts:* il cookie `credenziali` (Base64) è stato
+    sostituito con il cookie `token` (JWT), configurato con
+    `secure: true`, `sameSite: 'strict'` e `maxAge: 3600`.
+    La funzione `login()` chiama `POST /api/auth/login` e
+    memorizza il JWT ricevuto. La funzione `register()`
+    effettua la registrazione e poi il login automatico.
+
++ *useApi.ts:* la funzione `authHeaders()` legge il cookie
+    `token` e restituisce `{ Authorization: "Bearer <token>" }`
+    invece di `{ Authorization: "Basic <base64>" }`. L'endpoint
+    di login è stato cambiato da `GET /api/utenti` a
+    `POST /api/auth/login`.
+
++ *Test:* i mock dello store nei test unitari sono stati
+    aggiornati per includere la proprietà `token`.
+
+=== Differenze Chiave
+
+#table(
+    columns: (auto, auto, auto),
+    inset: 6pt,
+    stroke: 0.5pt,
+    [*Aspetto*], [*Prima (V-01)*], [*Dopo*],
+    [Credenziali nel cookie], [Base64(email:password)],
+        [JWT firmato (HMAC-SHA)],
+    [Header HTTP], [Authorization: Basic],
+        [Authorization: Bearer],
+    [Scadenza credenziali], [Nessuna], [1 ora (configurabile)],
+    [Mechanismo backend], [httpBasic()],
+        [JWT filter + STATELESS],
+    [Endpoint login], [GET /api/utenti],
+        [POST /api/auth/login],
+    [Protezione cookie], [Nessuna],
+        [secure, sameSite=strict, maxAge],
+    [Segreto lato server], [N/A (BCrypt solo)],
+        [HMAC-SHA key (jwt.secret)],
+)
 
 = Test di Performance per l'Affidabilità
 
@@ -783,13 +1039,13 @@ di errore della query nativa, un `catch (Exception)` ripristinava
   rispondeva con dati calcolati in memoria. Oggi l'errore si propaga
   esplicitamente (HTTP 500).
 - *Una sola fonte di verità:* calcolo distanze delegato a
-  `ST_Distance_Sphere`, eliminando la doppia implementazione
+  raw("ST_Distance_Sphere"), eliminando la doppia implementazione
   (Haversine in Java vs query spaziale).
 - *Codice morto:* il ramo non era mai esercitato (dev/prod usano
   MySQL). Di fatto dead code, è stato rimosso anziché testato.
 - *Cleanup:* eliminati `DistanceCalculator`, i suoi 4 unit test e i 2
-  benchmark JMH; `findByPosizioneNative` rinominato in
-  `findByPosizione`.
+  benchmark JMH; raw("findByPosizioneNative") rinominato in
+  raw("findByPosizione").
 
 Risultato: nessun mutante residuo sul metodo e nessuna regressione
 funzionale in dev/prod.
@@ -804,7 +1060,7 @@ funzionale in dev/prod.
     [JaCoCo], [Affidabilità], [Nessuna misura di copertura], [97,5% linee / 97,2% rami / 100% classi (30/30); esclusioni agent/report allineate],
     [CodeCov], [Affidabilità (monitoraggio copertura e test)], [Nessuna piattaforma di copertura], [Copertura JaCoCo e risultati Surefire caricati a ogni run del job test backend; storico e commenti per-PR],
     [Pitest], [Affidabilità], [Nessun mutation testing], [Mutation coverage 89,6% (583/651); 68 sopravvissute],
-    [Gate coverage CI], [Affidabilità], [Soglia 80% nella build], [Gate `--fail-below 80` su PR via script (JaCoCo e Pitest), al posto di PavanMudigonda/jacoco-reporter],
+    [Gate coverage CI], [Affidabilità], [Soglia 80% nella build], [Gate raw("--fail-below 80") su PR via script (JaCoCo e Pitest), al posto di PavanMudigonda/jacoco-reporter],
     [Checkstyle], [Manutenibilità], [Nessun controllo stile], [0 violazioni Google Java Style],
     [Buildabilità],
     [Dependability (generale)],
@@ -832,7 +1088,7 @@ funzionale in dev/prod.
     [44 benchmark eseguiti;
      BCrypt ~66 ms; servizi core 6-8 μs],
     [Ottimizzazioni bottleneck], [Affidabilità (performance)],
-    [Nessuna — findAll() in memoria],
+    [Nessuna — raw("findAll()") in memoria],
     [10 file modificati; latenza combinata da ~13 s a ~100 ms
      (-99%); 4 query ottimizzate; 3 nuovi indici],
 )
@@ -849,6 +1105,10 @@ seguenti aspetti da approfondire o completare:
 - *Risoluzione dei 3 code smell GCI1* (repository call in stream)
     per ridurre il debito tecnico e migliorare l'affidabilità del
     data access layer.
+- *Remediation delle vulnerabilità frontend:* V-01 risolta
+    (migrazione da HTTP Basic a JWT); V-02–V-07 ancora da
+    implementare: sanitizzazione output Leaflet, configurazione CSP,
+    validazione path nel tile proxy e migrazione da localStorage.
 - *Integrazione CI/CD continua* delle scansioni Snyk e GitGuardian
     per mantenere la security posture nel tempo.
 - *Riesecuzione periodica dei benchmark JMH* per monitorare

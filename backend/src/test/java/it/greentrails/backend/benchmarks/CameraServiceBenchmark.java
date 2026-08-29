@@ -81,4 +81,3 @@ public class CameraServiceBenchmark {
         return data;
     }
 }
-

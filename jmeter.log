@@ -1,0 +1,18 @@
+2026/07/12 12:05:31 INFO  - jmeter.util.JMeterUtils: Setting Locale to it_IT
+2026/07/12 12:05:31 ERROR - jmeter.util.JMeterUtils: Could not find resources for 'it_IT'
+2026/07/12 12:05:31 INFO  - jmeter.JMeter: Loading user properties from: /usr/share/jmeter/bin/user.properties
+2026/07/12 12:05:31 INFO  - jmeter.JMeter: Loading system properties from: /usr/share/jmeter/bin/system.properties
+2026/07/12 12:05:31 INFO  - jmeter.JMeter: Copyright (c) 1998-2015 The Apache Software Foundation
+2026/07/12 12:05:31 INFO  - jmeter.JMeter: Version 2.13.19691222
+2026/07/12 12:05:31 INFO  - jmeter.JMeter: java.version=1.8.0_492
+2026/07/12 12:05:31 INFO  - jmeter.JMeter: java.vm.name=OpenJDK 64-Bit Server VM
+2026/07/12 12:05:31 INFO  - jmeter.JMeter: os.name=Linux
+2026/07/12 12:05:31 INFO  - jmeter.JMeter: os.arch=amd64
+2026/07/12 12:05:31 INFO  - jmeter.JMeter: os.version=6.8.0-117-generic
+2026/07/12 12:05:31 INFO  - jmeter.JMeter: file.encoding=UTF-8
+2026/07/12 12:05:31 INFO  - jmeter.JMeter: Default Locale=italiano (Italia)
+2026/07/12 12:05:31 INFO  - jmeter.JMeter: JMeter  Locale=italiano (Italia)
+2026/07/12 12:05:31 INFO  - jmeter.JMeter: JMeterHome=/usr/share/jmeter
+2026/07/12 12:05:31 INFO  - jmeter.JMeter: user.dir  =/home/barry/IdeaProjects/GreenTrails
+2026/07/12 12:05:31 INFO  - jmeter.JMeter: PWD       =/home/barry/IdeaProjects/GreenTrails
+2026/07/12 12:05:31 INFO  - jmeter.JMeter: IP: 127.0.1.1 Name: VivoBook-ASUSLaptop-X512FB-X512FB FullName: VivoBook-ASUSLaptop-X512FB-X512FB

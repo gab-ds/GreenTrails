@@ -34,6 +34,7 @@ export default defineNuxtConfig({
   css: ["~/assets/css/main.css", "leaflet/dist/leaflet.css"],
 
   runtimeConfig: {
+    apiBaseUrl: "http://localhost:8080/api",
     public: {
       apiBaseUrl: "http://localhost:8080/api",
     },

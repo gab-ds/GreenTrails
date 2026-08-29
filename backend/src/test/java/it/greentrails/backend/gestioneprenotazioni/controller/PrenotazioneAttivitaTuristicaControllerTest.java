@@ -968,4 +968,3 @@ class PrenotazioneAttivitaTuristicaControllerTest {
         .deletePrenotazioneAttivitaTuristica(any());
   }
 }
-

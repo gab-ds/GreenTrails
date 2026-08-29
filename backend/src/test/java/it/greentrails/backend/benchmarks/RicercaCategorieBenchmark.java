@@ -51,10 +51,10 @@ public class RicercaCategorieBenchmark {
     public void setup() {
         AttivitaRepository repository = mock(AttivitaRepository.class);
         service = new RicercaServiceImpl(repository);
-        
+
         targetCategories = new ArrayList<>();
         Map<Long, List<Attivita>> mockDatabase = new HashMap<>();
-        
+
         // Generiamo le categorie
         for (int i = 0; i < numCategories; i++) {
             Categoria c = new Categoria();
@@ -68,19 +68,19 @@ public class RicercaCategorieBenchmark {
         // Creiamo 'listSize' elementi per ogni categoria.
         // Una frazione (es. 20%) sarÃ  comune a TUTTE le categorie (IDs 0..N*0.2)
         // Il resto saranno ID casuali o specifici per quella categoria per rendere l'intersezione costosa ma non vuota.
-        
+
         int commonCount = (int) (listSize * 0.2); // 20% in comune
-        
+
         for (Categoria cat : targetCategories) {
             List<Attivita> attivitaList = new ArrayList<>(listSize);
-            
+
             // Aggiungi elementi comuni
             for (int k = 0; k < commonCount; k++) {
                 Attivita a = new Attivita();
                 a.setId((long) k);
                 attivitaList.add(a);
             }
-            
+
             // Aggiungi elementi specifici per questa categoria (offset elevato per evitare collisioni non volute)
             long offset = 1000000L + (cat.getId() * listSize);
             for (int k = commonCount; k < listSize; k++) {
@@ -88,10 +88,10 @@ public class RicercaCategorieBenchmark {
                 a.setId(offset + k);
                 attivitaList.add(a);
             }
-            
+
             // Shuffle per rendere things more realistic (e slower contains?)
             Collections.shuffle(attivitaList, new Random(42));
-            
+
             mockDatabase.put(cat.getId(), attivitaList);
         }
 
@@ -108,4 +108,3 @@ public class RicercaCategorieBenchmark {
     }
 
 }
-

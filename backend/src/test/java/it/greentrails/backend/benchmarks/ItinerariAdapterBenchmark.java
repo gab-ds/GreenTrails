@@ -62,7 +62,7 @@ public class ItinerariAdapterBenchmark {
 
         when(attivitaRepo.findAll()).thenReturn(mockAttivita);
         when(cameraRepo.findAll()).thenReturn(mockCamere);
-        
+
         // Mock save to return input or dummy
         when(itinerariRepo.save(any(Itinerario.class))).thenAnswer(i -> {
             Itinerario it = i.getArgument(0);
@@ -72,10 +72,10 @@ public class ItinerariAdapterBenchmark {
 
         // Initialize Adapter
         adapter = new ItinerariStubAdapter(
-            attivitaRepo, 
-            cameraRepo, 
-            itinerariRepo, 
-            prenAlloggioRepo, 
+            attivitaRepo,
+            cameraRepo,
+            itinerariRepo,
+            prenAlloggioRepo,
             prenAttivitaRepo
         );
 
@@ -101,7 +101,7 @@ public class ItinerariAdapterBenchmark {
             a.setPrezzo(10.0 + r.nextDouble() * 100);
             // Mix of Alloggio (true) and Attivita Turistica (false)
             // Adapter filters for !isAlloggio
-            a.setAlloggio(r.nextBoolean()); 
+            a.setAlloggio(r.nextBoolean());
             list.add(a);
         }
         return list;
@@ -119,4 +119,3 @@ public class ItinerariAdapterBenchmark {
         return list;
     }
 }
-

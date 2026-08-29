@@ -44,7 +44,7 @@ public class PrenotazioneBenchmark {
     public void setup() {
         PrenotazioneAlloggioRepository repository = mock(PrenotazioneAlloggioRepository.class);
         CameraService cameraService = mock(CameraService.class);
-        
+
         List<PrenotazioneAlloggio> mockData = generateMockData(listSize);
         when(repository.findAll()).thenReturn(mockData);
 
@@ -73,4 +73,3 @@ public class PrenotazioneBenchmark {
         return data;
     }
 }
-

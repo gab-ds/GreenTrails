@@ -80,4 +80,3 @@ public class AttivitaServiceBenchmark {
         return data;
     }
 }
-

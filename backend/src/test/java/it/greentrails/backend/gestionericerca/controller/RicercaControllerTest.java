@@ -415,5 +415,3 @@ class RicercaControllerTest {
     verify(ricercaService).findAttivitaByCategorie(anyList());
   }
 }
-
-

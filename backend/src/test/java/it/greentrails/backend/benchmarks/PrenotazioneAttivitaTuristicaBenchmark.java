@@ -42,7 +42,7 @@ public class PrenotazioneAttivitaTuristicaBenchmark {
     @Setup(Level.Trial)
     public void setup() {
         PrenotazioneAttivitaTuristicaRepository repository = mock(PrenotazioneAttivitaTuristicaRepository.class);
-        
+
         List<PrenotazioneAttivitaTuristica> mockData = generateMockData(listSize);
         when(repository.findAll()).thenReturn(mockData);
 
@@ -71,4 +71,3 @@ public class PrenotazioneAttivitaTuristicaBenchmark {
         return data;
     }
 }
-

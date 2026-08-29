@@ -48,7 +48,7 @@ public class AttivitaController {
       @RequestParam("descrizioneBreve") final String descrizioneBreve,
       @RequestParam("descrizioneLunga") final String descrizioneLunga,
       @RequestParam("valori") final long idValori,
-      @RequestParam("immagine") final MultipartFile immagine,
+      @RequestParam(value = "immagine", required = false) final MultipartFile immagine,
       @RequestParam(value = "prezzo", required = false) final Double prezzo,
       @RequestParam(value = "disponibilita", required = false) final Integer disponibilita,
       @RequestParam(value = "categoriaAlloggio", required = false) final Integer categoriaAlloggio,
@@ -72,7 +72,9 @@ public class AttivitaController {
       attivita.setPrezzo(prezzo);
       String media = UUID.randomUUID().toString();
       attivita.setMedia(media);
-      archiviazioneService.store(media, immagine);
+      if (immagine != null && !immagine.isEmpty()) {
+        archiviazioneService.store(media, immagine);
+      }
       if (isAlloggio) {
         if (categoriaAlloggio == null) {
           return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,

@@ -6,13 +6,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -29,16 +32,27 @@ public class SecurityConfig {
   private static final String ROLE_GESTORE = RuoloUtente.GESTORE_ATTIVITA.name();
   private static final String ROLE_ADMIN = RuoloUtente.AMMINISTRATORE.name();
 
+  private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+  public SecurityConfig(final JwtAuthenticationFilter jwtAuthenticationFilter) {
+    this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+  }
+
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
 
   @Bean
+  public AuthenticationManager authenticationManager(
+      final AuthenticationConfiguration config) throws Exception {
+    return config.getAuthenticationManager();
+  }
+
+  @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
 
-    // Permetti richieste da questi origins
     configuration.setAllowedOrigins(Arrays.asList(
         "http://localhost:9000",
         "http://localhost:4200",
@@ -46,25 +60,20 @@ public class SecurityConfig {
         "http://frontend:80"
     ));
 
-    // Permetti tutti i metodi HTTP comuni
     configuration.setAllowedMethods(Arrays.asList(
         "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"
     ));
 
-    // Permetti tutti gli headers
     configuration.setAllowedHeaders(List.of("*"));
 
-    // Permetti l'invio di credenziali (cookies, authorization headers)
     configuration.setAllowCredentials(true);
 
-    // Esponi questi headers nella risposta
     configuration.setExposedHeaders(Arrays.asList(
         "Authorization",
         "Content-Type",
         "X-Requested-With"
     ));
 
-    // Max age per la cache della preflight request
     configuration.setMaxAge(3600L);
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -78,6 +87,7 @@ public class SecurityConfig {
     http
         .authorizeHttpRequests((authorize) -> authorize
             .requestMatchers(HttpMethod.PUT, "/api/utenti").permitAll()
+            .requestMatchers("/api/auth/**").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/utenti").authenticated()
             .requestMatchers(HttpMethod.GET, "/api/utenti/preferenze").hasRole(ROLE_VISITATORE)
 
@@ -147,8 +157,11 @@ public class SecurityConfig {
             .anyRequest().authenticated()
         )
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-        .httpBasic(Customizer.withDefaults())
-        .csrf(AbstractHttpConfigurer::disable);
+        .csrf(AbstractHttpConfigurer::disable)
+        .sessionManagement(session -> session
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .addFilterBefore(jwtAuthenticationFilter,
+            UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }

@@ -313,5 +313,3 @@ class GestioneUtenzeControllerTest {
     verify(gestioneUtenzeService).findByEmail("mario.rossi@test.com");
   }
 }
-
-

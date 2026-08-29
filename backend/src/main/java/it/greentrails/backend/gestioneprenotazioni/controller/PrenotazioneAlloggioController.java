@@ -167,7 +167,7 @@ public class PrenotazioneAlloggioController {
       Attivita attivita = attivitaService.findById(idAttivita);
       if (!attivita.getGestore().getId().equals(utente.getId())) {
         return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, "Alloggio non trovato");
-      } 
+      }
       return ResponseGenerator.generateResponse(HttpStatus.OK,
           prenotazioneAlloggioService.getPrenotazioniByAlloggio(attivita));
     } catch (Exception e) {

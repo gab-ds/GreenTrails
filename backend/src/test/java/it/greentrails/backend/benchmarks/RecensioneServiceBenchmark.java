@@ -79,4 +79,3 @@ public class RecensioneServiceBenchmark {
         return data;
     }
 }
-

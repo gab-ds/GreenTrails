@@ -6,6 +6,10 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
 
+jwt:
+  secret: ${JWT_SECRET:GreenTrailsDefaultSecretKey2026!ChangeInProd}
+  expiration-ms: ${JWT_EXPIRATION_MS:3600000}
+
 management:
   endpoints:
     web:
