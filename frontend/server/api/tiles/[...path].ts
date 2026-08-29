@@ -1,7 +1,9 @@
+const TILE_PATTERN = /^\d{1,2}\/\d{1,2}\/\d{1,2}\.png$/
+
 export default defineEventHandler(async (event) => {
   const path = getRouterParam(event, 'path')
-  if (!path) {
-    throw createError({ statusCode: 400, message: 'Missing tile path' })
+  if (!path || !TILE_PATTERN.test(path)) {
+    throw createError({ statusCode: 400, message: 'Invalid tile path' })
   }
   const url = `https://tile.openstreetmap.org/${path}`
   const res = await $fetch.raw(url, {
