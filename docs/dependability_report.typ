@@ -952,6 +952,47 @@ firmato, eliminando la necessità di un cookie separato.
         [1 ora (scadenza JWT)],
 )
 
+== V-03 — Sanitizzazione Output Leaflet (XSS)
+
+=== Problema
+
+Nella pagina di ricerca per posizione, il nome dell'attività
+veniva inserito direttamente in un `bindPopup()` di Leaflet
+come stringa HTML (`<a href="...">${r.nome}</a>`). Se un
+gestore inserisce codice HTML o JavaScript nel nome attività
+(campo testo libero), questo viene eseguito nel browser di
+ogni visitatore che visualizza la mappa.
+
+*CWE:* CWE-79 (Cross-site Scripting), CWE-116 (Improper
+Encoding or Escaping of Output)
+*OWASP:* A03:2021 Injection
+
+=== Soluzione
+
+Il popup viene costruito manipolando il DOM tramite
+`L.DomUtil.create` anziché concatenare stringhe HTML.
+Il nome attività viene assegnato tramite `textContent`
+invece di `innerHTML`, impedendo l'esecuzione di eventuali
+script iniettati.
+
+Prima:
+```javascript
+.bindPopup(
+  `<a href="/attivita/${r.id}">${r.nome}</a><br>${r.prezzo}€`
+);
+```
+
+Dopo:
+```javascript
+const div = L.DomUtil.create("div");
+const link = L.DomUtil.create("a", "", div);
+link.textContent = r.nome;
+link.setAttribute("href", `/attivita/${r.id}`);
+L.DomUtil.create("br", "", div);
+div.appendChild(document.createTextNode(`${r.prezzo}€`));
+marker.bindPopup(div);
+```
+
 = Test di Performance per l'Affidabilità
 
 I test di performance verificano che il sistema mantenga la
@@ -1170,10 +1211,9 @@ seguenti aspetti da approfondire o completare:
     data access layer.
 - *Remediation delle vulnerabilità frontend:* V-01 risolta
     (migrazione da HTTP Basic a JWT), V-02 risolta (rimozione
-    cookie plaintext, dati utente nei claim JWT); V-03–V-07
-    ancora da implementare: sanitizzazione output Leaflet,
-    configurazione CSP, validazione path nel tile proxy e
-    migrazione da localStorage.
+    cookie plaintext, dati utente nei claim JWT), V-03 risolta
+    (sanitizzazione output Leaflet con DOM); V-04–V-07
+    ancora da implementare.
 - *Integrazione CI/CD continua* delle scansioni Snyk e GitGuardian
     per mantenere la security posture nel tempo.
 - *Riesecuzione periodica dei benchmark JMH* per monitorare

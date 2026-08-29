@@ -46,10 +46,14 @@ async function aggiornaMarker() {
     const L = (await import("leaflet")).default;
     for (const r of risultati.value) {
         const marker = L.marker([r.coordinate.x, r.coordinate.y])
-            .addTo(map!)
-            .bindPopup(
-                `<a href="/attivita/${r.id}">${r.nome}</a><br>${r.prezzo}€`,
-            );
+            .addTo(map!);
+        const div = L.DomUtil.create("div");
+        const link = L.DomUtil.create("a", "", div);
+        link.textContent = r.nome;
+        link.setAttribute("href", `/attivita/${r.id}`);
+        L.DomUtil.create("br", "", div);
+        div.appendChild(document.createTextNode(`${r.prezzo}€`));
+        marker.bindPopup(div);
         markers.push(marker);
     }
 }
