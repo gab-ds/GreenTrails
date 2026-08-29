@@ -920,5 +920,3 @@ class AttivitaControllerTest {
     verify(attivitaService).findAll();
   }
 }
-
-

@@ -127,6 +127,7 @@ describe('AreaRiservata — ruolo gestore', () => {
   it('mostra le card per gestore', async () => {
     vi.mocked(useAuthStore).mockReturnValue({
       user: { id: 2, nome: 'Luigi', cognome: 'Verdi', email: 'l.verdi@example.com', ruolo: 'GESTORE_ATTIVITA' },
+      token: 'mock-jwt-token',
       isLoggedIn: true,
       isVisitatore: false,
       isGestore: true,
@@ -145,6 +146,7 @@ describe('AreaRiservata — ruolo admin', () => {
   it('mostra la card segnalazioni per admin', async () => {
     vi.mocked(useAuthStore).mockReturnValue({
       user: { id: 3, nome: 'Sofia', cognome: 'Neri', email: 's.neri@example.com', ruolo: 'AMMINISTRATORE' },
+      token: 'mock-jwt-token',
       isLoggedIn: true,
       isVisitatore: false,
       isGestore: false,
@@ -247,6 +249,7 @@ describe('MieAttivita', () => {
   beforeAll(() => {
     vi.mocked(useAuthStore).mockReturnValue({
       user: { id: 2, nome: 'Luigi', cognome: 'Verdi', email: 'l.verdi@example.com', ruolo: 'GESTORE_ATTIVITA' },
+      token: 'mock-jwt-token',
       isLoggedIn: true,
       isVisitatore: false,
       isGestore: true,
@@ -284,6 +287,7 @@ describe('AttivitaId', () => {
   beforeAll(() => {
     vi.mocked(useAuthStore).mockReturnValue({
       user: { id: 1, nome: 'Mario', cognome: 'Rossi', email: 'm.rossi@example.com', ruolo: 'VISITATORE' },
+      token: 'mock-jwt-token',
       isLoggedIn: true,
       isVisitatore: true,
       isGestore: false,
@@ -351,6 +355,7 @@ describe('InserimentoAttivita', () => {
   beforeAll(() => {
     vi.mocked(useAuthStore).mockReturnValue({
       user: { id: 2, nome: 'Luigi', cognome: 'Verdi', email: 'l.verdi@example.com', ruolo: 'GESTORE_ATTIVITA' },
+      token: 'mock-jwt-token',
       isLoggedIn: true,
       isVisitatore: false,
       isGestore: true,
@@ -386,6 +391,7 @@ describe('TabellaPrenotazioni', () => {
   beforeAll(() => {
     vi.mocked(useAuthStore).mockReturnValue({
       user: { id: 2, nome: 'Luigi', cognome: 'Verdi', email: 'l.verdi@example.com', ruolo: 'GESTORE_ATTIVITA' },
+      token: 'mock-jwt-token',
       isLoggedIn: true,
       isVisitatore: false,
       isGestore: true,
@@ -429,6 +435,7 @@ describe('IMieiViaggi', () => {
   beforeAll(() => {
     vi.mocked(useAuthStore).mockReturnValue({
       user: { id: 1, nome: 'Mario', cognome: 'Rossi', email: 'm.rossi@example.com', ruolo: 'VISITATORE' },
+      token: 'mock-jwt-token',
       isLoggedIn: true,
       isVisitatore: true,
       isGestore: false,
@@ -463,6 +470,7 @@ describe('ItinerarioAutomatico', () => {
   beforeAll(() => {
     vi.mocked(useAuthStore).mockReturnValue({
       user: { id: 1, nome: 'Mario', cognome: 'Rossi', email: 'm.rossi@example.com', ruolo: 'VISITATORE' },
+      token: 'mock-jwt-token',
       isLoggedIn: true,
       isVisitatore: true,
       isGestore: false,

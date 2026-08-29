@@ -240,7 +240,9 @@ async function onSubmit() {
     fd.append('descrizioneBreve', descrizioneBreve.value)
     fd.append('descrizioneLunga', descrizioneLunga.value)
     fd.append('valori', String(valoriRes.data.id))
-    fd.append('immagine', file.value || new Blob([], { type: 'application/octet-stream' }))
+    if (file.value) {
+      fd.append('immagine', file.value)
+    }
 
     if (alloggio.value) {
       fd.append('categoriaAlloggio', String(categoriaAlloggio.value))
@@ -346,16 +348,46 @@ async function onSubmit() {
         <h2 class="mb-4 text-lg font-semibold text-gray-800">Politiche eco-sostenibili</h2>
         <div class="flex flex-wrap gap-2">
           <label
-v-for="p in [
-            { key: 'politicheAntispreco', label: 'Antispreco', val: politicheAntispreco },
-            { key: 'prodottiLocali', label: 'Prodotti Locali', val: prodottiLocali },
-            { key: 'energiaVerde', label: 'Energia Verde', val: energiaVerde },
-            { key: 'raccoltaDifferenziata', label: 'Raccolta Differenziata', val: raccoltaDifferenziata },
-            { key: 'limiteEmissioneCO2', label: 'Limite Emissione CO₂', val: limiteEmissioneCO2 },
-            { key: 'contattoConNatura', label: 'Contatto con Natura', val: contattoConNatura },
-          ]" :key="p.key" class="cursor-pointer rounded-lg border px-4 py-2 text-sm transition" :class="p.val ? 'border-green-500 bg-green-50 text-green-700' : 'border-gray-200 text-gray-600 hover:border-gray-300'">
-            <input v-model="p.val" type="checkbox" class="sr-only">
-            {{ p.label }}
+            class="cursor-pointer rounded-lg border px-4 py-2 text-sm transition"
+            :class="politicheAntispreco ? 'border-green-500 bg-green-50 text-green-700' : 'border-gray-200 text-gray-600 hover:border-gray-300'"
+          >
+            <input v-model="politicheAntispreco" type="checkbox" class="sr-only">
+            Antispreco
+          </label>
+          <label
+            class="cursor-pointer rounded-lg border px-4 py-2 text-sm transition"
+            :class="prodottiLocali ? 'border-green-500 bg-green-50 text-green-700' : 'border-gray-200 text-gray-600 hover:border-gray-300'"
+          >
+            <input v-model="prodottiLocali" type="checkbox" class="sr-only">
+            Prodotti Locali
+          </label>
+          <label
+            class="cursor-pointer rounded-lg border px-4 py-2 text-sm transition"
+            :class="energiaVerde ? 'border-green-500 bg-green-50 text-green-700' : 'border-gray-200 text-gray-600 hover:border-gray-300'"
+          >
+            <input v-model="energiaVerde" type="checkbox" class="sr-only">
+            Energia Verde
+          </label>
+          <label
+            class="cursor-pointer rounded-lg border px-4 py-2 text-sm transition"
+            :class="raccoltaDifferenziata ? 'border-green-500 bg-green-50 text-green-700' : 'border-gray-200 text-gray-600 hover:border-gray-300'"
+          >
+            <input v-model="raccoltaDifferenziata" type="checkbox" class="sr-only">
+            Raccolta Differenziata
+          </label>
+          <label
+            class="cursor-pointer rounded-lg border px-4 py-2 text-sm transition"
+            :class="limiteEmissioneCO2 ? 'border-green-500 bg-green-50 text-green-700' : 'border-gray-200 text-gray-600 hover:border-gray-300'"
+          >
+            <input v-model="limiteEmissioneCO2" type="checkbox" class="sr-only">
+            Limite Emissione CO₂
+          </label>
+          <label
+            class="cursor-pointer rounded-lg border px-4 py-2 text-sm transition"
+            :class="contattoConNatura ? 'border-green-500 bg-green-50 text-green-700' : 'border-gray-200 text-gray-600 hover:border-gray-300'"
+          >
+            <input v-model="contattoConNatura" type="checkbox" class="sr-only">
+            Contatto con Natura
           </label>
         </div>
       </div>

@@ -1,10 +1,12 @@
 export function useApi() {
   const config = useRuntimeConfig()
-  const BASE = config.public.apiBaseUrl || 'http://localhost:8080/api'
+  const BASE = import.meta.server
+    ? (config.apiBaseUrl || 'http://localhost:8080/api')
+    : (config.public.apiBaseUrl || 'http://localhost:8080/api')
 
   function authHeaders(): Record<string, string> {
-    const creds = useCookie('credenziali').value
-    return creds ? { Authorization: `Basic ${creds}` } : {}
+    const token = useCookie('token').value
+    return token ? { Authorization: `Bearer ${token}` } : {}
   }
 
   return {
@@ -34,8 +36,9 @@ export function useApi() {
     },
     auth: {
       login: (email: string, password: string) =>
-        $fetch(`${BASE}/utenti`, {
-          headers: { Authorization: `Basic ${btoa(`${email}:${password}`)}` },
+        $fetch(`${BASE}/auth/login`, {
+          method: 'POST',
+          body: { email, password },
         }),
       register: (data: Record<string, unknown>, isGestore: boolean) =>
         $fetch(`${BASE}/utenti`, { method: 'PUT', params: { isGestore }, body: data }),
