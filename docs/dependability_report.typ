@@ -1075,6 +1075,51 @@ La funzione viene applicata sia all'URL server-side
 (`config.public.apiBaseUrl`), con fallback a
 `http://localhost:8080/api` per lo sviluppo locale.
 
+== V-06 — Configurazione Content Security Policy
+
+=== Problema
+
+Non era configurata nessuna Content Security Policy. Il
+browser caricava script, fogli di stile e font da qualsiasi
+origine, amplificando l'impatto di eventuali attacchi XSS:
+un script malevolo iniettato poteva eseguire codice
+arbitrario, caricare risorse da domini compromessi o
+inviare dati a server esterni.
+
+*CWE:* CWE-693 (Protection Mechanism Failure)
+*OWASP:* A05:2021 Security Misconfiguration
+
+=== Soluzione
+
+Una CSP restrittiva è stata configurata tramite meta tag
+in `nuxt.config.ts`. Le direttive principali:
+
+- `default-src 'self'`: tutte le risorse da origine sola
+    per default.
+- `script-src 'self' 'unsafe-inline' 'unsafe-eval'`:
+    script locali, inline (necessario per Nuxt hydration)
+    e eval (necessario per Nuxt devtools).
+- `style-src 'self' 'unsafe-inline'`: stili locali e
+    inline (necessario per Nuxt UI e Leaflet).
+- `img-src 'self' data: blob:`: immagini da origine
+    sola, data URI e blob (necessario per mappe Leaflet).
+- `font-src 'self' https://fonts.gstatic.com`: font
+    locali e Google Fonts (Inter).
+- `connect-src 'self'`: chiamate API solo a origine sola.
+- `frame-ancestors 'none'`: impedisce l'incorporamento
+    in iframe da siti esterni (protezione clickjacking).
+
+```html
+<meta http-equiv="Content-Security-Policy"
+  content="default-src 'self';
+    script-src 'self' 'unsafe-inline' 'unsafe-eval';
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data: blob:;
+    font-src 'self' https://fonts.gstatic.com;
+    connect-src 'self';
+    frame-ancestors 'none'" />
+```
+
 = Test di Performance per l'Affidabilità
 
 I test di performance verificano che il sistema mantenga la
@@ -1296,8 +1341,8 @@ seguenti aspetti da approfondire o completare:
     cookie plaintext, dati utente nei claim JWT), V-03 risolta
     (sanitizzazione output Leaflet con DOM), V-04 risolta
     (migrazione da localStorage a sessionStorage), V-05 risolta
-    (forzatura HTTPS in produzione); V-06–V-07 ancora da
-    implementare.
+    (forzatura HTTPS in produzione), V-06 risolta (CSP
+    restrittiva configurata); V-07 ancora da implementare.
 - *Integrazione CI/CD continua* delle scansioni Snyk e GitGuardian
     per mantenere la security posture nel tempo.
 - *Riesecuzione periodica dei benchmark JMH* per monitorare
