@@ -993,6 +993,48 @@ div.appendChild(document.createTextNode(`${r.prezzo}€`));
 marker.bindPopup(div);
 ```
 
+== V-04 — Migrazione da localStorage a sessionStorage
+
+=== Problema
+
+`PrenotazioneDialog.vue` e `CookieConsent.vue` utilizzavano
+`localStorage` per memorizzare rispettivamente l'ID di un
+itinerario creato e il consenso ai cookie. `localStorage`
+persiste senza scadenza e non è protetto da HttpOnly: dati
+memorizzati restano accessibili a qualsiasi script (anche
+compromesso via XSS) per l'intera durata della vita del
+browser.
+
+*CWE:* CWE-693 (Protection Mechanism Failure), CWE-1021
+(Restriction of UI Display)
+*OWASP:* A05:2021 Security Misconfiguration
+
+=== Soluzione
+
+Entrambi gli utilizzi sono stati migrati da `localStorage`
+a `sessionStorage`, che invece:
+- *non persiste* oltre la sessione del browser (viene
+    cancellato alla chiusura della finestra/abbandono del
+    sito);
+- *è isolato per tab/sessione*, riducendo la superficie
+    di attacco.
+
+Prima:
+```javascript
+localStorage.getItem('idItinerario')
+localStorage.setItem('idItinerario', String(id))
+localStorage.getItem('acceptedCookies')
+localStorage.setItem('acceptedCookies', 'true')
+```
+
+Dopo:
+```javascript
+sessionStorage.getItem('idItinerario')
+sessionStorage.setItem('idItinerario', String(id))
+sessionStorage.getItem('acceptedCookies')
+sessionStorage.setItem('acceptedCookies', 'true')
+```
+
 = Test di Performance per l'Affidabilità
 
 I test di performance verificano che il sistema mantenga la
@@ -1212,7 +1254,8 @@ seguenti aspetti da approfondire o completare:
 - *Remediation delle vulnerabilità frontend:* V-01 risolta
     (migrazione da HTTP Basic a JWT), V-02 risolta (rimozione
     cookie plaintext, dati utente nei claim JWT), V-03 risolta
-    (sanitizzazione output Leaflet con DOM); V-04–V-07
+    (sanitizzazione output Leaflet con DOM), V-04 risolta
+    (migrazione da localStorage a sessionStorage); V-05–V-07
     ancora da implementare.
 - *Integrazione CI/CD continua* delle scansioni Snyk e GitGuardian
     per mantenere la security posture nel tempo.

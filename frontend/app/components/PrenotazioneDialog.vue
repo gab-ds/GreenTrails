@@ -60,10 +60,10 @@ onMounted(async () => {
     }
   }
   try {
-    const stored = localStorage.getItem('idItinerario')
+    const stored = sessionStorage.getItem('idItinerario')
     if (stored) itinerarioId.value = Number(stored)
   } catch (err) {
-    console.error('Errore lettura localStorage:', err)
+    console.error('Errore lettura sessionStorage:', err)
   }
 })
 
@@ -142,7 +142,7 @@ async function creaItinerario() {
     const res = await itinerari.create() as { status: string; data: { id: number } }
     if (res.status === 'success') {
       itinerarioId.value = res.data.id
-      try { localStorage.setItem('idItinerario', String(res.data.id)) } catch (e) { console.error('Errore salvataggio localStorage:', e) }
+      try { sessionStorage.setItem('idItinerario', String(res.data.id)) } catch (e) { console.error('Errore salvataggio sessionStorage:', e) }
       azioneEseguita.value = true
       itinerarioCreato.value = true
     } else {
