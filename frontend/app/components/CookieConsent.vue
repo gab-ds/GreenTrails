@@ -2,14 +2,14 @@
 const show = ref(false)
 
 onMounted(() => {
-  const accepted = localStorage.getItem('acceptedCookies')
+  const accepted = sessionStorage.getItem('acceptedCookies')
   if (!accepted) {
     setTimeout(() => (show.value = true), 1000)
   }
 })
 
 function accept() {
-  localStorage.setItem('acceptedCookies', 'true')
+  sessionStorage.setItem('acceptedCookies', 'true')
   show.value = false
 }
 
