@@ -47,7 +47,7 @@ describe('useAuthStore', () => {
     expect(store.token).toBeNull()
   })
 
-  it('login imposta utente, token e cookie', async () => {
+  it('login imposta utente e token', async () => {
     mockLogin.mockResolvedValue(loginResponse(mario))
 
     const store = freshStore()
@@ -72,7 +72,7 @@ describe('useAuthStore', () => {
     expect(store.token).toBeNull()
   })
 
-  it('logout resetta utente, token e cookie', async () => {
+  it('logout resetta utente e token', async () => {
     mockLogin.mockResolvedValue(loginResponse(mario))
 
     const store = freshStore()
@@ -115,7 +115,7 @@ describe('useAuthStore', () => {
     expect(store.isLoggedIn).toBe(false)
   })
 
-  it('restore ripristina utente se token e user cookie presenti', async () => {
+  it('restore ripristina utente se token presente', async () => {
     mockLogin.mockResolvedValue(loginResponse(mario))
 
     const store = freshStore()

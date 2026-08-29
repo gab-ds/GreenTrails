@@ -13,6 +13,31 @@ interface LoginResponse {
   data: { token: string; utente: Utente }
 }
 
+interface JwtPayload {
+  id: number
+  nome: string
+  cognome: string
+  email: string
+  ruolo: string
+  exp: number
+}
+
+function decodeJwtPayload(token: string): JwtPayload | null {
+  try {
+    const base64Url = token.split('.')[1]
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    )
+    return JSON.parse(jsonPayload) as JwtPayload
+  } catch {
+    return null
+  }
+}
+
 export const useAuthStore = defineStore('auth', () => {
   const { auth: authApi } = useApi()
   const user = ref<Utente | null>(null)
@@ -23,7 +48,6 @@ export const useAuthStore = defineStore('auth', () => {
     sameSite: 'strict',
     maxAge: 3600,
   })
-  const userCookie = useCookie<string | null>('user', { default: () => null })
 
   const isLoggedIn = computed(() => !!user.value && !!token.value)
   const isVisitatore = computed(() => user.value?.ruolo === 'VISITATORE')
@@ -33,9 +57,8 @@ export const useAuthStore = defineStore('auth', () => {
   async function login(email: string, password: string) {
     try {
       const res = await authApi.login(email, password) as LoginResponse
-      user.value = res.data.utente
       token.value = res.data.token
-      userCookie.value = JSON.stringify(user.value)
+      user.value = res.data.utente
       return true
     } catch (err) {
       console.error('Login error:', err)
@@ -54,23 +77,25 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function restore() {
-    const stored = userCookie.value
-    if (stored && token.value) {
-      try {
-        user.value = JSON.parse(stored)
-      } catch (err) {
-        console.error('Restore user error:', err)
-        logout()
+    if (token.value) {
+      const payload = decodeJwtPayload(token.value)
+      if (payload && payload.exp * 1000 > Date.now()) {
+        user.value = {
+          id: payload.id,
+          nome: payload.nome,
+          cognome: payload.cognome,
+          email: payload.email,
+          ruolo: payload.ruolo,
+        }
+        return
       }
-    } else {
-      logout()
     }
+    logout()
   }
 
   function logout() {
     user.value = null
     token.value = null
-    userCookie.value = null
   }
 
   restore()
