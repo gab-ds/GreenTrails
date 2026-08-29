@@ -56,3 +56,5 @@ local.properties
 .vscode/settings.json
 backend/src/main/resources/META-INF/additional-spring-configuration-metadata.json
 **/*.pkrvars.hcl
+benchmarks/playbooks/.ssh_amber_lxc_tmp*
+benchmarks/playbooks/.build/

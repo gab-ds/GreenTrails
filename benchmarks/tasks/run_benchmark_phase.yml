@@ -1,0 +1,310 @@
+---
+- name: Clone Worker VM from Template via Proxmox API
+  community.proxmox.proxmox_kvm:
+    node: "{{ pve_node_name }}"
+    clone: "{{ template_vmid }}"
+    vmid: "{{ worker_vmid }}"
+    name: "benchmark-worker-{{ benchmark_run_id }}"
+    full: yes
+    ipconfig:
+      ipconfig0: "ip={{ worker_ip }}/24,gw={{ benchmark_gateway }}"
+    state: present
+
+- name: Pin worker vCPUs to host CPUs 2 and 3
+  ansible.builtin.command:
+    argv:
+      - qm
+      - set
+      - "{{ worker_vmid }}"
+      - --cores
+      - "{{ worker_vcpus }}"
+      - --sockets
+      - '1'
+      - --affinity
+      - "{{ worker_cpu_set }}"
+  register: worker_cpu_config
+  changed_when: true
+
+- name: Verify worker CPU count and affinity before startup
+  ansible.builtin.command: qm config "{{ worker_vmid }}"
+  register: worker_config
+  changed_when: false
+  failed_when: >-
+    worker_config.stdout_lines | select('match', '^cores: ' ~ (worker_vcpus | string) ~ '$') | list | length != 1
+    or worker_config.stdout_lines | select('match', '^sockets: 1$') | list | length != 1
+    or worker_config.stdout_lines | select('match', '^affinity: ' ~ (worker_cpu_set | replace(',', '[,]')) ~ '$') | list | length != 1
+
+- name: Start worker VM with its pinned vCPUs
+  community.proxmox.proxmox_kvm:
+    node: "{{ pve_node_name }}"
+    vmid: "{{ worker_vmid }}"
+    state: started
+
+- name: Wait for worker guest-agent network readiness
+  block:
+    - name: Verify worker benchmark network address
+      ansible.builtin.command: >
+        qm guest exec {{ worker_vmid }} -- ip -4 addr show
+      register: worker_network
+      until:
+        - worker_network.rc == 0
+        - worker_ip in worker_network.stdout
+      retries: 30
+      delay: 2
+      changed_when: false
+  rescue:
+    - name: Collect worker VM status after guest-agent timeout
+      ansible.builtin.command: qm status "{{ worker_vmid }}"
+      register: worker_status_debug
+      changed_when: false
+      failed_when: false
+
+    - name: Collect worker VM configuration after guest-agent timeout
+      ansible.builtin.command: qm config "{{ worker_vmid }}"
+      register: worker_config_debug
+      changed_when: false
+      failed_when: false
+
+    - name: Collect worker guest-agent OS information after timeout
+      ansible.builtin.command: qm agent "{{ worker_vmid }}" get-osinfo
+      register: worker_agent_debug
+      changed_when: false
+      failed_when: false
+
+    - name: Fail with worker readiness diagnostics
+      ansible.builtin.fail:
+        msg: >-
+          Worker VMID {{ worker_vmid }} did not expose the expected address
+          {{ worker_ip }} through the guest agent. Status:
+          {{ worker_status_debug.stdout | default('unavailable') }}.
+          Configuration: {{ worker_config_debug.stdout | default('unavailable') }}.
+          Guest agent: {{ worker_agent_debug.stdout | default('unavailable') }}.
+
+- name: Enable RAPL MSR passthrough on worker VM
+  community.proxmox.proxmox_kvm:
+    node: "{{ pve_node_name }}"
+    vmid: "{{ worker_vmid }}"
+    args: "-accel kvm,rapl=true,rapl-helper-socket=/var/run/qemu-vmsr-helper.sock"
+  register: rapl_args_result
+  until: rapl_args_result is succeeded
+  retries: 3
+  delay: 2
+
+- name: Disable background host services during benchmark
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: stopped
+  loop:
+    - ksmtuned
+    - irqbalance
+  failed_when: false
+
+- name: Set CPU governor to performance
+  ansible.builtin.command: cpufreq-set -r -g performance
+  register: governor_result
+  changed_when: false
+  failed_when: governor_result.rc != 0
+
+- name: Verify CPU governor is performance
+  ansible.builtin.command: cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+  register: active_cpu_governor
+  changed_when: false
+  failed_when: active_cpu_governor.stdout | trim != 'performance'
+
+- name: Disable Intel Turbo Boost
+  ansible.builtin.shell: echo 1 > /sys/devices/system/cpu/intel_pstate/no_turbo
+  register: turbo_result
+  changed_when: false
+  failed_when: turbo_result.rc != 0
+
+- name: Verify Intel Turbo Boost is disabled
+  ansible.builtin.command: cat /sys/devices/system/cpu/intel_pstate/no_turbo
+  register: active_turbo_state
+  changed_when: false
+  failed_when: active_turbo_state.stdout | trim != '1'
+
+- name: Start AMBER LXC container for JMH benchmarks
+  community.proxmox.proxmox:
+    node: "{{ pve_node_name }}"
+    vmid: "{{ amber_vmid }}"
+    state: started
+
+- name: Wait for AMBER LXC readiness
+  block:
+    - name: Wait for AMBER LXC to be running
+      ansible.builtin.command: pct status "{{ amber_vmid }}"
+      register: amber_lxc_status
+      until:
+        - amber_lxc_status.rc == 0
+        - "'status: running' in amber_lxc_status.stdout"
+      retries: 30
+      delay: 2
+      changed_when: false
+
+    - name: Verify AMBER LXC command execution
+      ansible.builtin.command:
+        argv:
+          - pct
+          - exec
+          - "{{ amber_vmid }}"
+          - --
+          - true
+      register: amber_lxc_exec
+      until: amber_lxc_exec.rc == 0
+      retries: 15
+      delay: 2
+      changed_when: false
+  rescue:
+    - name: Collect AMBER LXC status after readiness timeout
+      ansible.builtin.command: pct status "{{ amber_vmid }}"
+      register: amber_lxc_status_debug
+      changed_when: false
+      failed_when: false
+
+    - name: Collect AMBER service status after readiness timeout
+      ansible.builtin.command: >
+        pct exec {{ amber_vmid }} -- systemctl status amber.service --no-pager
+      register: amber_service_debug
+      changed_when: false
+      failed_when: false
+
+    - name: Collect AMBER service logs after readiness timeout
+      ansible.builtin.command: >
+        pct exec {{ amber_vmid }} -- journalctl -u amber.service -n 50 --no-pager
+      register: amber_logs_debug
+      changed_when: false
+      failed_when: false
+
+    - name: Fail with AMBER readiness diagnostics
+      ansible.builtin.fail:
+        msg: >-
+          AMBER LXC VMID {{ amber_vmid }} did not become ready. Status:
+          {{ amber_lxc_status_debug.stdout | default('unavailable') }}.
+          Service: {{ amber_service_debug.stdout | default('unavailable') }}.
+          Logs: {{ amber_logs_debug.stdout | default('unavailable') }}.
+
+- name: Start AMBER application service
+  ansible.builtin.command:
+    argv:
+      - pct
+      - exec
+      - "{{ amber_vmid }}"
+      - --
+      - systemctl
+      - start
+      - amber.service
+  changed_when: true
+
+- name: Validate AMBER application readiness
+  block:
+    - name: Verify AMBER service is reachable from JMH VM
+      ansible.builtin.command:
+        argv:
+          - qm
+          - guest
+          - exec
+          - "{{ worker_vmid }}"
+          - --
+          - curl
+          - -sf
+          - "http://{{ amber_ip }}:{{ amber_service_port }}/"
+      register: amber_health
+      until: amber_health.rc == 0
+      retries: 30
+      delay: 2
+      changed_when: false
+
+    - name: Smoke-test AMBER prediction endpoint
+      ansible.builtin.command:
+        argv:
+          - qm
+          - guest
+          - exec
+          - "{{ worker_vmid }}"
+          - --
+          - curl
+          - -sf
+          - -X
+          - POST
+          - -H
+          - Content-Type: application/json
+          - --data
+          - "{{ amber_smoke_payload }}"
+          - "http://{{ amber_ip }}:{{ amber_service_port }}/predict/oscnn"
+      register: amber_prediction
+      until: amber_prediction.rc == 0
+      retries: 10
+      delay: 2
+      changed_when: false
+
+    - name: Require a valid AMBER prediction response
+      ansible.builtin.assert:
+        that:
+          - "'steady' in amber_prediction.stdout"
+        fail_msg: "AMBER prediction smoke test did not return a valid response."
+  rescue:
+    - name: Collect AMBER service status after application timeout
+      ansible.builtin.command: >
+        pct exec {{ amber_vmid }} -- systemctl status amber.service --no-pager
+      register: amber_service_debug
+      changed_when: false
+      failed_when: false
+
+    - name: Collect AMBER service logs after application timeout
+      ansible.builtin.command: >
+        pct exec {{ amber_vmid }} -- journalctl -u amber.service -n 50 --no-pager
+      register: amber_logs_debug
+      changed_when: false
+      failed_when: false
+
+    - name: Collect worker network state after AMBER timeout
+      ansible.builtin.command: >
+        qm guest exec {{ worker_vmid }} -- ip -4 addr show
+      register: worker_network_debug
+      changed_when: false
+      failed_when: false
+
+    - name: Fail with AMBER application diagnostics
+      ansible.builtin.fail:
+        msg: >-
+          AMBER application readiness failed for {{ amber_ip }}:{{ amber_service_port }}.
+          Service: {{ amber_service_debug.stdout | default('unavailable') }}.
+          Logs: {{ amber_logs_debug.stdout | default('unavailable') }}.
+          Worker network: {{ worker_network_debug.stdout | default('unavailable') }}.
+
+- name: Disable MySQL during JMH benchmarks
+  ansible.builtin.command: >
+    qm guest exec {{ worker_vmid }} --
+    systemctl disable --now mysql
+  changed_when: true
+
+- name: Verify RAPL is accessible inside worker VM
+  ansible.builtin.command: >
+    qm guest exec {{ worker_vmid }} --
+    cat /sys/class/powercap/intel-rapl:0/energy_uj
+  register: rapl_check
+  until: rapl_check.rc == 0
+  retries: 5
+  delay: 2
+
+- name: Fail if RAPL counter is zero or unreadable
+  ansible.builtin.fail:
+    msg: "RAPL energy counter is 0 or unreadable inside worker VM. RAPL passthrough may not be working."
+  when: rapl_check.stdout is search('"out-data"\\s*:\\s*"0\\\\n"')
+
+- name: Execute JMH Benchmark via VirtIO QEMU Guest Agent
+  ansible.builtin.command: >
+    qm guest exec {{ worker_vmid }} -- /usr/local/bin/run_benchmarks.sh
+  register: benchmark_output
+
+- name: Output Benchmark Results
+  ansible.builtin.debug:
+    var: benchmark_output.stdout
+
+- name: Report separate energy measurement workflow
+  ansible.builtin.debug:
+    msg: >-
+      JMH execution completed for run {{ benchmark_run_id }}. Energy measurements
+      are a separate workflow: run /usr/local/bin/energy_measure.sh on the worker
+      VM, copy its run-specific /tmp/energy_results/<run-id>/ directory to durable
+      storage, then run the teardown playbook.

@@ -1,0 +1,78 @@
+---
+- name: Teardown Benchmark Infrastructure
+  hosts: proxmox_host
+  become: true
+
+  module_defaults:
+    group/community.proxmox.proxmox:
+      api_host: "{{ proxmox_api_host }}"
+      api_user: "{{ proxmox_api_user }}"
+      api_token_id: "{{ proxmox_api_token_id }}"
+      api_token_secret: "{{ proxmox_api_token_secret }}"
+      validate_certs: "{{ proxmox_validate_certs }}"
+      ca_path: "{{ proxmox_ca_path if proxmox_ca_path | length > 0 else omit }}"
+
+  pre_tasks:
+    - name: Validate Proxmox API configuration
+      ansible.builtin.include_tasks: "{{ playbook_dir }}/../tasks/validate_proxmox_credentials.yml"
+
+  tasks:
+    - name: Stop AMBER LXC container if running
+      community.proxmox.proxmox:
+        node: "{{ hostvars['pve_node']['node'] }}"
+        vmid: "{{ hostvars['amber_server']['proxmox_vmid'] }}"
+        state: stopped
+      ignore_errors: true
+
+    - name: Destroy AMBER LXC container
+      community.proxmox.proxmox:
+        node: "{{ hostvars['pve_node']['node'] }}"
+        vmid: "{{ hostvars['amber_server']['proxmox_vmid'] }}"
+        state: absent
+      ignore_errors: true
+
+    - name: Stop worker VM if running
+      community.proxmox.proxmox_kvm:
+        node: "{{ hostvars['pve_node']['node'] }}"
+        vmid: "{{ hostvars['vm_worker']['proxmox_vmid'] }}"
+        state: stopped
+      ignore_errors: true
+
+    - name: Destroy worker VM
+      community.proxmox.proxmox_kvm:
+        node: "{{ hostvars['pve_node']['node'] }}"
+        vmid: "{{ hostvars['vm_worker']['proxmox_vmid'] }}"
+        state: absent
+      ignore_errors: true
+
+    - name: Destroy VM template
+      community.proxmox.proxmox_kvm:
+        node: "{{ hostvars['pve_node']['node'] }}"
+        vmid: "{{ hostvars['vm_template']['proxmox_vmid'] }}"
+        state: absent
+      ignore_errors: true
+
+    - name: Remove CPU affinity override
+      ansible.builtin.file:
+        path: /etc/systemd/system.conf.d/99-cpu-affinity.conf
+        state: absent
+
+    - name: Disable qemu-vmsr-helper.socket
+      ansible.builtin.systemd:
+        name: qemu-vmsr-helper.socket
+        state: stopped
+        enabled: no
+      ignore_errors: true
+
+    - name: Reboot to restore default CPU affinity
+      ansible.builtin.reboot:
+        msg: "Rebooting to remove CPUAffinity override"
+        connect_timeout: 5
+        reboot_timeout: 300
+        pre_reboot_delay: 2
+        post_reboot_delay: 15
+
+    - name: Remove a stale benchmark lock after teardown
+      ansible.builtin.file:
+        path: /var/lock/greentrails-benchmark
+        state: absent

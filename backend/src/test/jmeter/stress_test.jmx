@@ -10,8 +10,8 @@
     </TestPlan>
     <hashTree>
       <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults">
-        <stringProp name="HTTPSampler.domain">localhost</stringProp>
-        <stringProp name="HTTPSampler.port">8080</stringProp>
+        <stringProp name="HTTPSampler.domain">${__P(host,localhost)}</stringProp>
+        <stringProp name="HTTPSampler.port">${__P(port,8080)}</stringProp>
         <stringProp name="HTTPSampler.protocol">http</stringProp>
         <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
           <collectionProp name="Arguments.arguments"/>
@@ -29,20 +29,40 @@
       </HeaderManager>
       <hashTree/>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
-        <intProp name="ThreadGroup.num_threads">200</intProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(threads,200)}</stringProp>
         <intProp name="ThreadGroup.ramp_time">10</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
-          <stringProp name="LoopController.loops">10</stringProp>
+          <stringProp name="LoopController.loops">1</stringProp>
           <boolProp name="LoopController.continue_forever">false</boolProp>
         </elementProp>
       </ThreadGroup>
       <hashTree>
+        <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert application response" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">def body = prev.getResponseDataAsString(); def expectedStatus = prev.getSampleLabel().contains('actuator/health') ? '&quot;status&quot;:&quot;UP&quot;' : '&quot;status&quot;:&quot;success&quot;'; if (prev.getResponseCode() ==~ /2\d\d/ &amp;&amp; !body.contains(expectedStatus)) { Failure = true; FailureMessage = 'Unexpected application response envelope' }</stringProp>
+        </JSR223Assertion>
+        <hashTree/>
+        <WhileController guiclass="WhileControllerGui" testclass="WhileController" testname="Stress duration" enabled="true">
+          <stringProp name="WhileController.condition">${__groovy(vars.get('stressEndTime') == null || System.currentTimeMillis() &lt; vars.get('stressEndTime').toLong())}</stringProp>
+        </WhileController>
+        <hashTree>
+          <JSR223Timer guiclass="TestBeanGUI" testclass="JSR223Timer" testname="Staged load think time" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">def start = props.get('stressStartTime'); if (start == null) { synchronized (props) { start = props.get('stressStartTime'); if (start == null) { start = System.currentTimeMillis().toString(); props.put('stressStartTime', start); def durationSeconds = Long.parseLong(props.get('duration') ?: '600'); props.put('stressEndTime', (start.toLong() + durationSeconds * 1000L).toString()) } } }; def elapsed = (System.currentTimeMillis() - start.toLong()) / 1000L; def stageDuration = Long.parseLong(props.get('stage_duration') ?: '60'); def stage = Math.min((elapsed / stageDuration) as int, 4); def stageDelays = [2000L, 1000L, 500L, 100L, 0L]; vars.put('stressEndTime', props.get('stressEndTime')); def range = stage &lt; 4 ? Long.parseLong(props.get('thinktime_range') ?: '250') : 0L; stageDelays[stage] + java.util.concurrent.ThreadLocalRandom.current().nextLong(range + 1L)</stringProp>
+          </JSR223Timer>
+          <hashTree/>
         <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="30% Ricerca + Dettaglio" enabled="true">
           <intProp name="ThroughputController.style">1</intProp>
           <boolProp name="ThroughputController.perThread">false</boolProp>
-          <intProp name="ThroughputController.maxThroughput">8</intProp>
           <FloatProperty>
             <name>ThroughputController.percentThroughput</name>
             <value>30.0</value>
@@ -72,7 +92,7 @@
             <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extract attivitaId" enabled="true">
               <stringProp name="JSONPostProcessor.referenceNames">attivitaId</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].id</stringProp>
-              <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
@@ -91,7 +111,6 @@
         <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="25% Navigazione Alloggi" enabled="true">
           <intProp name="ThroughputController.style">1</intProp>
           <boolProp name="ThroughputController.perThread">false</boolProp>
-          <intProp name="ThroughputController.maxThroughput">8</intProp>
           <FloatProperty>
             <name>ThroughputController.percentThroughput</name>
             <value>25.0</value>
@@ -121,7 +140,7 @@
             <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extract alloggioId" enabled="true">
               <stringProp name="JSONPostProcessor.referenceNames">alloggioId</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].id</stringProp>
-              <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
@@ -140,7 +159,6 @@
         <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="20% Attivita Turistiche" enabled="true">
           <intProp name="ThroughputController.style">1</intProp>
           <boolProp name="ThroughputController.perThread">false</boolProp>
-          <intProp name="ThroughputController.maxThroughput">8</intProp>
           <FloatProperty>
             <name>ThroughputController.percentThroughput</name>
             <value>20.0</value>
@@ -170,7 +188,7 @@
             <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extract attivitaId" enabled="true">
               <stringProp name="JSONPostProcessor.referenceNames">attivitaId</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].id</stringProp>
-              <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
@@ -200,7 +218,6 @@
         <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="15% Esplorazione" enabled="true">
           <intProp name="ThroughputController.style">1</intProp>
           <boolProp name="ThroughputController.perThread">false</boolProp>
-          <intProp name="ThroughputController.maxThroughput">8</intProp>
           <FloatProperty>
             <name>ThroughputController.percentThroughput</name>
             <value>15.0</value>
@@ -253,7 +270,6 @@
         <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="10% Health Check" enabled="true">
           <intProp name="ThroughputController.style">1</intProp>
           <boolProp name="ThroughputController.perThread">false</boolProp>
-          <intProp name="ThroughputController.maxThroughput">8</intProp>
           <FloatProperty>
             <name>ThroughputController.percentThroughput</name>
             <value>10.0</value>
@@ -272,6 +288,7 @@
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree/>
+        </hashTree>
         </hashTree>
         <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
@@ -307,7 +324,7 @@
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename"></stringProp>
+          <stringProp name="filename">${__P(resultfile,stress_test_report.csv)}</stringProp>
         </ResultCollector>
         <hashTree/>
       </hashTree>
