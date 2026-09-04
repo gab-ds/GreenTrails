@@ -1,14 +1,52 @@
 ---
+- name: Check if worker VM already exists
+  community.proxmox.proxmox_vm_info:
+    node: "{{ pve_node_name }}"
+    type: qemu
+    vmid: "{{ worker_vmid }}"
+  register: existing_worker
+
 - name: Clone Worker VM from Template via Proxmox API
   community.proxmox.proxmox_kvm:
     node: "{{ pve_node_name }}"
-    clone: "{{ template_vmid }}"
-    vmid: "{{ worker_vmid }}"
+    clone: "true"
+    vmid: "{{ template_vmid }}"
+    newid: "{{ worker_vmid }}"
     name: "benchmark-worker-{{ benchmark_run_id }}"
     full: yes
     ipconfig:
       ipconfig0: "ip={{ worker_ip }}/24,gw={{ benchmark_gateway }}"
     state: present
+    timeout: 300
+  when: existing_worker.proxmox_vms | length == 0
+
+- name: Stop existing worker VM for reuse
+  community.proxmox.proxmox_kvm:
+    node: "{{ pve_node_name }}"
+    vmid: "{{ worker_vmid }}"
+    state: stopped
+  when:
+    - existing_worker.proxmox_vms | length > 0
+    - (existing_worker.proxmox_vms | first).status == 'running'
+
+- name: Reconfigure existing worker VM for reuse
+  community.proxmox.proxmox_kvm:
+    node: "{{ pve_node_name }}"
+    vmid: "{{ worker_vmid }}"
+    name: "benchmark-worker-{{ benchmark_run_id }}"
+    ipconfig:
+      ipconfig0: "ip={{ worker_ip }}/24,gw={{ benchmark_gateway }}"
+    state: present
+    update: true
+  when: existing_worker.proxmox_vms | length > 0
+
+- name: Ensure worker VM CPU type is host
+  community.proxmox.proxmox_kvm:
+    node: "{{ pve_node_name }}"
+    vmid: "{{ worker_vmid }}"
+    cpu: host
+    state: present
+    update: true
 
 - name: Pin worker vCPUs to host CPUs 2 and 3
   ansible.builtin.command:
@@ -34,61 +72,60 @@
     or worker_config.stdout_lines | select('match', '^sockets: 1$') | list | length != 1
     or worker_config.stdout_lines | select('match', '^affinity: ' ~ (worker_cpu_set | replace(',', '[,]')) ~ '$') | list | length != 1
 
+- name: Enable RAPL MSR passthrough on worker VM
+  ansible.builtin.lineinfile:
+    path: "/etc/pve/qemu-server/{{ worker_vmid }}.conf"
+    regexp: "^args:"
+    line: "args: -accel kvm,rapl=true,rapl-helper-socket=/var/run/qemu-vmsr-helper.sock"
+    state: present
+  register: rapl_args_result
+  until: rapl_args_result is succeeded
+  retries: 3
+  delay: 2
+
 - name: Start worker VM with its pinned vCPUs
   community.proxmox.proxmox_kvm:
     node: "{{ pve_node_name }}"
     vmid: "{{ worker_vmid }}"
     state: started
 
-- name: Wait for worker guest-agent network readiness
+- name: Wait for worker SSH readiness
   block:
+    - name: Wait for worker VM SSH to become available
+      ansible.builtin.wait_for_connection:
+        timeout: 120
+      delegate_to: vm_worker
+
     - name: Verify worker benchmark network address
-      ansible.builtin.command: >
-        qm guest exec {{ worker_vmid }} -- ip -4 addr show
+      ansible.builtin.command: ip -4 addr show
       register: worker_network
       until:
         - worker_network.rc == 0
         - worker_ip in worker_network.stdout
-      retries: 30
+      retries: 10
       delay: 2
       changed_when: false
+      delegate_to: vm_worker
   rescue:
-    - name: Collect worker VM status after guest-agent timeout
+    - name: Collect worker VM status after SSH timeout
       ansible.builtin.command: qm status "{{ worker_vmid }}"
       register: worker_status_debug
       changed_when: false
       failed_when: false
 
-    - name: Collect worker VM configuration after guest-agent timeout
+    - name: Collect worker VM configuration after SSH timeout
       ansible.builtin.command: qm config "{{ worker_vmid }}"
       register: worker_config_debug
-      changed_when: false
-      failed_when: false
-
-    - name: Collect worker guest-agent OS information after timeout
-      ansible.builtin.command: qm agent "{{ worker_vmid }}" get-osinfo
-      register: worker_agent_debug
       changed_when: false
       failed_when: false
 
     - name: Fail with worker readiness diagnostics
       ansible.builtin.fail:
         msg: >-
-          Worker VMID {{ worker_vmid }} did not expose the expected address
-          {{ worker_ip }} through the guest agent. Status:
+          Worker VMID {{ worker_vmid }} did not become SSH-ready at
+          {{ worker_ip }}. Status:
           {{ worker_status_debug.stdout | default('unavailable') }}.
           Configuration: {{ worker_config_debug.stdout | default('unavailable') }}.
-          Guest agent: {{ worker_agent_debug.stdout | default('unavailable') }}.
-
-- name: Enable RAPL MSR passthrough on worker VM
-  community.proxmox.proxmox_kvm:
-    node: "{{ pve_node_name }}"
-    vmid: "{{ worker_vmid }}"
-    args: "-accel kvm,rapl=true,rapl-helper-socket=/var/run/qemu-vmsr-helper.sock"
-  register: rapl_args_result
-  until: rapl_args_result is succeeded
-  retries: 3
-  delay: 2
 
 - name: Disable background host services during benchmark
   ansible.builtin.systemd:
@@ -100,7 +137,7 @@
   failed_when: false
 
 - name: Set CPU governor to performance
-  ansible.builtin.command: cpufreq-set -r -g performance
+  ansible.builtin.command: cpupower frequency-set -r -g performance
   register: governor_result
   changed_when: false
   failed_when: governor_result.rc != 0
@@ -148,11 +185,11 @@
           - exec
           - "{{ amber_vmid }}"
           - --
-          - true
+          - /bin/true
       register: amber_lxc_exec
       until: amber_lxc_exec.rc == 0
-      retries: 15
-      delay: 2
+      retries: 30
+      delay: 3
       changed_when: false
   rescue:
     - name: Collect AMBER LXC status after readiness timeout
@@ -198,49 +235,36 @@
 - name: Validate AMBER application readiness
   block:
     - name: Verify AMBER service is reachable from JMH VM
-      ansible.builtin.command:
-        argv:
-          - qm
-          - guest
-          - exec
-          - "{{ worker_vmid }}"
-          - --
-          - curl
-          - -sf
-          - "http://{{ amber_ip }}:{{ amber_service_port }}/"
+      ansible.builtin.uri:
+        url: "http://{{ amber_ip }}:{{ amber_service_port }}/"
+        return_content: no
+        status_code: 200
       register: amber_health
-      until: amber_health.rc == 0
-      retries: 30
+      until: amber_health is succeeded
+      retries: 90
       delay: 2
-      changed_when: false
+      delegate_to: vm_worker
 
     - name: Smoke-test AMBER prediction endpoint
-      ansible.builtin.command:
-        argv:
-          - qm
-          - guest
-          - exec
-          - "{{ worker_vmid }}"
-          - --
-          - curl
-          - -sf
-          - -X
-          - POST
-          - -H
-          - Content-Type: application/json
-          - --data
-          - "{{ amber_smoke_payload }}"
-          - "http://{{ amber_ip }}:{{ amber_service_port }}/predict/oscnn"
+      ansible.builtin.uri:
+        url: "http://{{ amber_ip }}:{{ amber_service_port }}/predict/oscnn"
+        method: POST
+        body_format: json
+        body: "{{ amber_smoke_payload }}"
+        headers:
+          Content-Type: application/json
+        return_content: yes
+        status_code: 200
       register: amber_prediction
-      until: amber_prediction.rc == 0
+      until: amber_prediction is succeeded
       retries: 10
       delay: 2
-      changed_when: false
+      delegate_to: vm_worker
 
     - name: Require a valid AMBER prediction response
       ansible.builtin.assert:
         that:
-          - "'steady' in amber_prediction.stdout"
+          - "'steady' in amber_prediction.content"
         fail_msg: "AMBER prediction smoke test did not return a valid response."
   rescue:
     - name: Collect AMBER service status after application timeout
@@ -258,11 +282,11 @@
       failed_when: false
 
     - name: Collect worker network state after AMBER timeout
-      ansible.builtin.command: >
-        qm guest exec {{ worker_vmid }} -- ip -4 addr show
+      ansible.builtin.command: ip -4 addr show
       register: worker_network_debug
       changed_when: false
       failed_when: false
+      delegate_to: vm_worker
 
     - name: Fail with AMBER application diagnostics
       ansible.builtin.fail:
@@ -273,29 +297,30 @@
           Worker network: {{ worker_network_debug.stdout | default('unavailable') }}.
 
 - name: Disable MySQL during JMH benchmarks
-  ansible.builtin.command: >
-    qm guest exec {{ worker_vmid }} --
-    systemctl disable --now mysql
+  ansible.builtin.systemd:
+    name: mysql
+    state: stopped
+    enabled: no
   changed_when: true
+  delegate_to: vm_worker
 
 - name: Verify RAPL is accessible inside worker VM
-  ansible.builtin.command: >
-    qm guest exec {{ worker_vmid }} --
-    cat /sys/class/powercap/intel-rapl:0/energy_uj
+  ansible.builtin.command: cat /sys/class/powercap/intel-rapl:0/energy_uj
   register: rapl_check
   until: rapl_check.rc == 0
   retries: 5
   delay: 2
+  delegate_to: vm_worker
 
 - name: Fail if RAPL counter is zero or unreadable
   ansible.builtin.fail:
     msg: "RAPL energy counter is 0 or unreadable inside worker VM. RAPL passthrough may not be working."
   when: rapl_check.stdout is search('"out-data"\\s*:\\s*"0\\\\n"')
 
-- name: Execute JMH Benchmark via VirtIO QEMU Guest Agent
-  ansible.builtin.command: >
-    qm guest exec {{ worker_vmid }} -- /usr/local/bin/run_benchmarks.sh
+- name: Execute JMH Benchmark
+  ansible.builtin.command: /usr/local/bin/run_benchmarks.sh
   register: benchmark_output
+  delegate_to: vm_worker
 
 - name: Output Benchmark Results
   ansible.builtin.debug:

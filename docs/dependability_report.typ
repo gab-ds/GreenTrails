@@ -871,6 +871,20 @@ tramite una manutenzione evolutiva mirata alla qualità della misura:
 // TODO: rieseguire i benchmark sulla macchina di riferimento e
 // aggiornare i valori alla suite consolidata (4 classi, 9 benchmark).
 
+Durante le esecuzioni preliminari, i benchmark sono terminati con
+errori `OutOfMemoryError: Java heap space` durante la fase di
+warm-up (alla iterazione 44 su 500 previste). La causa è stata
+identificata in `ItinerariAdapterBenchmark`: il fake repository
+accumulava ogni oggetto `Itinerario` nella lista `items` senza mai
+svuotarla. Il problema è stato risolto rimuovendo
+l'`items.add(entity)` dal metodo `save()`.
+
+I risultati preliminari della suite consolidata (9 benchmark) su
+VM Proxmox mostrano valori coerenti con la baseline storica:
+BCrypt 73 ms (vs 66 ms storici, differenza hardware),
+Archiviazione 10/27/24 μs (vs 1.4/17/68 μs), Pianificazione
+0.004--0.315 ms (vs 0.052--0.537 ms).
+
 = Riepilogo delle Misurazioni
 
 #table(
@@ -907,7 +921,9 @@ tramite una manutenzione evolutiva mirata alla qualità della misura:
     [JMH], [Affidabilità (performance)],
     [Nessun benchmark],
     [Suite consolidata: 9 benchmark (da 44);
-     BCrypt ~66 ms (baseline storica); aggiornamento valori in corso],
+     BCrypt ~73 ms (preliminare, VM);
+     Pianificazione 0.004--0.315 ms;
+     confronto con baseline storica indicativo],
     [Ottimizzazioni bottleneck], [Affidabilità (performance)],
     [Nessuna — findAll() in memoria],
     [10 file modificati; latenza combinata da ~13 s a ~100 ms

@@ -20,11 +20,16 @@
     amber_vmid: "{{ hostvars['amber_server']['proxmox_vmid'] }}"
     worker_ip: "{{ hostvars['vm_worker']['worker_vm_ip'] }}"
     amber_ip: "{{ hostvars['amber_server']['amber_lxc_ip'] }}"
-    benchmark_run_id: "{{ lookup('pipe', 'date -u +%Y%m%dT%H%M%SZ') }}"
     benchmark_lock_path: "/var/lock/greentrails-benchmark"
-    host_cpu_affinity: "{{ host_cpu_set | replace(',', ' ') }}"
 
   pre_tasks:
+    - name: Ensure Python venv for Proxmox modules
+      ansible.builtin.include_tasks: "{{ playbook_dir }}/../tasks/ensure_proxmox_python.yml"
+
+    - name: Record benchmark run identifier
+      ansible.builtin.set_fact:
+        benchmark_run_id: "{{ lookup('pipe', 'date -u +%Y%m%dT%H%M%SZ') }}"
+
     - name: Validate Proxmox API configuration
       ansible.builtin.include_tasks: "{{ playbook_dir }}/../tasks/validate_proxmox_credentials.yml"
 
@@ -40,25 +45,31 @@
       changed_when: false
       failed_when: online_cpus.stdout | trim != '0-3'
 
-    - name: Verify cpufreq-set is already installed
-      ansible.builtin.shell: command -v cpufreq-set
-      register: cpufreq_set_binary
+    - name: Verify cpupower is already installed
+      ansible.builtin.shell: command -v cpupower
+      register: cpupower_binary
       changed_when: false
-      failed_when: cpufreq_set_binary.rc != 0
+      failed_when: cpupower_binary.rc != 0
 
-    - name: Verify systemd host affinity
-      ansible.builtin.command: systemctl show -p CPUAffinity
-      register: cpu_affinity
+    - name: Verify PID 1 CPUAffinity from kernel status
+      ansible.builtin.command: cat /proc/1/status
+      register: proc_status
       changed_when: false
-      failed_when: host_cpu_affinity not in cpu_affinity.stdout
+
+    - name: Fail if CPUAffinity is not applied to host cores 0,1
+      ansible.builtin.fail:
+        msg: "Expected Cpus_allowed_list to be 0-1 or 0,1 but got: {{ proc_status.stdout | regex_search('Cpus_allowed_list:.*') }}"
+      when: >-
+        'Cpus_allowed_list:' not in proc_status.stdout or
+        ('0-1' not in proc_status.stdout and '0,1' not in proc_status.stdout)
 
     - name: Validate stale worker policy
       ansible.builtin.assert:
         that:
-          - benchmark_stale_worker_policy in ['fail', 'destroy']
+          - benchmark_stale_worker_policy in ['fail', 'destroy', 'reuse']
         fail_msg: >-
-          GT_STALE_WORKER_POLICY must be either 'fail' (the safe default) or
-          'destroy', got '{{ benchmark_stale_worker_policy }}'.
+          GT_STALE_WORKER_POLICY must be 'fail', 'destroy', or 'reuse',
+          got '{{ benchmark_stale_worker_policy }}'.
 
   tasks:
     - name: Run managed benchmark phase with guaranteed cleanup
@@ -125,7 +136,7 @@
             state: stopped
           when:
             - worker_info.proxmox_vms | length > 0
-            - benchmark_stale_worker_policy == 'destroy'
+            - benchmark_stale_worker_policy in ['destroy', 'reuse']
             - (worker_info.proxmox_vms | first).status == 'running'
 
         - name: Destroy a stale worker after explicit policy confirmation

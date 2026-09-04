@@ -80,9 +80,8 @@ public class ItinerariAdapterBenchmark {
     }
 
     @Benchmark
-    public void benchmarkPianificazione(Blackhole bh) {
-        Itinerario result = adapter.pianificazioneAutomatica(dummyPreferenze);
-        bh.consume(result);
+    public Itinerario benchmarkPianificazione() {
+        return adapter.pianificazioneAutomatica(dummyPreferenze);
     }
 
     private List<Attivita> generateAttivita(int size) {
@@ -126,7 +125,9 @@ abstract class FakeJpaRepository<T, ID> implements JpaRepository<T, ID> {
 
   @Override
   public <S extends T> S save(S entity) {
-    items.add(entity);
+    if (entity instanceof Itinerario itinerario) {
+        itinerario.setId(99L);
+    }
     return entity;
   }
 
@@ -351,7 +352,7 @@ class FakeItinerariRepository extends FakeJpaRepository<Itinerario, Long>
   @Override
   public Itinerario save(Itinerario itinerario) {
     itinerario.setId(99L);
-    return super.save(itinerario);
+    return itinerario;
   }
 
   @Override
