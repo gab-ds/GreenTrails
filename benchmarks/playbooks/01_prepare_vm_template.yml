@@ -11,6 +11,27 @@
     benchmark_jar: "{{ backend_src }}/target/benchmarks.jar"
 
   pre_tasks:
+    - name: Check if build artifacts already exist
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      loop:
+        - "{{ build_dir }}/backend.jar"
+        - "{{ build_dir }}/benchmarks.jar"
+      register: existing_jars
+
+    - name: Set build needed flag
+      ansible.builtin.set_fact:
+        build_needed: >-
+          {{ lookup('env', 'GT_FORCE_BUILD') | default('no', true) | bool
+             or existing_jars.results
+                | selectattr('stat.exists', 'false')
+                | list | length > 0 }}
+
+    - name: Skip build
+      ansible.builtin.debug:
+        msg: "Both JARs already exist in {{ build_dir }}, skipping build."
+      when: not build_needed
+
     - name: Check backend build inputs
       ansible.builtin.stat:
         path: "{{ item.path }}"
@@ -22,6 +43,7 @@
         - name: AMBER JMH dependency
           path: "{{ amber_jmh_jar }}"
       register: build_input_stats
+      when: build_needed
 
     - name: Validate backend build inputs
       ansible.builtin.assert:
@@ -30,105 +52,119 @@
           - item.stat.isreg | default(false)
           - (item.item.name != 'Maven wrapper' or item.stat.executable | default(false))
         fail_msg: "Required build input is missing or unusable: {{ item.item.path }}"
-      loop: "{{ build_input_stats.results }}"
+      loop: "{{ build_input_stats.results | default([]) }}"
       loop_control:
         label: "{{ item.item.name }}"
+      when: build_needed
 
     - name: Check Java runtime
       ansible.builtin.command: java -version
       register: java_version
       changed_when: false
+      when: build_needed
 
     - name: Require Java 21
       ansible.builtin.assert:
         that:
           - "'21' in (java_version.stderr ~ java_version.stdout)"
         fail_msg: "Java 21 is required to build the backend and benchmarks."
+      when: build_needed
 
     - name: Check Maven wrapper availability
       ansible.builtin.command: ./mvnw --version
       args:
         chdir: "{{ backend_src }}"
       changed_when: false
+      when: build_needed
+
+    - name: Generate temporary SSH key pair for VM
+      community.crypto.openssh_keypair:
+        path: "{{ playbook_dir }}/.ssh_id_vm_tmp"
+        type: ed25519
+        mode: '0600'
+      delegate_to: localhost
 
   tasks:
-    - name: Ensure build directory exists
-      ansible.builtin.file:
-        path: "{{ build_dir }}"
-        state: directory
+    - name: Build JARs
+      when: build_needed
+      block:
+        - name: Ensure build directory exists
+          ansible.builtin.file:
+            path: "{{ build_dir }}"
+            state: directory
 
-    - name: Build Spring Boot JAR
-      ansible.builtin.command:
-        argv:
-          - ./mvnw
-          - clean
-          - package
-          - -DskipTests=true
-      args:
-        chdir: "{{ backend_src }}"
-      changed_when: true
+        - name: Build Spring Boot JAR
+          ansible.builtin.command:
+            argv:
+              - ./mvnw
+              - clean
+              - package
+              - -DskipTests=true
+          args:
+            chdir: "{{ backend_src }}"
+          changed_when: true
 
-    - name: Verify Spring Boot JAR was built
-      ansible.builtin.stat:
-        path: "{{ backend_jar }}"
-      register: backend_jar_stats
+        - name: Verify Spring Boot JAR was built
+          ansible.builtin.stat:
+            path: "{{ backend_jar }}"
+          register: backend_jar_stats
 
-    - name: Require Spring Boot JAR
-      ansible.builtin.assert:
-        that:
-          - backend_jar_stats.stat.exists
-          - backend_jar_stats.stat.isreg | default(false)
-        fail_msg: "Spring Boot JAR was not produced at {{ backend_jar }}."
+        - name: Require Spring Boot JAR
+          ansible.builtin.assert:
+            that:
+              - backend_jar_stats.stat.exists
+              - backend_jar_stats.stat.isreg | default(false)
+            fail_msg: "Spring Boot JAR was not produced at {{ backend_jar }}."
 
-    - name: Copy Spring Boot JAR to build directory
-      ansible.builtin.copy:
-        src: "{{ backend_jar }}"
-        dest: "{{ build_dir }}/backend.jar"
-        remote_src: yes
+        - name: Copy Spring Boot JAR to build directory
+          ansible.builtin.copy:
+            src: "{{ backend_jar }}"
+            dest: "{{ build_dir }}/backend.jar"
+            remote_src: yes
 
-    - name: Install AMBER JMH dependency
-      ansible.builtin.command:
-        argv:
-          - ./mvnw
-          - install:install-file
-          - "-Dfile={{ amber_jmh_jar }}"
-          - -DgroupId=org.openjdk.jmh
-          - -DartifactId=jmh-core
-          - -Dversion=1.37-extended
-          - -Dpackaging=jar
-      args:
-        chdir: "{{ backend_src }}"
-      changed_when: true
+        - name: Install AMBER JMH dependency
+          ansible.builtin.command:
+            argv:
+              - ./mvnw
+              - install:install-file
+              - "-Dfile={{ amber_jmh_jar }}"
+              - -DgroupId=org.openjdk.jmh
+              - -DartifactId=jmh-core
+              - -Dversion=1.37-extended
+              - -Dpackaging=jar
+          args:
+            chdir: "{{ backend_src }}"
+          changed_when: true
 
-    - name: Build Benchmark JAR
-      ansible.builtin.command:
-        argv:
-          - ./mvnw
-          - -Pbenchmark,amber
-          - clean
-          - package
-          - -DskipTests=true
-      args:
-        chdir: "{{ backend_src }}"
-      changed_when: true
+        - name: Build Benchmark JAR
+          ansible.builtin.command:
+            argv:
+              - ./mvnw
+              - -Pbenchmark,amber
+              - clean
+              - package
+              - -DskipTests=true
+          args:
+            chdir: "{{ backend_src }}"
+          changed_when: true
 
-    - name: Verify Benchmark JAR was built
-      ansible.builtin.stat:
-        path: "{{ benchmark_jar }}"
-      register: benchmark_jar_stats
+        - name: Verify Benchmark JAR was built
+          ansible.builtin.stat:
+            path: "{{ benchmark_jar }}"
+          register: benchmark_jar_stats
 
-    - name: Require Benchmark JAR
-      ansible.builtin.assert:
-        that:
-          - benchmark_jar_stats.stat.exists
-          - benchmark_jar_stats.stat.isreg | default(false)
-        fail_msg: "Benchmark JAR was not produced at {{ benchmark_jar }}."
+        - name: Require Benchmark JAR
+          ansible.builtin.assert:
+            that:
+              - benchmark_jar_stats.stat.exists
+              - benchmark_jar_stats.stat.isreg | default(false)
+            fail_msg: "Benchmark JAR was not produced at {{ benchmark_jar }}."
 
-    - name: Copy Benchmark JAR to build directory
-      ansible.builtin.copy:
-        src: "{{ benchmark_jar }}"
-        dest: "{{ build_dir }}/benchmarks.jar"
-        remote_src: yes
+        - name: Copy Benchmark JAR to build directory
+          ansible.builtin.copy:
+            src: "{{ benchmark_jar }}"
+            dest: "{{ build_dir }}/benchmarks.jar"
+            remote_src: yes
 
 - name: Create Base Cloud-Init Template
   hosts: proxmox_host
@@ -144,6 +180,24 @@
       ca_path: "{{ proxmox_ca_path if proxmox_ca_path | length > 0 else omit }}"
 
   pre_tasks:
+    - name: Ensure Python venv for Proxmox modules
+      ansible.builtin.include_tasks: "{{ playbook_dir }}/../tasks/ensure_proxmox_python.yml"
+
+    - name: Check if VM is already a template
+      ansible.builtin.command: qm config {{ hostvars['vm_template']['proxmox_vmid'] }}
+      register: vm_config_check
+      changed_when: false
+      failed_when: false
+
+    - name: Set VM template status fact
+      ansible.builtin.set_fact:
+        vm_is_template: "{{ 'template: 1' in vm_config_check.stdout | default('') }}"
+
+    - name: Notify VM template status
+      ansible.builtin.debug:
+        msg: "VM {{ hostvars['vm_template']['proxmox_vmid'] }} is already a template. Skipping creation and provisioning."
+      when: vm_is_template
+
     - name: Check required AMBER service files on the control node
       ansible.builtin.stat:
         path: "{{ item }}"
@@ -191,87 +245,107 @@
     image_url: "https://cloud.debian.org/images/cloud/trixie/latest/debian-13-generic-amd64.qcow2"
     energibridge_repo: "https://github.com/tdurieux/EnergiBridge.git"
     energibridge_dest: "/opt/energibridge"
+    amber_service_src: "{{ playbook_dir }}/../../third_party/AMBER/jpt_service"
 
   tasks:
-    - name: Enable qemu-vmsr-helper.socket for RAPL MSR passthrough
-      ansible.builtin.systemd:
-        name: qemu-vmsr-helper.socket
-        state: started
-        enabled: yes
-
-    - name: Verify RAPL is available on host
-      ansible.builtin.command: cat /sys/class/powercap/intel-rapl/enabled
-      register: rapl_enabled
-      changed_when: false
-      failed_when: rapl_enabled.stdout != '1'
-
-    - name: Download Debian Cloud image
-      ansible.builtin.get_url:
-        url: "{{ image_url }}"
-        dest: /tmp/debian-cloud.qcow2
-
-    - name: Create VM
-      community.proxmox.proxmox_kvm:
-        node: "{{ hostvars['pve_node']['node'] }}"
-        vmid: "{{ hostvars['vm_template']['proxmox_vmid'] }}"
-        name: "debian-java-benchmark-template"
-        memory: 2048
-        cores: "{{ worker_vcpus }}"
-        sockets: 1
-        agent: enabled=1
-        net: '{"net0":"virtio,bridge={{ benchmark_bridge }}"}'
-        ide:
-          ide2: "{{ proxmox_cloudinit_storage }}:cloudinit"
-        ipconfig:
-          ipconfig0: "ip={{ hostvars['vm_worker']['worker_vm_ip'] }}/24,gw={{ benchmark_gateway }}"
-        scsihw: "virtio-scsi-pci"
-        state: present
-
-    - name: Import OS Disk into VM
-      community.proxmox.proxmox_disk:
-        vmid: "{{ hostvars['vm_template']['proxmox_vmid'] }}"
-        disk: scsi0
-        import_from: "/tmp/debian-cloud.qcow2"
-        storage: "local-lvm"
-        state: present
-
-    - name: Power on VM for provisioning
-      community.proxmox.proxmox_kvm:
-        vmid: "{{ hostvars['vm_template']['proxmox_vmid'] }}"
-        state: started
-
-    - name: Wait for QEMU Guest Agent readiness
+    - name: Run VM creation and setup
+      when:
+        - not vm_is_template
+        - not (force_reprovision | default(false))
       block:
-        - name: Ping QEMU Guest Agent
-          ansible.builtin.command: qm agent "{{ hostvars['vm_template']['proxmox_vmid'] }}" ping
-          register: guest_agent_ping
-          until: guest_agent_ping.rc == 0
-          retries: 30
-          delay: 2
-          changed_when: false
-      rescue:
-        - name: Collect VM status after QEMU Guest Agent timeout
-          ansible.builtin.command: qm status "{{ hostvars['vm_template']['proxmox_vmid'] }}"
-          register: guest_agent_vm_status
-          changed_when: false
-          failed_when: false
+        - name: Ensure qemu-vmsr-helper service is available
+          ansible.builtin.include_tasks: "{{ playbook_dir }}/../tasks/ensure_qemu_vmsr_helper.yml"
 
-        - name: Collect VM configuration after QEMU Guest Agent timeout
-          ansible.builtin.command: qm config "{{ hostvars['vm_template']['proxmox_vmid'] }}"
-          register: guest_agent_vm_config
+        - name: Verify RAPL is available on host
+          ansible.builtin.command: cat /sys/class/powercap/intel-rapl/enabled
+          register: rapl_enabled
           changed_when: false
-          failed_when: false
+          failed_when: rapl_enabled.stdout != '1'
 
-        - name: Fail with QEMU Guest Agent diagnostics
-          ansible.builtin.fail:
-            msg: >-
-              QEMU Guest Agent did not become ready for VMID
-              {{ hostvars['vm_template']['proxmox_vmid'] }}.
-              Status: {{ guest_agent_vm_status.stdout | default('unavailable') }}.
-              Configuration: {{ guest_agent_vm_config.stdout | default('unavailable') }}.
+        - name: Download Debian Cloud image
+          ansible.builtin.get_url:
+            url: "{{ image_url }}"
+            dest: /var/lib/vz/import/debian-cloud.qcow2
+            force: no
+            timeout: 300
+
+        - name: Ensure Cloud-Init snippets directory exists
+          ansible.builtin.file:
+            path: /var/lib/vz/snippets
+            state: directory
+            mode: '0755'
+
+        - name: Deploy Cloud-Init user-data
+          ansible.builtin.copy:
+            dest: /var/lib/vz/snippets/userdata.yaml
+            mode: '0644'
+            content: |
+              #cloud-config
+              password: "{{ vm_password }}"
+              chpasswd:
+                expire: false
+              ssh_pwauth: true
+              ssh_authorized_keys:
+                - "{{ lookup('file', playbook_dir ~ '/.ssh_id_vm_tmp.pub') }}"
+              package_update: true
+              packages: []
+          no_log: true
+
+        - name: Create VM
+          community.proxmox.proxmox_kvm:
+            node: "{{ hostvars['pve_node']['node'] }}"
+            vmid: "{{ hostvars['vm_template']['proxmox_vmid'] }}"
+            name: "debian-java-benchmark-template"
+            memory: 4096
+            cpu: host
+            cores: "{{ worker_vcpus }}"
+            sockets: 1
+            net: '{"net0":"virtio,bridge={{ benchmark_bridge }}"}'
+            ide:
+              ide2: "{{ proxmox_cloudinit_storage }}:cloudinit"
+            ipconfig:
+              ipconfig0: "ip=192.168.2.100/24,gw={{ benchmark_gateway }}"
+            cicustom: "user=local:snippets/userdata.yaml"
+            scsihw: "virtio-scsi-pci"
+            boot: "order=scsi0;ide2;net0"
+            state: present
+
+        - name: Check if VM already has a disk
+          community.proxmox.proxmox_vm_info:
+            node: "{{ hostvars['pve_node']['node'] }}"
+            type: qemu
+            vmid: "{{ hostvars['vm_template']['proxmox_vmid'] }}"
+          register: template_info
+
+        - name: Import OS Disk into VM
+          community.proxmox.proxmox_disk:
+            vmid: "{{ hostvars['vm_template']['proxmox_vmid'] }}"
+            disk: scsi0
+            import_from: "{{ proxmox_import_storage }}:import/debian-cloud.qcow2"
+            storage: "local-lvm"
+            state: present
+          when: >-
+            template_info.proxmox_vms | length == 0 or
+            (template_info.proxmox_vms | first).disk | default(0) | int == 0
+
+        - name: Resize OS Disk to 20GB
+          ansible.builtin.command: >-
+            qm resize {{ hostvars['vm_template']['proxmox_vmid'] }} scsi0 20G
+          changed_when: true
+
+        - name: Power on VM for provisioning
+          community.proxmox.proxmox_kvm:
+            vmid: "{{ hostvars['vm_template']['proxmox_vmid'] }}"
+            state: started
+
+        - name: Wait for SSH readiness
+          ansible.builtin.wait_for_connection:
+            timeout: 120
+          delegate_to: vm_template
 
 - name: Provision Base Template
-  hosts: template_vm
+  hosts: vm_template
+  gather_facts: false
 
   vars:
     build_dir: "{{ playbook_dir }}/.build"
@@ -283,8 +357,26 @@
     amber_host: "{{ hostvars['amber_server']['amber_lxc_ip'] }}"
     energy_script_src: "{{ playbook_dir }}/energy_measure.sh"
     energy_script_dest: "/usr/local/bin/energy_measure.sh"
+    provisioned_flag_file: "/etc/greentrails_provisioned"
+    force_reprovision: false
 
   pre_tasks:
+    - name: Check if VM is already a template (via Proxmox host)
+      ansible.builtin.command: qm config {{ hostvars['vm_template']['proxmox_vmid'] }}
+      delegate_to: "{{ hostvars['pve_node']['inventory_hostname'] }}"
+      register: vm_config_provision
+      changed_when: false
+      failed_when: false
+
+    - name: Set VM template status for provisioning play
+      ansible.builtin.set_fact:
+        vm_is_template: "{{ 'template: 1' in vm_config_provision.stdout | default('') }}"
+
+    - name: Notify VM is already a template (skipping provisioning)
+      ansible.builtin.debug:
+        msg: "VM is already a template. Skipping provisioning."
+      when: vm_is_template
+
     - name: Validate MySQL database identifiers and password
       ansible.builtin.assert:
         that:
@@ -295,14 +387,14 @@
           GT_DB_NAME and GT_DB_USER must start with a letter and contain only
           letters, numbers, and underscores; GT_DB_PASS must be non-empty.
 
-  tasks:
     - name: Wait for Cloud-Init completion
+      when: not vm_is_template
       block:
         - name: Wait for Cloud-Init with a bounded timeout
           ansible.builtin.command: timeout 300 cloud-init status --wait
           register: cloud_init_status
           changed_when: false
-          failed_when: cloud_init_status.rc != 0
+          failed_when: cloud_init_status.rc not in [0, 2]
       rescue:
         - name: Collect Cloud-Init status after timeout
           ansible.builtin.command: cloud-init status --long
@@ -323,7 +415,26 @@
               Status: {{ cloud_init_debug.stdout | default('unavailable') }}.
               Logs: {{ cloud_init_logs_debug.stdout | default('unavailable') }}.
 
+    - name: Check if VM is already provisioned
+      ansible.builtin.stat:
+        path: "{{ provisioned_flag_file }}"
+      register: vm_provision_check
+      when: not vm_is_template
+
+    - name: Notify if VM provisioning will be skipped
+      ansible.builtin.debug:
+        msg: "VM {{ inventory_hostname }} is already provisioned. Skipping provisioning tasks."
+      when:
+        - not vm_is_template
+        - vm_provision_check.stat.exists | default(false)
+    - name: Gather facts after Cloud-Init completes
+      ansible.builtin.setup:
+      when: not vm_is_template
+
+  tasks:
     - name: Verify worker network address is configured
+      when:
+        - not vm_is_template
       ansible.builtin.command: ip -4 addr show
       register: template_network
       until: hostvars['vm_worker']['worker_vm_ip'] in template_network.stdout
@@ -332,199 +443,237 @@
       changed_when: false
       failed_when: hostvars['vm_worker']['worker_vm_ip'] not in template_network.stdout
 
-    - name: Ensure prerequisite packages are installed
-      ansible.builtin.apt:
-        name:
-          - wget
-          - apt-transport-https
-          - gnupg
-        state: present
-        update_cache: yes
+    - name: Run full VM provisioning
+      when:
+        - not vm_is_template
+        - not (vm_provision_check.stat.exists | default(false))
+        - not (force_reprovision | default(false))
+      block:
+        - name: Ensure prerequisite packages are installed
+          ansible.builtin.apt:
+            name:
+              - wget
+              - apt-transport-https
+              - gnupg
+            state: present
+            update_cache: yes
 
-    - name: Ensure trusted directory exists
-      ansible.builtin.file:
-        path: /etc/apt/trusted.gpg.d
-        state: directory
-        mode: '0755'
+        - name: Ensure trusted directory exists
+          ansible.builtin.file:
+            path: /etc/apt/trusted.gpg.d
+            state: directory
+            mode: '0755'
 
-    - name: Download Eclipse Adoptium GPG key
-      ansible.builtin.get_url:
-        url: https://packages.adoptium.net/artifactory/api/gpg/key/public
-        dest: /tmp/adoptium.asc
-        mode: '0600'
+        - name: Download Eclipse Adoptium GPG key
+          ansible.builtin.get_url:
+            url: https://packages.adoptium.net/artifactory/api/gpg/key/public
+            dest: /tmp/adoptium.asc
+            mode: '0600'
 
-    - name: Dearmor Eclipse Adoptium GPG key
-      ansible.builtin.command:
-        cmd: gpg --dearmor -o /etc/apt/trusted.gpg.d/adoptium.gpg /tmp/adoptium.asc
-        creates: /etc/apt/trusted.gpg.d/adoptium.gpg
+        - name: Dearmor Eclipse Adoptium GPG key
+          ansible.builtin.command:
+            cmd: gpg --dearmor -o /etc/apt/trusted.gpg.d/adoptium.gpg /tmp/adoptium.asc
+            creates: /etc/apt/trusted.gpg.d/adoptium.gpg
 
-    - name: Add Eclipse Adoptium APT repository
-      ansible.builtin.apt_repository:
-        repo: "deb https://packages.adoptium.net/artifactory/deb {{ ansible_distribution_release }} main"
-        state: present
-        filename: adoptium
+        - name: Add Eclipse Adoptium APT repository
+          ansible.builtin.apt_repository:
+            repo: "deb https://packages.adoptium.net/artifactory/deb {{ ansible_distribution_release }} main"
+            state: present
+            filename: adoptium
 
-    - name: Clean up temporary raw GPG key
-      ansible.builtin.file:
-        path: /tmp/adoptium.asc
-        state: absent
+        - name: Clean up temporary raw GPG key
+          ansible.builtin.file:
+            path: /tmp/adoptium.asc
+            state: absent
 
-    - name: Install guest dependencies
-      ansible.builtin.apt:
-        name:
-          - temurin-21-jdk
-          - qemu-guest-agent
-          - git
-          - curl
-          - maven
-          - mysql-server
-          - python3-pymysql
-          - cmake
-          - build-essential
-        state: present
-        update_cache: yes
+        - name: Install guest dependencies
+          ansible.builtin.apt:
+            name:
+              - temurin-21-jdk
+              - git
+              - curl
+              - maven
+              - mariadb-server
+              - python3-pymysql
+              - cmake
+              - build-essential
+            state: present
+            update_cache: yes
 
-    - name: Ensure MySQL directory exists for socket
-      ansible.builtin.file:
-        path: /var/run/mysqld
-        state: directory
-        owner: mysql
-        group: mysql
-        mode: '0755'
+        - name: Disable and mask serial getty on VM template
+          ansible.builtin.systemd:
+            name: serial-getty@ttyS0.service
+            state: stopped
+            enabled: no
+            masked: yes
+          failed_when: false
 
-    - name: Start MySQL for initial setup
-      ansible.builtin.systemd:
-        name: mysql
-        state: started
+        - name: Load MSR kernel module for EnergiBridge
+          community.general.modprobe:
+            name: msr
+            state: present
 
-    - name: Create GreenTrails database
-      ansible.mysql.mysql_db:
-        name: "{{ db_name }}"
-        state: present
-        login_user: root
-        login_unix_socket: /var/run/mysqld/mysqld.sock
-        config_file: ''
-        check_implicit_admin: true
-      no_log: true
+        - name: Persist MSR kernel module across reboots
+          ansible.builtin.copy:
+            dest: /etc/modules-load.d/msr.conf
+            content: |
+              msr
+            mode: '0644'
 
-    - name: Create GreenTrails application user and grant database access
-      ansible.mysql.mysql_user:
-        name: "{{ db_user }}"
-        host: localhost
-        password: "{{ db_pass }}"
-        priv:
-          "{{ db_name }}.*": ALL
-        state: present
-        login_user: root
-        login_unix_socket: /var/run/mysqld/mysqld.sock
-        config_file: ''
-        check_implicit_admin: true
-      no_log: true
+        - name: Ensure MySQL directory exists for socket
+          ansible.builtin.file:
+            path: /var/run/mysqld
+            state: directory
+            owner: mysql
+            group: mysql
+            mode: '0755'
 
-    - name: Disable MySQL outside energy measurements
-      ansible.builtin.systemd:
-        name: mysql
-        state: stopped
-        enabled: false
+        - name: Start MySQL for initial setup
+          ansible.builtin.systemd:
+            name: mysql
+            state: started
 
-    - name: Install Rust toolchain
-      ansible.builtin.shell: |
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-      args:
-        creates: /root/.cargo/bin/rustc
+        - name: Create GreenTrails database
+          ansible.mysql.mysql_db:
+            name: "{{ db_name }}"
+            state: present
+            login_user: root
+            login_unix_socket: /var/run/mysqld/mysqld.sock
+            config_file: ''
+            check_implicit_admin: true
+          no_log: true
 
-    - name: Clone EnergiBridge repository
-      ansible.builtin.git:
-        repo: "{{ energibridge_repo }}"
-        dest: "{{ energibridge_dest }}"
-        version: "{{ energibridge_version }}"
+        - name: Create GreenTrails application user and grant database access
+          ansible.mysql.mysql_user:
+            name: "{{ db_user }}"
+            host: localhost
+            password: "{{ db_pass }}"
+            priv: "{{ db_name }}.*:ALL"
+            append_privs: yes
+            state: present
+            login_user: root
+            login_unix_socket: /var/run/mysqld/mysqld.sock
+            config_file: ''
+            check_implicit_admin: true
+          no_log: true
 
-    - name: Build EnergiBridge
-      ansible.builtin.shell: |
-        export PATH="/root/.cargo/bin:$PATH"
-        cargo build --release
-      args:
-        chdir: "{{ energibridge_dest }}"
-      changed_when: true
+        - name: Disable MySQL outside energy measurements
+          ansible.builtin.systemd:
+            name: mysql
+            state: stopped
+            enabled: false
 
-    - name: Symlink EnergiBridge binary
-      ansible.builtin.file:
-        src: "{{ energibridge_dest }}/target/release/energibridge"
-        dest: /usr/local/bin/energibridge
-        state: link
+        - name: Install Rust toolchain
+          ansible.builtin.shell: |
+            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          args:
+            creates: /root/.cargo/bin/rustc
 
-    - name: Create backend installation directory
-      ansible.builtin.file:
-        path: "{{ backend_dest }}"
-        state: directory
-        mode: '0755'
+        - name: Clone EnergiBridge repository
+          ansible.builtin.git:
+            repo: "{{ energibridge_repo }}"
+            dest: "{{ energibridge_dest }}"
+            version: "{{ energibridge_version }}"
 
-    - name: Deploy Spring Boot JAR
-      ansible.builtin.copy:
-        src: "{{ build_dir }}/backend.jar"
-        dest: "{{ backend_dest }}/backend.jar"
-        mode: '0644'
+        - name: Build EnergiBridge
+          ansible.builtin.shell: |
+            export PATH="/root/.cargo/bin:$PATH"
+            cargo build --release
+          args:
+            chdir: "{{ energibridge_dest }}"
+          changed_when: true
 
-    - name: Create benchmark suite directory
-      ansible.builtin.file:
-        path: "{{ benchmark_dest }}"
-        state: directory
-        mode: '0755'
+        - name: Symlink EnergiBridge binary
+          ansible.builtin.file:
+            src: "{{ energibridge_dest }}/target/release/energibridge"
+            dest: /usr/local/bin/energibridge
+            state: link
 
-    - name: Deploy Benchmark JAR
-      ansible.builtin.copy:
-        src: "{{ build_dir }}/benchmarks.jar"
-        dest: "{{ benchmark_dest }}/benchmarks.jar"
-        mode: '0644'
+        - name: Create backend installation directory
+          ansible.builtin.file:
+            path: "{{ backend_dest }}"
+            state: directory
+            mode: '0755'
 
-    - name: Deploy custom minimal benchmark.target
-      ansible.builtin.copy:
-        dest: /etc/systemd/system/benchmark.target
-        content: |
-          [Unit]
-          Description=Minimal Isolated Target for JMH Benchmarks
-          Requires=basic.target qemu-guest-agent.service
-          After=basic.target qemu-guest-agent.service
-          AllowIsolate=yes
-        mode: '0644'
+        - name: Deploy Spring Boot JAR
+          ansible.builtin.copy:
+            src: "{{ build_dir }}/backend.jar"
+            dest: "{{ backend_dest }}/backend.jar"
+            mode: '0644'
 
-    - name: Deploy benchmark runner script
-      ansible.builtin.copy:
-        dest: /usr/local/bin/run_benchmarks.sh
-        mode: '0755'
-        content: |
-          #!/bin/bash
-          set -Eeuo pipefail
+        - name: Create benchmark suite directory
+          ansible.builtin.file:
+            path: "{{ benchmark_dest }}"
+            state: directory
+            mode: '0755'
 
-          restore_multi_user_target() {
-              status=$?
-              trap - EXIT INT TERM
-              set +e
-              echo "[+] Restoring multi-user.target..."
-              systemctl isolate multi-user.target
-              exit "$status"
-          }
+        - name: Deploy Benchmark JAR
+          ansible.builtin.copy:
+            src: "{{ build_dir }}/benchmarks.jar"
+            dest: "{{ benchmark_dest }}/benchmarks.jar"
+            mode: '0644'
 
-          trap restore_multi_user_target EXIT INT TERM
+        - name: Deploy custom minimal benchmark.target
+          ansible.builtin.copy:
+            dest: /etc/systemd/system/benchmark.target
+            content: |
+              [Unit]
+              Description=Minimal Isolated Target for JMH Benchmarks
+              Requires=basic.target
+              After=basic.target
+              AllowIsolate=yes
+            mode: '0644'
 
-          echo "[+] Switching to minimal benchmark.target..."
-          systemctl isolate benchmark.target
+        - name: Deploy benchmark runner script
+          ansible.builtin.copy:
+            dest: /usr/local/bin/run_benchmarks.sh
+            mode: '0755'
+            content: |
+              #!/bin/bash
+              set -Eeuo pipefail
 
-          echo "[+] Starting JMH benchmarks..."
-          SPRING_PROFILES_ACTIVE=dev SPRING_JPA_SHOW_SQL=false \
-          java -jar /opt/benchmark-suite/target/benchmarks.jar \
-            -f {{ jmh_forks | quote }} \
-            -wi {{ jmh_warmups | quote }} \
-            -i {{ jmh_iterations | quote }} \
-            -hmodel {{ amber_model | quote }} \
-            -host {{ amber_host | quote }} \
-            -hport {{ amber_service_port | quote }}
+              restore_multi_user_target() {
+                  status=$?
+                  trap - EXIT INT TERM
+                  set +e
+                  echo "[+] Restoring multi-user.target..."
+                  systemctl isolate multi-user.target
+                  exit "$status"
+              }
 
-    - name: Deploy energy measurement script
-      ansible.builtin.copy:
-        src: "{{ energy_script_src }}"
-        dest: "{{ energy_script_dest }}"
-        mode: '0755'
+              trap restore_multi_user_target EXIT INT TERM
+
+              echo "[+] Switching to minimal benchmark.target..."
+              systemctl isolate benchmark.target
+
+              mkdir -p /opt/benchmark-suite/results
+
+              echo "[+] Starting JMH benchmarks..."
+              SPRING_PROFILES_ACTIVE=dev SPRING_JPA_SHOW_SQL=false \
+              java -jar /opt/benchmark-suite/target/benchmarks.jar \
+                -f {{ jmh_forks | quote }} \
+                -wi {{ jmh_warmups | quote }} \
+                -i {{ jmh_iterations | quote }} \
+                -hmodel {{ amber_model | quote }} \
+                -hhost {{ amber_host | quote }} \
+                -hport {{ amber_service_port | quote }} \
+                -jvmArgs "-Xms2048m -Xmx2048m -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC" \
+                -foe true \
+                -rf CSV \
+                -rff /opt/benchmark-suite/results/jmh-result.csv \
+                -o /opt/benchmark-suite/results/jmh-output.txt
+
+        - name: Deploy energy measurement script
+          ansible.builtin.copy:
+            src: "{{ energy_script_src }}"
+            dest: "{{ energy_script_dest }}"
+            mode: '0755'
+
+        - name: Mark VM as fully provisioned
+          ansible.builtin.file:
+            path: "{{ provisioned_flag_file }}"
+            state: touch
+            mode: '0644'
 
 - name: Create & Provision Debian Trixie LXC for AMBER Server
   hosts: proxmox_host
@@ -552,6 +701,8 @@
     amber_python_root: "/opt/pyenv"
     amber_python_bin: "{{ amber_python_root }}/versions/{{ amber_python_version }}/bin/python"
     amber_venv: "{{ amber_service_dest }}/.venv"
+    amber_lxc_provisioned_flag: "/etc/greentrails_provisioned"
+    force_reprovision: false
 
   tasks:
     - name: Update LXC template catalog
@@ -601,6 +752,7 @@
         ostemplate: "{{ amber_template_volid }}"
         password: "{{ amber_lxc_password }}"
         ostype: "debian"
+        cmode: "tty"
         cpus: 2
         memory: 4096
         swap: 1024
@@ -609,10 +761,20 @@
           net0: "name=eth0,bridge={{ benchmark_bridge }},ip={{ hostvars['amber_server']['amber_lxc_ip'] }}/24,gw={{ benchmark_gateway }}"
         features:
           - "nesting=1"
-          - "keyctl=1"
         unprivileged: true
         state: present
       no_log: true
+
+    - name: Add random and urandom mounts to LXC config
+      ansible.builtin.blockinfile:
+        path: "/etc/pve/lxc/{{ hostvars['amber_server']['proxmox_vmid'] }}.conf"
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - RANDOM DEVICES"
+        block: |
+          lxc.cgroup2.devices.allow: c 1:8 rwm
+          lxc.cgroup2.devices.allow: c 1:9 rwm
+          lxc.mount.entry: /dev/random dev/random none bind,optional,create=file 0 0
+          lxc.mount.entry: /dev/urandom dev/urandom none bind,optional,create=file 0 0
+      delegate_to: "pve_node"
 
     - name: Start LXC container
       community.proxmox.proxmox:
@@ -639,11 +801,11 @@
               - exec
               - "{{ hostvars['amber_server']['proxmox_vmid'] }}"
               - --
-              - true
+              - /bin/true
           register: amber_lxc_exec
           until: amber_lxc_exec.rc == 0
-          retries: 15
-          delay: 2
+          retries: 30
+          delay: 3
           changed_when: false
       rescue:
         - name: Collect AMBER LXC status after readiness timeout
@@ -665,183 +827,219 @@
               become ready. Status: {{ amber_lxc_status_debug.stdout | default('unavailable') }}.
               Configuration: {{ amber_lxc_config_debug.stdout | default('unavailable') }}.
 
-    - name: Update Debian package catalog in LXC
+    - name: Check if LXC is already provisioned
       ansible.builtin.command:
         argv:
           - pct
           - exec
           - "{{ hostvars['amber_server']['proxmox_vmid'] }}"
           - --
-          - apt-get
-          - update
+          - test
+          - -f
+          - "{{ amber_lxc_provisioned_flag }}"
+      register: lxc_provision_check
       changed_when: false
+      failed_when: false
 
-    - name: Install Debian AMBER build and SSH packages in LXC
-      ansible.builtin.command:
-        argv:
-          - pct
-          - exec
-          - "{{ hostvars['amber_server']['proxmox_vmid'] }}"
-          - --
-          - apt-get
-          - install
-          - -y
-          - --no-install-recommends
-          - ca-certificates
-          - curl
-          - git
-          - openssh-server
-          - build-essential
-          - libbz2-dev
-          - libffi-dev
-          - liblzma-dev
-          - libncursesw5-dev
-          - libreadline-dev
-          - libsqlite3-dev
-          - libssl-dev
-          - libxml2-dev
-          - libxmlsec1-dev
-          - tk-dev
-          - uuid-dev
-          - wget
-          - xz-utils
-      changed_when: true
+    - name: Notify if LXC provisioning will be skipped
+      ansible.builtin.debug:
+        msg: "AMBER LXC is already provisioned. Skipping provisioning tasks."
+      when: lxc_provision_check.rc == 0
 
-    - name: Install Python 3.9 for AMBER in LXC
-      ansible.builtin.command:
-        argv:
-          - pct
-          - exec
-          - "{{ hostvars['amber_server']['proxmox_vmid'] }}"
-          - --
-          - sh
-          - -c
-          - >-
-            if [ ! -x {{ amber_python_bin }} ]; then
-            if [ ! -x {{ amber_python_root }}/bin/pyenv ]; then
-            git clone --depth 1 https://github.com/pyenv/pyenv.git {{ amber_python_root }};
-            fi;
-            PYENV_ROOT={{ amber_python_root }} {{ amber_python_root }}/bin/pyenv install --skip-existing {{ amber_python_version }};
-            fi
-      changed_when: true
-
-    - name: Generate temporary SSH keypair on control node
-      ansible.builtin.command: >
-        ssh-keygen -t ed25519
-        -f {{ playbook_dir }}/.ssh_amber_lxc_tmp -N ""
-        -C "amber-provisioning"
+    - name: Generate temporary SSH keypair for LXC on control node
+      community.crypto.openssh_keypair:
+        path: "{{ playbook_dir }}/.ssh_amber_lxc_tmp"
+        type: ed25519
+        mode: '0600'
       delegate_to: localhost
       become: false
-      args:
-        creates: "{{ playbook_dir }}/.ssh_amber_lxc_tmp"
+      register: amber_lxc_keypair
 
-    - name: Install SSH public key in LXC container
-      ansible.builtin.shell: |
-        PUB=$(cat {{ playbook_dir }}/.ssh_amber_lxc_tmp.pub)
-        pct exec {{ hostvars['amber_server']['proxmox_vmid'] }} -- sh -c "mkdir -p /root/.ssh && echo '$PUB' > /root/.ssh/authorized_keys && chmod 700 /root/.ssh && chmod 600 /root/.ssh/authorized_keys"
-      changed_when: true
+    - name: Set LXC SSH public key fact
+      ansible.builtin.set_fact:
+        amber_lxc_ssh_pubkey: "{{ amber_lxc_keypair.public_key }}"
 
-    - name: Start SSH daemon in LXC
-      ansible.builtin.command: >
-        pct exec {{ hostvars['amber_server']['proxmox_vmid'] }} -- systemctl start ssh
-      changed_when: true
+    - name: Run full LXC provisioning
+      when:
+        - lxc_provision_check.rc != 0
+        - not force_reprovision
+      block:
+        - name: Update Debian package catalog in LXC
+          ansible.builtin.command:
+            argv:
+              - pct
+              - exec
+              - "{{ hostvars['amber_server']['proxmox_vmid'] }}"
+              - --
+              - apt-get
+              - update
+          changed_when: false
 
-    - name: Add AMBER LXC to in-memory inventory for SSH
-      ansible.builtin.add_host:
-        name: amber_lxc
-        ansible_host: "{{ hostvars['amber_server']['amber_lxc_ip'] }}"
-        ansible_user: root
-        ansible_ssh_private_key_file: "{{ playbook_dir }}/.ssh_amber_lxc_tmp"
-        ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+        - name: Install Debian AMBER build and SSH packages in LXC
+          ansible.builtin.command:
+            argv:
+              - pct
+              - exec
+              - "{{ hostvars['amber_server']['proxmox_vmid'] }}"
+              - --
+              - apt-get
+              - install
+              - -y
+              - --no-install-recommends
+              - ca-certificates
+              - curl
+              - git
+              - openssh-server
+              - build-essential
+              - libbz2-dev
+              - libffi-dev
+              - liblzma-dev
+              - libncursesw5-dev
+              - libreadline-dev
+              - libsqlite3-dev
+              - libssl-dev
+              - libxml2-dev
+              - libxmlsec1-dev
+              - python3-packaging
+              - python3-pip
+              - tk-dev
+              - uuid-dev
+              - wget
+              - xz-utils
+          changed_when: true
 
-    - name: Wait for SSH to be ready
-      ansible.builtin.wait_for_connection:
-        delay: 5
-        timeout: 30
-      delegate_to: amber_lxc
+        - name: Install Python 3.9 for AMBER in LXC
+          ansible.builtin.command:
+            argv:
+              - pct
+              - exec
+              - "{{ hostvars['amber_server']['proxmox_vmid'] }}"
+              - --
+              - sh
+              - -c
+              - >-
+                if [ ! -x {{ amber_python_bin }} ]; then
+                if [ ! -x {{ amber_python_root }}/bin/pyenv ]; then
+                git clone --depth 1 https://github.com/pyenv/pyenv.git {{ amber_python_root }};
+                fi;
+                PYENV_ROOT={{ amber_python_root }} {{ amber_python_root }}/bin/pyenv install --skip-existing {{ amber_python_version }};
+                fi
+          changed_when: true
 
-    - name: Copy AMBER service files to LXC container
-      ansible.builtin.copy:
-        src: "{{ amber_service_src }}/"
-        dest: "{{ amber_service_dest }}/"
-        mode: '0644'
-        directory_mode: '0755'
-      delegate_to: amber_lxc
+        - name: Install SSH public key in LXC container
+          ansible.builtin.shell: |
+            pct exec {{ hostvars['amber_server']['proxmox_vmid'] }} -- sh -c "mkdir -p /root/.ssh && echo '{{ amber_lxc_ssh_pubkey }}' > /root/.ssh/authorized_keys && chmod 700 /root/.ssh && chmod 600 /root/.ssh/authorized_keys"
+          changed_when: true
 
-    - name: Create AMBER Python virtual environment
-      ansible.builtin.command:
-        argv:
-          - "{{ amber_python_bin }}"
-          - -m
-          - venv
-          - "{{ amber_venv }}"
-        creates: "{{ amber_venv }}/bin/python"
-      delegate_to: amber_lxc
+        - name: Start SSH daemon in LXC
+          ansible.builtin.command: >
+            pct exec {{ hostvars['amber_server']['proxmox_vmid'] }} -- systemctl start ssh
+          changed_when: true
 
-    - name: Install AMBER Python dependencies
-      ansible.builtin.pip:
-        requirements: "{{ amber_service_dest }}/requirements.txt"
-        executable: "{{ amber_venv }}/bin/pip"
-      delegate_to: amber_lxc
+        - name: Add AMBER LXC to in-memory inventory for SSH
+          ansible.builtin.add_host:
+            name: amber_lxc
+            ansible_host: "{{ hostvars['amber_server']['amber_lxc_ip'] }}"
+            ansible_user: root
+            ansible_ssh_private_key_file: "{{ playbook_dir }}/.ssh_amber_lxc_tmp"
+            ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o IdentitiesOnly=yes -o UserKnownHostsFile=/dev/null -o ProxyJump={{ lookup('env', 'PROXMOX_SSH_USER') | default('root', true) }}@{{ lookup('env', 'PROXMOX_HOST') }}"
 
-    - name: Install AMBER systemd service unit
-      ansible.builtin.copy:
-        dest: /etc/systemd/system/amber.service
-        mode: '0644'
-        content: |
-          [Unit]
-          Description=AMBER prediction service
-          Wants=network-online.target
-          After=network-online.target
+        - name: Wait for SSH to be ready
+          ansible.builtin.wait_for_connection:
+            delay: 5
+            timeout: 30
+          delegate_to: amber_lxc
 
-          [Service]
-          Type=simple
-          WorkingDirectory={{ amber_service_dest }}
-          ExecStart={{ amber_venv }}/bin/python {{ amber_service_dest }}/service.py
-          Environment=PYTHONUNBUFFERED=1
-          Restart=on-failure
-          RestartSec=5
+        - name: Copy AMBER service files to LXC container
+          ansible.builtin.copy:
+            src: "{{ amber_service_src }}/"
+            dest: "{{ amber_service_dest }}/"
+            mode: '0644'
+            directory_mode: '0755'
+          delegate_to: amber_lxc
 
-          [Install]
-          WantedBy=multi-user.target
-      delegate_to: amber_lxc
+        - name: Create AMBER Python virtual environment
+          ansible.builtin.command:
+            argv:
+              - "{{ amber_python_bin }}"
+              - -m
+              - venv
+              - "{{ amber_venv }}"
+            creates: "{{ amber_venv }}/bin/python"
+          delegate_to: amber_lxc
 
-    - name: Enable AMBER systemd service for container boot
-      ansible.builtin.systemd:
-        name: amber.service
-        daemon_reload: true
-        enabled: true
-        state: stopped
-      delegate_to: amber_lxc
+        - name: Install AMBER Python dependencies
+          ansible.builtin.pip:
+            requirements: "{{ amber_service_dest }}/requirements.txt"
+            executable: "{{ amber_venv }}/bin/pip"
+          delegate_to: amber_lxc
 
-    - name: Verify AMBER service.py is in place
-      ansible.builtin.stat:
-        path: "{{ amber_service_dest }}/service.py"
-      register: amber_stat
-      delegate_to: amber_lxc
-      failed_when: not amber_stat.stat.exists
+        - name: Install AMBER systemd service unit
+          ansible.builtin.copy:
+            dest: /etc/systemd/system/amber.service
+            mode: '0644'
+            content: |
+              [Unit]
+              Description=AMBER prediction service
+              Requires=network-online.target
+              Wants=network-online.target ssh.service systemd-user-sessions.service
+              After=network-online.target
 
-    - name: Stop LXC container
-      community.proxmox.proxmox:
-        node: "{{ hostvars['pve_node']['node'] }}"
-        vmid: "{{ hostvars['amber_server']['proxmox_vmid'] }}"
-        state: stopped
+              [Service]
+              Type=simple
+              WorkingDirectory={{ amber_service_dest }}
+              ExecStart={{ amber_venv }}/bin/python {{ amber_service_dest }}/service.py
+              Environment=PYTHONUNBUFFERED=1
+              Environment=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6
+              Environment=CUDA_VISIBLE_DEVICES=-1
+              Environment=KMP_AFFINITY=disabled
+              Environment=KMP_BLOCKTIME=0
+              Environment=OMP_NUM_THREADS=2
+              Environment=TF_NUM_INTRAOP_THREADS=2
+              Environment=TF_NUM_INTEROP_THREADS=2
+              Environment=TF_ENABLE_ONEDNN_OPTS=0
+              Environment=TF_XLA_FLAGS=--tf_xla_auto_jit=0
+              Environment=TF_CPP_MIN_LOG_LEVEL=3
+              Restart=on-failure
+              RestartSec=5
 
-    - name: Remove temporary SSH keypair from control node
-      ansible.builtin.file:
-        path: "{{ playbook_dir }}/{{ item }}"
-        state: absent
-      loop:
-        - .ssh_amber_lxc_tmp
-        - .ssh_amber_lxc_tmp.pub
-      delegate_to: localhost
-      become: false
+              [Install]
+              WantedBy=multi-user.target
+          delegate_to: amber_lxc
+
+        - name: Enable AMBER systemd service for container boot
+          ansible.builtin.systemd:
+            name: amber.service
+            daemon_reload: true
+            enabled: true
+            state: stopped
+          delegate_to: amber_lxc
+
+        - name: Verify AMBER service.py is in place
+          ansible.builtin.stat:
+            path: "{{ amber_service_dest }}/service.py"
+          register: amber_stat
+          delegate_to: amber_lxc
+          failed_when: not amber_stat.stat.exists
+
+        - name: Mark LXC as fully provisioned
+          ansible.builtin.file:
+            path: "{{ amber_lxc_provisioned_flag }}"
+            state: touch
+            mode: '0644'
+          delegate_to: amber_lxc
 
     - name: Disable SSH in LXC after provisioning
       ansible.builtin.command: >
         pct exec {{ hostvars['amber_server']['proxmox_vmid'] }} -- systemctl stop ssh
       changed_when: true
       ignore_errors: true
+
+    - name: Stop LXC container
+      community.proxmox.proxmox:
+        node: "{{ hostvars['pve_node']['node'] }}"
+        vmid: "{{ hostvars['amber_server']['proxmox_vmid'] }}"
+        state: stopped
 
 - name: Convert VM & Cleanup
   hosts: proxmox_host
@@ -860,26 +1058,32 @@
     - name: Validate Proxmox API configuration
       ansible.builtin.include_tasks: "{{ playbook_dir }}/../tasks/validate_proxmox_credentials.yml"
 
+    - name: Check if VM is already a template
+      ansible.builtin.command: qm config {{ hostvars['vm_template']['proxmox_vmid'] }}
+      register: vm_config_convert
+      changed_when: false
+      failed_when: false
+
+    - name: Set VM template status for convert play
+      ansible.builtin.set_fact:
+        vm_is_template: "{{ 'template: 1' in vm_config_convert.stdout | default('') }}"
+
+    - name: Notify VM is already a template (skipping conversion)
+      ansible.builtin.debug:
+        msg: "VM is already a template. Skipping conversion."
+      when: vm_is_template
+
   tasks:
-    - name: Gracefully stop VM prior to template conversion
-      community.proxmox.proxmox_kvm:
-        vmid: "{{ hostvars['vm_template']['proxmox_vmid'] }}"
-        state: stopped
+    - name: Convert VM to template
+      when: not vm_is_template
+      block:
+        - name: Gracefully stop VM prior to template conversion
+          community.proxmox.proxmox_kvm:
+            vmid: "{{ hostvars['vm_template']['proxmox_vmid'] }}"
+            state: stopped
 
-    - name: Convert VM to Template
-      community.proxmox.proxmox_kvm:
-        node: "{{ hostvars['pve_node']['node'] }}"
-        vmid: "{{ hostvars['vm_template']['proxmox_vmid'] }}"
-        state: template
-
-    - name: Clean up temporary cloud image
-      ansible.builtin.file:
-        path: /tmp/debian-cloud.qcow2
-        state: absent
-
-    - name: Clean up local build artifacts
-      ansible.builtin.file:
-        path: "{{ playbook_dir }}/.build"
-        state: absent
-      delegate_to: localhost
-      become: false
+        - name: Convert VM to Template
+          community.proxmox.proxmox_kvm:
+            node: "{{ hostvars['pve_node']['node'] }}"
+            vmid: "{{ hostvars['vm_template']['proxmox_vmid'] }}"
+            state: template

@@ -1,0 +1,36 @@
+---
+- name: Check if qemu-vmsr-helper systemd service already exists
+  ansible.builtin.stat:
+    path: /etc/systemd/system/qemu-vmsr-helper.service
+  register: vmsr_service_stat
+
+- name: Find qemu-vmsr-helper binary
+  ansible.builtin.shell: command -v qemu-vmsr-helper
+  register: vmsr_helper_path
+  changed_when: false
+  when: not vmsr_service_stat.stat.exists
+
+- name: Install qemu-vmsr-helper systemd service unit
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/qemu-vmsr-helper.service
+    mode: '0644'
+    content: |
+      [Unit]
+      Description=QEMU vMSR Helper for RAPL MSR passthrough
+      After=network.target
+
+      [Service]
+      ExecStart={{ vmsr_helper_path.stdout }} -d -k /var/run/qemu-vmsr-helper.sock
+      Type=forking
+      PIDFile=/var/run/qemu-vmsr-helper.pid
+
+      [Install]
+      WantedBy=multi-user.target
+  when: not vmsr_service_stat.stat.exists
+
+- name: Enable and start qemu-vmsr-helper service
+  ansible.builtin.systemd:
+    daemon_reload: "{{ not vmsr_service_stat.stat.exists }}"
+    name: qemu-vmsr-helper.service
+    state: started
+    enabled: true

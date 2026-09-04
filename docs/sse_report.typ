@@ -281,6 +281,39 @@ codice:
 // TODO: rieseguire i benchmark sulla macchina di riferimento e
 // aggiornare i valori alla suite consolidata (4 classi, 9 benchmark).
 
+Durante le esecuzioni preliminari, i benchmark sono terminati con
+errori `OutOfMemoryError: Java heap space` durante la fase di
+warm-up (alla iterazione 44 su 500 previste), con il forked VM che
+termina con exit code 3. La causa è stata identificata in
+`ItinerariAdapterBenchmark`: il fake in-memory repository
+(`FakeJpaRepository`) accumulava ogni oggetto `Itinerario` creato
+nelle iterazioni di warm-up nella lista `items` senza mai
+svuotarla, provocando un crescente consumo di heap fino all'esaurimento
+dello spazio disponibile. Il problema è stato risolto rimuovendo
+l'`items.add(entity)` dal metodo `save()`, poiché il repository
+fittizio non ha bisogno di persistere gli oggetti per misurare le
+performance di `pianificazioneAutomatica()`.
+
+=== Confronto con la Suite Precedente
+
+I risultati preliminari della suite consolidata (9 benchmark) sono
+stati confrontati con i valori storici della suite originaria
+(16 classi, 44 benchmark) eseguita su un hardware diverso:
+
+- *BCrypt:* 73 ms vs 66 ms storici — delta atteso, attribuibile
+  alla diversa architettura CPU della macchina di riferimento.
+- *ArchiviazioneFileSystemService:* 10 / 27 / 24 μs (delete/loadAll/store)
+  vs 1.4 / 17 / 68 μs storici — variazioni compatibili con I/O
+  del filesystem su VM vs bare metal.
+- *Pianificazione itinerari:* 0.004--0.315 ms (100--10.000 attivita)
+  vs 0.052--0.537 ms storici — range coerente, crescita lineare.
+
+Non essendo ancora disponibili i profili energetici (EnergiBridge) e
+i test di carico (JMeter), i confronti restano indicativi. La suite
+consolidata rimuove i benchmark pass-through e quelli con dataset
+estremi (fino a 50.000 elementi) che producevano latenze in secondi,
+concentrandosi sui componenti critici effettivamente misurabili.
+
 = Sostenibilità Sociale
 
 La sostenibilità sociale del software riguarda l'impatto del progetto

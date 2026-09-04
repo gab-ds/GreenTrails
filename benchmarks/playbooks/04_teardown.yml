@@ -13,6 +13,9 @@
       ca_path: "{{ proxmox_ca_path if proxmox_ca_path | length > 0 else omit }}"
 
   pre_tasks:
+    - name: Ensure Python venv for Proxmox modules
+      ansible.builtin.include_tasks: "{{ playbook_dir }}/../tasks/ensure_proxmox_python.yml"
+
     - name: Validate Proxmox API configuration
       ansible.builtin.include_tasks: "{{ playbook_dir }}/../tasks/validate_proxmox_credentials.yml"
 
@@ -57,12 +60,22 @@
         path: /etc/systemd/system.conf.d/99-cpu-affinity.conf
         state: absent
 
-    - name: Disable qemu-vmsr-helper.socket
+    - name: Disable qemu-vmsr-helper service
       ansible.builtin.systemd:
-        name: qemu-vmsr-helper.socket
+        name: qemu-vmsr-helper.service
         state: stopped
-        enabled: no
+        enabled: false
       ignore_errors: true
+
+    - name: Remove qemu-vmsr-helper service file
+      ansible.builtin.file:
+        path: /etc/systemd/system/qemu-vmsr-helper.service
+        state: absent
+
+    - name: Remove Cloud-Init snippets
+      ansible.builtin.file:
+        path: /var/lib/vz/snippets/userdata.yaml
+        state: absent
 
     - name: Reboot to restore default CPU affinity
       ansible.builtin.reboot:
@@ -75,4 +88,16 @@
     - name: Remove a stale benchmark lock after teardown
       ansible.builtin.file:
         path: /var/lock/greentrails-benchmark
+        state: absent
+
+    - name: Clean up local build artifacts
+      ansible.builtin.file:
+        path: "{{ playbook_dir }}/.build"
+        state: absent
+      delegate_to: localhost
+      become: false
+
+    - name: Remove imported cloud image
+      ansible.builtin.file:
+        path: /var/lib/vz/import/debian-cloud.qcow2
         state: absent
