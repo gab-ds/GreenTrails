@@ -30,6 +30,8 @@ jobs:
       reports_ok: ${{ steps.check.outputs.ok }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
       - name: Lint Dockerfile
         uses: hadolint/hadolint-action@2a66e89f53d0771bb131a7fa31f3136336094aa6 # v3.4.0
         with:
@@ -40,6 +42,12 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: 'maven'
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
       - name: Cache PIT history
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
@@ -60,6 +68,17 @@ jobs:
           if [ -d "target/reports" ] && [ -f "target/site/jacoco/jacoco.xml" ] && [ -d "target/pit-reports" ]; then
             echo "ok=true" >> "$GITHUB_OUTPUT"
           fi
+      - name: SonarQube Analysis
+        if: ${{ !cancelled() && steps.check.outputs.ok == 'true' }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: |
+          mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -Dsonar.projectKey=gab-ds_GreenTrails_0f2f65ea-0ac1-4f74-8a26-a216168e69bd \
+            -Dsonar.projectName='GreenTrails' \
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
+            --batch-mode
       - name: Genera badge coverage
         if: ${{ !cancelled() && steps.check.outputs.ok == 'true' }}
         uses: cicirello/jacoco-badge-generator@72266185b7ee48a6fd74eaf0238395cc8b14fef8 # v2
