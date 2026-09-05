@@ -1,0 +1,10 @@
+"Benchmark","Mode","Threads","Samples","Score","Score Error (99.9%)","Unit","Param: listSize"
+"it.greentrails.backend.benchmarks.ArchiviazioneFileSystemServiceBenchmark.benchmarkDelete","avgt",1,300,0.010382,0.000035,"ms/op",
+"it.greentrails.backend.benchmarks.ArchiviazioneFileSystemServiceBenchmark.benchmarkLoadAll","avgt",1,300,0.027268,0.000071,"ms/op",
+"it.greentrails.backend.benchmarks.ArchiviazioneFileSystemServiceBenchmark.benchmarkStore","avgt",1,300,0.024462,0.000179,"ms/op",
+"it.greentrails.backend.benchmarks.ItinerariAdapterBenchmark.benchmarkPianificazione","avgt",1,300,0.003507,0.000004,"ms/op",100
+"it.greentrails.backend.benchmarks.ItinerariAdapterBenchmark.benchmarkPianificazione","avgt",1,300,0.032409,0.000035,"ms/op",1000
+"it.greentrails.backend.benchmarks.ItinerariAdapterBenchmark.benchmarkPianificazione","avgt",1,300,0.156983,0.000965,"ms/op",5000
+"it.greentrails.backend.benchmarks.ItinerariAdapterBenchmark.benchmarkPianificazione","avgt",1,300,0.314966,0.002605,"ms/op",10000
+"it.greentrails.backend.benchmarks.PasswordEncodingBenchmark.benchmarkPasswordEncoding","avgt",1,300,73.167124,0.036650,"ms/op",
+"it.greentrails.backend.benchmarks.PasswordEncodingBenchmark.benchmarkPasswordMatching","avgt",1,300,73.123005,0.033195,"ms/op",

@@ -58,3 +58,4 @@ backend/src/main/resources/META-INF/additional-spring-configuration-metadata.jso
 **/*.pkrvars.hcl
 benchmarks/playbooks/.ssh*
 benchmarks/playbooks/.build/
+*.pdf
