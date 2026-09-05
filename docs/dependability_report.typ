@@ -921,9 +921,8 @@ Archiviazione 10/27/24 μs (vs 1.4/17/68 μs), Pianificazione
     [JMH], [Affidabilità (performance)],
     [Nessun benchmark],
     [Suite consolidata: 9 benchmark (da 44);
-     BCrypt ~73 ms (preliminare, VM);
-     Pianificazione 0.004--0.315 ms;
-     confronto con baseline storica indicativo],
+     BCrypt ~73 ms; Pianificazione 0,004--0,315 ms;
+     Archiviazione 0,010--0,027 ms (VM QEMU, 300 campioni)],
     [Ottimizzazioni bottleneck], [Affidabilità (performance)],
     [Nessuna — findAll() in memoria],
     [10 file modificati; latenza combinata da ~13 s a ~100 ms
