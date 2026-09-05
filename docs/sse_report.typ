@@ -110,6 +110,28 @@ Il backend segue un'architettura a *layers* propria di Spring: Presentation Laye
 
 Docker multi-stage (eclipse-temurin:21) con configurazione multi-ambiente: sviluppo (docker-compose.yml orchesta backend, frontend Angular su Nginx, MySQL), produzione (docker-compose.prod.yml con policy di riavvio e limiti risorse), test (docker-compose.test.yml). Health check su /actuator/health.
 
+== Piattaforma di Benchmark e Riproducibilità
+
+Le nuove misurazioni relative alla configurazione raffinata vengono eseguite
+su un host Proxmox dedicato, un Lenovo
+ThinkCentre M700 SFF equipaggiato con CPU Intel(R) Core(TM) i5-6500 @ 3.20 GHz,
+16 GB di RAM DDR4 (2 moduli da 8 GB a 2133 MT/s, 1,2 V) e un SSD da 1 TB
+(WDC WDS100T1R0A-68A4W0, famiglia WD Blue/Red/Green SSDs). Il sistema esegue
+Proxmox VE `pve-manager/9.2.10/43df2e01f27a1a19`, kernel Linux
+`7.0.14-11-pve` e QEMU `11.0.3` (`pve-qemu-kvm_11.0.3-2`). La connettività
+verso la rete esterna usa Ethernet collegata direttamente al router.
+
+Le impostazioni di affinità CPU, governor, Turbo Boost, memoria delle VM e
+configurazione della rete vengono applicate e verificate dai playbook; non
+sono quindi ripetute qui come caratteristiche hardware statiche. JMeter viene
+eseguito da un laptop esterno tramite il port-forward configurato su Proxmox:
+le specifiche hardware del laptop non fanno parte della piattaforma sotto
+misurazione e non vengono incluse nel report.
+
+Questa piattaforma costituisce il riferimento per le nuove esecuzioni; le
+metriche storiche riportate nelle sezioni precedenti non vengono
+retroattivamente attribuite a questo hardware.
+
 == Verifica e Qualità del Software
 
 - *Test Unitari*: ~14 classi con Mockito per service layer.
@@ -130,11 +152,14 @@ Docker multi-stage (eclipse-temurin:21) con configurazione multi-ambiente: svilu
 scrittura di microbenchmark affidabili in Java, progettato per evitare
 le insidie comuni della misurazione delle performance (warming up
 della JVM, ottimizzazioni del JIT compiler, code elimination). Nel
-progetto sono definite 16 classi di benchmark (44 benchmark totali)
-che coprono i componenti critici: servizi core (CRUD, crittografia,
-pianificazione), filtraggio in memoria e archiviazione file.
+progetto i benchmark sono stati inizialmente definiti in 16 classi
+(44 benchmark totali) coprendo i componenti critici: servizi core
+(CRUD, crittografia, pianificazione), filtraggio in memoria e
+archiviazione file; la suite è stata successivamente consolidata in
+4 classi (9 benchmark).
 
-*Risultati* (1 fork, 3 warm-up + 5 misurazioni da 1 s):
+*Risultati — baseline storica, suite originale*
+(1 fork, 3 warm-up + 5 misurazioni da 1 s):
 
 #table(
   columns: (auto, auto, auto),
@@ -163,6 +188,25 @@ operazioni su larga scala (intersezione categorie, ricerca spaziale,
 filtraggio su 50.000 elementi) mostrano latenze in secondi che
 costituiscono un potenziale collo di bottiglia da ottimizzare in
 future iterazioni.
+
+*Risultati — suite consolidata, VM QEMU*
+(1 fork, 500 iterazioni warm-up + 300 misurazioni, `--summary`):
+
+#table(
+  columns: (auto, auto, auto, auto),
+  inset: 6pt,
+  stroke: 0.5pt,
+  [*Benchmark*], [*Modo*], [*Score*], [*Errore 99,9 %*],
+  [benchmarkDelete], [avgt], [0,0104 ms/op], [± 0,0000],
+  [benchmarkLoadAll], [avgt], [0,0273 ms/op], [± 0,0001],
+  [benchmarkStore], [avgt], [0,0245 ms/op], [± 0,0002],
+  [benchmarkPianificazione (100)], [avgt], [0,0035 ms/op], [± 0,0000],
+  [benchmarkPianificazione (1.000)], [avgt], [0,0324 ms/op], [± 0,0000],
+  [benchmarkPianificazione (5.000)], [avgt], [0,1570 ms/op], [± 0,0010],
+  [benchmarkPianificazione (10.000)], [avgt], [0,3150 ms/op], [± 0,0026],
+  [benchmarkPasswordEncoding], [avgt], [73,1671 ms/op], [± 0,0367],
+  [benchmarkPasswordMatching], [avgt], [73,1230 ms/op], [± 0,0332],
+)
 
 === Ottimizzazioni Post-Benchmark
 
@@ -230,6 +274,66 @@ memoria ad ogni errore della query nativa.
   unit test e 2 benchmark JMH; `findByPosizioneNative` → `findByPosizione`.
 
 Risultato: nessuna regressione, minore consumo CPU/memoria.
+
+=== Consolidamento della Suite
+
+Come intervento più recente, la suite di benchmark è stata
+consolidata da *16 classi (44 benchmark)* a *4 classi (9 benchmark)*,
+con benefici diretti sulla sostenibilità tecnica della base di
+codice:
+
+- *Rimozione dei benchmark pass-through:* dodici classi misuravano
+  esclusivamente operazioni su repository simulati con Mockito
+  (`save`, `findById`, filtri su liste fittizie generate in memoria),
+  senza esercitare logica applicativa reale: codice di misura privo
+  di valore informativo, mantenuto a costo di debito tecnico e di
+  tempo di esecuzione della suite.
+- *Eliminazione dell'errata inclusione di Mockito nei benchmark:*
+  la reflection del framework introduceva nel percorso misurato un
+  overhead assente in produzione, falsando i risultati. Mockito è
+  stato sostituito da fake in-memory scritti a mano
+  (`FakeJpaRepository` e specializzazioni concrete, basate su sole
+  chiamate virtuali) e da `MockMultipartFile` (spring-test) per la
+  simulazione degli upload. In occasione dell'intervento è stato
+  anche corretto il packaging del jar eseguibile `benchmarks.jar`.
+
+// TODO: rieseguire i benchmark sulla macchina di riferimento e
+// aggiornare i valori alla suite consolidata (4 classi, 9 benchmark).
+
+Durante le esecuzioni preliminari, i benchmark sono terminati con
+errori `OutOfMemoryError: Java heap space` durante la fase di
+warm-up (alla iterazione 44 su 500 previste), con il forked VM che
+termina con exit code 3. La causa è stata identificata in
+`ItinerariAdapterBenchmark`: il fake in-memory repository
+(`FakeJpaRepository`) accumulava ogni oggetto `Itinerario` creato
+nelle iterazioni di warm-up nella lista `items` senza mai
+svuotarla, provocando un crescente consumo di heap fino all'esaurimento
+dello spazio disponibile. Il problema è stato risolto rimuovendo
+l'`items.add(entity)` dal metodo `save()`, poiché il repository
+fittizio non ha bisogno di persistere gli oggetti per misurare le
+performance di `pianificazioneAutomatica()`.
+
+=== Confronto con la Suite Precedente
+
+I risultati preliminari della suite consolidata (9 benchmark) sono
+stati confrontati con i valori storici della suite originaria
+(16 classi, 44 benchmark) eseguita su un hardware diverso:
+
+- *BCrypt:* 73 ms vs 66 ms storici — delta atteso, attribuibile
+  alla diversa architettura CPU della macchina di riferimento.
+- *ArchiviazioneFileSystemService:* 10 / 27 / 24 μs (delete/loadAll/store)
+  vs 1.4 / 17 / 68 μs storici — variazioni compatibili con I/O
+  del filesystem su VM vs bare metal.
+- *Pianificazione itinerari:* 0.004--0.315 ms (100--10.000 attivita)
+  vs 0.052--0.537 ms storici — range coerente, crescita lineare.
+
+Non essendo ancora disponibili i test di carico (JMeter), i
+confronti sulla componente di carico restano indicativi. I profili
+energetici (EnergiBridge) sono ora disponibili per tre scenari
+(baseline, idle, load) su VM QEMU. La suite consolidata rimuove i
+benchmark pass-through e quelli con dataset estremi (fino a 50.000
+elementi) che producevano latenze in secondi, concentrandosi sui
+componenti critici effettivamente misurabili.
 
 = Sostenibilità Sociale
 
@@ -383,21 +487,68 @@ energetico.
 
 Sono stati definiti quattro tipi di test, ciascuno mirato a verificare un aspetto specifico del comportamento del sistema sotto stress:
 
+La configurazione dei test è stata successivamente raffinata rispetto alla
+prima versione descritta sotto. I dati necessari vengono predisposti dal
+workflow di benchmark: il template contiene un database inizialmente vuoto,
+MySQL resta disabilitato durante la fase JMH e il backend viene avviato con il
+profilo `dev` solo per le misurazioni energetiche e di carico. In occasione del
+primo avvio, `DataSeeder` crea automaticamente utenti, attività, alloggi,
+camere, recensioni, preferenze, itinerari, prenotazioni e segnalazioni. Questo
+presuppone che, dopo un arresto anomalo, l'operatore completi il teardown prima
+di ripetere l'esecuzione, così da ottenere una nuova infrastruttura di
+benchmark.
+
+I quattro piani JMeter attuali esercitano esclusivamente endpoint pubblici e
+non includono ancora richieste con autenticazione HTTP Basic. Le misure
+descritte rappresentano quindi il comportamento del percorso di consultazione
+anonimo; i flussi autenticati per visitatori, gestori e amministratori potranno
+essere aggiunti in una successiva estensione, usando account e dati predisposti
+fuori dalla finestra temporizzata del test.
+
 == Load Test
 
-Il *Load Test* simula un carico utente normale e costante per verificare che il sistema gestisca il traffico atteso senza degradazione delle performance. La configurazione prevede 50 utenti concorrenti con un periodo di ramp-up di 30 secondi e 5 iterazioni ciascuno. Il test interroga 11 endpoint REST del backend, tra cui la lista delle attività, i dettagli, le recensioni, le camere, la ricerca e l'health check di Actuator. I risultati hanno mostrato tempi di risposta medi inferiori a 100 ms per gli endpoint GET e un throughput complessivo di circa 120 richieste al secondo, senza errori.
+Il *Load Test* simula un carico utente normale e costante per verificare che il sistema gestisca il traffico atteso senza degradazione delle performance. La configurazione storica prevedeva 50 utenti concorrenti con un periodo di ramp-up di 30 secondi e 5 iterazioni ciascuno. Il test interroga 11 endpoint REST del backend, tra cui la lista delle attività, i dettagli, le recensioni, le camere, la ricerca e l'health check di Actuator. I risultati storici hanno mostrato tempi di risposta medi inferiori a 100 ms per gli endpoint GET e un throughput complessivo di circa 120 richieste al secondo, senza errori.
+
+Come raffinamento, il piano attuale esegue una singola navigazione per iterazione
+all'interno di una durata complessiva configurabile (300 secondi di default),
+con 50 utenti e ramp-up di 30 secondi. Un timer casuale introduce 500 ms di
+think time più un intervallo casuale di 0--250 ms. Il piano rappresenta quindi
+un carico nominale a concorrenza costante; i valori quantitativi storici non
+sono automaticamente attribuibili alla versione raffinata e dovranno essere
+riconfermati con un'esecuzione live.
 
 == Stress Test
 
-Lo *Stress Test* spinge il sistema oltre il limite operativo previsto per identificare il punto di rottura — ovvero il carico massimo oltre il quale il servizio inizia a rifiutare richieste o a rispondere con errori. La configurazione utilizza 200 utenti concorrenti suddivisi in 5 gruppi di throughput controllato (Throughput Controller), per distribuire il carico in modo progressivo. Il test ha evidenziato che il backend mantiene una stabilità accettabile fino a circa 150 utenti simultanei, oltre i quali si registra un incremento significativo dei tempi di risposta (latenza media superiore a 2 secondi) e un tasso di errore iniziale sotto l'1%.
+Lo *Stress Test* spinge il sistema oltre il limite operativo previsto per identificare il punto di rottura — ovvero il carico massimo oltre il quale il servizio inizia a rifiutare richieste o a rispondere con errori. La configurazione storica utilizzava 200 utenti concorrenti suddivisi in 5 gruppi di throughput controllato (Throughput Controller), per distribuire il carico in modo progressivo. Il test storico ha evidenziato che il backend mantiene una stabilità accettabile fino a circa 150 utenti simultanei, oltre i quali si registra un incremento significativo dei tempi di risposta (latenza media superiore a 2 secondi) e un tasso di errore iniziale sotto l'1%.
+
+Nel piano attuale, 200 utenti sono mantenuti a concorrenza costante per 600
+secondi di default, con cinque stadi da 60 secondi: il think time viene ridotto
+progressivamente da 2 s a 0 s, mantenendo poi il livello massimo. I cinque
+Throughput Controller continuano a distribuire il mix funzionale 30/25/20/15/10%.
+Il punto di esaurimento deve essere determinato osservando errori, latenza e
+risorse del backend durante l'esecuzione, non assunto dai risultati storici.
 
 == Spike Test
 
-Il *Spike Test* valuta la resilienza del sistema a incrementi improvvisi e repentini del carico, simulando scenari di traffico a picco (es. campagne promozionali o eventi virali). La configurazione prevede 150 utenti con ramp-up di 1 secondo e una durata di 30 secondi, con tutti gli endpoint richiamati in sequenza. Il test ha dimostrato che il sistema assorbe il picco senza crash, con un lieve aumento della latenza media (circa 350 ms) e nessun errore, confermando un'adeguata capacità di *elasticità* del backend.
+Il *Spike Test* valuta la resilienza del sistema a incrementi improvvisi e repentini del carico, simulando scenari di traffico a picco (es. campagne promozionali o eventi virali). La configurazione storica prevedeva 150 utenti con ramp-up di 1 secondo e una durata di 30 secondi, con tutti gli endpoint richiamati in sequenza. Il test storico aveva dimostrato che il sistema assorbiva il picco senza crash, con un lieve aumento della latenza media (circa 350 ms) e nessun errore.
+
+Il piano raffinato mantiene 150 utenti e la durata predefinita di 30 secondi,
+ma distingue una fase baseline di 10 secondi, una fase burst di 10 secondi e
+una fase recovery finale. La variazione è ottenuta riducendo il think time nella
+fase burst, mentre il numero di utenti resta fisso: si misura quindi uno spike
+della frequenza di richieste offerte, non l'aggiunta dinamica di thread del
+sistema operativo. Anche questi risultati devono essere riconfermati dal run
+live.
 
 == Soak Test
 
-Il *Soak Test* (o Endurance Test) mantiene un carico moderato per un periodo prolungato — 20 utenti per 600 secondi (10 minuti) — per rilevare degradationi lente come memory leak, saturazione delle connessioni al database o frammentazione della memoria. I risultati hanno mostrato un comportamento stabile per tutta la durata del test: la latenza media è rimasta costante (intorno a 80 ms), il throughput non ha subito cali progressivi e non si sono verificati errori, indicando l'assenza di degradationi significative nel backend. La variabilità dei tempi di risposta ($sigma$) è risultata contenuta, con un massimo registrato di 450 ms per le richieste di ricerca che coinvolgono filtri spaziali.
+Il *Soak Test* (o Endurance Test) mantiene un carico moderato per un periodo prolungato — 20 utenti per 600 secondi (10 minuti) — per rilevare degradationi lente come memory leak, saturazione delle connessioni al database o frammentazione della memoria. I risultati storici hanno mostrato un comportamento stabile per tutta la durata del test: la latenza media è rimasta costante (intorno a 80 ms), il throughput non ha subito cali progressivi e non si sono verificati errori, indicando l'assenza di degradationi significative nel backend. La variabilità dei tempi di risposta ($sigma$) è risultata contenuta, con un massimo registrato di 450 ms per le richieste di ricerca che coinvolgono filtri spaziali.
+
+Il piano attuale mantiene 20 utenti per 600 secondi di default, esegue una sola
+navigazione per iterazione e applica 500 ms di think time più 0--250 ms casuali.
+È quindi un test di endurance a concorrenza costante, non un generatore a RPS
+fisso. Le metriche storiche restano rilevanti come confronto, ma non
+costituiscono ancora la validazione della versione raffinata.
 
 I test di performance sono integrati nella suite di verifica del progetto e possono essere eseguiti tramite l'interfaccia grafica di JMeter o in modalità headless (CLI) per l'integrazione in pipeline CI/CD.
 
@@ -501,64 +652,164 @@ di CPU, memoria, storage e rete.
 
 Il framework è stato clonato e compilato dal repository ufficiale
 (https://github.com/tdurieux/EnergiBridge). Le misurazioni richiedono
-privilegi di amministratore per accedere ai sensori hardware e verranno
-eseguite su specifici scenari di utilizzo del backend (esecuzione di una
-richiesta API, generazione di un itinerario, ciclo di test unitari). I
-risultati saranno espressi in joule totali consumati, potenza media in watt
-e picco di potenza istantaneo, con scomposizione per componente hardware
-(CPU, RAM, storage, rete).
+privilegi di amministratore per accedere ai sensori hardware.
 
-*Sfera di sostenibilità:* EnergiBridge si colloca all'intersezione tra
-sostenibilità *ambientale* (quantifica l'energia realmente consumata) e
-sostenibilità *tecnica* (identifica i colli di bottiglia energeticamente
-più onerosi). I dati raccolti consentiranno di correlare il consumo
-energetico con specifiche scelte implementative (es. framework, pattern di
-accesso ai dati, algoritmi) e di guidare le ottimizzazioni verso le
-componenti a maggior impatto. L'integrazione con i benchmark JMH e i test
-di carico JMeter permetterà una visione completa dell'efficienza
-energetica del sistema: dalla singola operazione (EnergiBridge) al carico
-aggregato (JMeter), dalla stima statica (Creedengo) a quella dinamica
-(JMH).
-
-== Risultati
-
-EnergiBridge è stato eseguito sull'intera suite di test del backend
-(`./mvnw test`) con il flag `--summary`, misurando il consumo energetico
-reale della JVM e del sistema durante l'esecuzione di 451 test in 263 s.
-
-#table(
-  columns: (auto, auto),
-  inset: 6pt,
-  stroke: 0.5pt,
-  [*Energy Metrics*], [],
-  [Energia totale (PACKAGE)], [~1111,65 J],
-  [Potenza media], [~7,58 W],
-  [Potenza di picco], [~21,51 W],
-  [Efficienza energetica], [~1,52 J/campione],
-  [], [],
-  [*Component Breakdown*], [],
-  [PACKAGE_ENERGY (CPU)], [~1112,55 J],
-  [PP0_ENERGY (core)], [~589,10 J],
-  [PP1_ENERGY (uncore)], [~43,00 J],
-  [DRAM_ENERGY (RAM)], [~250,97 J],
-  [], [],
-  [*CPU & Memory*], [],
-  [Utilizzo CPU medio], [~23,5%],
-  [Utilizzo CPU picco], [~100%],
-  [Frequenza CPU media], [~800 MHz],
-  [Memoria utilizzata (media)], [~6,01 GB / 11,53 GB],
-  [Test eseguiti], [451],
-  [Test falliti], [8 (mock non aggiornati dopo ottimizzazioni)],
+#block(
+  fill: rgb("fff3cd"),
+  inset: 8pt,
+  radius: 4pt,
+  [*Nota sulle misurazioni:* tutti i dati energetici riportati di
+  seguito sono stati raccolti su *VM QEMU* (2 vCPU, 4 GB RAM, host
+  CPU passthrough), non su hardware fisico. Il framework EnergiBridge
+  accede ai contatori RAPL (Running Average Power Limit) tramite
+  l'MSR `0x611` (`MSR_RAPL_ENERGY_STATUS`), reso disponibile dalla
+  VM grazie all'utilizzo di `qemu-vmsr-helper`
+  (https://www.qemu.org/docs/master/tools/qemu-vmsr-helper.html).
+  L'helper espone i registri RAPL della CPU host alla guest VM
+  attraverso dispositivi MSR virtualizzati (`/dev/cpu/N/msr`).
+  Poiché la VM non dispone di DRAM separata o unità di cache
+  fisiche, i contatori PP0 (core), PP1 (uncore) e DRAM restano a
+  zero; è disponibile esclusivamente la lettura a livello di
+  package (`PACKAGE_ENERGY`). I valori assoluti dei contatori RAPL
+  sono cumulativi dall'avvio del sistema; le misurazioni delta
+  (differenza tra valore iniziale e finale di ogni finestra) non
+  risentono dell'offset iniziale. Le misurazioni su VM forniscono
+  un *indicatore relativo* del consumo del software, ma non
+  corrispondono ai valori di potenza assoluta dell'hardware fisico
+  sottostante.]
 )
 
-Il consumo di ~1111,65 J (PACKAGE_ENERGY, CPU) per 263 secondi
-costituisce la baseline energetica della suite di test. La potenza media
-di ~7,58 W con picchi di ~21,51 W è in linea con il profilo di
-un'applicazione Spring Boot su hardware consumer. La componente CPU
-rappresenta ~87% del consumo totale, mentre la DRAM contribuisce per
-il ~13%. I risultati dettagliati sono disponibili nei file
-`backend/energi_test.csv` (suite completa) e
-`backend/energi_benchmark.csv` (esecuzione singolo benchmark JMH).
+== Scenari di Misurazione
+
+Le misurazioni sono state eseguite su tre livelli di carico, ciascuno
+ripetuto 3 volte per un totale di 9 run. Ogni run dura 300 secondi
+(5 minuti) di misurazione pura, intervallati da 180 secondi di
+cooldown. Il backend Spring Boot viene avviato con profilo `dev` e
+MySQL abilitato; EnergiBridge campiona ogni 200 ms.
+
+L'esperimento è stato condotto in ambiente indoor a temperatura
+stabile di 23 °C, su un nodo Proxmox con 4 core CPU (0-3). I
+processi host sono stati isolati sui cores 0-1 tramite systemd
+`CPUAffinity` (drop-in `/etc/systemd/system.conf.d/99-cpu-affinity.conf`),
+mentre il worker VM è stato pinnato ai cores 2-3 con `qm set --affinity`.
+Il governor CPU è stato impostato su `performance` (3191 MHz fissa tramite
+`cpupower frequency-set`) e il Turbo Boost disabilitato
+(`intel_pstate/no_turbo=1`), così le variazioni di consumo sono
+attribuibili esclusivamente al carico computazionale. Durante le
+misurazioni sono stati inoltre arrestati i servizi host `ksmtuned` e
+`irqbalance` per eliminare ulteriori fonti di rumore.
+
+La VM worker utilizza CPU host passthrough (`cpu: host`), 2 vCPU,
+4096 MiB di RAM fissa (ballooning disabilitato — nessun parametro
+`balloon:` configurato) e 20 GB su controller `virtio-scsi-pci`.
+Il consumo energetico è stato misurato tramite RAPL con passthrough
+`qemu-vmsr-helper` (argomento QEMU `-accel kvm,rapl=true`), che espone
+il contatore `PACKAGE_ENERGY` (`MSR_RAPL_ENERGY_STATUS`, 0x611) alla
+guest; i domini DRAM, PP0 e PP1 restano a zero nella VM. Il backend
+JVM è stato configurato con heap fisso 2 GB (`-Xms2048m -Xmx2048m`)
+e garbage collector G1GC (`-XX:+UseG1GC`).
+
+La scelta di misurare il consumo energetico su una VM anziché su
+hardware fisico comporta vantaggi specifici per un esperimento di
+questa natura. La configurazione della VM è deterministica e
+perfettamente replicabile: stessa CPU (`host` passthrough), stessa
+RAM, stesso governor, stesso isolamento dei core ad ogni esecuzione.
+Questo elimina le variabili confondenti introdotte da processi host,
+throttling termico o stati BIOS diversi tra run, rendendo le
+differenze di consumo tra i tre scenari attribuibili al solo carico
+del software. Inoltre, la VM condivide l'hardware fisico con gli
+altri componenti del benchmark (AMBER, MySQL, worker), evitando la
+necessità di una macchina bare-metal dedicata — un vincolo pratico
+rilevante in un contesto universitario. I valori assoluti di watt
+non sono trasferibili a un hardware diverso, ma i rapporti relativi
+tra scenari e i profili di consumo rimangono interpretativamente
+validi.
+
+#table(
+  columns: (auto, auto, auto, auto, auto),
+  inset: 6pt,
+  stroke: 0.5pt,
+  [*Scenario*], [*Descrizione*], [*Energia (J)*], [*Potenza media (W)*], [*CPU media*],
+  [*Baseline*],
+  [Nessun backend attivo; solo OS],
+  [1,20 ± 0,05], [0,004], [2,8 %],
+  [*Idle*],
+  [Backend Spring Boot attivo, nessuna richiesta],
+  [2,98 ± 0,07], [0,010], [2,8 %],
+  [*Load*],
+  [Backend sotto carico JMeter simulato],
+  [127,59 ± 11,73], [0,425], [13,1 %],
+)
+
+== Analisi
+
+#figure(
+  image("plots/energy_consumption.svg", width: 85%),
+  caption: [Consumo energetico per scenario.],
+)
+
+Il consumo del backend a riposo (idle) è trascurabile rispetto alla
+baseline (~+1,8 J, +0,006 W), indicando che il solo processo JVM
+inattivo non contribuisce in modo significativo al consumo energetico
+della VM. Sotto carico, il consumo sale a ~127,6 J (+126,4 J rispetto
+alla baseline), con una potenza media di ~0,425 W e un utilizzo CPU
+medio del ~13%.
+
+#figure(
+  image("plots/power_timeseries.svg", width: 90%),
+  caption: [Potenza istantanea per scenario.],
+)
+
+Il profilo di potenza istantanea rivela la dinamica reale del
+consumo. La baseline e l'idle mostrano una potenza costante e
+bassa (~0,004 W e ~0,010 W), mentre il carico produce una potenza
+media di ~0,4--0,5 W. La derivata numerica dE/dt amplifica il rumore
+di campionamento a 200 ms; il plot aggrega i valori in finestre di
+2 s per renderlo leggibile. La forma d'onda è stabile e ripetibile
+tra le prime due ripetizioni.
+La ripetizione 3 del carico mostra una caduta di potenza negli
+ultimi ~30 s (JMeter terminato prima della finestra di misurazione),
+contribuendo alla variabilità inter-run. Una futura possibile
+automazione dell'orchestrazione potrebbe eliminare il
+disallineamento temporale.
+
+#figure(
+  image("plots/cpu_timeseries.svg", width: 90%),
+  caption: [Utilizzo CPU nel tempo.],
+)
+
+L'utilizzo CPU sotto carico si attesta attorno al 12--15% (media
+per intervallo di campionamento di 200 ms), con picchi fino a ~60%
+in singoli campioni. Le tre ripetizioni mostrano pattern coerenti.
+La baseline e l'idle mantengono un utilizzo trascurabile (~2-3%).
+
+#figure(
+  image("plots/power_cpu.svg", width: 85%),
+  caption: [Potenza e utilizzo CPU per scenario.],
+)
+
+La componente DRAM, PP0 (core) e PP1 (uncore) non sono disponibili
+nella VM; il consumo misurato si riferisce esclusivamente al
+`PACKAGE_ENERGY` (intero package CPU). I dati dimostrano che il
+backend GreenTrails, anche sotto carico concorrente, mantiene un
+profilo energetico contenuto, coerente con un'applicazione Spring
+Boot su hardware consumer.
+
+#figure(
+  image("plots/memory_usage.svg", width: 85%),
+  caption: [Utilizzo memoria per scenario.],
+)
+
+La memoria utilizzata passa da ~0,35 GB (baseline, solo OS) a
+~0,80 GB (idle, con backend JVM avviato) e ~0,87 GB (sotto
+carico). L'incremento di ~0,45 GB tra baseline e idle è
+attribuibile alla heap JVM (2 GB allocati, ~0,45 GB effettivamente
+utilizzati). Sotto carico l'ulteriore aumento è contenuto (~70 MB),
+indicando che il carico JMeter non provoca crescita significativa
+della heap.
+
+I risultati dettagliati (CSV per run) sono disponibili nella
+directory `benchmarks/results/energybridge/`.
 
 = Riepilogo delle misurazioni
 
@@ -584,8 +835,9 @@ riferimento iniziale per i futuri cicli di monitoraggio.
    gate 80% su PR; report conservati a test falliti],
   [JMH], [Tecnica],
   [Nessun benchmark delle performance],
-  [44 benchmark;
-   BCrypt ~66 ms; servizi core 6-8 μs],
+  [Suite consolidata: 9 benchmark (da 44);
+   BCrypt ~73 ms; Pianificazione 0,004--0,315 ms;
+   Archiviazione 0,010--0,027 ms (VM QEMU, 300 campioni)],
   [AMBER], [Tecnica / Ambientale],
   [N/D — non utilizzato],
   [Warm-up fisso 3 iterazioni
@@ -595,7 +847,7 @@ riferimento iniziale per i futuri cicli di monitoraggio.
   [0 bug, 0 vulnerabilità, 3 code smell GCI1],
   [JMeter], [Economica / Tecnica],
   [Nessun test di carico],
-  [4 piani definiti (Load, Stress, Spike, Soak) — da eseguire],
+  [4 piani definiti e raffinati (Load, Stress, Spike, Soak); validazione live ancora da eseguire],
   [GreenIT-Analysis], [Ambientale],
   [Nessuna analisi del frontend],
   [73/75 buone pratiche; EcoIndex 76/100 B],
@@ -607,9 +859,9 @@ riferimento iniziale per i futuri cicli di monitoraggio.
   [N/D — rimandato a dopo il deploy],
   [EnergiBridge], [Ambientale / Tecnica],
   [Nessuna misurazione energetica],
-  [~1111,65 J PACKAGE (1995,62 J totale componenti)
-   su 451 test (263 s); potenza media ~7,58 W,
-   picco ~21,51 W; CPU ~87%, DRAM ~13%],
+  [3 scenari × 3 ripetizioni su VM QEMU (RAPL via `qemu-vmsr-helper`);
+   baseline 1,2 J, idle 3,0 J, load 127,6 J (PACKAGE_ENERGY);
+   potenza media load ~0,43 W; DRAM/PP0/PP1 non disponibili nella VM],
   [GUIDO], [Sociale],
   [Nessuna analisi community smells],
   [4 smell rilevati (BCE, PDE, RS, TC) sul repo originale],

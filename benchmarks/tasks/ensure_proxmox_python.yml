@@ -1,0 +1,43 @@
+---
+- name: Set Proxmox Python venv path
+  ansible.builtin.set_fact:
+    proxmox_venv: /root/.venv-ansible
+
+- name: Check if Proxmox venv exists
+  ansible.builtin.stat:
+    path: "{{ proxmox_venv }}/bin/python"
+  register: venv_stat
+
+- name: Set up Proxmox Python venv
+  when: not venv_stat.stat.exists
+  block:
+    - name: Create Proxmox Python venv
+      ansible.builtin.command: python3 -m venv "{{ proxmox_venv }}"
+
+    - name: Copy requirements.txt to Proxmox host
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../requirements.txt"
+        dest: /tmp/ansible-requirements.txt
+        mode: '0644'
+
+    - name: Install Python dependencies in Proxmox venv
+      ansible.builtin.pip:
+        requirements: /tmp/ansible-requirements.txt
+        virtualenv: "{{ proxmox_venv }}"
+
+  rescue:
+    - name: Remove incomplete venv on failure
+      ansible.builtin.file:
+        path: "{{ proxmox_venv }}"
+        state: absent
+
+    - name: Fail with venv setup error
+      ansible.builtin.fail:
+        msg: >-
+          Failed to set up the Python venv at {{ proxmox_venv }}.
+          The incomplete venv has been removed. Check that python3-venv
+          and pip are available on the Proxmox host.
+
+- name: Set ansible_python_interpreter to venv
+  ansible.builtin.set_fact:
+    ansible_python_interpreter: "{{ proxmox_venv }}/bin/python"
