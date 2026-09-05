@@ -6,7 +6,7 @@ RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lock
 COPY . .
 RUN bun run build
 
-FROM dhi.io/node:22-alpine3.23@sha256:f3c24df224fbc6842525b329b4625a2dc6d101b9d9f0fe455aa2ab17b9afec82 AS runtime
+FROM dhi.io/node:22-alpine3.23@sha256:f7692e98521c11110c4df18ddda7dba5f9819f676b708a731c7c8b26c6e6954c AS runtime
 WORKDIR /app
 COPY --from=builder /app/.output ./.output
 ENV HOST=0.0.0.0
