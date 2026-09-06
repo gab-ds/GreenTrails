@@ -661,89 +661,67 @@ I test di performance verificano che il sistema mantenga la
 disponibilità e i tempi di risposta attesi sotto diversi profili
 di carico, contribuendo direttamente all'affidabilità del servizio.
 
-*JMeter* è stato utilizzato per definire quattro tipi di test:
-
-La configurazione è stata poi raffinata rispetto alla prima versione descritta
-nei paragrafi seguenti. Il workflow prepara un database inizialmente vuoto e
-mantiene MySQL disabilitato durante JMH, che non avvia il backend applicativo.
-Per le misurazioni energetiche e di carico il backend viene avviato con il
-profilo `dev`; prima che l'health check diventi disponibile, `DataSeeder` crea
-automaticamente gli utenti e i dati di dominio necessari. In caso di crash,
-l'ipotesi operativa è che l'operatore completi il teardown e riparta da una
-nuova infrastruttura, evitando database parzialmente popolati.
-
-I quattro piani JMeter attuali esercitano esclusivamente endpoint pubblici e
-non includono ancora richieste con autenticazione HTTP Basic. Le misure
-rappresentano quindi il percorso di consultazione anonimo; i flussi autenticati
-per visitatori, gestori e amministratori costituiscono un'estensione futura e
-dovranno usare account e dati predisposti fuori dalla finestra temporizzata.
+JMeter è stato utilizzato per eseguire quattro tipi di test su
+endpoint pubblici del backend (nessuna autenticazione HTTP Basic).
+Il workflow prepara un database inizialmente vuoto; al primo avvio,
+`DataSeeder` crea automaticamente utenti, attività, alloggi, camere,
+recensioni e dati di dominio necessari. I quattro piani esercitano
+esclusivamente il percorso di consultazione anonimo; i flussi
+autenticati costituiscono un'estensione futura.
 
 == Load Test
 
-Il *Load Test* simula un carico utente normale e costante per
-verificare che il sistema gestisca il traffico atteso senza
-degradazione delle performance. La configurazione storica prevedeva 50
-utenti concorrenti con un periodo di ramp-up di 30 secondi e 5
-iterazioni ciascuno. I risultati storici hanno mostrato tempi di
-risposta medi inferiori a 100 ms per gli endpoint GET e un throughput
-complessivo di circa 120 richieste al secondo, senza errori.
-
-Il piano attuale mantiene 50 utenti e 30 secondi di ramp-up, ma usa una
-durata complessiva configurabile di 300 secondi, una navigazione per
-iterazione e 500 ms di think time con una componente casuale fino a 250
-ms. I dati storici sono mantenuti come baseline, ma devono essere
-riconfermati dopo questa modifica.
+Il *Load Test* simula un carico utente normale e costante con 50
+utenti, ramp-up di 30 secondi e think time di 500 ms + 0--250 ms
+casuali. Risultati: 140.813 richieste, 0 errori, throughput medio
+76,1 req/s. Tempi di risposta: media 11 ms, mediana 7 ms, p95 23 ms,
+p99 73 ms, massimo 2.436 ms.
 
 == Stress Test
 
-Lo *Stress Test* spinge il sistema oltre il limite operativo previsto
-per identificare il punto di rottura — ovvero il carico massimo oltre
-il quale il servizio inizia a rifiutare richieste o a rispondere con
-errori. La configurazione storica utilizzava 200 utenti concorrenti
-suddivisi in 5 gruppi di throughput controllato (Throughput Controller),
-per distribuire il carico in modo progressivo. Il test storico ha
-evidenziato che il backend mantiene una stabilità accettabile fino a
-circa 150 utenti simultanei, oltre i quali si registra un incremento
-significativo dei tempi di risposta (latenza media superiore a 2
-secondi) e un tasso di errore iniziale sotto l'1%.
-
-Il piano raffinato mantiene 200 utenti a concorrenza costante per 600
-secondi di default. Cinque stadi da 60 secondi riducono progressivamente
-il think time da 2 s a 0 s, dopo di che viene mantenuto il livello
-massimo. Il punto di esaurimento dovrà essere ricavato da errori,
-latenza e metriche delle risorse, non dai risultati storici.
+Lo *Stress Test* mantiene 200 utenti a concorrenza costante per
+~600 secondi con think time decrescente da 2 s a 0 s. Risultati:
+302.735 richieste, 0 errori, throughput medio 506,2 req/s. Tempi di
+risposta: media 248 ms, mediana 195 ms, p95 722 ms, p99 1.170 ms,
+massimo 15.409 ms. Il backend ha mantenuto la stabilità senza
+rifiutare richieste, superando le aspettative della configurazione
+storica che prevedeva un degrado oltre 150 utenti simultanei.
 
 == Spike Test
 
-Il *Spike Test* valuta la resilienza del sistema a incrementi
-improvvisi e repentini del carico, simulando scenari di traffico a
-picco (es. campagne promozionali o eventi virali). La configurazione
-storica prevedeva 150 utenti con ramp-up di 1 secondo e una durata di
-30 secondi. Il test storico aveva dimostrato che il sistema assorbiva
-il picco senza crash, con un lieve aumento della latenza media (circa
-350 ms) e nessun errore.
-
-Il piano attuale divide i 30 secondi in baseline di 10 secondi, burst di
-10 secondi e recovery finale. La fase burst riduce il think time e
-aumenta la frequenza di richieste offerte, mantenendo fissi i 150
-utenti; non simula quindi l'aggiunta dinamica di thread.
+Il *Spike Test* mantiene 150 utenti con fase baseline (10 s), burst
+(10 s) e recovery. Risultati: 23.310 richieste, 0 errori, throughput
+medio 72,2 req/s. Tempi di risposta: media 80 ms, mediana 9 ms,
+p95 552 ms, p99 1.403 ms, massimo 4.618 ms. La distribuzione
+bimodale indica che la maggior parte delle richieste risponde
+rapidamente, con aumento transitorio durante il picco.
 
 == Soak Test
 
-Il *Soak Test* (o Endurance Test) mantiene un carico moderato per un
-periodo prolungato — 20 utenti per 600 secondi (10 minuti) — per
-rilevare degradationi lente come memory leak, saturazione delle
-connessioni al database o frammentazione della memoria. I risultati
-storici hanno mostrato un comportamento stabile per tutta la durata del
-test: la latenza media è rimasta costante (intorno a 80 ms), il
-throughput non ha subito cali progressivi e non si sono verificati
-errori, indicando l'assenza di degradationi significative nel backend.
+Il *Soak Test* mantiene 20 utenti per ~30 minuti. Risultati:
+56.749 richieste, 0 errori, throughput medio 31,4 req/s. Tempi di
+risposta: media 8 ms, mediana 7 ms, p95 18 ms, p99 29 ms, massimo
+193 ms. Le metriche sono rimaste stabili per tutta la durata del
+test, confermando l'assenza di degradationi significative.
 
-Il piano attuale mantiene 20 utenti per 600 secondi, con una sola
-navigazione per iterazione e think time di 500 ms più una componente
-casuale fino a 250 ms. È un test di endurance a concorrenza costante,
-non un generatore a RPS fisso; le metriche storiche dovranno essere
-riconfermate con la configurazione raffinata.
+== Analisi
+
+#figure(
+  image("plots/jmeter_response_time.svg", width: 90%),
+  caption: [Tempo di risposta mediano per test nel tempo (finestre di 10 s).],
+)
+
+Il grafico confronta l'evoluzione temporale del tempo di risposta
+mediano per i quattro test. Load e Soak mantengono una mediana
+stabile e bassa (< 10 ms) per tutta la durata. Lo Stress mostra
+una mediana di ~195 ms con una leggera crescita nelle fasi iniziali,
+poi stabilizzazione. Lo Spike evidenzia chiaramente il picco
+transitorio nella fase burst, con un aumento della mediana fino a
+~100 ms prima di tornare ai livelli baseline.
+
+Complessivamente, i 523.607 richieste dei quattro test hanno
+prodotto 0 errori, dimostrando la robustezza del backend sotto
+diversi profili di carico.
 
 I test di performance sono integrati nella suite di verifica del
 progetto e possono essere eseguiti tramite l'interfaccia grafica di
@@ -916,8 +894,10 @@ Archiviazione 10/27/24 μs (vs 1.4/17/68 μs), Pianificazione
     [Nessuna specifica formale],
     [37 file annotati; 258 failure (baseline) -> 188 (6 moduli); Utenze 16->6, Attivita 37->32, Itinerari 33->22, Ricerca 42->42, Segnalazioni 9->6, Upload 93->80; Prenotazioni crasha (bug OpenJML); 3 cause strutturali non risolvibili],
     [JMeter], [Affidabilità / Disponibilità],
-    [Nessun test di carico],
-    [4 piani raffinati (Load, Stress, Spike, Soak); validazione live ancora da eseguire],
+    [Nessuna analisi di performance],
+    [4 piani eseguiti; 0 errori su 523.607 richieste;
+     Load: p95 23 ms; Stress: p95 722 ms (200 thread, 0 errori);
+     Soak: 30 min stabile],
     [JMH], [Affidabilità (performance)],
     [Nessun benchmark],
     [Suite consolidata: 9 benchmark (da 44);
@@ -934,8 +914,13 @@ Archiviazione 10/27/24 μs (vs 1.4/17/68 μs), Pianificazione
 Le attività di verifica della dependability hanno evidenziato i
 seguenti aspetti da approfondire o completare:
 
-- *Esecuzione completa dei test JMeter* in modalità headless per
-    ottenere metriche reali di latenza, throughput e tasso di errore.
+- *Riesecuzione dei test JMeter con un database più ampio:* gli
+    attuali test operano su un database generato da `DataSeeder` con
+    un numero limitato di entità. Un database con un volume di dati
+    realistico (migliaia di attività, recensioni, alloggi) potrebbe
+    rivelare colli di bottiglia nelle query e nei JOIN che non
+    emergono con dataset piccoli, influenzando latenza e consumo
+    energetico.
 - *Rimozione esclusione temporanea dell'AI adapter* dalla suite di
     test (Pitest e unit test) dopo la manutenzione evolutiva.
 - *Risoluzione dei 3 code smell GCI1* (repository call in stream)
@@ -945,5 +930,3 @@ seguenti aspetti da approfondire o completare:
     per mantenere la security posture nel tempo.
 - *Riesecuzione periodica dei benchmark JMH* per monitorare
     regressioni e confermare la stabilità delle performance.
-- *Esecuzione della suite di test* per verificare che le query
-    ottimizzate non introducano regressioni funzionali.

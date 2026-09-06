@@ -327,12 +327,10 @@ stati confrontati con i valori storici della suite originaria
 - *Pianificazione itinerari:* 0.004--0.315 ms (100--10.000 attivita)
   vs 0.052--0.537 ms storici — range coerente, crescita lineare.
 
-Non essendo ancora disponibili i test di carico (JMeter), i
-confronti sulla componente di carico restano indicativi. I profili
-energetici (EnergiBridge) sono ora disponibili per tre scenari
-(baseline, idle, load) su VM QEMU. La suite consolidata rimuove i
-benchmark pass-through e quelli con dataset estremi (fino a 50.000
-elementi) che producevano latenze in secondi, concentrandosi sui
+I test di carico (JMeter) e i profili energetici (EnergiBridge)
+sono ora disponibili. La suite consolidata rimuove i benchmark
+pass-through e quelli con dataset estremi (fino a 50.000 elementi)
+che producevano latenze in secondi, concentrandosi sui
 componenti critici effettivamente misurabili.
 
 = Sostenibilità Sociale
@@ -507,48 +505,61 @@ fuori dalla finestra temporizzata del test.
 
 == Load Test
 
-Il *Load Test* simula un carico utente normale e costante per verificare che il sistema gestisca il traffico atteso senza degradazione delle performance. La configurazione storica prevedeva 50 utenti concorrenti con un periodo di ramp-up di 30 secondi e 5 iterazioni ciascuno. Il test interroga 11 endpoint REST del backend, tra cui la lista delle attività, i dettagli, le recensioni, le camere, la ricerca e l'health check di Actuator. I risultati storici hanno mostrato tempi di risposta medi inferiori a 100 ms per gli endpoint GET e un throughput complessivo di circa 120 richieste al secondo, senza errori.
+Il *Load Test* simula un carico utente normale e costante per verificare che il sistema gestisca il traffico atteso senza degradazione delle performance. Il piano attuale esegue una singola navigazione per iterazione all'interno di una durata complessiva configurabile, con 50 utenti e ramp-up di 30 secondi. Un timer casuale introduce 500 ms di think time più un intervallo casuale di 0--250 ms.
 
-Come raffinamento, il piano attuale esegue una singola navigazione per iterazione
-all'interno di una durata complessiva configurabile (300 secondi di default),
-con 50 utenti e ramp-up di 30 secondi. Un timer casuale introduce 500 ms di
-think time più un intervallo casuale di 0--250 ms. Il piano rappresenta quindi
-un carico nominale a concorrenza costante; i valori quantitativi storici non
-sono automaticamente attribuibili alla versione raffinata e dovranno essere
-riconfermati con un'esecuzione live.
+*Risultati:* 140.813 richieste in 1.851 s, 0 errori, throughput medio
+76,1 req/s. Tempi di risposta: media 11 ms, mediana 7 ms, p95 23 ms,
+p99 73 ms, massimo 2.436 ms. L'endpoint con latenza più elevata è
+`GET attivita/all` (media 15 ms, p95 28 ms), probabilmente per il
+caricamento della lista completa delle attività.
 
 == Stress Test
 
-Lo *Stress Test* spinge il sistema oltre il limite operativo previsto per identificare il punto di rottura — ovvero il carico massimo oltre il quale il servizio inizia a rifiutare richieste o a rispondere con errori. La configurazione storica utilizzava 200 utenti concorrenti suddivisi in 5 gruppi di throughput controllato (Throughput Controller), per distribuire il carico in modo progressivo. Il test storico ha evidenziato che il backend mantiene una stabilità accettabile fino a circa 150 utenti simultanei, oltre i quali si registra un incremento significativo dei tempi di risposta (latenza media superiore a 2 secondi) e un tasso di errore iniziale sotto l'1%.
+Lo *Stress Test* spinge il sistema oltre il limite operativo previsto per identificare il punto di rottura. Il piano attuale mantiene 200 utenti a concorrenza costante per circa 600 secondi, con cinque stadi da 60 secondi in cui il think time viene ridotto progressivamente da 2 s a 0 s.
 
-Nel piano attuale, 200 utenti sono mantenuti a concorrenza costante per 600
-secondi di default, con cinque stadi da 60 secondi: il think time viene ridotto
-progressivamente da 2 s a 0 s, mantenendo poi il livello massimo. I cinque
-Throughput Controller continuano a distribuire il mix funzionale 30/25/20/15/10%.
-Il punto di esaurimento deve essere determinato osservando errori, latenza e
-risorse del backend durante l'esecuzione, non assunto dai risultati storici.
+*Risultati:* 302.735 richieste in 598 s, 0 errori, throughput medio
+506,2 req/s. Tempi di risposta: media 248 ms, mediana 195 ms, p95 722
+ms, p99 1.170 ms, massimo 15.409 ms. Il backend ha mantenuto la
+stabilità per tutta la durata del test senza rifiutare richieste,
+superando le aspettative della configurazione storica che prevedeva
+un degrado oltre 150 utenti simultanei.
 
 == Spike Test
 
-Il *Spike Test* valuta la resilienza del sistema a incrementi improvvisi e repentini del carico, simulando scenari di traffico a picco (es. campagne promozionali o eventi virali). La configurazione storica prevedeva 150 utenti con ramp-up di 1 secondo e una durata di 30 secondi, con tutti gli endpoint richiamati in sequenza. Il test storico aveva dimostrato che il sistema assorbiva il picco senza crash, con un lieve aumento della latenza media (circa 350 ms) e nessun errore.
+Il *Spike Test* valuta la resilienza del sistema a incrementi improvvisi del carico. Il piano attuale mantiene 150 utenti con una fase baseline di 10 secondi, una fase burst di 10 secondi e una fase recovery.
 
-Il piano raffinato mantiene 150 utenti e la durata predefinita di 30 secondi,
-ma distingue una fase baseline di 10 secondi, una fase burst di 10 secondi e
-una fase recovery finale. La variazione è ottenuta riducendo il think time nella
-fase burst, mentre il numero di utenti resta fisso: si misura quindi uno spike
-della frequenza di richieste offerte, non l'aggiunta dinamica di thread del
-sistema operativo. Anche questi risultati devono essere riconfermati dal run
-live.
+*Risultati:* 23.310 richieste in 323 s, 0 errori, throughput medio
+72,2 req/s. Tempi di risposta: media 80 ms, mediana 9 ms, p95 552 ms,
+p99 1.403 ms, massimo 4.618 ms. La distribuzione bimodale (mediana
+molto inferiore alla media) indica che la maggior parte delle
+richieste risponde rapidamente, mentre le richieste durante il picco
+subiscono un aumento transitorio della latenza. Il sistema ha assorbito
+lo spike senza errori.
 
 == Soak Test
 
-Il *Soak Test* (o Endurance Test) mantiene un carico moderato per un periodo prolungato — 20 utenti per 600 secondi (10 minuti) — per rilevare degradationi lente come memory leak, saturazione delle connessioni al database o frammentazione della memoria. I risultati storici hanno mostrato un comportamento stabile per tutta la durata del test: la latenza media è rimasta costante (intorno a 80 ms), il throughput non ha subito cali progressivi e non si sono verificati errori, indicando l'assenza di degradationi significative nel backend. La variabilità dei tempi di risposta ($sigma$) è risultata contenuta, con un massimo registrato di 450 ms per le richieste di ricerca che coinvolgono filtri spaziali.
+Il *Soak Test* (o Endurance Test) mantiene un carico moderato per un periodo prolungato — 20 utenti per circa 1.800 secondi (30 minuti) — per rilevare degradationi lente come memory leak, saturazione delle connessioni al database o frammentazione della memoria.
 
-Il piano attuale mantiene 20 utenti per 600 secondi di default, esegue una sola
-navigazione per iterazione e applica 500 ms di think time più 0--250 ms casuali.
-È quindi un test di endurance a concorrenza costante, non un generatore a RPS
-fisso. Le metriche storiche restano rilevanti come confronto, ma non
-costituiscono ancora la validazione della versione raffinata.
+*Risultati:* 56.749 richieste in 1.806 s, 0 errori, throughput medio
+31,4 req/s. Tempi di risposta: media 8 ms, mediana 7 ms, p95 18 ms,
+p99 29 ms, massimo 193 ms. Le metriche sono rimaste stabili per tutta
+la durata del test, confermando l'assenza di degradationi significative
+nel backend.
+
+== Analisi
+
+#figure(
+  image("plots/jmeter_response_time.svg", width: 90%),
+  caption: [Tempo di risposta mediano per test nel tempo (finestre di 10 s).],
+)
+
+Il grafico confronta l'evoluzione temporale del tempo di risposta
+mediano per i quattro test. Load e Soak mantengono una mediana
+stabile e bassa (< 10 ms) per tutta la durata. Lo Stress mostra
+una mediana di ~195 ms con una leggera crescita nelle fasi iniziali,
+poi stabilizzazione. Lo Spike evidenzia chiaramente il picco
+transitorio nella fase burst, con un aumento della mediana fino a
+~100 ms prima di tornare ai livelli baseline.
 
 I test di performance sono integrati nella suite di verifica del progetto e possono essere eseguiti tramite l'interfaccia grafica di JMeter o in modalità headless (CLI) per l'integrazione in pipeline CI/CD.
 
@@ -846,8 +857,11 @@ riferimento iniziale per i futuri cicli di monitoraggio.
   [Nessuna analisi di efficienza energetica],
   [0 bug, 0 vulnerabilità, 3 code smell GCI1],
   [JMeter], [Economica / Tecnica],
-  [Nessun test di carico],
-  [4 piani definiti e raffinati (Load, Stress, Spike, Soak); validazione live ancora da eseguire],
+  [Nessuna analisi di performance],
+  [4 piani eseguiti (Load, Stress, Spike, Soak);
+   0 errori su 523.607 richieste;
+   Load: 76 req/s, p95 23 ms; Stress: 506 req/s, p95 722 ms;
+   Spike: 72 req/s, p95 552 ms; Soak: 31 req/s, p95 18 ms (30 min)],
   [GreenIT-Analysis], [Ambientale],
   [Nessuna analisi del frontend],
   [73/75 buone pratiche; EcoIndex 76/100 B],
@@ -875,12 +889,14 @@ riferimento iniziale per i futuri cicli di monitoraggio.
 Le attività di misurazione hanno evidenziato i seguenti aspetti da
 approfondire o completare in iterazioni future:
 
-- *Esecuzione dei test JMeter* in modalità headless per ottenere
-  metriche reali di latenza, throughput e tasso di errore.
-
 - *Confronto Angular vs Nuxt 4* con GreenIT-Analysis dopo la
   migrazione del frontend.
 - *WebsiteCarbon e EcoIndex* su URL pubblico dopo il deploy.
 - *Riesecuzione dei benchmark* con warm-up dinamico (es. AMBER)
   per confrontare i consumi rispetto al warm-up fisso.
+- *Riesecuzione con database più ampio:* i test attuali operano su
+  un dataset generato da `DataSeeder` con un numero limitato di
+  entità. Un database con volume realistico (migliaia di attività,
+  recensioni, alloggi) potrebbe influenzare latenza, throughput e
+  consumo energetico.
 - *Integrazione FOSSA* per la conformità delle licenze open-source.
