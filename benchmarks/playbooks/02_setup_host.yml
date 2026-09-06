@@ -1,0 +1,64 @@
+---
+- name: Apply Persistent Host Isolation and Reboot
+  hosts: proxmox_host
+  become: true
+
+  pre_tasks:
+    - name: Ensure Python venv for Proxmox modules
+      ansible.builtin.include_tasks: "{{ playbook_dir }}/../tasks/ensure_proxmox_python.yml"
+
+    - name: Verify the benchmark host has exactly four online CPUs
+      ansible.builtin.command: cat /sys/devices/system/cpu/online
+      register: online_cpus
+      changed_when: false
+      failed_when: online_cpus.stdout | trim != '0-3'
+
+    - name: Verify cpupower is already installed
+      ansible.builtin.shell: command -v cpupower
+      register: cpupower_binary
+      changed_when: false
+      failed_when: cpupower_binary.rc != 0
+
+  tasks:
+    - name: Ensure systemd drop-in directory exists
+      ansible.builtin.file:
+        path: /etc/systemd/system.conf.d
+        state: directory
+        mode: '0755'
+
+    - name: Apply CPUAffinity override (Host cores 0,1)
+      ansible.builtin.copy:
+        dest: /etc/systemd/system.conf.d/99-cpu-affinity.conf
+        content: |
+          [Manager]
+          CPUAffinity={{ host_cpu_set | replace(',', ' ') }}
+        mode: '0644'
+
+    - name: Reboot Proxmox host to cleanly apply systemd CPUAffinity
+      ansible.builtin.reboot:
+        msg: "Rebooting Proxmox host to apply CPUAffinity settings"
+        connect_timeout: 5
+        reboot_timeout: 300
+        pre_reboot_delay: 2
+        post_reboot_delay: 15
+
+    - name: Verify PID 1 CPUAffinity from kernel status
+      ansible.builtin.command: cat /proc/1/status
+      register: proc_status
+      changed_when: false
+
+    - name: Fail if CPUAffinity is not applied to host cores 0,1
+      ansible.builtin.fail:
+        msg: "Expected Cpus_allowed_list to be 0-1 or 0,1 but got: {{ proc_status.stdout | regex_search('Cpus_allowed_list:.*') }}"
+      when: >-
+        'Cpus_allowed_list:' not in proc_status.stdout or
+        ('0-1' not in proc_status.stdout and '0,1' not in proc_status.stdout)
+
+    - name: Ensure qemu-vmsr-helper service is available
+      ansible.builtin.include_tasks: "{{ playbook_dir }}/../tasks/ensure_qemu_vmsr_helper.yml"
+
+    - name: Verify RAPL is available on host
+      ansible.builtin.command: cat /sys/class/powercap/intel-rapl/enabled
+      register: rapl_enabled
+      changed_when: false
+      failed_when: rapl_enabled.stdout != '1'

@@ -10,8 +10,8 @@
     </TestPlan>
     <hashTree>
       <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults">
-        <stringProp name="HTTPSampler.domain">localhost</stringProp>
-        <stringProp name="HTTPSampler.port">8080</stringProp>
+        <stringProp name="HTTPSampler.domain">${__P(host,localhost)}</stringProp>
+        <stringProp name="HTTPSampler.port">${__P(port,8080)}</stringProp>
         <stringProp name="HTTPSampler.protocol">http</stringProp>
         <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
           <collectionProp name="Arguments.arguments"/>
@@ -31,21 +31,37 @@
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
         <intProp name="ThreadGroup.num_threads">20</intProp>
         <intProp name="ThreadGroup.ramp_time">20</intProp>
-        <longProp name="ThreadGroup.duration">600</longProp>
         <longProp name="ThreadGroup.delay">0</longProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
-          <intProp name="LoopController.loops">-1</intProp>
+          <intProp name="LoopController.loops">1</intProp>
           <boolProp name="LoopController.continue_forever">false</boolProp>
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
-          <stringProp name="LoopController.loops">100</stringProp>
-        </LoopController>
+        <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert application response" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">def body = prev.getResponseDataAsString(); def expectedStatus = prev.getSampleLabel().contains('actuator/health') ? '&quot;status&quot;:&quot;UP&quot;' : '&quot;status&quot;:&quot;success&quot;'; if (prev.getResponseCode() ==~ /2\d\d/ &amp;&amp; !body.contains(expectedStatus)) { Failure = true; FailureMessage = 'Unexpected application response envelope' }</stringProp>
+        </JSR223Assertion>
+        <hashTree/>
+        <WhileController guiclass="WhileControllerGui" testclass="WhileController" testname="Soak duration" enabled="true">
+          <stringProp name="WhileController.condition">${__groovy(vars.get('soakEndTime') == null || System.currentTimeMillis() &lt; vars.get('soakEndTime').toLong())}</stringProp>
+        </WhileController>
         <hashTree>
+          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="User think time" enabled="true">
+            <stringProp name="ConstantTimer.delay">${__P(thinktime,500)}</stringProp>
+            <stringProp name="RandomTimer.range">${__P(thinktime_range,250)}</stringProp>
+          </UniformRandomTimer>
+          <hashTree/>
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="User journey" enabled="true">
+            <stringProp name="LoopController.loops">1</stringProp>
+          </LoopController>
+          <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="01 - GET attivita/all" enabled="true">
             <stringProp name="HTTPSampler.path">/api/attivita/all</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
@@ -57,18 +73,18 @@
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 Tag Soak" enabled="true">
+            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Initialize soak duration" enabled="true">
               <stringProp name="scriptLanguage">groovy</stringProp>
               <stringProp name="parameters"></stringProp>
               <stringProp name="filename"></stringProp>
               <stringProp name="cacheKey">true</stringProp>
-              <stringProp name="script">vars.put(&apos;runTag&apos;, &apos;SOAK_&apos; + (System.currentTimeMillis()/1000 as long))</stringProp>
+              <stringProp name="script">def endTime = props.get('soakEndTime'); if (endTime == null) { synchronized (props) { endTime = props.get('soakEndTime'); if (endTime == null) { def durationSeconds = Long.parseLong('${__P(duration,600)}'); endTime = (System.currentTimeMillis() + durationSeconds * 1000L).toString(); props.put('soakEndTime', endTime) } } }; vars.put('soakEndTime', endTime)</stringProp>
             </JSR223PreProcessor>
             <hashTree/>
             <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extract attivitaId" enabled="true">
               <stringProp name="JSONPostProcessor.referenceNames">attivitaId</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].id</stringProp>
-              <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
             </JSONPostProcessor>
             <hashTree/>
             <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert 200" enabled="true">
@@ -137,7 +153,7 @@
             <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extract alloggioId" enabled="true">
               <stringProp name="JSONPostProcessor.referenceNames">alloggioId</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].id</stringProp>
-              <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
@@ -231,6 +247,7 @@
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree/>
+          </hashTree>
         </hashTree>
         <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
@@ -266,7 +283,7 @@
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename"></stringProp>
+          <stringProp name="filename">${__P(resultfile,soak_test_report.csv)}</stringProp>
         </ResultCollector>
         <hashTree/>
       </hashTree>

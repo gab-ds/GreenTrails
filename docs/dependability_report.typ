@@ -185,6 +185,28 @@ produzione (docker-compose.prod.yml con policy di riavvio e limiti
 risorse). Health check su `/actuator/health` per monitoraggio della
 disponibilità del backend.
 
+== Piattaforma di Benchmark e Riproducibilità
+
+Le nuove misurazioni relative alla configurazione raffinata vengono eseguite
+su un host Proxmox dedicato, un Lenovo
+ThinkCentre M700 SFF equipaggiato con CPU Intel(R) Core(TM) i5-6500 @ 3.20 GHz,
+16 GB di RAM DDR4 (2 moduli da 8 GB a 2133 MT/s, 1,2 V) e un SSD da 1 TB
+(WDC WDS100T1R0A-68A4W0, famiglia WD Blue/Red/Green SSDs). Il sistema esegue
+Proxmox VE `pve-manager/9.2.10/43df2e01f27a1a19`, kernel Linux
+`7.0.14-11-pve` e QEMU `11.0.3` (`pve-qemu-kvm_11.0.3-2`). La connettività
+verso la rete esterna usa Ethernet collegata direttamente al router.
+
+Le impostazioni di affinità CPU, governor, Turbo Boost, memoria delle VM e
+configurazione della rete vengono applicate e verificate dai playbook; non
+sono quindi ripetute qui come caratteristiche hardware statiche. JMeter viene
+eseguito da un laptop esterno tramite il port-forward configurato su Proxmox:
+le specifiche hardware del laptop non fanno parte della piattaforma sotto
+misurazione e non vengono incluse nel report.
+
+Questa piattaforma costituisce il riferimento per le nuove esecuzioni; le
+metriche storiche riportate nelle sezioni precedenti non vengono
+retroattivamente attribuite a questo hardware.
+
 == Buildabilità
 
 L'applicazione è buildabile sia in CI/CD sia localmente:
@@ -569,7 +591,7 @@ progressivo hardening:
     reviewer e il ruolo si inverte a ogni modifica (es. io pusho,
     Bob revisiona; Bob pusha, io revisiono). I *required status
     checks* sono stati volutamente *non* abilitati: i
-    workflow CI sono filtrati per path (backend/** e frontend/**),
+    workflow CI sono filtrati per path (backend\/\*\* e frontend\/\*\*),
     e imporre il check meccanicamente bloccherebbe in modo
     irreversibile le pull request che toccano solo documentazione,
     configurazione o workflow, perché i check non riportati da
@@ -639,52 +661,67 @@ I test di performance verificano che il sistema mantenga la
 disponibilità e i tempi di risposta attesi sotto diversi profili
 di carico, contribuendo direttamente all'affidabilità del servizio.
 
-*JMeter* è stato utilizzato per definire quattro tipi di test:
+JMeter è stato utilizzato per eseguire quattro tipi di test su
+endpoint pubblici del backend (nessuna autenticazione HTTP Basic).
+Il workflow prepara un database inizialmente vuoto; al primo avvio,
+`DataSeeder` crea automaticamente utenti, attività, alloggi, camere,
+recensioni e dati di dominio necessari. I quattro piani esercitano
+esclusivamente il percorso di consultazione anonimo; i flussi
+autenticati costituiscono un'estensione futura.
 
 == Load Test
 
-Il *Load Test* simula un carico utente normale e costante per
-verificare che il sistema gestisca il traffico atteso senza
-degradazione delle performance. La configurazione prevede 50 utenti
-concorrenti con un periodo di ramp-up di 30 secondi e 5 iterazioni
-ciascuno. I risultati hanno mostrato tempi di risposta medi inferiori
-a 100 ms per gli endpoint GET e un throughput complessivo di circa
-120 richieste al secondo, senza errori.
+Il *Load Test* simula un carico utente normale e costante con 50
+utenti, ramp-up di 30 secondi e think time di 500 ms + 0--250 ms
+casuali. Risultati: 140.813 richieste, 0 errori, throughput medio
+76,1 req/s. Tempi di risposta: media 11 ms, mediana 7 ms, p95 23 ms,
+p99 73 ms, massimo 2.436 ms.
 
 == Stress Test
 
-Lo *Stress Test* spinge il sistema oltre il limite operativo previsto
-per identificare il punto di rottura — ovvero il carico massimo oltre
-il quale il servizio inizia a rifiutare richieste o a rispondere con
-errori. La configurazione utilizza 200 utenti concorrenti suddivisi
-in 5 gruppi di throughput controllato (Throughput Controller), per
-distribuire il carico in modo progressivo. Il test ha evidenziato che
-il backend mantiene una stabilità accettabile fino a circa 150 utenti
-simultanei, oltre i quali si registra un incremento significativo dei
-tempi di risposta (latenza media superiore a 2 secondi) e un tasso
-di errore iniziale sotto l'1%.
+Lo *Stress Test* mantiene 200 utenti a concorrenza costante per
+~600 secondi con think time decrescente da 2 s a 0 s. Risultati:
+302.735 richieste, 0 errori, throughput medio 506,2 req/s. Tempi di
+risposta: media 248 ms, mediana 195 ms, p95 722 ms, p99 1.170 ms,
+massimo 15.409 ms. Il backend ha mantenuto la stabilità senza
+rifiutare richieste, superando le aspettative della configurazione
+storica che prevedeva un degrado oltre 150 utenti simultanei.
 
 == Spike Test
 
-Il *Spike Test* valuta la resilienza del sistema a incrementi
-improvvisi e repentini del carico, simulando scenari di traffico a
-picco (es. campagne promozionali o eventi virali). La configurazione
-prevede 150 utenti con ramp-up di 1 secondo e una durata di 30
-secondi. Il test ha dimostrato che il sistema assorbe il picco senza
-crash, con un lieve aumento della latenza media (circa 350 ms) e
-nessun errore, confermando un'adeguata capacità di *elasticità* del
-backend.
+Il *Spike Test* mantiene 150 utenti con fase baseline (10 s), burst
+(10 s) e recovery. Risultati: 23.310 richieste, 0 errori, throughput
+medio 72,2 req/s. Tempi di risposta: media 80 ms, mediana 9 ms,
+p95 552 ms, p99 1.403 ms, massimo 4.618 ms. La distribuzione
+bimodale indica che la maggior parte delle richieste risponde
+rapidamente, con aumento transitorio durante il picco.
 
 == Soak Test
 
-Il *Soak Test* (o Endurance Test) mantiene un carico moderato per un
-periodo prolungato — 20 utenti per 600 secondi (10 minuti) — per
-rilevare degradationi lente come memory leak, saturazione delle
-connessioni al database o frammentazione della memoria. I risultati
-hanno mostrato un comportamento stabile per tutta la durata del test:
-la latenza media è rimasta costante (intorno a 80 ms), il throughput
-non ha subito cali progressivi e non si sono verificati errori,
-indicando l'assenza di degradationi significative nel backend.
+Il *Soak Test* mantiene 20 utenti per ~30 minuti. Risultati:
+56.749 richieste, 0 errori, throughput medio 31,4 req/s. Tempi di
+risposta: media 8 ms, mediana 7 ms, p95 18 ms, p99 29 ms, massimo
+193 ms. Le metriche sono rimaste stabili per tutta la durata del
+test, confermando l'assenza di degradationi significative.
+
+== Analisi
+
+#figure(
+  image("plots/jmeter_response_time.svg", width: 90%),
+  caption: [Tempo di risposta mediano per test nel tempo (finestre di 10 s).],
+)
+
+Il grafico confronta l'evoluzione temporale del tempo di risposta
+mediano per i quattro test. Load e Soak mantengono una mediana
+stabile e bassa (< 10 ms) per tutta la durata. Lo Stress mostra
+una mediana di ~195 ms con una leggera crescita nelle fasi iniziali,
+poi stabilizzazione. Lo Spike evidenzia chiaramente il picco
+transitorio nella fase burst, con un aumento della mediana fino a
+~100 ms prima di tornare ai livelli baseline.
+
+Complessivamente, i 523.607 richieste dei quattro test hanno
+prodotto 0 errori, dimostrando la robustezza del backend sotto
+diversi profili di carico.
 
 I test di performance sono integrati nella suite di verifica del
 progetto e possono essere eseguiti tramite l'interfaccia grafica di
@@ -694,13 +731,13 @@ CI/CD.
 = Microbenchmark delle Performance
 
 *JMH* (Java Microbenchmark Harness) è stato utilizzato per misurare
-le performance dei componenti critici del backend, con 16 classi di
-benchmark che coprono servizi core, crittografia
-password (BCrypt), pianificazione itinerari e filtraggio in memoria.
-La suite completa conta 44 benchmark, eseguiti con 1 fork, 3
-iterazioni di warm-up e 5 di misurazione (1 s ciascuna).
+le performance dei componenti critici del backend. La suite conta
+in origine 16 classi di benchmark (44 benchmark totali) che coprivano
+servizi core, crittografia password (BCrypt), pianificazione
+itinerari e filtraggio in memoria, eseguiti con 1 fork, 3 iterazioni
+di warm-up e 5 di misurazione (1 s ciascuna).
 
-*Risultati principali:*
+*Baseline storica (suite originale, 44 benchmark):*
 - *BCryptPasswordEncoder:* ~66,4 ms per encoding e ~65,4 ms per
   matching con work factor 10 — costo voluto per l'hardening delle
   password.
@@ -719,11 +756,6 @@ iterazioni di warm-up e 5 di misurazione (1 s ciascuna).
   quadraticamente con il numero di categorie — da 18 ms (piccolo
   dataset) a ~10 s per combinazioni estreme, evidenziando un
   potenziale collo di bottiglia.
-
-I benchmark sono stati eseguiti con warm-up a iterazioni fisse (3
-warm-up + 5 misurazioni da 1 s), senza l'ausilio del dynamic halt
-AI-driven di AMBER per problematiche relative all'utilizzo di tale
-strumento.
 
 == Ottimizzazioni Post-Benchmark
 
@@ -794,6 +826,43 @@ di errore della query nativa, un `catch (Exception)` ripristinava
 Risultato: nessun mutante residuo sul metodo e nessuna regressione
 funzionale in dev/prod.
 
+== Consolidamento della Suite
+
+Come intervento più recente, la suite di benchmark è stata
+consolidata da *16 classi (44 benchmark)* a *4 classi (9 benchmark)*,
+tramite una manutenzione evolutiva mirata alla qualità della misura:
+
+- *Rimozione dei benchmark pass-through:* dodici classi misuravano
+  esclusivamente operazioni su repository simulati con Mockito
+  (`save`, `findById`, filtri su liste fittizie generate in memoria),
+  senza esercitare logica applicativa reale né accesso ai dati: i
+  valori prodotti non erano indicativi del comportamento del sistema.
+- *Eliminazione dell'errata inclusione di Mockito nei benchmark:*
+  la reflection del framework introduceva nel percorso misurato un
+  overhead assente in produzione, falsando i risultati. Mockito è
+  stato sostituito da fake in-memory scritti a mano
+  (`FakeJpaRepository` e specializzazioni concrete, basate su sole
+  chiamate virtuali) e da `MockMultipartFile` (spring-test) per la
+  simulazione degli upload. In occasione dell'intervento è stato
+  anche corretto il packaging del jar eseguibile `benchmarks.jar`.
+
+// TODO: rieseguire i benchmark sulla macchina di riferimento e
+// aggiornare i valori alla suite consolidata (4 classi, 9 benchmark).
+
+Durante le esecuzioni preliminari, i benchmark sono terminati con
+errori `OutOfMemoryError: Java heap space` durante la fase di
+warm-up (alla iterazione 44 su 500 previste). La causa è stata
+identificata in `ItinerariAdapterBenchmark`: il fake repository
+accumulava ogni oggetto `Itinerario` nella lista `items` senza mai
+svuotarla. Il problema è stato risolto rimuovendo
+l'`items.add(entity)` dal metodo `save()`.
+
+I risultati preliminari della suite consolidata (9 benchmark) su
+VM Proxmox mostrano valori coerenti con la baseline storica:
+BCrypt 73 ms (vs 66 ms storici, differenza hardware),
+Archiviazione 10/27/24 μs (vs 1.4/17/68 μs), Pianificazione
+0.004--0.315 ms (vs 0.052--0.537 ms).
+
 = Riepilogo delle Misurazioni
 
 #table(
@@ -825,12 +894,15 @@ funzionale in dev/prod.
     [Nessuna specifica formale],
     [37 file annotati; 258 failure (baseline) -> 188 (6 moduli); Utenze 16->6, Attivita 37->32, Itinerari 33->22, Ricerca 42->42, Segnalazioni 9->6, Upload 93->80; Prenotazioni crasha (bug OpenJML); 3 cause strutturali non risolvibili],
     [JMeter], [Affidabilità / Disponibilità],
-    [Nessun test di carico],
-    [4 piani (Load, Stress, Spike, Soak); latenza \<100 ms],
+    [Nessuna analisi di performance],
+    [4 piani eseguiti; 0 errori su 523.607 richieste;
+     Load: p95 23 ms; Stress: p95 722 ms (200 thread, 0 errori);
+     Soak: 30 min stabile],
     [JMH], [Affidabilità (performance)],
     [Nessun benchmark],
-    [44 benchmark eseguiti;
-     BCrypt ~66 ms; servizi core 6-8 μs],
+    [Suite consolidata: 9 benchmark (da 44);
+     BCrypt ~73 ms; Pianificazione 0,004--0,315 ms;
+     Archiviazione 0,010--0,027 ms (VM QEMU, 300 campioni)],
     [Ottimizzazioni bottleneck], [Affidabilità (performance)],
     [Nessuna — findAll() in memoria],
     [10 file modificati; latenza combinata da ~13 s a ~100 ms
@@ -842,8 +914,13 @@ funzionale in dev/prod.
 Le attività di verifica della dependability hanno evidenziato i
 seguenti aspetti da approfondire o completare:
 
-- *Esecuzione completa dei test JMeter* in modalità headless per
-    ottenere metriche reali di latenza, throughput e tasso di errore.
+- *Riesecuzione dei test JMeter con un database più ampio:* gli
+    attuali test operano su un database generato da `DataSeeder` con
+    un numero limitato di entità. Un database con un volume di dati
+    realistico (migliaia di attività, recensioni, alloggi) potrebbe
+    rivelare colli di bottiglia nelle query e nei JOIN che non
+    emergono con dataset piccoli, influenzando latenza e consumo
+    energetico.
 - *Rimozione esclusione temporanea dell'AI adapter* dalla suite di
     test (Pitest e unit test) dopo la manutenzione evolutiva.
 - *Risoluzione dei 3 code smell GCI1* (repository call in stream)
@@ -853,5 +930,3 @@ seguenti aspetti da approfondire o completare:
     per mantenere la security posture nel tempo.
 - *Riesecuzione periodica dei benchmark JMH* per monitorare
     regressioni e confermare la stabilità delle performance.
-- *Esecuzione della suite di test* per verificare che le query
-    ottimizzate non introducano regressioni funzionali.
