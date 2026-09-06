@@ -236,7 +236,6 @@
             <param>it.greentrails.backend.enums.*</param>
             <param>it.greentrails.backend.gestioneutenze.security.SecurityConfig</param>
             <param>it.greentrails.backend.BackendApplication</param>
-            <param>it.greentrails.backend.utils.CorsConfig</param>
             <param>it.greentrails.backend.utils.DataSeeder</param>
             <!-- Temporaneamente escluso, verrà incluso a seguito della manutenzione evolutiva -->
             <param>it.greentrails.backend.gestioneitinerari.adapter.ItinerariAiAdapter</param>

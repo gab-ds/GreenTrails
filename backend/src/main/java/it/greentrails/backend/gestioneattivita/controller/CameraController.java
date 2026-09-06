@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,15 +31,10 @@ public class CameraController {
   @PostMapping
   public ResponseEntity<Object> creaCamera(
       @AuthenticationPrincipal Utente utente,
-      @RequestParam(value = "idAlloggio") final Long idAlloggio,
-      @RequestParam("tipoCamera") final String tipoCamera,
-      @RequestParam("disponibilita") final Integer disponibilita,
-      @RequestParam("descrizione") final String descrizione,
-      @RequestParam("capienza") final int capienza,
-      @RequestParam("prezzo") final double prezzo
+      @RequestBody final CameraRequest request
   ) {
     try {
-      Attivita alloggio = attivitaService.findById(idAlloggio);
+      Attivita alloggio = attivitaService.findById(request.idAlloggio());
       if (!alloggio.getGestore().getId().equals(utente.getId())) {
         return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, "Attività non trovata.");
       }
@@ -49,11 +44,11 @@ public class CameraController {
       }
       Camera camera = new Camera();
       camera.setAlloggio(alloggio);
-      camera.setTipoCamera(tipoCamera);
-      camera.setDisponibilita(disponibilita);
-      camera.setDescrizione(descrizione);
-      camera.setCapienza(capienza);
-      camera.setPrezzo(prezzo);
+      camera.setTipoCamera(request.tipoCamera());
+      camera.setDisponibilita(request.disponibilita());
+      camera.setDescrizione(request.descrizione());
+      camera.setCapienza(request.capienza());
+      camera.setPrezzo(request.prezzo());
       camera = cameraService.saveCamera(camera);
       return ResponseGenerator.generateResponse(HttpStatus.OK, camera);
     } catch (Exception e) {
@@ -105,4 +100,13 @@ public class CameraController {
       return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
   }
+
+  public record CameraRequest(
+      Long idAlloggio,
+      String tipoCamera,
+      Integer disponibilita,
+      String descrizione,
+      int capienza,
+      double prezzo
+  ) { }
 }

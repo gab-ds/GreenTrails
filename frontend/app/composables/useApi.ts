@@ -1,19 +1,12 @@
-function enforceHttps(url: string): string {
-  if (import.meta.server && url.startsWith('http://') && !url.includes('localhost')) {
-    return url.replace('http://', 'https://')
-  }
-  return url
-}
-
 export function useApi() {
   const config = useRuntimeConfig()
   const BASE = import.meta.server
-    ? enforceHttps(config.apiBaseUrl || 'http://localhost:8080/api')
-    : enforceHttps(config.public.apiBaseUrl || 'http://localhost:8080/api')
+    ? (config.apiBaseUrl || 'http://localhost:8080/api')
+    : (config.public.apiBaseUrl || 'http://localhost:8080/api')
 
   function authHeaders(): Record<string, string> {
     const token = useCookie('token').value
-    return token ? { Authorization: `Bearer ${token}` } : {}
+    return token ? { Authorization: `Bearer ${token}` } : {} as Record<string, string>
   }
 
   return {

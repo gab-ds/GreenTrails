@@ -40,11 +40,13 @@ function decodeJwtPayload(token: string): JwtPayload | null {
 
 export const useAuthStore = defineStore('auth', () => {
   const { auth: authApi } = useApi()
+  const config = useRuntimeConfig()
   const user = ref<Utente | null>(null)
+  const isSecure = config.public.apiBaseUrl.startsWith('https://')
   const token = useCookie<string | null>('token', {
     default: () => null,
     httpOnly: false,
-    secure: true,
+    secure: isSecure,
     sameSite: 'strict',
     maxAge: 3600,
   })
