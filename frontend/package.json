@@ -54,7 +54,7 @@
     "@types/leaflet": "^1.9.22",
     "@vue/test-utils": "^2.4.11",
     "happy-dom": "^20.13.0",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.11"
   },
   "overrides": {
     "esbuild": "^0.28.1"
