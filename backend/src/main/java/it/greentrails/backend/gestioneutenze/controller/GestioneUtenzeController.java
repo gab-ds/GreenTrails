@@ -35,7 +35,7 @@ public class GestioneUtenzeController {
   private final PasswordEncoder passwordEncoder;
 
   @PutMapping
-  private ResponseEntity<Object> registrazione(
+  public ResponseEntity<Object> registrazione(
       @RequestParam final boolean isGestore,
       @RequestBody final Utente utente
   ) {
@@ -55,7 +55,7 @@ public class GestioneUtenzeController {
   }
 
   @GetMapping("preferenze")
-  private ResponseEntity<Object> visualizzaPreferenze(
+  public ResponseEntity<Object> visualizzaPreferenze(
       @AuthenticationPrincipal Utente utente
   ) {
     try {
@@ -67,7 +67,7 @@ public class GestioneUtenzeController {
   }
 
   @PostMapping("questionario")
-  private ResponseEntity<Object> compilaQuestionario(
+  public ResponseEntity<Object> compilaQuestionario(
       @AuthenticationPrincipal Utente utente,
       @RequestParam("viaggioPreferito") final PreferenzeViaggio viaggioPreferito,
       @RequestParam("alloggioPreferito") final PreferenzeAlloggio alloggioPreferito,
@@ -102,7 +102,7 @@ public class GestioneUtenzeController {
   }
 
   @GetMapping
-  private ResponseEntity<Object> visualizzaInfo(
+  public ResponseEntity<Object> visualizzaInfo(
       @AuthenticationPrincipal final Utente utente
   ) {
     Optional<Utente> u = service.findByEmail(utente.getEmail());

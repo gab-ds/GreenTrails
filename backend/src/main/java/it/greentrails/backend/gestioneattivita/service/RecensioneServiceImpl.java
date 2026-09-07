@@ -41,7 +41,7 @@ public class RecensioneServiceImpl implements RecensioneService {
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
-    Optional<Recensione> recensione = repository.findById(id);
+    final Optional<Recensione> recensione = repository.findById(id);
     if (recensione.isEmpty()) {
       throw new Exception("La recensione non è stata trovata.");
     }

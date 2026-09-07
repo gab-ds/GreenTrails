@@ -10,6 +10,7 @@ class BackendApplicationTests {
 
   @Test
   void contextLoads() {
+    // Verifies that the application context starts successfully
   }
 
 }

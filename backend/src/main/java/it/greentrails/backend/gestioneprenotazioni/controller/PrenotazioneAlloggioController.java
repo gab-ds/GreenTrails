@@ -31,6 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PrenotazioneAlloggioController {
 
+  private static final String PRENOTAZIONE_NON_TROVATA = "Prenotazione non trovata";
+
   private final ItinerariService itinerariService;
   private final AttivitaService attivitaService;
   private final CameraService cameraService;
@@ -38,7 +40,7 @@ public class PrenotazioneAlloggioController {
 
 
   @PostMapping
-  private ResponseEntity<Object> creaPrenotazioneAlloggio(
+  public ResponseEntity<Object> creaPrenotazioneAlloggio(
       @AuthenticationPrincipal Utente utente,
       @RequestParam("idItinerario") final Long idItinerario,
       @RequestParam("idCamera") final Long idCamera,
@@ -90,7 +92,7 @@ public class PrenotazioneAlloggioController {
   }
 
   @PostMapping("{id}")
-  private ResponseEntity<Object> confermaPrenotazioneAlloggio(
+  public ResponseEntity<Object> confermaPrenotazioneAlloggio(
       @AuthenticationPrincipal Utente utente,
       @PathVariable("id") final long id,
       @RequestParam("numAdulti") final int adulti,
@@ -104,7 +106,7 @@ public class PrenotazioneAlloggioController {
       Itinerario itinerario = prenotazione.getItinerario();
       if (!itinerario.getVisitatore().getId().equals(utente.getId())) {
         return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND,
-            "Prenotazione non trovata");
+            PRENOTAZIONE_NON_TROVATA);
       }
       if (prenotazione.getStato() != StatoPrenotazione.NON_CONFERMATA) {
         return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,
@@ -143,14 +145,14 @@ public class PrenotazioneAlloggioController {
   }
 
   @GetMapping("{id}")
-  private ResponseEntity<Object> visualizzaPrenotazioneAlloggio(
+  public ResponseEntity<Object> visualizzaPrenotazioneAlloggio(
       @AuthenticationPrincipal Utente utente,
       @PathVariable("id") final Long id
   ) {
     try {
       PrenotazioneAlloggio prenotazioneAlloggio = prenotazioneAlloggioService.findById(id);
       if (!prenotazioneAlloggio.getItinerario().getVisitatore().getId().equals(utente.getId())) {
-        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, "Prenotazione non trovata");
+        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, PRENOTAZIONE_NON_TROVATA);
       }
       return ResponseGenerator.generateResponse(HttpStatus.OK, prenotazioneAlloggio);
     } catch (Exception e) {
@@ -159,7 +161,7 @@ public class PrenotazioneAlloggioController {
   }
 
   @GetMapping("perAttivita/{idAttivita}")
-  private ResponseEntity<Object> visualizzaPrenotazioniAlloggioPerAttivita(
+  public ResponseEntity<Object> visualizzaPrenotazioniAlloggioPerAttivita(
       @AuthenticationPrincipal Utente utente,
       @PathVariable("idAttivita") final long idAttivita
   ) {
@@ -167,7 +169,7 @@ public class PrenotazioneAlloggioController {
       Attivita attivita = attivitaService.findById(idAttivita);
       if (!attivita.getGestore().getId().equals(utente.getId())) {
         return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, "Alloggio non trovato");
-      } 
+      }
       return ResponseGenerator.generateResponse(HttpStatus.OK,
           prenotazioneAlloggioService.getPrenotazioniByAlloggio(attivita));
     } catch (Exception e) {
@@ -176,7 +178,7 @@ public class PrenotazioneAlloggioController {
   }
 
   @GetMapping("perAttivita/{idAttivita}/disponibilita")
-  private ResponseEntity<Object> visualizzaDisponibilitaPerAlloggio(
+  public ResponseEntity<Object> visualizzaDisponibilitaPerAlloggio(
       @PathVariable("idAttivita") final long idAttivita,
       @RequestParam("dataInizio") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date dataInizio,
       @RequestParam("dataFine") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date dataFine
@@ -192,7 +194,7 @@ public class PrenotazioneAlloggioController {
   }
 
   @GetMapping("perCamera/{idCamera}/disponibilita")
-  private ResponseEntity<Object> visualizzaDisponibilitaPerCamera(
+  public ResponseEntity<Object> visualizzaDisponibilitaPerCamera(
       @PathVariable("idCamera") final long idCamera,
       @RequestParam("dataInizio") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date dataInizio,
       @RequestParam("dataFine") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date dataFine
@@ -207,7 +209,7 @@ public class PrenotazioneAlloggioController {
   }
 
   @GetMapping
-  private ResponseEntity<Object> visualizzaPrenotazioniAlloggioPerVisitatore(
+  public ResponseEntity<Object> visualizzaPrenotazioniAlloggioPerVisitatore(
       @AuthenticationPrincipal Utente utente
   ) {
     try {
@@ -219,14 +221,14 @@ public class PrenotazioneAlloggioController {
   }
 
   @DeleteMapping("{id}")
-  private ResponseEntity<Object> cancellaPrenotazioneAlloggio(
+  public ResponseEntity<Object> cancellaPrenotazioneAlloggio(
       @AuthenticationPrincipal Utente utente,
       @PathVariable("id") final Long id
   ) {
     try {
       PrenotazioneAlloggio prenotazioneAlloggio = prenotazioneAlloggioService.findById(id);
       if (!prenotazioneAlloggio.getItinerario().getVisitatore().getId().equals(utente.getId())) {
-        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, "Prenotazione non trovata");
+        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, PRENOTAZIONE_NON_TROVATA);
       }
       Itinerario itinerario = prenotazioneAlloggio.getItinerario();
       itinerario.setTotale(itinerario.getTotale() - prenotazioneAlloggio.getPrezzo());

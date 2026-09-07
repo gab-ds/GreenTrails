@@ -26,7 +26,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-public class ItinerariServiceImplTest {
+class ItinerariServiceImplTest {
 
   @Mock
   private ItinerariRepository repository;

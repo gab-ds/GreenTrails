@@ -32,7 +32,7 @@ public class AttivitaServiceImpl implements AttivitaService {
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
-    Optional<Attivita> attivita = repository.findById(id);
+    final Optional<Attivita> attivita = repository.findById(id);
     if (attivita.isEmpty()) {
       throw new Exception("L'attività non è stata trovata.");
     }

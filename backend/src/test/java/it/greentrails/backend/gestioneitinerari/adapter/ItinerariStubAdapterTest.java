@@ -113,13 +113,13 @@ class ItinerariStubAdapterTest {
     verify(cameraRepository).findAll();
 
     // Verifica che siano state create prenotazioni per attività turistiche (non alloggi)
-    ArgumentCaptor<PrenotazioneAttivitaTuristica> prenotazioneAttivitaCaptor =
-        ArgumentCaptor.forClass(PrenotazioneAttivitaTuristica.class);
-    verify(prenotazioneAttivitaTuristicaRepository, atLeast(1))
-        .save(prenotazioneAttivitaCaptor.capture());
+    ArgumentCaptor<List<PrenotazioneAttivitaTuristica>> prenotazioneAttivitaCaptor =
+        ArgumentCaptor.forClass(List.class);
+    verify(prenotazioneAttivitaTuristicaRepository, times(1))
+        .saveAll(prenotazioneAttivitaCaptor.capture());
 
     List<PrenotazioneAttivitaTuristica> prenotazioniAttivita =
-        prenotazioneAttivitaCaptor.getAllValues();
+        prenotazioneAttivitaCaptor.getValue();
     assertTrue(prenotazioniAttivita.size() <= 3);
     for (PrenotazioneAttivitaTuristica p : prenotazioniAttivita) {
       assertNotNull(p.getAttivitaTuristica());
@@ -132,13 +132,13 @@ class ItinerariStubAdapterTest {
     }
 
     // Verifica che sia stata creata una prenotazione alloggio
-    ArgumentCaptor<PrenotazioneAlloggio> prenotazioneAlloggioCaptor =
-        ArgumentCaptor.forClass(PrenotazioneAlloggio.class);
-    verify(prenotazioneAlloggioRepository, atLeast(1))
-        .save(prenotazioneAlloggioCaptor.capture());
+    ArgumentCaptor<List<PrenotazioneAlloggio>> prenotazioneAlloggioCaptor =
+        ArgumentCaptor.forClass(List.class);
+    verify(prenotazioneAlloggioRepository, times(1))
+        .saveAll(prenotazioneAlloggioCaptor.capture());
 
     List<PrenotazioneAlloggio> prenotazioniAlloggio =
-        prenotazioneAlloggioCaptor.getAllValues();
+        prenotazioneAlloggioCaptor.getValue();
     assertTrue(prenotazioniAlloggio.size() <= 1);
     for (PrenotazioneAlloggio p : prenotazioniAlloggio) {
       assertNotNull(p.getCamera());
@@ -173,13 +173,13 @@ class ItinerariStubAdapterTest {
     // Assert
     assertNotNull(result);
 
-    ArgumentCaptor<PrenotazioneAttivitaTuristica> prenotazioneAttivitaCaptor =
-        ArgumentCaptor.forClass(PrenotazioneAttivitaTuristica.class);
-    verify(prenotazioneAttivitaTuristicaRepository, times(2))
-        .save(prenotazioneAttivitaCaptor.capture());
+    ArgumentCaptor<List<PrenotazioneAttivitaTuristica>> prenotazioneAttivitaCaptor =
+        ArgumentCaptor.forClass(List.class);
+    verify(prenotazioneAttivitaTuristicaRepository, times(1))
+        .saveAll(prenotazioneAttivitaCaptor.capture());
 
     List<PrenotazioneAttivitaTuristica> prenotazioniAttivita =
-        prenotazioneAttivitaCaptor.getAllValues();
+        prenotazioneAttivitaCaptor.getValue();
     assertEquals(2, prenotazioniAttivita.size());
     for (PrenotazioneAttivitaTuristica p : prenotazioniAttivita) {
       assertFalse(p.getAttivitaTuristica().isAlloggio());
@@ -208,14 +208,14 @@ class ItinerariStubAdapterTest {
     assertNotNull(result);
 
     // Non devono essere create prenotazioni per attività turistiche
-    verify(prenotazioneAttivitaTuristicaRepository, never()).save(any());
+    verify(prenotazioneAttivitaTuristicaRepository).saveAll(eq(Collections.emptyList()));
 
     // Deve essere creata una prenotazione alloggio
-    ArgumentCaptor<PrenotazioneAlloggio> alloggioCaptor =
-        ArgumentCaptor.forClass(PrenotazioneAlloggio.class);
-    verify(prenotazioneAlloggioRepository, atLeast(1)).save(alloggioCaptor.capture());
+    ArgumentCaptor<List<PrenotazioneAlloggio>> alloggioCaptor =
+        ArgumentCaptor.forClass(List.class);
+    verify(prenotazioneAlloggioRepository, times(1)).saveAll(alloggioCaptor.capture());
 
-    for (PrenotazioneAlloggio p : alloggioCaptor.getAllValues()) {
+    for (PrenotazioneAlloggio p : alloggioCaptor.getValue()) {
       assertEquals(0, p.getNumBambini());
       assertEquals(p.getCamera().getPrezzo(), p.getPrezzo());
     }
@@ -238,11 +238,11 @@ class ItinerariStubAdapterTest {
     assertNotNull(result);
 
     // Devono essere create prenotazioni per attività turistiche
-    verify(prenotazioneAttivitaTuristicaRepository, atLeast(1))
-        .save(any(PrenotazioneAttivitaTuristica.class));
+    verify(prenotazioneAttivitaTuristicaRepository, times(1))
+        .saveAll(any(List.class));
 
     // Non devono essere create prenotazioni alloggio
-    verify(prenotazioneAlloggioRepository, never()).save(any());
+    verify(prenotazioneAlloggioRepository).saveAll(eq(Collections.emptyList()));
   }
 
   @Test
@@ -262,14 +262,14 @@ class ItinerariStubAdapterTest {
     assertNotNull(result);
 
     // Non devono essere create prenotazioni per attività turistiche
-    verify(prenotazioneAttivitaTuristicaRepository, never()).save(any());
+    verify(prenotazioneAttivitaTuristicaRepository).saveAll(eq(Collections.emptyList()));
 
     // Deve essere creata una prenotazione alloggio
-    ArgumentCaptor<PrenotazioneAlloggio> alloggioCaptor =
-        ArgumentCaptor.forClass(PrenotazioneAlloggio.class);
-    verify(prenotazioneAlloggioRepository, atLeast(1)).save(alloggioCaptor.capture());
+    ArgumentCaptor<List<PrenotazioneAlloggio>> alloggioCaptor =
+        ArgumentCaptor.forClass(List.class);
+    verify(prenotazioneAlloggioRepository, times(1)).saveAll(alloggioCaptor.capture());
 
-    for (PrenotazioneAlloggio p : alloggioCaptor.getAllValues()) {
+    for (PrenotazioneAlloggio p : alloggioCaptor.getValue()) {
       assertEquals(0, p.getNumBambini());
       assertEquals(p.getCamera().getPrezzo(), p.getPrezzo());
     }
@@ -294,8 +294,8 @@ class ItinerariStubAdapterTest {
     assertEquals(visitatore, result.getVisitatore());
 
     // Non devono essere create prenotazioni
-    verify(prenotazioneAttivitaTuristicaRepository, never()).save(any());
-    verify(prenotazioneAlloggioRepository, never()).save(any());
+    verify(prenotazioneAttivitaTuristicaRepository).saveAll(eq(Collections.emptyList()));
+    verify(prenotazioneAlloggioRepository).saveAll(eq(Collections.emptyList()));
   }
 
   @Test
@@ -318,13 +318,13 @@ class ItinerariStubAdapterTest {
     // Assert
     assertNotNull(result);
 
-    ArgumentCaptor<PrenotazioneAttivitaTuristica> prenotazioneAttivitaCaptor =
-        ArgumentCaptor.forClass(PrenotazioneAttivitaTuristica.class);
-    verify(prenotazioneAttivitaTuristicaRepository, times(3))
-        .save(prenotazioneAttivitaCaptor.capture());
+    ArgumentCaptor<List<PrenotazioneAttivitaTuristica>> prenotazioneAttivitaCaptor =
+        ArgumentCaptor.forClass(List.class);
+    verify(prenotazioneAttivitaTuristicaRepository, times(1))
+        .saveAll(prenotazioneAttivitaCaptor.capture());
 
     List<PrenotazioneAttivitaTuristica> prenotazioniAttivita =
-        prenotazioneAttivitaCaptor.getAllValues();
+        prenotazioneAttivitaCaptor.getValue();
     assertEquals(3, prenotazioniAttivita.size());
 
     for (PrenotazioneAttivitaTuristica p : prenotazioniAttivita) {
@@ -356,17 +356,17 @@ class ItinerariStubAdapterTest {
     assertEquals(visitatore, itinerarioSalvato.getVisitatore());
 
     // Verifica numBambini = 0 per tutte le prenotazioni attività
-    ArgumentCaptor<PrenotazioneAttivitaTuristica> captorAtt =
-        ArgumentCaptor.forClass(PrenotazioneAttivitaTuristica.class);
-    verify(prenotazioneAttivitaTuristicaRepository, atLeast(1)).save(captorAtt.capture());
-    captorAtt.getAllValues().forEach(p ->
+    ArgumentCaptor<List<PrenotazioneAttivitaTuristica>> captorAtt =
+        ArgumentCaptor.forClass(List.class);
+    verify(prenotazioneAttivitaTuristicaRepository, times(1)).saveAll(captorAtt.capture());
+    captorAtt.getValue().forEach(p ->
         assertEquals(0, p.getNumBambini()));
 
     // Verifica numBambini = 0 per tutte le prenotazioni alloggio
-    ArgumentCaptor<PrenotazioneAlloggio> captorAll =
-        ArgumentCaptor.forClass(PrenotazioneAlloggio.class);
-    verify(prenotazioneAlloggioRepository, atLeast(1)).save(captorAll.capture());
-    captorAll.getAllValues().forEach(p ->
+    ArgumentCaptor<List<PrenotazioneAlloggio>> captorAll =
+        ArgumentCaptor.forClass(List.class);
+    verify(prenotazioneAlloggioRepository, times(1)).saveAll(captorAll.capture());
+    captorAll.getValue().forEach(p ->
         assertEquals(0, p.getNumBambini()));
   }
 
@@ -379,14 +379,14 @@ class ItinerariStubAdapterTest {
     when(attivitaRepository.findAll()).thenReturn(attivitaList);
     when(cameraRepository.findAll()).thenReturn(camereList);
 
-    ArgumentCaptor<PrenotazioneAttivitaTuristica> captorAttivita =
-        ArgumentCaptor.forClass(PrenotazioneAttivitaTuristica.class);
-    when(prenotazioneAttivitaTuristicaRepository.save(captorAttivita.capture()))
-        .thenReturn(new PrenotazioneAttivitaTuristica());
+    ArgumentCaptor<List<PrenotazioneAttivitaTuristica>> captorAttivita =
+        ArgumentCaptor.forClass(List.class);
+    when(prenotazioneAttivitaTuristicaRepository.saveAll(captorAttivita.capture()))
+        .thenAnswer(invocation -> invocation.getArgument(0));
 
     when(prenotazioneAttivitaTuristicaRepository.findByItinerario(eq(1L), any(Pageable.class)))
         .thenAnswer(invocation -> {
-          List<PrenotazioneAttivitaTuristica> list = captorAttivita.getAllValues();
+          List<PrenotazioneAttivitaTuristica> list = captorAttivita.getValue();
           return new PageImpl<>(list);
         });
 
@@ -415,14 +415,14 @@ class ItinerariStubAdapterTest {
     when(attivitaRepository.findAll()).thenReturn(attivitaList);
     when(cameraRepository.findAll()).thenReturn(camereList);
 
-    ArgumentCaptor<PrenotazioneAlloggio> captorAlloggio =
-        ArgumentCaptor.forClass(PrenotazioneAlloggio.class);
-    when(prenotazioneAlloggioRepository.save(captorAlloggio.capture()))
-        .thenReturn(new PrenotazioneAlloggio());
+    ArgumentCaptor<List<PrenotazioneAlloggio>> captorAlloggio =
+        ArgumentCaptor.forClass(List.class);
+    when(prenotazioneAlloggioRepository.saveAll(captorAlloggio.capture()))
+        .thenAnswer(invocation -> invocation.getArgument(0));
 
     when(prenotazioneAlloggioRepository.findByItinerario(eq(1L), any(Pageable.class)))
         .thenAnswer(invocation -> {
-          List<PrenotazioneAlloggio> list = captorAlloggio.getAllValues();
+          List<PrenotazioneAlloggio> list = captorAlloggio.getValue();
           return new PageImpl<>(list);
         });
 

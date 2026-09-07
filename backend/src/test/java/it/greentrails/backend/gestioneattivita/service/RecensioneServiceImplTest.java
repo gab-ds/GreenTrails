@@ -271,19 +271,6 @@ class RecensioneServiceImplTest {
     recensione2.setValutazioneStelleEsperienza(5);
     recensione2.setValoriEcosostenibilita(valoriEcosostenibilita);
 
-    // Recensione di un altro visitatore
-    Utente altroVisitatore = new Utente();
-    altroVisitatore.setId(2L);
-    altroVisitatore.setRuolo(RuoloUtente.VISITATORE);
-
-    Recensione recensione3 = new Recensione();
-    recensione3.setId(3L);
-    recensione3.setAttivita(attivita);
-    recensione3.setVisitatore(altroVisitatore);
-    recensione3.setDescrizione("Non male");
-    recensione3.setValutazioneStelleEsperienza(3);
-    recensione3.setValoriEcosostenibilita(valoriEcosostenibilita);
-
     when(repository.findByVisitatore(visitatore.getId())).thenReturn(List.of(recensione, recensione2));
 
     // When

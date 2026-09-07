@@ -51,7 +51,7 @@ public class CategoriaServiceImpl implements CategoriaService {
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
-    Optional<Categoria> categoria = repository.findById(id);
+    final Optional<Categoria> categoria = repository.findById(id);
     if (categoria.isEmpty()) {
       throw new Exception("La categoria non è stata trovata.");
     }

@@ -37,7 +37,7 @@ public class SegnalazioniController {
   private final ArchiviazioneService archiviazioneService;
 
   @PostMapping
-  private ResponseEntity<Object> creaSegnalazione(
+  public ResponseEntity<Object> creaSegnalazione(
       @AuthenticationPrincipal Utente utente,
       @RequestParam("descrizione") final String descrizione,
       @RequestParam(value = "immagine", required = false) final MultipartFile immagine,
@@ -73,7 +73,7 @@ public class SegnalazioniController {
   }
 
   @GetMapping("{id}")
-  private ResponseEntity<Object> visualizzaSegnalazione(
+  public ResponseEntity<Object> visualizzaSegnalazione(
       @PathVariable("id") final long id
   ) {
     try {
@@ -84,7 +84,7 @@ public class SegnalazioniController {
   }
 
   @GetMapping
-  private ResponseEntity<Object> visualizzaSegnalazioniPerTipo(
+  public ResponseEntity<Object> visualizzaSegnalazioniPerTipo(
       @RequestParam("isForRecensione") final boolean isForRecensione
   ) {
     return ResponseGenerator.generateResponse(HttpStatus.OK,
@@ -92,7 +92,7 @@ public class SegnalazioniController {
   }
 
   @DeleteMapping("{id}")
-  private ResponseEntity<Object> chiudiSegnalazione(
+  public ResponseEntity<Object> chiudiSegnalazione(
       @PathVariable("id") final long id,
       @RequestParam(value = "chiarimenti", required = false) final String chiarimenti
   ) {

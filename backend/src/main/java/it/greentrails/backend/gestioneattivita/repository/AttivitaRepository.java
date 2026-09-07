@@ -44,8 +44,11 @@ public interface AttivitaRepository extends JpaRepository<Attivita, Long> {
   @Query("SELECT a FROM Attivita a")
   List<Attivita> findAll();
 
-  @Query(value = "SELECT * FROM attivita WHERE "
-      + "ST_Distance_Sphere(coordinate, POINT(?2, ?1)) <= ?3", nativeQuery = true)
+  @Query(value = "SELECT id, id_gestore, nome, indirizzo, cap, citta, provincia, "
+      + "coordinate, prezzo, descrizione_breve, descrizione_lunga, media, disponibilita, "
+      + "id_valori, categoria_alloggio, categoria_attivita_turistica, is_alloggio, eliminata "
+      + "FROM attivita WHERE ST_Distance_Sphere(coordinate, POINT(?2, ?1)) <= ?3",
+      nativeQuery = true)
   List<Attivita> findByPosizione(double lat, double lon, double raggio);
 
 }

@@ -180,13 +180,6 @@ class PrenotazioneAttivitaTuristicaServiceImplTest {
     PrenotazioneAttivitaTuristica prenotazione1 = new PrenotazioneAttivitaTuristica();
     prenotazione1.setStato(StatoPrenotazione.CREATA);
 
-    PrenotazioneAttivitaTuristica prenotazione2 = new PrenotazioneAttivitaTuristica();
-    prenotazione2.setStato(StatoPrenotazione.COMPLETATA);
-
-    List<PrenotazioneAttivitaTuristica> prenotazioni = new ArrayList<>();
-    prenotazioni.add(prenotazione1);
-    prenotazioni.add(prenotazione2);
-
     when(repositoryMock.findByStato(StatoPrenotazione.CREATA)).thenReturn(List.of(prenotazione1));
 
     List<PrenotazioneAttivitaTuristica> risultato =

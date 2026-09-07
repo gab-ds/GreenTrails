@@ -35,7 +35,7 @@ public class AttivitaController {
   private final ArchiviazioneService archiviazioneService;
 
   @PostMapping
-  private ResponseEntity<Object> creaAttivita(
+  public ResponseEntity<Object> creaAttivita(
       @AuthenticationPrincipal Utente utente,
       @RequestParam("alloggio") final boolean isAlloggio,
       @RequestParam("nome") final String nome,
@@ -106,7 +106,7 @@ public class AttivitaController {
   }
 
   @GetMapping("{id}")
-  private ResponseEntity<Object> visualizzaAttivita(
+  public ResponseEntity<Object> visualizzaAttivita(
       @PathVariable("id") final Long id
   ) {
     try {
@@ -118,7 +118,7 @@ public class AttivitaController {
   }
 
   @GetMapping("perGestore")
-  private ResponseEntity<Object> visualizzaAttivitaPerGestore(
+  public ResponseEntity<Object> visualizzaAttivitaPerGestore(
       @AuthenticationPrincipal Utente utente
   ) {
     try {
@@ -130,7 +130,7 @@ public class AttivitaController {
   }
 
   @GetMapping("perPrezzo")
-  private ResponseEntity<Object> visualizzaAttivitaPerPrezzo(
+  public ResponseEntity<Object> visualizzaAttivitaPerPrezzo(
       @RequestParam(value = "limite", required = false) Integer limite
   ) {
     if (limite == null) {
@@ -141,7 +141,7 @@ public class AttivitaController {
   }
 
   @PostMapping("{id}")
-  private ResponseEntity<Object> modificaAttivita(
+  public ResponseEntity<Object> modificaAttivita(
       @AuthenticationPrincipal Utente utente,
       @PathVariable("id") final long idAttivita,
       @RequestParam("nome") final String nome,
@@ -210,7 +210,7 @@ public class AttivitaController {
   }
 
   @DeleteMapping("{id}")
-  private ResponseEntity<Object> cancellaAttivita(
+  public ResponseEntity<Object> cancellaAttivita(
       @AuthenticationPrincipal Utente utente,
       @PathVariable("id") final Long id
   ) {
@@ -227,7 +227,7 @@ public class AttivitaController {
   }
 
   @GetMapping("alloggi")
-  private ResponseEntity<Object> getAlloggi(
+  public ResponseEntity<Object> getAlloggi(
       @RequestParam(value = "limite", required = false) Integer limite
   ) {
     if (limite == null) {
@@ -238,7 +238,7 @@ public class AttivitaController {
   }
 
   @GetMapping("attivitaTuristiche")
-  private ResponseEntity<Object> getAttivitaTuristiche(
+  public ResponseEntity<Object> getAttivitaTuristiche(
       @RequestParam(value = "limite", required = false) Integer limite
   ) {
     if (limite == null) {
@@ -249,7 +249,7 @@ public class AttivitaController {
   }
 
   @GetMapping("all")
-  private ResponseEntity<Object> findAll() {
+  public ResponseEntity<Object> findAll() {
     return ResponseGenerator.generateResponse(HttpStatus.OK,
         attivitaService.findAll());
   }

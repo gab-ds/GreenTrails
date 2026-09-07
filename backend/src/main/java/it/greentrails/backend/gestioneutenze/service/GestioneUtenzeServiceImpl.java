@@ -31,7 +31,7 @@ public class GestioneUtenzeServiceImpl implements GestioneUtenzeService {
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
-    Optional<Utente> utente = repository.findById(id);
+    final Optional<Utente> utente = repository.findById(id);
     if (utente.isEmpty()) {
       throw new Exception("L'utente non è stato trovato.");
     }
@@ -91,7 +91,7 @@ public class GestioneUtenzeServiceImpl implements GestioneUtenzeService {
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
-    Optional<Preferenze> preferenze = preferenzeRepository.findById(id);
+    final Optional<Preferenze> preferenze = preferenzeRepository.findById(id);
     if (preferenze.isEmpty()) {
       throw new Exception("Le preferenze non sono state trovate.");
     }
@@ -107,7 +107,7 @@ public class GestioneUtenzeServiceImpl implements GestioneUtenzeService {
     if (username == null) {
       throw new UsernameNotFoundException("Username is null");
     }
-    Optional<Utente> utente = findByEmail(username);
+    final Optional<Utente> utente = findByEmail(username);
     if (utente.isEmpty()) {
       throw new UsernameNotFoundException(username);
     }

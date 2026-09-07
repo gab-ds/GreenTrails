@@ -38,7 +38,7 @@ public class RecensioneController {
   private final ArchiviazioneService archiviazioneService;
 
   @PostMapping
-  private ResponseEntity<Object> creaRecensione(
+  public ResponseEntity<Object> creaRecensione(
       @AuthenticationPrincipal Utente utente,
       @RequestParam("idAttivita") final Long idAttivita,
       @RequestParam("valutazioneStelleEsperienza") final int valutazioneStelleEsperienza,
@@ -69,7 +69,7 @@ public class RecensioneController {
   }
 
   @GetMapping("{id}")
-  private ResponseEntity<Object> visualizzaRecensione(
+  public ResponseEntity<Object> visualizzaRecensione(
       @PathVariable("id") final Long id
   ) {
     try {
@@ -81,7 +81,7 @@ public class RecensioneController {
   }
 
   @GetMapping("perAttivita/{idAttivita}")
-  private ResponseEntity<Object> visualizzaRecensioniPerAttivita(
+  public ResponseEntity<Object> visualizzaRecensioniPerAttivita(
       @PathVariable("idAttivita") final Long idAttivita
   ) {
     try {
@@ -95,7 +95,7 @@ public class RecensioneController {
 
 
   @DeleteMapping("{id}")
-  private ResponseEntity<Object> cancellaRecensione(
+  public ResponseEntity<Object> cancellaRecensione(
       @AuthenticationPrincipal Utente utente,
       @PathVariable("id") final Long id
   ) {

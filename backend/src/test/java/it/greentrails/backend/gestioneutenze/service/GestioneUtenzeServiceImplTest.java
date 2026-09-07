@@ -15,7 +15,6 @@ import it.greentrails.backend.gestioneutenze.repository.PreferenzeRepository;
 import it.greentrails.backend.gestioneutenze.repository.UtenteRepository;
 import java.util.Date;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -36,10 +35,6 @@ class GestioneUtenzeServiceImplTest {
 
   @InjectMocks
   private GestioneUtenzeServiceImpl service;
-
-  @BeforeEach
-  void setUp() {
-  }
 
   @Test
   void getPreferenzeByIdNullId() {

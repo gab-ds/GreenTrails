@@ -20,7 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-public class CategoriaServiceImplTest {
+class CategoriaServiceImplTest {
 
   @Mock
   private CategoriaRepository categoriaRepository;

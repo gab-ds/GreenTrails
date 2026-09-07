@@ -86,7 +86,7 @@ public class ItinerariServiceImpl implements ItinerariService {
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
-    Optional<Itinerario> itinerario = repository.findById(id);
+    final Optional<Itinerario> itinerario = repository.findById(id);
     if (itinerario.isEmpty()) {
       throw new Exception("L'itinerario non è stato trovato.");
     }

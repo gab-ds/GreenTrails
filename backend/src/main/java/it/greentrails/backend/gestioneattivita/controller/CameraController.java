@@ -29,7 +29,7 @@ public class CameraController {
   private final CameraService cameraService;
 
   @PostMapping
-  private ResponseEntity<Object> creaCamera(
+  public ResponseEntity<Object> creaCamera(
       @AuthenticationPrincipal Utente utente,
       @RequestParam(value = "idAlloggio") final Long idAlloggio,
       @RequestParam("tipoCamera") final String tipoCamera,
@@ -62,7 +62,7 @@ public class CameraController {
   }
 
   @GetMapping("{id}")
-  private ResponseEntity<Object> visualizzaCamera(
+  public ResponseEntity<Object> visualizzaCamera(
       @PathVariable("id") final Long id
   ) {
     try {
@@ -73,7 +73,7 @@ public class CameraController {
   }
 
   @GetMapping("perAlloggio/{idAlloggio}")
-  private ResponseEntity<Object> visualizzaCamerePerAlloggio(
+  public ResponseEntity<Object> visualizzaCamerePerAlloggio(
       @PathVariable("idAlloggio") final Long idAlloggio
   ) {
     try {
@@ -90,7 +90,7 @@ public class CameraController {
   }
 
   @DeleteMapping("{id}")
-  private ResponseEntity<Object> cancellaCamera(
+  public ResponseEntity<Object> cancellaCamera(
       @AuthenticationPrincipal Utente utente,
       @PathVariable("id") final Long id
   ) {

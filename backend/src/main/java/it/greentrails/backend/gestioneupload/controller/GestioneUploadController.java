@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,7 +43,6 @@ public class GestioneUploadController {
   }
 
   @GetMapping("{media:.+}/{filename:.+}")
-  @ResponseBody
   public ResponseEntity<Resource> serviFile(
       @PathVariable final String media,
       @PathVariable final String filename) {
@@ -86,13 +84,13 @@ public class GestioneUploadController {
   }
 
   @ExceptionHandler(FileNonTrovatoException.class)
-  public ResponseEntity<?> handleStorageFileNotFound(FileNonTrovatoException exc) {
+  public ResponseEntity<Void> handleStorageFileNotFound(FileNonTrovatoException exc) {
     return ResponseEntity.notFound().build();
   }
 
 
   @DeleteMapping("{media:.+}/{filename:.+}")
-  private ResponseEntity<Object> cancellaMedia(
+  public ResponseEntity<Object> cancellaMedia(
       @AuthenticationPrincipal Utente utente,
       @PathVariable final String media,
       @PathVariable final String filename

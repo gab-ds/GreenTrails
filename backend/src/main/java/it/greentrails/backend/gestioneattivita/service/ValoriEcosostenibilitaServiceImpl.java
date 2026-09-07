@@ -51,7 +51,7 @@ public class ValoriEcosostenibilitaServiceImpl implements ValoriEcosostenibilita
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
-    Optional<ValoriEcosostenibilita> valori = repository.findById(id);
+    final Optional<ValoriEcosostenibilita> valori = repository.findById(id);
     if (valori.isEmpty()) {
       throw new Exception("I valori non sono stati trovati.");
     }

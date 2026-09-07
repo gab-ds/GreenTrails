@@ -31,7 +31,7 @@ public class ItinerariController {
   private final GestioneUtenzeService gestioneUtenzeService;
 
   @PostMapping
-  private ResponseEntity<Object> creaItinerario(
+  public ResponseEntity<Object> creaItinerario(
       @AuthenticationPrincipal Utente utente
   ) {
     try {
@@ -45,7 +45,7 @@ public class ItinerariController {
   }
 
   @PostMapping("genera")
-  private ResponseEntity<Object> generaItinerario(
+  public ResponseEntity<Object> generaItinerario(
       @AuthenticationPrincipal Utente utente
   ) {
     try {
@@ -58,7 +58,7 @@ public class ItinerariController {
   }
 
   @GetMapping("{id}")
-  private ResponseEntity<Object> visualizzaItinerario(
+  public ResponseEntity<Object> visualizzaItinerario(
       @AuthenticationPrincipal Utente utente,
       @PathVariable("id") final Long id
   ) {
@@ -80,7 +80,7 @@ public class ItinerariController {
   }
 
   @DeleteMapping("{id}")
-  private ResponseEntity<Object> cancellaItinerario(
+  public ResponseEntity<Object> cancellaItinerario(
       @AuthenticationPrincipal Utente utente,
       @PathVariable("id") final Long id
   ) {

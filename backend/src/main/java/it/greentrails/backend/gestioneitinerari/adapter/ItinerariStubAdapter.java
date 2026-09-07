@@ -13,6 +13,7 @@ import it.greentrails.backend.gestioneprenotazioni.repository.PrenotazioneAllogg
 import it.greentrails.backend.gestioneprenotazioni.repository.PrenotazioneAttivitaTuristicaRepository;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -45,14 +46,15 @@ public class ItinerariStubAdapter implements ItinerariAdapter {
     @*/
   @Override
   public Itinerario pianificazioneAutomatica(Preferenze preferenze) {
-    Itinerario itinerario = new Itinerario();
+    final Itinerario itinerario = new Itinerario();
     itinerario.setVisitatore(preferenze.getVisitatore());
-    Itinerario itinerarioFinal = itinerariRepository.save(itinerario);
+    final Itinerario itinerarioFinal = itinerariRepository.save(itinerario);
     List<Attivita> attivitaTuristiche = attivitaRepository.findAll();
     if (attivitaTuristiche == null) {
       attivitaTuristiche = Collections.emptyList();
     }
     Collections.shuffle(attivitaTuristiche);
+    List<PrenotazioneAttivitaTuristica> prenotazioniAttivita = new ArrayList<>();
     attivitaTuristiche.stream().filter(a -> !a.isAlloggio()).limit(3).forEach(a -> {
       PrenotazioneAttivitaTuristica p = new PrenotazioneAttivitaTuristica();
       p.setAttivitaTuristica(a);
@@ -61,13 +63,15 @@ public class ItinerariStubAdapter implements ItinerariAdapter {
       p.setNumAdulti(1);
       p.setNumBambini(0);
       p.setPrezzo(a.getPrezzo());
-      PrenotazioneAttivitaTuristica saved = prenotazioneAttivitaTuristicaRepository.save(p);
+      prenotazioniAttivita.add(p);
     });
+    prenotazioneAttivitaTuristicaRepository.saveAll(prenotazioniAttivita);
     List<Camera> camere = cameraRepository.findAll();
     if (camere == null) {
       camere = Collections.emptyList();
     }
     Collections.shuffle(camere);
+    List<PrenotazioneAlloggio> prenotazioniAlloggio = new ArrayList<>();
     camere.stream().limit(1).forEach(c -> {
       PrenotazioneAlloggio p = new PrenotazioneAlloggio();
       p.setCamera(c);
@@ -78,8 +82,9 @@ public class ItinerariStubAdapter implements ItinerariAdapter {
       p.setNumBambini(0);
       p.setNumCamere(1);
       p.setPrezzo(c.getPrezzo());
-      PrenotazioneAlloggio saved = prenotazioneAlloggioRepository.save(p);
+      prenotazioniAlloggio.add(p);
     });
+    prenotazioneAlloggioRepository.saveAll(prenotazioniAlloggio);
     return itinerarioFinal;
   }
 

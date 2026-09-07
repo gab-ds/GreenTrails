@@ -28,6 +28,7 @@ public class SecurityConfig {
   private static final String ROLE_VISITATORE = RuoloUtente.VISITATORE.name();
   private static final String ROLE_GESTORE = RuoloUtente.GESTORE_ATTIVITA.name();
   private static final String ROLE_ADMIN = RuoloUtente.AMMINISTRATORE.name();
+  private static final String PATH_ATTIVITA = "/api/attivita/*";
 
   @Bean
   public PasswordEncoder passwordEncoder() {
@@ -76,7 +77,7 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
-        .authorizeHttpRequests((authorize) -> authorize
+        .authorizeHttpRequests(authorize -> authorize
             .requestMatchers(HttpMethod.PUT, "/api/utenti").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/utenti").authenticated()
             .requestMatchers(HttpMethod.GET, "/api/utenti/preferenze").hasRole(ROLE_VISITATORE)
@@ -87,7 +88,7 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.DELETE, "/api/file/**").authenticated()
             .requestMatchers(HttpMethod.GET, "/api/file/**").permitAll()
 
-            .requestMatchers(HttpMethod.GET, "/api/attivita/*").permitAll()
+            .requestMatchers(HttpMethod.GET, PATH_ATTIVITA).permitAll()
             .requestMatchers(HttpMethod.GET, "/api/attivita/perPrezzo").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/attivita/perGestore").hasRole(ROLE_GESTORE)
             .requestMatchers(HttpMethod.GET, "/api/attivita/alloggi").permitAll()
@@ -95,8 +96,8 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.GET, "/api/attivita/all").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/attivita").hasRole(ROLE_GESTORE)
             .requestMatchers(HttpMethod.POST, "/api/attivita").hasRole(ROLE_GESTORE)
-            .requestMatchers(HttpMethod.POST, "/api/attivita/*").hasRole(ROLE_GESTORE)
-            .requestMatchers(HttpMethod.DELETE, "/api/attivita/*").hasRole(ROLE_GESTORE)
+            .requestMatchers(HttpMethod.POST, PATH_ATTIVITA).hasRole(ROLE_GESTORE)
+            .requestMatchers(HttpMethod.DELETE, PATH_ATTIVITA).hasRole(ROLE_GESTORE)
 
             .requestMatchers(HttpMethod.GET, "/api/camere/**").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/camere").hasRole(ROLE_GESTORE)
