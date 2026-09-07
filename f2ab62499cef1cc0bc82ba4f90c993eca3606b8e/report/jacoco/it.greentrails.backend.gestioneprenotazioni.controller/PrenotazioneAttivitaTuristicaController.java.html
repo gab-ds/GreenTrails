@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PrenotazioneAttivitaTuristicaController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">it.greentrails.backend.gestioneprenotazioni.controller</a> &gt; <span class="el_source">PrenotazioneAttivitaTuristicaController.java</span></div><h1>PrenotazioneAttivitaTuristicaController.java</h1><pre class="source lang-java linenums">package it.greentrails.backend.gestioneprenotazioni.controller;
+
+import it.greentrails.backend.entities.Attivita;
+import it.greentrails.backend.entities.Itinerario;
+import it.greentrails.backend.entities.PrenotazioneAttivitaTuristica;
+import it.greentrails.backend.entities.Utente;
+import it.greentrails.backend.enums.StatoPrenotazione;
+import it.greentrails.backend.gestioneattivita.service.AttivitaService;
+import it.greentrails.backend.gestioneitinerari.service.ItinerariService;
+import it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAttivitaTuristicaService;
+import it.greentrails.backend.utils.service.ResponseGenerator;
+import java.time.Duration;
+import java.util.Date;
+import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping(path = &quot;api/prenotazioni-attivita-turistica&quot;)
+@RequiredArgsConstructor
+public class PrenotazioneAttivitaTuristicaController {
+
+  private static final String PRENOTAZIONE_NON_TROVATA = &quot;Prenotazione non trovata&quot;;
+
+  private final ItinerariService itinerariService;
+  private final AttivitaService attivitaService;
+  private final PrenotazioneAttivitaTuristicaService prenotazioneAttivitaTuristicaService;
+
+
+  @PostMapping
+  public ResponseEntity&lt;Object&gt; creaPrenotazioneAttivitaTuristica(
+      @AuthenticationPrincipal Utente utente,
+      @RequestParam(&quot;idItinerario&quot;) final Long idItinerario,
+      @RequestParam(&quot;idAttivita&quot;) final Long idAttivita,
+      @RequestParam(&quot;numAdulti&quot;) final int adulti,
+      @RequestParam(value = &quot;numBambini&quot;, defaultValue = &quot;0&quot;, required = false) final int bambini,
+      @RequestParam(&quot;dataInizio&quot;) @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;)
+      final Date dataInizio,
+      @RequestParam(value = &quot;dataFine&quot;, required = false)
+      @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) final Date dataFine
+  ) {
+    try {
+<span class="fc" id="L52">      Itinerario itinerario = itinerariService.findById(idItinerario);</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">      if (!itinerario.getVisitatore().getId().equals(utente.getId())) {</span>
+<span class="fc" id="L54">        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, &quot;Itinerario non trovato&quot;);</span>
+      }
+<span class="fc" id="L56">      Attivita attivita = attivitaService.findById(idAttivita);</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">      if (attivita.isAlloggio()) {</span>
+<span class="fc" id="L58">        throw new Exception(&quot;L'attività non è un'attività turistica.&quot;);</span>
+      }
+<span class="fc" id="L60">      PrenotazioneAttivitaTuristica prenotazione = new PrenotazioneAttivitaTuristica();</span>
+<span class="fc" id="L61">      prenotazione.setAttivitaTuristica(attivita);</span>
+<span class="fc" id="L62">      prenotazione.setItinerario(itinerario);</span>
+<span class="fc" id="L63">      prenotazione.setNumAdulti(adulti);</span>
+<span class="fc" id="L64">      prenotazione.setNumBambini(bambini);</span>
+<span class="fc" id="L65">      prenotazione.setDataInizio(dataInizio);</span>
+<span class="fc" id="L66">      prenotazione.setStato(StatoPrenotazione.CREATA);</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">      if (prenotazioneAttivitaTuristicaService.controllaDisponibilitaAttivitaTuristica(attivita,</span>
+          dataInizio) &lt; adulti + bambini) {
+<span class="fc" id="L69">        return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span>
+            &quot;Attività turistica non disponibile&quot;);
+      }
+<span class="fc" id="L72">      double prezzo = (adulti + bambini) * attivita.getPrezzo();</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">      if (dataFine != null) {</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        if (dataFine.before(dataInizio)) {</span>
+<span class="fc" id="L75">          return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span>
+              &quot;La data di fine non può essere precedente alla data di inizio.&quot;);
+        }
+<span class="fc" id="L78">        prenotazione.setDataFine(dataFine);</span>
+<span class="fc" id="L79">        long durataOre = Duration.between(dataInizio.toInstant(), dataFine.toInstant()).toHours();</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        if (durataOre &gt; 24) {</span>
+<span class="fc" id="L81">          prezzo = prezzo * Math.ceil((double) durataOre / 24);</span>
+        }
+      }
+<span class="fc" id="L84">      prenotazione.setPrezzo(prezzo);</span>
+<span class="fc" id="L85">      prenotazione = prenotazioneAttivitaTuristicaService.savePrenotazioneAttivitaTuristica(</span>
+          attivita, prenotazione);
+<span class="fc" id="L87">      itinerario.setTotale(prezzo + itinerario.getTotale());</span>
+<span class="fc" id="L88">      itinerariService.saveItinerario(itinerario);</span>
+<span class="fc" id="L89">      return ResponseGenerator.generateResponse(HttpStatus.OK, prenotazione);</span>
+<span class="fc" id="L90">    } catch (Exception e) {</span>
+<span class="fc" id="L91">      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span>
+    }
+  }
+
+  @PostMapping(&quot;{id}&quot;)
+  public ResponseEntity&lt;Object&gt; confermaPrenotazioneAttivitaTuristica(
+      @AuthenticationPrincipal Utente utente,
+      @PathVariable(&quot;id&quot;) final long id,
+      @RequestParam(&quot;numAdulti&quot;) final int adulti,
+      @RequestParam(value = &quot;numBambini&quot;, defaultValue = &quot;0&quot;, required = false) final int bambini,
+      @RequestParam(&quot;dataInizio&quot;) @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) final Date dataInizio,
+      @RequestParam(value = &quot;dataFine&quot;, required = false) @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;)
+      final Date dataFine
+  ) {
+    try {
+<span class="fc" id="L106">      PrenotazioneAttivitaTuristica prenotazione =</span>
+<span class="fc" id="L107">          prenotazioneAttivitaTuristicaService.findById(id);</span>
+<span class="fc" id="L108">      Itinerario itinerario = prenotazione.getItinerario();</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">      if (!itinerario.getVisitatore().getId().equals(utente.getId())) {</span>
+<span class="fc" id="L110">        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND,</span>
+            PRENOTAZIONE_NON_TROVATA);
+      }
+<span class="fc bfc" id="L113" title="All 2 branches covered.">      if (prenotazione.getStato() != StatoPrenotazione.NON_CONFERMATA) {</span>
+<span class="fc" id="L114">        return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span>
+            &quot;Prenotazione non modificabile&quot;);
+      }
+<span class="fc" id="L117">      prenotazione.setNumAdulti(adulti);</span>
+<span class="fc" id="L118">      prenotazione.setNumBambini(bambini);</span>
+<span class="fc" id="L119">      prenotazione.setDataInizio(dataInizio);</span>
+<span class="fc" id="L120">      prenotazione.setStato(StatoPrenotazione.CREATA);</span>
+<span class="fc" id="L121">      Attivita attivita = prenotazione.getAttivitaTuristica();</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">      if (prenotazioneAttivitaTuristicaService.controllaDisponibilitaAttivitaTuristica(</span>
+          attivita, dataInizio) &lt; adulti + bambini) {
+<span class="fc" id="L124">        return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span>
+            &quot;Attività turistica non disponibile&quot;);
+      }
+<span class="fc" id="L127">      double prezzo = (adulti + bambini) * attivita.getPrezzo();</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">      if (dataFine != null) {</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        if (dataFine.before(dataInizio)) {</span>
+<span class="fc" id="L130">          return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span>
+              &quot;La data di fine non può essere precedente alla data di inizio.&quot;);
+        }
+<span class="fc" id="L133">        prenotazione.setDataFine(dataFine);</span>
+<span class="fc" id="L134">        long durataOre = Duration.between(dataInizio.toInstant(), dataFine.toInstant()).toHours();</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">        if (durataOre &gt; 24) {</span>
+<span class="fc" id="L136">          prezzo = prezzo * Math.ceil((double) durataOre / 24);</span>
+        }
+      }
+<span class="fc" id="L139">      prenotazione.setPrezzo(prezzo);</span>
+<span class="fc" id="L140">      prenotazione = prenotazioneAttivitaTuristicaService.savePrenotazioneAttivitaTuristica(</span>
+          attivita, prenotazione);
+<span class="fc" id="L142">      itinerario.setTotale(prezzo + itinerario.getTotale());</span>
+<span class="fc" id="L143">      itinerariService.saveItinerario(itinerario);</span>
+<span class="fc" id="L144">      return ResponseGenerator.generateResponse(HttpStatus.OK, prenotazione);</span>
+<span class="fc" id="L145">    } catch (Exception e) {</span>
+<span class="fc" id="L146">      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span>
+    }
+  }
+
+  @GetMapping(&quot;{id}&quot;)
+  public ResponseEntity&lt;Object&gt; visualizzaPrenotazioneAttivitaTuristica(
+      @AuthenticationPrincipal Utente utente,
+      @PathVariable(&quot;id&quot;) final Long id
+  ) {
+    try {
+<span class="fc" id="L156">      PrenotazioneAttivitaTuristica prenotazione = prenotazioneAttivitaTuristicaService.findById(</span>
+          id);
+<span class="fc" id="L158">      if (!prenotazione.getItinerario().getVisitatore().getId()</span>
+<span class="fc bfc" id="L159" title="All 2 branches covered.">          .equals(utente.getId())) {</span>
+<span class="fc" id="L160">        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, PRENOTAZIONE_NON_TROVATA);</span>
+      }
+<span class="fc" id="L162">      return ResponseGenerator.generateResponse(HttpStatus.OK, prenotazione);</span>
+<span class="fc" id="L163">    } catch (Exception e) {</span>
+<span class="fc" id="L164">      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span>
+    }
+  }
+
+  @GetMapping(&quot;perAttivita/{idAttivita}&quot;)
+  public ResponseEntity&lt;Object&gt; visualizzaPrenotazioniAttivitaTuristicaPerAttivita(
+      @AuthenticationPrincipal Utente utente,
+      @PathVariable(&quot;idAttivita&quot;) final Long idAttivita
+  ) {
+    try {
+<span class="fc" id="L174">      Attivita attivita = attivitaService.findById(idAttivita);</span>
+<span class="fc bfc" id="L175" title="All 2 branches covered.">      if (!attivita.getGestore().getId().equals(utente.getId())) {</span>
+<span class="fc" id="L176">        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND,</span>
+            &quot;Attività turistica non trovata&quot;);
+      }
+<span class="fc" id="L179">      return ResponseGenerator.generateResponse(HttpStatus.OK,</span>
+<span class="fc" id="L180">          prenotazioneAttivitaTuristicaService.getPrenotazioniByAttivitaTuristica(attivita));</span>
+<span class="fc" id="L181">    } catch (Exception e) {</span>
+<span class="fc" id="L182">      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span>
+    }
+  }
+
+  @GetMapping(&quot;perAttivita/{idAttivita}/disponibilita&quot;)
+  public ResponseEntity&lt;Object&gt; visualizzaDisponibilitaPerAttivitaTuristica(
+      @PathVariable(&quot;idAttivita&quot;) final long idAttivita,
+      @RequestParam(&quot;dataInizio&quot;) @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) final Date dataInizio
+  ) {
+    try {
+<span class="fc" id="L192">      Attivita attivita = attivitaService.findById(idAttivita);</span>
+<span class="fc" id="L193">      return ResponseGenerator.generateResponse(HttpStatus.OK,</span>
+<span class="fc" id="L194">          prenotazioneAttivitaTuristicaService.controllaDisponibilitaAttivitaTuristica(attivita,</span>
+              dataInizio));
+<span class="fc" id="L196">    } catch (Exception e) {</span>
+<span class="fc" id="L197">      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span>
+    }
+  }
+
+  @GetMapping
+  public ResponseEntity&lt;Object&gt; visualizzaPrenotazioniAttivitaTuristicaPerVisitatore(
+      @AuthenticationPrincipal Utente utente
+  ) {
+    try {
+<span class="fc" id="L206">      return ResponseGenerator.generateResponse(HttpStatus.OK,</span>
+<span class="fc" id="L207">          prenotazioneAttivitaTuristicaService.getPrenotazioniByVisitatore(utente));</span>
+<span class="fc" id="L208">    } catch (Exception e) {</span>
+<span class="fc" id="L209">      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span>
+    }
+  }
+
+  @DeleteMapping(&quot;{id}&quot;)
+  public ResponseEntity&lt;Object&gt; cancellaPrenotazioneAttivitaTuristica(
+      @AuthenticationPrincipal Utente utente,
+      @PathVariable(&quot;id&quot;) final Long id
+  ) {
+    try {
+<span class="fc" id="L219">      PrenotazioneAttivitaTuristica prenotazione = prenotazioneAttivitaTuristicaService.findById(</span>
+          id);
+<span class="fc" id="L221">      if (!prenotazione.getItinerario().getVisitatore().getId()</span>
+<span class="fc bfc" id="L222" title="All 2 branches covered.">          .equals(utente.getId())) {</span>
+<span class="fc" id="L223">        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, PRENOTAZIONE_NON_TROVATA);</span>
+      }
+<span class="fc" id="L225">      Itinerario itinerario = prenotazione.getItinerario();</span>
+<span class="fc" id="L226">      itinerario.setTotale(itinerario.getTotale() - prenotazione.getPrezzo());</span>
+<span class="fc" id="L227">      itinerariService.saveItinerario(itinerario);</span>
+<span class="fc" id="L228">      return ResponseGenerator.generateResponse(HttpStatus.OK,</span>
+<span class="fc" id="L229">          prenotazioneAttivitaTuristicaService.deletePrenotazioneAttivitaTuristica(</span>
+              prenotazione));
+<span class="fc" id="L231">    } catch (Exception e) {</span>
+<span class="fc" id="L232">      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span>
+    }
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>
