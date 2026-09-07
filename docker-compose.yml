@@ -11,7 +11,7 @@ services:
       - DB_USER=${DB_USER:-user}
       - DB_PASS=${DB_PASS:-password}
       - DB_URL=jdbc:mysql://db:3306/${DB_NAME:-greentrails}
-      - JWT_SECRET=${JWT_SECRET:-GreenTrailsDefaultSecretKey2026!ChangeInProd}
+      - JWT_SECRET=${JWT_SECRET:?JWT_SECRET must be set}
       - JWT_EXPIRATION_MS=${JWT_EXPIRATION_MS:-3600000}
     healthcheck:
         test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || exit 1"]

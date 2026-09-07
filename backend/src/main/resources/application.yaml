@@ -7,7 +7,7 @@ spring:
       max-request-size: 100MB
 
 jwt:
-  secret: ${JWT_SECRET:GreenTrailsDefaultSecretKey2026!ChangeInProd}
+  secret: ${JWT_SECRET}
   expiration-ms: ${JWT_EXPIRATION_MS:3600000}
 
 management:

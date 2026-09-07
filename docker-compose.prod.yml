@@ -8,6 +8,7 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
+      - JWT_SECRET=${JWT_SECRET:?JWT_SECRET must be set}
       - SSL_CERT_PATH=file:/app/certs/cert.pem
       - SSL_KEY_PATH=file:/app/certs/key.pem
     healthcheck:
