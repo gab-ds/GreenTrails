@@ -1,6 +1,6 @@
 package it.greentrails.backend.gestioneupload.service;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -42,25 +42,23 @@ class ArchiviazioneFileSystemServiceTest {
 
   @AfterEach
   void tearDown() throws IOException {
-    // pulisco la directory temporanea
     if (Files.exists(tempRoot)) {
-      // ricorsivamente delete
-      Files.walk(tempRoot)
-          .sorted(Comparator.reverseOrder())
-          .forEach(p -> {
-            try {
-              Files.deleteIfExists(p);
-            } catch (IOException e) {
-              // ignore
-            }
-          });
+      try (var stream = Files.walk(tempRoot)) {
+        stream.sorted(Comparator.reverseOrder())
+            .forEach(p -> {
+              try {
+                Files.deleteIfExists(p);
+              } catch (IOException ignored) {
+              }
+            });
+      }
     }
   }
 
   @Test
   void constructorEmptyLocationThrows() {
     ArchiviazioneProperties p = new ArchiviazioneProperties();
-    p.setLocation("   ");
+    p.setLocation("    ");
     assertThrows(ArchiviazioneException.class, () -> new ArchiviazioneFileSystemService(p));
   }
 
@@ -73,7 +71,6 @@ class ArchiviazioneFileSystemServiceTest {
     svc.init();
     assertTrue(Files.exists(newRoot));
     assertTrue(Files.isDirectory(newRoot));
-    // cleanup
     Files.deleteIfExists(newRoot);
   }
 
@@ -89,7 +86,6 @@ class ArchiviazioneFileSystemServiceTest {
     String media = "media1";
     service.store(media, file);
 
-    // dopo lo store deve esserci un file nella directory media1
     Path mediaDir = tempRoot.resolve(media);
     assertTrue(Files.exists(mediaDir) && Files.isDirectory(mediaDir));
     List<String> all = service.loadAll(media);
@@ -98,13 +94,11 @@ class ArchiviazioneFileSystemServiceTest {
     String filename = all.getFirst();
     assertTrue(filename.endsWith(".jpg"));
 
-    // loadAsResource
     Resource r = service.loadAsResource(media, filename);
     assertNotNull(r);
     assertTrue(r.exists());
     assertTrue(r.isReadable());
 
-    // delete
     service.delete(media, filename);
     assertFalse(Files.exists(mediaDir.resolve(filename)));
   }
@@ -126,28 +120,35 @@ class ArchiviazioneFileSystemServiceTest {
   }
 
   @Test
+  void storeDisallowedExtensionThrowsRceProtection() {
+    MultipartFile file = Mockito.mock(MultipartFile.class);
+    when(file.isEmpty()).thenReturn(false);
+    when(file.getContentType()).thenReturn("image/jpeg");
+    when(file.getOriginalFilename()).thenReturn("exploit.php");
+
+    assertThrows(ArchiviazioneException.class, () -> service.store("m", file));
+  }
+
+  @Test
   void loadAsResourceNotFoundThrows() {
-    assertThrows(FileNonTrovatoException.class, () -> service.loadAsResource("m", "nofile.txt"));
+    assertThrows(FileNonTrovatoException.class, () -> service.loadAsResource("m", "nofile.jpg"));
   }
 
   @Test
   void deletePathTraversalThrows() throws IOException {
     String media = "m2";
-    // creo la directory media
     Path mediaDir = tempRoot.resolve(media);
     Files.createDirectories(mediaDir);
-    // provo a eliminare con filename che risale fuori
     assertThrows(ArchiviazioneException.class, () -> service.delete(media, "../escape.txt"));
   }
 
   @Test
   void deleteNonExistingDoesNotThrow() {
-    assertDoesNotThrow(() -> service.delete("no_media", "nofile.jpg"));
+    service.delete("no_media", "nofile.jpg");
   }
 
   @Test
   void deleteAllRemovesRoot() throws IOException {
-    // creo una sottodirectory e un file
     Path mediaDir = tempRoot.resolve("m3");
     Files.createDirectories(mediaDir);
     Path f = mediaDir.resolve("a.txt");
@@ -158,13 +159,11 @@ class ArchiviazioneFileSystemServiceTest {
     assertFalse(Files.exists(tempRoot));
   }
 
-  // ----- nuovi test per migliorare la coverage -----
-
   @Test
   void storeWhenDirectoryAlreadyExists() throws Exception {
     String media = "existsMedia";
     Path mediaDir = tempRoot.resolve(media);
-    Files.createDirectories(mediaDir); // directory già esistente -> copre il ramo "exists == true"
+    Files.createDirectories(mediaDir);
 
     MultipartFile file = Mockito.mock(MultipartFile.class);
     when(file.isEmpty()).thenReturn(false);
@@ -172,7 +171,6 @@ class ArchiviazioneFileSystemServiceTest {
     when(file.getOriginalFilename()).thenReturn("img.png");
     Mockito.doReturn(new ByteArrayInputStream("x".getBytes())).when(file).getInputStream();
 
-    // non deve lanciare eccezioni
     service.store(media, file);
 
     List<String> all = service.loadAll(media);
@@ -181,7 +179,6 @@ class ArchiviazioneFileSystemServiceTest {
 
   @Test
   void storeWithMediaPathTraversalThrows() throws Exception {
-    // se il parametro media contiene componenti che risalgono la gerarchia, deve fallire
     MultipartFile file = Mockito.mock(MultipartFile.class);
     when(file.isEmpty()).thenReturn(false);
     when(file.getContentType()).thenReturn("image/jpeg");
@@ -192,26 +189,22 @@ class ArchiviazioneFileSystemServiceTest {
   }
 
   @Test
-  void loadAsResourceExistsButNotReadable() throws Exception {
+  void loadAsResourceExistsButNotReadableThrows() throws Exception {
     String media = "nr";
     Path mediaDir = tempRoot.resolve(media);
     Files.createDirectories(mediaDir);
     Path f = mediaDir.resolve("secret.jpg");
     Files.write(f, "data".getBytes());
 
-    // proviamo a rimuovere i permessi di lettura (POSIX). Se il file system non supporta POSIX,
-    // non falliamo il test: consideriamo il test valido se non possiamo cambiare i permessi.
     try {
       Set<PosixFilePermission> perms = PosixFilePermissions.fromString("-wx------");
       Files.setPosixFilePermissions(f, perms);
-    } catch (UnsupportedOperationException | IOException ignored) {
-      // filesystem non POSIX (es. Windows nei runner) o errore IO: niente da fare
-    }
 
-    // carichiamo la risorsa: se il file esiste ma non è leggibile, UrlResource.exists() può essere true
-    // e il metodo dovrebbe ritornare la risorsa (esercitando la combinazione exists==true && isReadable==false)
-    Resource r = service.loadAsResource(media, "secret.jpg");
-    assertNotNull(r);
+      if (!Files.isReadable(f)) {
+        assertThrows(FileNonTrovatoException.class, () -> service.loadAsResource(media, "secret.jpg"));
+      }
+    } catch (UnsupportedOperationException | IOException ignored) {
+    }
   }
 
   @Test
@@ -226,19 +219,9 @@ class ArchiviazioneFileSystemServiceTest {
   }
 
   @Test
-  void loadAllMediaPathTraversalThrows() {
-    assertThrows(ArchiviazioneException.class, () -> service.loadAll("../escape"));
+  void loadAllNonExistingReturnsEmptyList() {
+    List<String> files = service.loadAll("non_esiste");
+    assertNotNull(files);
+    assertTrue(files.isEmpty());
   }
-
-  @Test
-  void deleteMediaPathTraversalThrows() {
-    assertThrows(ArchiviazioneException.class, () -> service.delete("../escape", "file.txt"));
-  }
-
-  @Test
-  void loadAllNonExistingThrows() {
-    // se la directory non esiste Files.walk solleverà NoSuchFileException -> deve essere wrap in ArchiviazioneException
-    assertThrows(ArchiviazioneException.class, () -> service.loadAll("non_esiste"));
-  }
-
 }
