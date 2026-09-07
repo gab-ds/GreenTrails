@@ -14,3 +14,7 @@ spring:
 server:
   error:
     include-message: always
+
+jwt:
+  cookie:
+    secure: false

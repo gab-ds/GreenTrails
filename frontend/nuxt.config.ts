@@ -34,6 +34,7 @@ export default defineNuxtConfig({
   css: ["~/assets/css/main.css", "leaflet/dist/leaflet.css"],
 
   runtimeConfig: {
+    apiBaseUrl: "http://localhost:8080/api",
     public: {
       apiBaseUrl: "http://localhost:8080/api",
     },
@@ -46,6 +47,12 @@ export default defineNuxtConfig({
         {
           name: "description",
           content: "Eco-sustainable itinerary booking platform",
+        },
+        {
+          "http-equiv": "Content-Security-Policy",
+          content: process.env.NODE_ENV === "production"
+            ? "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://localhost:8080 https://localhost:8080; frame-ancestors 'none'"
+            : "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://localhost:8080 https://localhost:8080 https://localhost:8443; frame-ancestors 'none'",
         },
       ],
     },

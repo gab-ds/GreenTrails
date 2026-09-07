@@ -1,10 +1,18 @@
-version: '3.8'
 services:
   backend:
+    ports:
+      - "8443:8443"
+    volumes:
+      - ./certs:/app/certs:ro
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
+      - JWT_SECRET=${JWT_SECRET:?JWT_SECRET must be set}
+      - SSL_CERT_PATH=file:/app/certs/cert.pem
+      - SSL_KEY_PATH=file:/app/certs/key.pem
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- --no-check-certificate https://localhost:8443/actuator/health || exit 1"]
     restart: unless-stopped
     deploy:
       resources:
@@ -13,6 +21,12 @@ services:
           cpus: 0.5
 
   frontend:
+    volumes:
+      - ./certs/cert.pem:/app/certs/cert.pem:ro
+    environment:
+      - NUXT_API_BASE_URL=https://backend:8443/api
+      - NUXT_PUBLIC_API_BASE_URL=https://localhost:8443/api
+      - NODE_EXTRA_CA_CERTS=/app/certs/cert.pem
     restart: unless-stopped
     deploy:
       resources:

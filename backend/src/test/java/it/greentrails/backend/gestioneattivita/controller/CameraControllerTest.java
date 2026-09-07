@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.geo.Point;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -97,12 +98,10 @@ class CameraControllerTest {
         .thenAnswer(invocation -> invocation.getArgument(0));
 
     mockMvc.perform(post("/api/camere")
-            .param("idAlloggio", "1")
-            .param("tipoCamera", "Doppia")
-            .param("disponibilita", "10")
-            .param("descrizione", "Camera doppia con vista")
-            .param("capienza", "2")
-            .param("prezzo", "100.0")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"idAlloggio\":1,\"tipoCamera\":\"Doppia\","
+                + "\"disponibilita\":10,\"descrizione\":\"Camera doppia con vista\","
+                + "\"capienza\":2,\"prezzo\":100.0}")
             .with(user(utente))
             .with(csrf()))
         .andExpect(status().isOk())
@@ -127,12 +126,10 @@ class CameraControllerTest {
     when(attivitaService.findById(1L)).thenReturn(alloggio);
 
     mockMvc.perform(post("/api/camere")
-            .param("idAlloggio", "1")
-            .param("tipoCamera", "Doppia")
-            .param("disponibilita", "10")
-            .param("descrizione", "Camera doppia con vista")
-            .param("capienza", "2")
-            .param("prezzo", "100.0")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"idAlloggio\":1,\"tipoCamera\":\"Doppia\","
+                + "\"disponibilita\":10,\"descrizione\":\"Camera doppia con vista\","
+                + "\"capienza\":2,\"prezzo\":100.0}")
             .with(user(altroUtente))
             .with(csrf()))
         .andExpect(status().isNotFound());
@@ -146,12 +143,10 @@ class CameraControllerTest {
     when(attivitaService.findById(2L)).thenReturn(attivitaTuristica);
 
     mockMvc.perform(post("/api/camere")
-            .param("idAlloggio", "2")
-            .param("tipoCamera", "Doppia")
-            .param("disponibilita", "10")
-            .param("descrizione", "Camera doppia con vista")
-            .param("capienza", "2")
-            .param("prezzo", "100.0")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"idAlloggio\":2,\"tipoCamera\":\"Doppia\","
+                + "\"disponibilita\":10,\"descrizione\":\"Camera doppia con vista\","
+                + "\"capienza\":2,\"prezzo\":100.0}")
             .with(user(utente))
             .with(csrf()))
         .andExpect(status().isBadRequest());
@@ -165,12 +160,10 @@ class CameraControllerTest {
     when(attivitaService.findById(1L)).thenThrow(new RuntimeException("Errore DB"));
 
     mockMvc.perform(post("/api/camere")
-            .param("idAlloggio", "1")
-            .param("tipoCamera", "Doppia")
-            .param("disponibilita", "10")
-            .param("descrizione", "Camera doppia con vista")
-            .param("capienza", "2")
-            .param("prezzo", "100.0")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"idAlloggio\":1,\"tipoCamera\":\"Doppia\","
+                + "\"disponibilita\":10,\"descrizione\":\"Camera doppia con vista\","
+                + "\"capienza\":2,\"prezzo\":100.0}")
             .with(user(utente))
             .with(csrf()))
         .andExpect(status().isInternalServerError());

@@ -10,9 +10,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
-import java.util.stream.Stream;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -22,138 +22,85 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-/*@ nullable_by_default @*/
 public class ArchiviazioneFileSystemService implements ArchiviazioneService {
 
-  /*@ spec_public non_null @*/
   private final Path rootLocation;
-  /*@ spec_public non_null @*/
-  private static final String[] ALLOWED_CONTENT_TYPES = {"image/jpeg", "image/png", "video/mp4"};
-
-  // rootLocation is guaranteed non-null by Spring constructor injection
+  private static final Set<String> ALLOWED_CONTENT_TYPES = Set.of("image/jpeg", "image/png", "video/mp4");
+  private static final Set<String> ALLOWED_EXTENSIONS = Set.of("jpg", "jpeg", "png", "mp4");
 
   @Autowired
   public ArchiviazioneFileSystemService(ArchiviazioneProperties properties) {
-
-    if (properties.getLocation().trim().isEmpty()) {
+    if (properties.getLocation() == null || properties.getLocation().trim().isEmpty()) {
       throw new ArchiviazioneException("Il percorso di upload è vuoto.");
     }
-
-    this.rootLocation = Paths.get(properties.getLocation());
+    this.rootLocation = Paths.get(properties.getLocation()).toAbsolutePath().normalize();
   }
 
-  /*@ requires media != null; requires file != null; @*/
   @Override
   public void store(String media, MultipartFile file) {
     try {
-      if (file.isEmpty()) {
+      if (file == null || file.isEmpty()) {
         throw new ArchiviazioneException("Il file è vuoto.");
       }
-      if (!Arrays.asList(ALLOWED_CONTENT_TYPES).contains(file.getContentType())) {
-        throw new ArchiviazioneException("Il formato del file non è valido.");
-      }
-      final Path destinationDir = this.rootLocation.resolve(media);
-      if (!destinationDir.toFile().exists()) {
-        destinationDir.toFile().mkdir();
-      }
-      final String filename =
-          (System.currentTimeMillis() / 1000L) + "." + StringUtils.getFilenameExtension(
-              file.getOriginalFilename());
-      final Path destinationFile = destinationDir.resolve(
-              Paths.get(filename))
-          .normalize().toAbsolutePath();
-      if (!destinationFile.getParent().equals(destinationDir.toAbsolutePath())) {
-        throw new ArchiviazioneException(
-            "Impossibile salvare al di fuori della cartella di upload.");
-      }
+
+      String extension = validateAndExtractExtension(file);
+      Path destinationDir = resolveAndValidate(media, null);
+      Files.createDirectories(destinationDir);
+
+      String filename = (System.currentTimeMillis() / 1000L) + "." + extension;
+      Path destinationFile = destinationDir.resolve(filename);
+
       try (InputStream inputStream = file.getInputStream()) {
-        Files.copy(inputStream, destinationFile,
-            StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
       }
     } catch (IOException e) {
       throw new ArchiviazioneException("Impossibile salvare il file.", e);
     }
   }
 
-  /*@
-    @ also
-    @ requires media != null;
-    @ ensures \result != null;
-    @*/
   @Override
   public List<String> loadAll(String media) {
-    try {
-      final Path mediaDir = resolveMediaDir(media);
-      try (Stream<Path> stream = Files.walk(mediaDir, 1)) {
-        return stream
-            .filter(path -> !path.equals(mediaDir))
-            .map(mediaDir::relativize)
-            .map(Path::toString)
-            .toList();
-      }
+    Path mediaDir = resolveAndValidate(media, null);
+    if (!Files.exists(mediaDir)) {
+      return List.of();
+    }
+    try (Stream<Path> stream = Files.walk(mediaDir, 1)) {
+      return stream
+          .filter(path -> !path.equals(mediaDir))
+          .map(mediaDir::relativize)
+          .map(Path::toString)
+          .toList();
     } catch (IOException e) {
       throw new ArchiviazioneException("Impossibile leggere i file salvati", e);
     }
-
   }
 
-  private Path resolveMediaDir(String media) {
-    final Path baseDir = this.rootLocation.toAbsolutePath().normalize();
-    final Path mediaDir = baseDir.resolve(media).normalize().toAbsolutePath();
-    if (!mediaDir.startsWith(baseDir)) {
-      throw new ArchiviazioneException("Percorso media non valido.");
-    }
-    return mediaDir;
-  }
-
-  private Path resolveFilePath(String media, String filename) {
-    final Path mediaDir = resolveMediaDir(media);
-    final Path file = mediaDir.resolve(filename).normalize().toAbsolutePath();
-    if (!file.startsWith(mediaDir)) {
-      throw new ArchiviazioneException("Percorso file non valido.");
-    }
-    return file;
-  }
-
-  /*@ requires media != null; requires filename != null; @*/
   @Override
   public Path load(String media, String filename) {
-    return resolveFilePath(media, filename);
+    return resolveAndValidate(media, filename);
   }
 
-  /*@
-    @ also
-    @ requires media != null;
-    @ requires filename != null;
-    @ ensures \result != null;
-    @*/
   @Override
   public Resource loadAsResource(String media, String filename) {
     try {
-      final Path file = load(media, filename);
-      final Resource resource = new UrlResource(file.toUri());
-      if (resource.exists() || resource.isReadable()) {
+      Path file = load(media, filename);
+      Resource resource = new UrlResource(file.toUri());
+      if (resource.exists() && resource.isReadable()) {
         return resource;
-      } else {
-        throw new FileNonTrovatoException(
-            "Impossibile trovare il file: " + filename);
-
       }
+      throw new FileNonTrovatoException("Impossibile trovare il file: " + filename);
     } catch (MalformedURLException e) {
       throw new FileNonTrovatoException("Impossibile trovare il file: " + filename, e);
     }
   }
 
-  /*@ requires media != null; requires filename != null; @*/
   @Override
   public void delete(String media, String filename) {
-    final Path file = resolveFilePath(media, filename);
-    if (Files.exists(file)) {
-      try {
-        Files.delete(file);
-      } catch (IOException e) {
-        throw new ArchiviazioneException("Impossibile eliminare il file: " + filename, e);
-      }
+    Path file = resolveAndValidate(media, filename);
+    try {
+      Files.deleteIfExists(file);
+    } catch (IOException e) {
+      throw new ArchiviazioneException("Impossibile eliminare il file: " + filename, e);
     }
   }
 
@@ -169,5 +116,39 @@ public class ArchiviazioneFileSystemService implements ArchiviazioneService {
     } catch (IOException e) {
       throw new ArchiviazioneException("Impossibile inizializzare l'archiviazione", e);
     }
+  }
+
+  private Path resolveAndValidate(String media, String filename) {
+    Path mediaDir = this.rootLocation.resolve(media).normalize().toAbsolutePath();
+
+    if (!mediaDir.startsWith(this.rootLocation)) {
+      throw new ArchiviazioneException("Accesso negato: contesto media non valido.");
+    }
+
+    if (filename == null || filename.isBlank()) {
+      return mediaDir;
+    }
+
+    Path targetFile = mediaDir.resolve(filename).normalize().toAbsolutePath();
+
+    if (!targetFile.startsWith(mediaDir)) {
+      throw new ArchiviazioneException("Accesso negato: percorso file non valido.");
+    }
+
+    return targetFile;
+  }
+
+  private String validateAndExtractExtension(MultipartFile file) {
+    String contentType = file.getContentType();
+    if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType)) {
+      throw new ArchiviazioneException("Il formato del file non è valido.");
+    }
+
+    String ext = StringUtils.getFilenameExtension(file.getOriginalFilename());
+    if (ext == null || !ALLOWED_EXTENSIONS.contains(ext.toLowerCase())) {
+      throw new ArchiviazioneException("Estensione del file non supportata.");
+    }
+
+    return ext.toLowerCase();
   }
 }
