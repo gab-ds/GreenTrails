@@ -6,7 +6,6 @@ import it.greentrails.backend.gestionericerca.service.RicercaService;
 import it.greentrails.backend.utils.service.ResponseGenerator;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.geo.Point;
 import org.springframework.http.HttpStatus;
@@ -25,7 +24,7 @@ public class RicercaController {
   private final CategoriaService categoriaService;
 
   @PostMapping
-  private ResponseEntity<Object> cerca(
+  public ResponseEntity<Object> cerca(
       @RequestParam(value = "query") final String query,
       @RequestParam(value = "idCategorie", required = false) final Long[] idCategorie,
       @RequestParam(value = "latitudine", required = false) final Long latitudine,
@@ -41,23 +40,23 @@ public class RicercaController {
                 } catch (Exception e) {
                   throw new RuntimeException(e);
                 }
-              }).collect(Collectors.toList()))
+              }).toList())
           .stream()
           .filter(risultati::contains)
-          .collect(Collectors.toList());
+          .toList();
     }
     if (latitudine != null && longitudine != null && raggio != null) {
       Point coordinate = new Point(latitudine, longitudine);
       risultati = ricercaService.findAttivitaByPosizione(coordinate, raggio)
           .stream()
           .filter(risultati::contains)
-          .collect(Collectors.toList());
+          .toList();
     }
     return ResponseGenerator.generateResponse(HttpStatus.OK, risultati);
   }
 
   @PostMapping("perPosizione")
-  private ResponseEntity<Object> cercaSenzaQuery(
+  public ResponseEntity<Object> cercaSenzaQuery(
       @RequestParam(value = "latitudine") final Double latitudine,
       @RequestParam(value = "longitudine") final Double longitudine,
       @RequestParam(value = "raggio") final Double raggio,
@@ -73,10 +72,10 @@ public class RicercaController {
                 } catch (Exception e) {
                   throw new RuntimeException(e);
                 }
-              }).collect(Collectors.toList()))
+              }).toList())
           .stream()
           .filter(risultati::contains)
-          .collect(Collectors.toList());
+          .toList();
     }
     return ResponseGenerator.generateResponse(HttpStatus.OK, risultati);
   }

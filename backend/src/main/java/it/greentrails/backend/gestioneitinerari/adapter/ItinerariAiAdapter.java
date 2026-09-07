@@ -16,7 +16,7 @@ public class ItinerariAiAdapter implements ItinerariAdapter {
     @*/
   @Override
   public Itinerario pianificazioneAutomatica(Preferenze preferenze) {
-    Itinerario itinerario = new Itinerario();
+    final Itinerario itinerario = new Itinerario();
     itinerario.setVisitatore(preferenze.getVisitatore());
     return itinerario;
   }

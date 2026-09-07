@@ -3,7 +3,6 @@ package it.greentrails.backend.gestionericerca.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -169,8 +168,6 @@ class RicercaServiceImplTest {
     attivita3.setNome("Lontano");
     attivita3.setCoordinate(new Point(45.4642, 9.1900)); // Milano - molto lontano
 
-    List<Attivita> allAttivita = Arrays.asList(attivita1, attivita2, attivita3);
-
     when(repository.findByPosizione(coordinate.getY(), coordinate.getX(), raggio)).thenReturn(
         Arrays.asList(attivita1, attivita2));
 
@@ -220,8 +217,6 @@ class RicercaServiceImplTest {
     attivita2.setNome("Posizione diversa");
     attivita2.setCoordinate(new Point(41.9029, 12.4965));
 
-    List<Attivita> allAttivita = Arrays.asList(attivita1, attivita2);
-
     when(repository.findByPosizione(coordinate.getY(), coordinate.getX(), zeroRaggio)).thenReturn(
         Arrays.asList(attivita1));
 
@@ -251,8 +246,6 @@ class RicercaServiceImplTest {
     attivita2.setId(2L);
     attivita2.setNome("Museo");
 
-    List<Attivita> listCategoria1 = Arrays.asList(attivita1);
-    List<Attivita> listCategoria2 = Arrays.asList(attivita2);
     List<Categoria> categorie = Arrays.asList(categoria1, categoria2);
 
     when(repository.findByCategorie(categorie, categorie.size())).thenReturn(new ArrayList<>());
@@ -273,8 +266,6 @@ class RicercaServiceImplTest {
     attivita1.setId(1L);
     attivita1.setNome("Lontano");
     attivita1.setCoordinate(new Point(45.4642, 9.1900));
-
-    List<Attivita> allAttivita = Arrays.asList(attivita1);
 
     when(repository.findByPosizione(coordinate.getY(), coordinate.getX(), raggio)).thenReturn(
         new ArrayList<>());

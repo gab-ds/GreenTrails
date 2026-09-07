@@ -42,7 +42,7 @@ public class SegnalazioniServiceImpl implements SegnalazioniService {
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
-    Optional<Segnalazione> segnalazione = repository.findById(id);
+    final Optional<Segnalazione> segnalazione = repository.findById(id);
     if (segnalazione.isEmpty()) {
       throw new Exception("La segnalazione non è stata trovata.");
     }

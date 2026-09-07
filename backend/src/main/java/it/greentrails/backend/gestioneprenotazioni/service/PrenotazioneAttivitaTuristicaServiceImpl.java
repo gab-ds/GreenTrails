@@ -84,7 +84,7 @@ public class PrenotazioneAttivitaTuristicaServiceImpl implements
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
-    Optional<PrenotazioneAttivitaTuristica> prenotazioneAttivitaTuristica = repository.findById(id);
+    final Optional<PrenotazioneAttivitaTuristica> prenotazioneAttivitaTuristica = repository.findById(id);
     if (prenotazioneAttivitaTuristica.isEmpty()) {
       throw new Exception("La prenotazione non è stata trovata.");
     }

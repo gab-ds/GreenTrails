@@ -21,7 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-public class CameraServiceImplTest {
+class CameraServiceImplTest {
 
   @Mock
   private CameraRepository cameraRepository;
@@ -30,19 +30,19 @@ public class CameraServiceImplTest {
   private CameraServiceImpl cameraService;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     MockitoAnnotations.initMocks(this);
   }
 
   @Test
-  public void testGetCamereByAlloggio_NullAlloggio() {
+  void testGetCamereByAlloggio_NullAlloggio() {
     assertThrows(Exception.class, () -> {
       cameraService.getCamereByAlloggio(null);
     });
   }
 
   @Test
-  public void testGetCamereByAlloggio_NotAlloggio() {
+  void testGetCamereByAlloggio_NotAlloggio() {
     Attivita alloggio = new Attivita();
     alloggio.setAlloggio(false);
 
@@ -52,7 +52,7 @@ public class CameraServiceImplTest {
   }
 
   @Test
-  public void testGetCamereByAlloggio_ValidAlloggio() throws Exception {
+  void testGetCamereByAlloggio_ValidAlloggio() throws Exception {
     Attivita alloggio = new Attivita();
     alloggio.setAlloggio(true);
     alloggio.setId(1L);
@@ -71,7 +71,7 @@ public class CameraServiceImplTest {
   }
 
   @Test
-  public void testGetCamereByAlloggio_ValidAlloggio_MultipleCamere() throws Exception {
+  void testGetCamereByAlloggio_ValidAlloggio_MultipleCamere() throws Exception {
     Attivita alloggio1 = new Attivita();
     alloggio1.setAlloggio(true);
     alloggio1.setId(1L);
@@ -103,14 +103,14 @@ public class CameraServiceImplTest {
 
   // Test per saveCamera
   @Test
-  public void testSaveCamera_NullCamera() {
+  void testSaveCamera_NullCamera() {
     assertThrows(Exception.class, () -> {
       cameraService.saveCamera(null);
     });
   }
 
   @Test
-  public void testSaveCamera_ValidCamera() throws Exception {
+  void testSaveCamera_ValidCamera() throws Exception {
     Camera camera = new Camera();
     camera.setId(1L);
     camera.setTipoCamera("Doppia");
@@ -128,21 +128,21 @@ public class CameraServiceImplTest {
 
   // Test per findById
   @Test
-  public void testFindById_NullId() {
+  void testFindById_NullId() {
     assertThrows(Exception.class, () -> {
       cameraService.findById(null);
     });
   }
 
   @Test
-  public void testFindById_NegativeId() {
+  void testFindById_NegativeId() {
     assertThrows(Exception.class, () -> {
       cameraService.findById(-1L);
     });
   }
 
   @Test
-  public void testFindById_NotFound() {
+  void testFindById_NotFound() {
     when(cameraRepository.findById(1L)).thenReturn(Optional.empty());
 
     assertThrows(Exception.class, () -> {
@@ -151,7 +151,7 @@ public class CameraServiceImplTest {
   }
 
   @Test
-  public void testFindById_ValidId() throws Exception {
+  void testFindById_ValidId() throws Exception {
     Camera camera = new Camera();
     camera.setId(1L);
     camera.setTipoCamera("Doppia");
@@ -167,14 +167,14 @@ public class CameraServiceImplTest {
 
   // Test per deleteCamera
   @Test
-  public void testDeleteCamera_NullCamera() {
+  void testDeleteCamera_NullCamera() {
     assertThrows(Exception.class, () -> {
       cameraService.deleteCamera(null);
     });
   }
 
   @Test
-  public void testDeleteCamera_Successful() throws Exception {
+  void testDeleteCamera_Successful() throws Exception {
     Camera camera = new Camera();
     camera.setId(1L);
 
@@ -188,7 +188,7 @@ public class CameraServiceImplTest {
   }
 
   @Test
-  public void testDeleteCamera_Failed() throws Exception {
+  void testDeleteCamera_Failed() throws Exception {
     Camera camera = new Camera();
     camera.setId(1L);
 

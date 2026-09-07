@@ -86,7 +86,7 @@ public class PrenotazioneAlloggioServiceImpl implements PrenotazioneAlloggioServ
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
-    Optional<PrenotazioneAlloggio> prenotazioneAlloggio = repository.findById(id);
+    final Optional<PrenotazioneAlloggio> prenotazioneAlloggio = repository.findById(id);
     if (prenotazioneAlloggio.isEmpty()) {
       throw new Exception("La prenotazione non è stata trovata.");
     }

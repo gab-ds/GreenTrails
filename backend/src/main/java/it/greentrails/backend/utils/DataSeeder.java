@@ -49,6 +49,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DataSeeder implements CommandLineRunner {
 
+  private static final String CAMERA_DOPPIA = "Camera Doppia";
+
   private final UtenteRepository utenteRepository;
   private final CategoriaRepository categoriaRepository;
   private final ValoriEcosostenibilitaRepository valoriRepository;
@@ -69,73 +71,73 @@ public class DataSeeder implements CommandLineRunner {
       return;
     }
 
-    Utente mario = utenteRepository.save(createUtente("Mario", "Rossi", "1980-05-15",
+    final Utente mario = utenteRepository.save(createUtente("Mario", "Rossi", "1980-05-15",
         "mario@test.it", RuoloUtente.GESTORE_ATTIVITA));
-    Utente lucia = utenteRepository.save(createUtente("Lucia", "Verdi", "1985-03-20",
+    final Utente lucia = utenteRepository.save(createUtente("Lucia", "Verdi", "1985-03-20",
         "lucia@test.it", RuoloUtente.GESTORE_ATTIVITA));
-    Utente marco = utenteRepository.save(createUtente("Marco", "Bianchi", "1995-07-10",
+    final Utente marco = utenteRepository.save(createUtente("Marco", "Bianchi", "1995-07-10",
         "marco@test.it", RuoloUtente.VISITATORE));
-    Utente anna = utenteRepository.save(createUtente("Anna", "Neri", "2000-01-25",
+    final Utente anna = utenteRepository.save(createUtente("Anna", "Neri", "2000-01-25",
         "anna@test.it", RuoloUtente.VISITATORE));
-    Utente admin = utenteRepository.save(createUtente("Admin", "System", "1990-01-01",
+    utenteRepository.save(createUtente("Admin", "System", "1990-01-01",
         "admin@test.it", RuoloUtente.AMMINISTRATORE));
 
-    Categoria natura = categoriaRepository.save(
+    final Categoria natura = categoriaRepository.save(
         createCategoria("Natura e Paesaggio", "Attività all'aria aperta a contatto con la natura"));
-    Categoria cultura = categoriaRepository.save(
+    final Categoria cultura = categoriaRepository.save(
         createCategoria("Cultura e Storia", "Visite a siti storici, musei e monumenti"));
-    Categoria gastro = categoriaRepository.save(
+    final Categoria gastro = categoriaRepository.save(
         createCategoria("Gastronomia", "Esperienze culinarie e degustazioni"));
-    Categoria relax = categoriaRepository.save(
+    categoriaRepository.save(
         createCategoria("Relax e Benessere", "Spa, centri benessere e attività rilassanti"));
-    Categoria sport = categoriaRepository.save(
+    final Categoria sport = categoriaRepository.save(
         createCategoria("Sport e Avventura", "Attività sportive e avventurose"));
-    Categoria ecosostenibilita = categoriaRepository.save(
+    final Categoria ecosostenibilita = categoriaRepository.save(
         createCategoria("Eco-Sostenibilità", "Attività con attenzione all'ambiente"));
 
-    ValoriEcosostenibilita v1 = valoriRepository.save(createValori(true, true, true, true, true, true));
-    ValoriEcosostenibilita v2 = valoriRepository.save(createValori(true, true, false, true, false, true));
-    ValoriEcosostenibilita v3 = valoriRepository.save(createValori(false, true, true, true, true, false));
-    ValoriEcosostenibilita v4 = valoriRepository.save(createValori(true, false, true, true, false, true));
-    ValoriEcosostenibilita v5 = valoriRepository.save(createValori(true, true, true, true, false, true));
-    ValoriEcosostenibilita v6 = valoriRepository.save(createValori(false, true, false, true, true, true));
+    final ValoriEcosostenibilita v1 = valoriRepository.save(createValori(true, true, true, true, true, true));
+    final ValoriEcosostenibilita v2 = valoriRepository.save(createValori(true, true, false, true, false, true));
+    final ValoriEcosostenibilita v3 = valoriRepository.save(createValori(false, true, true, true, true, false));
+    final ValoriEcosostenibilita v4 = valoriRepository.save(createValori(true, false, true, true, false, true));
+    final ValoriEcosostenibilita v5 = valoriRepository.save(createValori(true, true, true, true, false, true));
+    final ValoriEcosostenibilita v6 = valoriRepository.save(createValori(false, true, false, true, true, true));
 
-    Attivita ecoHotel = attivitaRepository.save(createAlloggio(mario,
+    final Attivita ecoHotel = attivitaRepository.save(createAlloggio(mario,
         "EcoHotel Roma Verde", "Via dei Fori Imperiali 1", "00100", "Roma", "RM",
         new Point(41.9028, 12.4964), 120.00,
         "Hotel ecosostenibile nel cuore di Roma",
         "Hotel con pannelli solari, raccolta differenziata e prodotti locali.",
         v1, CategorieAlloggio.HOTEL, 50));
 
-    Attivita bbFirenze = attivitaRepository.save(createAlloggio(mario,
+    final Attivita bbFirenze = attivitaRepository.save(createAlloggio(mario,
         "B And B Fiorentino Bio", "Via della Vigna Nuova 10", "50123", "Firenze", "FI",
         new Point(43.7696, 11.2558), 85.00,
         "Bed & Breakfast biologico a Firenze",
         "B&B con colazione biologica a base di prodotti toscani.",
         v2, CategorieAlloggio.BED_AND_BREAKFAST, 20));
 
-    Attivita agriturismo = attivitaRepository.save(createAlloggio(lucia,
+    final Attivita agriturismo = attivitaRepository.save(createAlloggio(lucia,
         "Agriturismo Costa Blu", "Via Marina 5", "84010", "Amalfi", "SA",
         new Point(40.6333, 14.6000), 95.00,
         "Agriturismo sostenibile sulla Costiera",
         "Prodotti a km0 dall'orto, energia solare e recupero acque.",
         v3, CategorieAlloggio.VILLAGGIO_TURISTICO, 30));
 
-    Attivita vesuvio = attivitaRepository.save(createAttivitaTuristica(lucia,
+    final Attivita vesuvio = attivitaRepository.save(createAttivitaTuristica(lucia,
         "Escursione Vesuvio", "Piazza Duomo 1", "80013", "Caserta", "CE",
         new Point(41.2341, 14.4321), 25.00,
         "Escursione guidata al Vesuvio",
         "Camminata guidata nei sentieri del Vesuvio.",
         v4, CategorieAttivitaTuristica.ALL_APERTO, 100));
 
-    Attivita tourGastro = attivitaRepository.save(createAttivitaTuristica(mario,
+    final Attivita tourGastro = attivitaRepository.save(createAttivitaTuristica(mario,
         "Tour Gastronomico Roma", "Via del Corso 100", "00100", "Roma", "RM",
         new Point(41.9030, 12.4760), 55.00,
         "Tour enogastronomico a Roma",
         "Degustazione vini, formaggi e cooking class.",
         v5, CategorieAttivitaTuristica.VISITE_CULTURALI_STORICHE, 40));
 
-    Attivita pompei = attivitaRepository.save(createAttivitaTuristica(lucia,
+    final Attivita pompei = attivitaRepository.save(createAttivitaTuristica(lucia,
         "Visita Guidata Pompei", "Via Villa dei Misteri 2", "80045", "Pompei", "NA",
         new Point(40.7500, 14.4897), 35.00,
         "Visita guidata eco-sostenibile a Pompei",
@@ -147,24 +149,24 @@ public class DataSeeder implements CommandLineRunner {
     pompei.getCategorie().addAll(Set.of(cultura, ecosostenibilita));
     attivitaRepository.saveAll(Set.of(vesuvio, tourGastro, pompei));
 
-    Camera c1 = cameraRepository.save(createCamera(ecoHotel,
-        "Camera Doppia", 120.00, 20, "Letto matrimoniale e bagno privato", 2));
+    final Camera c1 = cameraRepository.save(createCamera(ecoHotel,
+        CAMERA_DOPPIA, 120.00, 20, "Letto matrimoniale e bagno privato", 2));
     cameraRepository.save(createCamera(ecoHotel,
         "Camera Singola", 80.00, 15, "Singola con bagno privato", 1));
     cameraRepository.save(createCamera(ecoHotel,
         "Suite", 200.00, 5, "Suite con terrazzo vista Fori Imperiali", 3));
     cameraRepository.save(createCamera(bbFirenze,
-        "Camera Doppia", 85.00, 8, "Letto matrimoniale e vista Duomo", 2));
+        CAMERA_DOPPIA, 85.00, 8, "Letto matrimoniale e vista Duomo", 2));
     cameraRepository.save(createCamera(bbFirenze,
         "Camera Tripla", 110.00, 4, "Camera per famiglia con 3 letti", 3));
-    Camera cAgriDoppia = cameraRepository.save(createCamera(agriturismo,
-        "Camera Doppia", 95.00, 10, "Vista mare e balcone", 2));
+    final Camera cAgriDoppia = cameraRepository.save(createCamera(agriturismo,
+        CAMERA_DOPPIA, 95.00, 10, "Vista mare e balcone", 2));
     cameraRepository.save(createCamera(agriturismo,
         "Appartamento", 150.00, 3, "Con cucina", 4));
 
-    Itinerario it1 = itinerarioRepository.save(createItinerario(marco, StatoItinerario.PIANIFICATO, 0.0));
-    Itinerario it2 = itinerarioRepository.save(createItinerario(marco, StatoItinerario.PIANIFICATO, 0.0));
-    Itinerario it3 = itinerarioRepository.save(createItinerario(anna, StatoItinerario.PIANIFICATO, 0.0));
+    final Itinerario it1 = itinerarioRepository.save(createItinerario(marco, StatoItinerario.PIANIFICATO, 0.0));
+    final Itinerario it2 = itinerarioRepository.save(createItinerario(marco, StatoItinerario.PIANIFICATO, 0.0));
+    itinerarioRepository.save(createItinerario(anna, StatoItinerario.PIANIFICATO, 0.0));
 
     recensioneRepository.save(createRecensione(marco, ecoHotel, 5,
         "Hotel meraviglioso, attento all'ambiente!", v1));
@@ -189,7 +191,7 @@ public class DataSeeder implements CommandLineRunner {
     segnalazioneRepository.save(createSegnalazione(anna,
         "Attività sospesa per maltempo", false, null, 6L));
 
-    Date now = new Date(System.currentTimeMillis() + 86_400_000L);
+    final Date now = new Date(System.currentTimeMillis() + 86_400_000L);
     prenotazioneAlloggioRepository.save(createPrenotazioneAlloggio(it1, c1,
         2, 0, now, now, 1, StatoPrenotazione.COMPLETATA, 240.0));
     prenotazioneAlloggioRepository.save(createPrenotazioneAlloggio(it1, cAgriDoppia,
@@ -203,7 +205,7 @@ public class DataSeeder implements CommandLineRunner {
 
   private Utente createUtente(String nome, String cognome, String dataNascita,
       String email, RuoloUtente ruolo) {
-    Utente u = new Utente();
+    final Utente u = new Utente();
     u.setNome(nome);
     u.setCognome(cognome);
     u.setDataNascita(java.sql.Date.valueOf(dataNascita));
@@ -214,7 +216,7 @@ public class DataSeeder implements CommandLineRunner {
   }
 
   private Categoria createCategoria(String nome, String descrizione) {
-    Categoria c = new Categoria();
+    final Categoria c = new Categoria();
     c.setNome(nome);
     c.setDescrizione(descrizione);
     return c;
@@ -222,7 +224,7 @@ public class DataSeeder implements CommandLineRunner {
 
   private ValoriEcosostenibilita createValori(boolean politiche, boolean prodotti,
       boolean energia, boolean raccolta, boolean emissioni, boolean contatto) {
-    ValoriEcosostenibilita v = new ValoriEcosostenibilita();
+    final ValoriEcosostenibilita v = new ValoriEcosostenibilita();
     v.setPoliticheAntispreco(politiche);
     v.setProdottiLocali(prodotti);
     v.setEnergiaVerde(energia);
@@ -236,7 +238,7 @@ public class DataSeeder implements CommandLineRunner {
       String cap, String citta, String provincia, Point coordinate, double prezzo,
       String descrizioneBreve, String descrizioneLunga,
       ValoriEcosostenibilita valori, CategorieAlloggio categoria, int disponibilita) {
-    Attivita a = new Attivita();
+    final Attivita a = new Attivita();
     a.setGestore(gestore);
     a.setNome(nome);
     a.setIndirizzo(indirizzo);
@@ -259,7 +261,7 @@ public class DataSeeder implements CommandLineRunner {
       String cap, String citta, String provincia, Point coordinate, double prezzo,
       String descrizioneBreve, String descrizioneLunga,
       ValoriEcosostenibilita valori, CategorieAttivitaTuristica categoria, int disponibilita) {
-    Attivita a = new Attivita();
+    final Attivita a = new Attivita();
     a.setGestore(gestore);
     a.setNome(nome);
     a.setIndirizzo(indirizzo);
@@ -280,7 +282,7 @@ public class DataSeeder implements CommandLineRunner {
 
   private Camera createCamera(Attivita alloggio, String tipoCamera, double prezzo,
       int disponibilita, String descrizione, int capienza) {
-    Camera c = new Camera();
+    final Camera c = new Camera();
     c.setAlloggio(alloggio);
     c.setTipoCamera(tipoCamera);
     c.setPrezzo(prezzo);
@@ -291,7 +293,7 @@ public class DataSeeder implements CommandLineRunner {
   }
 
   private Itinerario createItinerario(Utente visitatore, StatoItinerario stato, double totale) {
-    Itinerario i = new Itinerario();
+    final Itinerario i = new Itinerario();
     i.setVisitatore(visitatore);
     i.setStato(stato);
     i.setTotale(totale);
@@ -300,7 +302,7 @@ public class DataSeeder implements CommandLineRunner {
 
   private Recensione createRecensione(Utente visitatore, Attivita attivita,
       int valutazione, String descrizione, ValoriEcosostenibilita valori) {
-    Recensione r = new Recensione();
+    final Recensione r = new Recensione();
     r.setVisitatore(visitatore);
     r.setAttivita(attivita);
     r.setValutazioneStelleEsperienza(valutazione);
@@ -313,7 +315,7 @@ public class DataSeeder implements CommandLineRunner {
       PreferenzeAlloggio alloggio, PreferenzeAlimentari alimentare,
       PreferenzeAttivita attivita, boolean animale, PreferenzeBudget budget,
       boolean souvenir, PreferenzeStagione stagione) {
-    Preferenze p = new Preferenze();
+    final Preferenze p = new Preferenze();
     p.setId(visitatore.getId());
     p.setVisitatore(visitatore);
     p.setViaggioPreferito(viaggio);
@@ -329,19 +331,19 @@ public class DataSeeder implements CommandLineRunner {
 
   private Segnalazione createSegnalazione(Utente utente, String descrizione,
       boolean isPerRecensione, Long idRecensione, Long idAttivita) {
-    Segnalazione s = new Segnalazione();
+    final Segnalazione s = new Segnalazione();
     s.setDataSegnalazione(new Date());
     s.setDescrizione(descrizione);
     s.setStato(StatoSegnalazione.CREATA);
     s.setForRecensione(isPerRecensione);
     s.setUtente(utente);
     if (idRecensione != null) {
-      Recensione r = new Recensione();
+      final Recensione r = new Recensione();
       r.setId(idRecensione);
       s.setRecensione(r);
     }
     if (idAttivita != null) {
-      Attivita a = new Attivita();
+      final Attivita a = new Attivita();
       a.setId(idAttivita);
       s.setAttivita(a);
     }
@@ -351,7 +353,7 @@ public class DataSeeder implements CommandLineRunner {
   private PrenotazioneAlloggio createPrenotazioneAlloggio(Itinerario itinerario,
       Camera camera, int adulti, int bambini, Date dataInizio, Date dataFine,
       int numCamere, StatoPrenotazione stato, double prezzo) {
-    PrenotazioneAlloggio p = new PrenotazioneAlloggio();
+    final PrenotazioneAlloggio p = new PrenotazioneAlloggio();
     p.setItinerario(itinerario);
     p.setCamera(camera);
     p.setNumAdulti(adulti);
@@ -367,7 +369,7 @@ public class DataSeeder implements CommandLineRunner {
   private PrenotazioneAttivitaTuristica createPrenotazioneAttivita(Itinerario itinerario,
       Attivita attivita, int adulti, int bambini, Date dataInizio, Date dataFine,
       StatoPrenotazione stato, double prezzo) {
-    PrenotazioneAttivitaTuristica p = new PrenotazioneAttivitaTuristica();
+    final PrenotazioneAttivitaTuristica p = new PrenotazioneAttivitaTuristica();
     p.setItinerario(itinerario);
     p.setAttivitaTuristica(attivita);
     p.setNumAdulti(adulti);

@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
+import java.util.stream.Stream;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -51,14 +52,14 @@ public class ArchiviazioneFileSystemService implements ArchiviazioneService {
       if (!Arrays.asList(ALLOWED_CONTENT_TYPES).contains(file.getContentType())) {
         throw new ArchiviazioneException("Il formato del file non è valido.");
       }
-      Path destinationDir = this.rootLocation.resolve(media);
+      final Path destinationDir = this.rootLocation.resolve(media);
       if (!destinationDir.toFile().exists()) {
         destinationDir.toFile().mkdir();
       }
-      String filename =
+      final String filename =
           (System.currentTimeMillis() / 1000L) + "." + StringUtils.getFilenameExtension(
               file.getOriginalFilename());
-      Path destinationFile = destinationDir.resolve(
+      final Path destinationFile = destinationDir.resolve(
               Paths.get(filename))
           .normalize().toAbsolutePath();
       if (!destinationFile.getParent().equals(destinationDir.toAbsolutePath())) {
@@ -82,12 +83,14 @@ public class ArchiviazioneFileSystemService implements ArchiviazioneService {
   @Override
   public List<String> loadAll(String media) {
     try {
-      Path mediaDir = this.rootLocation.resolve(media);
-      return Files.walk(mediaDir, 1)
-          .filter(path -> !path.equals(mediaDir))
-          .map(mediaDir::relativize)
-          .map(Path::toString)
-          .toList();
+      final Path mediaDir = this.rootLocation.resolve(media);
+      try (Stream<Path> stream = Files.walk(mediaDir, 1)) {
+        return stream
+            .filter(path -> !path.equals(mediaDir))
+            .map(mediaDir::relativize)
+            .map(Path::toString)
+            .toList();
+      }
     } catch (IOException e) {
       throw new ArchiviazioneException("Impossibile leggere i file salvati", e);
     }
@@ -109,8 +112,8 @@ public class ArchiviazioneFileSystemService implements ArchiviazioneService {
   @Override
   public Resource loadAsResource(String media, String filename) {
     try {
-      Path file = load(media, filename);
-      Resource resource = new UrlResource(file.toUri());
+      final Path file = load(media, filename);
+      final Resource resource = new UrlResource(file.toUri());
       if (resource.exists() || resource.isReadable()) {
         return resource;
       } else {
@@ -126,8 +129,8 @@ public class ArchiviazioneFileSystemService implements ArchiviazioneService {
   /*@ requires media != null; requires filename != null; @*/
   @Override
   public void delete(String media, String filename) {
-    Path destinationDir = this.rootLocation.resolve(media);
-    Path file = destinationDir.resolve(filename);
+    final Path destinationDir = this.rootLocation.resolve(media);
+    final Path file = destinationDir.resolve(filename);
     if (!file.getParent().equals(destinationDir.toAbsolutePath())) {
       throw new ArchiviazioneException(
           "Impossibile eliminare al di fuori della cartella di upload.");

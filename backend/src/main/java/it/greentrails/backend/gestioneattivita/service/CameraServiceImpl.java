@@ -40,7 +40,7 @@ public class CameraServiceImpl implements CameraService {
     if (id == null || id < 0) {
       throw new Exception("L'id non è valido.");
     }
-    Optional<Camera> camera = repository.findById(id);
+    final Optional<Camera> camera = repository.findById(id);
     if (camera.isEmpty()) {
       throw new Exception("La camera non è stata trovata.");
     }
@@ -60,7 +60,7 @@ public class CameraServiceImpl implements CameraService {
     if (!alloggio.isAlloggio()) {
       throw new Exception("L'attività non può essere un'attività turistica.");
     }
-    List<Camera> camere = new ArrayList<>();
+    final List<Camera> camere = new ArrayList<>();
     repository.findAll().forEach(c -> {
 
       if (c.getAlloggio().getId().equals(alloggio.getId())) {

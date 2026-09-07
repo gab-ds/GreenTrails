@@ -61,7 +61,7 @@ public class Attivita {
   @JdbcTypeCode(SqlTypes.CHAR)
   @NotBlank(message = "Il CAP non può essere vuoto.")
   @Size(min = 5, max = 5, message = "Il CAP non ha lunghezza valida.")
-  @Pattern(regexp = "^[0-9]*", message = "Il CAP non ha formato valido.")
+  @Pattern(regexp = "^\\d*", message = "Il CAP non ha formato valido.")
   private String cap;
 
   @Column(name = "citta", nullable = false)

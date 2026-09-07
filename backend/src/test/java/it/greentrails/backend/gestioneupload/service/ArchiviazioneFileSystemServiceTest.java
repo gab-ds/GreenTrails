@@ -1,5 +1,6 @@
 package it.greentrails.backend.gestioneupload.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -141,8 +142,7 @@ class ArchiviazioneFileSystemServiceTest {
 
   @Test
   void deleteNonExistingDoesNotThrow() {
-    // se il file non esiste non deve lanciare eccezioni
-    service.delete("no_media", "nofile.jpg");
+    assertDoesNotThrow(() -> service.delete("no_media", "nofile.jpg"));
   }
 
   @Test

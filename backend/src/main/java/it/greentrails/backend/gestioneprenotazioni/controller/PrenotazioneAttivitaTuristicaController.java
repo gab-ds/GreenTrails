@@ -29,13 +29,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PrenotazioneAttivitaTuristicaController {
 
+  private static final String PRENOTAZIONE_NON_TROVATA = "Prenotazione non trovata";
+
   private final ItinerariService itinerariService;
   private final AttivitaService attivitaService;
   private final PrenotazioneAttivitaTuristicaService prenotazioneAttivitaTuristicaService;
 
 
   @PostMapping
-  private ResponseEntity<Object> creaPrenotazioneAttivitaTuristica(
+  public ResponseEntity<Object> creaPrenotazioneAttivitaTuristica(
       @AuthenticationPrincipal Utente utente,
       @RequestParam("idItinerario") final Long idItinerario,
       @RequestParam("idAttivita") final Long idAttivita,
@@ -91,7 +93,7 @@ public class PrenotazioneAttivitaTuristicaController {
   }
 
   @PostMapping("{id}")
-  private ResponseEntity<Object> confermaPrenotazioneAttivitaTuristica(
+  public ResponseEntity<Object> confermaPrenotazioneAttivitaTuristica(
       @AuthenticationPrincipal Utente utente,
       @PathVariable("id") final long id,
       @RequestParam("numAdulti") final int adulti,
@@ -106,7 +108,7 @@ public class PrenotazioneAttivitaTuristicaController {
       Itinerario itinerario = prenotazione.getItinerario();
       if (!itinerario.getVisitatore().getId().equals(utente.getId())) {
         return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND,
-            "Prenotazione non trovata");
+            PRENOTAZIONE_NON_TROVATA);
       }
       if (prenotazione.getStato() != StatoPrenotazione.NON_CONFERMATA) {
         return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,
@@ -146,7 +148,7 @@ public class PrenotazioneAttivitaTuristicaController {
   }
 
   @GetMapping("{id}")
-  private ResponseEntity<Object> visualizzaPrenotazioneAttivitaTuristica(
+  public ResponseEntity<Object> visualizzaPrenotazioneAttivitaTuristica(
       @AuthenticationPrincipal Utente utente,
       @PathVariable("id") final Long id
   ) {
@@ -155,7 +157,7 @@ public class PrenotazioneAttivitaTuristicaController {
           id);
       if (!prenotazione.getItinerario().getVisitatore().getId()
           .equals(utente.getId())) {
-        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, "Prenotazione non trovata");
+        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, PRENOTAZIONE_NON_TROVATA);
       }
       return ResponseGenerator.generateResponse(HttpStatus.OK, prenotazione);
     } catch (Exception e) {
@@ -164,7 +166,7 @@ public class PrenotazioneAttivitaTuristicaController {
   }
 
   @GetMapping("perAttivita/{idAttivita}")
-  private ResponseEntity<Object> visualizzaPrenotazioniAttivitaTuristicaPerAttivita(
+  public ResponseEntity<Object> visualizzaPrenotazioniAttivitaTuristicaPerAttivita(
       @AuthenticationPrincipal Utente utente,
       @PathVariable("idAttivita") final Long idAttivita
   ) {
@@ -182,7 +184,7 @@ public class PrenotazioneAttivitaTuristicaController {
   }
 
   @GetMapping("perAttivita/{idAttivita}/disponibilita")
-  private ResponseEntity<Object> visualizzaDisponibilitaPerAttivitaTuristica(
+  public ResponseEntity<Object> visualizzaDisponibilitaPerAttivitaTuristica(
       @PathVariable("idAttivita") final long idAttivita,
       @RequestParam("dataInizio") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date dataInizio
   ) {
@@ -197,7 +199,7 @@ public class PrenotazioneAttivitaTuristicaController {
   }
 
   @GetMapping
-  private ResponseEntity<Object> visualizzaPrenotazioniAttivitaTuristicaPerVisitatore(
+  public ResponseEntity<Object> visualizzaPrenotazioniAttivitaTuristicaPerVisitatore(
       @AuthenticationPrincipal Utente utente
   ) {
     try {
@@ -209,7 +211,7 @@ public class PrenotazioneAttivitaTuristicaController {
   }
 
   @DeleteMapping("{id}")
-  private ResponseEntity<Object> cancellaPrenotazioneAttivitaTuristica(
+  public ResponseEntity<Object> cancellaPrenotazioneAttivitaTuristica(
       @AuthenticationPrincipal Utente utente,
       @PathVariable("id") final Long id
   ) {
@@ -218,7 +220,7 @@ public class PrenotazioneAttivitaTuristicaController {
           id);
       if (!prenotazione.getItinerario().getVisitatore().getId()
           .equals(utente.getId())) {
-        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, "Prenotazione non trovata");
+        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, PRENOTAZIONE_NON_TROVATA);
       }
       Itinerario itinerario = prenotazione.getItinerario();
       itinerario.setTotale(itinerario.getTotale() - prenotazione.getPrezzo());

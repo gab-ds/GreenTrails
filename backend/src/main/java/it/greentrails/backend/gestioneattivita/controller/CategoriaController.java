@@ -29,7 +29,7 @@ public class CategoriaController {
   private final AttivitaService attivitaService;
 
   @PostMapping("{id}")
-  private ResponseEntity<Object> aggiungiCategoria(
+  public ResponseEntity<Object> aggiungiCategoria(
       @AuthenticationPrincipal Utente utente,
       @PathVariable("id") final Long id,
       @RequestParam("idAttivita") final Long idAttivita
@@ -51,7 +51,7 @@ public class CategoriaController {
   }
 
   @GetMapping("{id}")
-  private ResponseEntity<Object> visualizzaCategoria(
+  public ResponseEntity<Object> visualizzaCategoria(
           @PathVariable("id") final Long id
   ) {
     try {
@@ -62,7 +62,7 @@ public class CategoriaController {
   }
 
   @DeleteMapping("{id}")
-  private ResponseEntity<Object> rimuoviCategoria(
+  public ResponseEntity<Object> rimuoviCategoria(
       @AuthenticationPrincipal Utente utente,
       @PathVariable("id") final Long id,
       @RequestParam("idAttivita") final Long idAttivita

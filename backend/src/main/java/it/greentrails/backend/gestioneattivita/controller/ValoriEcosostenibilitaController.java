@@ -30,7 +30,7 @@ public class ValoriEcosostenibilitaController {
 
   @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
   @PostMapping
-  private ResponseEntity<Object> creaValoriEcosostenibilita(
+  public ResponseEntity<Object> creaValoriEcosostenibilita(
       @RequestParam(value = "politicheAntispreco", required = false)
       final Boolean politicheAntispreco,
       @RequestParam(value = "prodottiLocali", required = false)
@@ -60,7 +60,7 @@ public class ValoriEcosostenibilitaController {
   }
 
   @GetMapping("{id}")
-  private ResponseEntity<Object> visualizzaValoriEcosostenibilita(
+  public ResponseEntity<Object> visualizzaValoriEcosostenibilita(
       @PathVariable("id") final Long id
   ) {
     try {
@@ -73,7 +73,7 @@ public class ValoriEcosostenibilitaController {
 
   @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
   @PostMapping("{id}")
-  private ResponseEntity<Object> modificaValoriEcosostenibilita(
+  public ResponseEntity<Object> modificaValoriEcosostenibilita(
       @AuthenticationPrincipal Utente utente,
       @PathVariable("id") final Long id,
       @RequestParam(value = "politicheAntispreco", required = false)
