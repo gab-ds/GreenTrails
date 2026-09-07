@@ -72,7 +72,8 @@ public class SecurityConfig {
     configuration.setExposedHeaders(Arrays.asList(
         "Authorization",
         "Content-Type",
-        "X-Requested-With"
+        "X-Requested-With",
+        "Set-Cookie"
     ));
 
     configuration.setMaxAge(3600L);

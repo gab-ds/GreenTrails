@@ -1,8 +1,10 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 
-const { mockLogin, mockRegister } = vi.hoisted(() => ({
+const { mockLogin, mockRegister, mockLogout, mockGetCurrentUser } = vi.hoisted(() => ({
   mockLogin: vi.fn(),
   mockRegister: vi.fn(),
+  mockLogout: vi.fn(),
+  mockGetCurrentUser: vi.fn(),
 }))
 
 vi.mock('~/composables/useApi', () => ({
@@ -10,19 +12,11 @@ vi.mock('~/composables/useApi', () => ({
     auth: {
       login: mockLogin,
       register: mockRegister,
+      logout: mockLogout,
+      getCurrentUser: mockGetCurrentUser,
     },
   }),
 }))
-
-function loginResponse(utente: Record<string, unknown>) {
-  return {
-    status: 'success',
-    data: {
-      token: 'mock-jwt-token',
-      utente,
-    },
-  }
-}
 
 const mario = { id: 1, nome: 'Mario', cognome: 'Rossi', email: 'mario@test.it', ruolo: 'VISITATORE' }
 const luigi = { id: 2, nome: 'Luigi', cognome: 'Verdi', email: 'luigi@test.it', ruolo: 'GESTORE_ATTIVITA' }
@@ -38,17 +32,21 @@ describe('useAuthStore', () => {
   beforeEach(() => {
     mockLogin.mockReset()
     mockRegister.mockReset()
+    mockLogout.mockReset()
+    mockGetCurrentUser.mockReset()
   })
 
   it('inizia con utente non loggato', () => {
     const store = freshStore()
     expect(store.isLoggedIn).toBe(false)
     expect(store.user).toBeNull()
-    expect(store.token).toBeNull()
   })
 
-  it('login imposta utente e token', async () => {
-    mockLogin.mockResolvedValue(loginResponse(mario))
+  it('login imposta utente', async () => {
+    mockLogin.mockResolvedValue({
+      status: 'success',
+      data: { utente: mario },
+    })
 
     const store = freshStore()
     const ok = await store.login('mario@test.it', 'password')
@@ -57,7 +55,6 @@ describe('useAuthStore', () => {
     expect(store.isLoggedIn).toBe(true)
     expect(store.user?.nome).toBe('Mario')
     expect(store.user?.ruolo).toBe('VISITATORE')
-    expect(store.token).toBe('mock-jwt-token')
   })
 
   it('login fallito restituisce false e non imposta utente', async () => {
@@ -69,25 +66,32 @@ describe('useAuthStore', () => {
     expect(ok).toBe(false)
     expect(store.isLoggedIn).toBe(false)
     expect(store.user).toBeNull()
-    expect(store.token).toBeNull()
   })
 
-  it('logout resetta utente e token', async () => {
-    mockLogin.mockResolvedValue(loginResponse(mario))
+  it('logout resetta utente e chiama backend', async () => {
+    mockLogin.mockResolvedValue({
+      status: 'success',
+      data: { utente: mario },
+    })
+    mockLogout.mockResolvedValue({ status: 'success' })
 
     const store = freshStore()
     await store.login('mario@test.it', 'password')
     expect(store.isLoggedIn).toBe(true)
 
-    store.logout()
+    mockLogout.mockClear()
+    await store.logout()
     expect(store.isLoggedIn).toBe(false)
     expect(store.user).toBeNull()
-    expect(store.token).toBeNull()
+    expect(mockLogout).toHaveBeenCalledOnce()
   })
 
   it('register chiama register poi login automaticamente', async () => {
     mockRegister.mockResolvedValue({ status: 'success' })
-    mockLogin.mockResolvedValue(loginResponse(luigi))
+    mockLogin.mockResolvedValue({
+      status: 'success',
+      data: { utente: luigi },
+    })
 
     const store = freshStore()
     const ok = await store.register(
@@ -115,31 +119,34 @@ describe('useAuthStore', () => {
     expect(store.isLoggedIn).toBe(false)
   })
 
-  it('restore ripristina utente se token presente', async () => {
-    mockLogin.mockResolvedValue(loginResponse(mario))
+  it('restore recupera utente dal backend', async () => {
+    mockGetCurrentUser.mockResolvedValue({
+      status: 'success',
+      data: mario,
+    })
 
     const store = freshStore()
-    await store.login('mario@test.it', 'password')
-    expect(store.user?.nome).toBe('Mario')
+    expect(store.user).toBeNull()
 
-    const store2 = useAuthStore()
-    expect(store2.user).not.toBeNull()
-    expect(store2.token).toBe('mock-jwt-token')
+    await store.restore()
+    expect(store.user?.nome).toBe('Mario')
+    expect(store.isLoggedIn).toBe(true)
   })
 
-  it('restore fa logout se token assente', async () => {
-    mockLogin.mockResolvedValue(loginResponse(mario))
+  it('restore imposta user a null se il backend fallisce', async () => {
+    mockGetCurrentUser.mockRejectedValue(new Error('Unauthorized'))
 
     const store = freshStore()
-    await store.login('mario@test.it', 'password')
-    store.token = null
-
-    const store2 = useAuthStore()
-    expect(store2.isLoggedIn).toBe(false)
+    await store.restore()
+    expect(store.user).toBeNull()
+    expect(store.isLoggedIn).toBe(false)
   })
 
   it('getter ruolo funzionano correttamente', async () => {
-    mockLogin.mockResolvedValue(loginResponse(admin))
+    mockLogin.mockResolvedValue({
+      status: 'success',
+      data: { utente: admin },
+    })
 
     const store = freshStore()
     await store.login('admin@test.it', 'password')
@@ -150,7 +157,10 @@ describe('useAuthStore', () => {
   })
 
   it('getter isGestore funziona', async () => {
-    mockLogin.mockResolvedValue(loginResponse(luigi))
+    mockLogin.mockResolvedValue({
+      status: 'success',
+      data: { utente: luigi },
+    })
 
     const store = freshStore()
     await store.login('luigi@test.it', 'password')
@@ -160,19 +170,17 @@ describe('useAuthStore', () => {
     expect(store.isAdmin).toBe(false)
   })
 
-  it('isLoggedIn richiede sia user che token', async () => {
-    mockLogin.mockResolvedValue(loginResponse(mario))
+  it('isLoggedIn dipende solo da user', async () => {
+    mockLogin.mockResolvedValue({
+      status: 'success',
+      data: { utente: mario },
+    })
 
     const store = freshStore()
     await store.login('mario@test.it', 'password')
     expect(store.isLoggedIn).toBe(true)
 
     store.user = null
-    expect(store.isLoggedIn).toBe(false)
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    store.user = mario as any
-    store.token = null
     expect(store.isLoggedIn).toBe(false)
   })
 })

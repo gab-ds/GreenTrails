@@ -4,6 +4,7 @@ import it.greentrails.backend.entities.Utente;
 import it.greentrails.backend.gestioneutenze.service.GestioneUtenzeService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -28,25 +29,39 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       final FilterChain filterChain
   ) throws ServletException, IOException {
 
-    final String header = request.getHeader("Authorization");
+    final String token = extractToken(request);
 
-    if (header != null && header.startsWith("Bearer ")) {
-      final String token = header.substring(7);
+    if (token != null && jwtUtil.validateToken(token)) {
+      final String email = jwtUtil.extractEmail(token);
+      final String ruolo = jwtUtil.extractRuolo(token);
 
-      if (jwtUtil.validateToken(token)) {
-        final String email = jwtUtil.extractEmail(token);
-        final String ruolo = jwtUtil.extractRuolo(token);
+      final Utente utente = (Utente) utenteService.loadUserByUsername(email);
+      final var authorities = new java.util.ArrayList<SimpleGrantedAuthority>();
+      authorities.add(new SimpleGrantedAuthority("ROLE_" + ruolo));
 
-        final Utente utente = (Utente) utenteService.loadUserByUsername(email);
-        final var authorities = new java.util.ArrayList<SimpleGrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + ruolo));
-
-        final var authentication = new UsernamePasswordAuthenticationToken(
-            utente, null, authorities);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-      }
+      final var authentication = new UsernamePasswordAuthenticationToken(
+          utente, null, authorities);
+      SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     filterChain.doFilter(request, response);
+  }
+
+  private String extractToken(final HttpServletRequest request) {
+    final String header = request.getHeader("Authorization");
+    if (header != null && header.startsWith("Bearer ")) {
+      return header.substring(7);
+    }
+
+    final Cookie[] cookies = request.getCookies();
+    if (cookies != null) {
+      for (final Cookie cookie : cookies) {
+        if ("token".equals(cookie.getName())) {
+          return cookie.getValue();
+        }
+      }
+    }
+
+    return null;
   }
 }

@@ -8,7 +8,6 @@ const mockPush = vi.fn()
 vi.mock('~/stores/auth', () => ({
   useAuthStore: vi.fn(() => ({
     user: null,
-    token: null,
     isLoggedIn: false,
     login: mockLogin,
     logout: vi.fn(),
