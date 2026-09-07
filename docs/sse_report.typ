@@ -109,17 +109,17 @@ Il backend segue un'architettura a *layers* propria di Spring: Presentation Laye
 
 == Stack Tecnologico
 
-*Java 21* con *Spring Boot 3.5.16* (aggiornato da 3.2.1), moduli Web MVC, Data JPA, Security (HTTP Basic + BCrypt), Actuator, Validation. Dipendenze gestite con Maven, profiling per ambienti dev/prod/test. Database MySQL 8 (produzione) / H2 embedded (test).
+*Java 21* con *Spring Boot 3.5.16* (aggiornato da 3.2.1), moduli Web MVC, Data JPA, Security (JWT HttpOnly cookie + BCrypt), Actuator, Validation. Dipendenze gestite con Maven, profiling per ambienti dev/prod/test. Database MySQL 8 (produzione) / H2 embedded (test).
 
 == Componenti Principali
 
-- *Sicurezza*: HTTP Basic Authentication, BCryptPasswordEncoder (work factor 10, ~130 ms per hash), controllo accessi basato su ruoli (VISITATORE, GESTORE_ATTIVITA, AMMINISTRATORE), CORS configurato per frontend su localhost:4200 e :9000.
+- *Sicurezza*: In origine HTTP Basic Authentication; migrato a JWT in HttpOnly cookie (HMAC-SHA256, scadenza 1 h) con `JwtAuthenticationFilter` prima di `UsernamePasswordAuthenticationFilter` e sessioni stateless. BCryptPasswordEncoder (work factor 10, ~130 ms per hash) invariato. Controllo accessi basato su ruoli (VISITATORE, GESTORE_ATTIVITA, AMMINISTRATORE). CORS esteso da localhost:4200 e :9000 a localhost:4200, :9000, frontend e frontend:80.
 - *Servizi Core*: GestioneUtenzeServiceImpl (UserDetailsService), AttivitaServiceImpl (CRUD e filtri attività), ItinerariServiceImpl (pianificazione con adattatore AI — attualmente stub con shuffle casuale), PrenotazioneAlloggioServiceImpl / PrenotazioneAttivitaTuristicaServiceImpl (ciclo di vita prenotazioni), RicercaServiceImpl (filtri spaziali).
 - *Utility*: CorsConfig, ResponseGenerator.
 
 == Infrastruttura e Distribuzione
 
-Docker multi-stage (eclipse-temurin:21) con configurazione multi-ambiente: sviluppo (docker-compose.yml orchesta backend, frontend Angular su Nginx, MySQL), produzione (docker-compose.prod.yml con policy di riavvio e limiti risorse), test (docker-compose.test.yml). Health check su /actuator/health.
+Docker multi-stage (eclipse-temurin:21) con configurazione multi-ambiente: sviluppo (docker-compose.yml orchesta backend, frontend Nuxt 4 su Node.js (:9000), MySQL), produzione (docker-compose.prod.yml con policy di riavvio e limiti risorse), test (docker-compose.test.yml). Health check su /actuator/health.
 
 == Piattaforma di Benchmark e Riproducibilità
 
@@ -145,15 +145,15 @@ retroattivamente attribuite a questo hardware.
 
 == Verifica e Qualità del Software
 
-- *Test Unitari*: ~14 classi con Mockito per service layer.
-- *Test di Integrazione*: ~12 classi con `@SpringBootTest` e `@AutoConfigureMockMvc` per controller REST.
+- *Test Unitari*: ~16 classi con Mockito per service layer (aggiunte `JwtUtilTest` e `JwtAuthenticationFilterTest`).
+- *Test di Integrazione*: ~13 classi con `@SpringBootTest` e `@AutoConfigureMockMvc` per controller REST (aggiunta `AuthControllerTest`).
 - *Mutation Testing*: PiTest 1.22.1, soglia minima 80%.
 
 === JaCoCo — Code Coverage
 
 *JaCoCo* (Java Code Coverage) è uno strumento che misura la percentuale di codice sorgente effettivamente eseguita durante i test, analizzando copertura di linee, rami, metodi e classi. Nel progetto è integrato come plugin Maven con soglia minima dell'80%. Inizialmente la soglia era applicata direttamente nella build: se la copertura scendeva sotto tale valore, la build falliva. Nel corso della manutenzione il controllo è stato spostato in CI/CD tramite lo script `scripts/jacoco_coverage.py --fail-below 80`, eseguito sulle pull request al posto della precedente action `PavanMudigonda/jacoco-reporter`.
 
-*Risultati*: la copertura attuale si attesta al 97,5% sulle linee, 97,2% sui rami e 100% sulle classi (30/30), con i service layer al 100%. Le esclusioni agent/report sono state allineate: entity, enum, utility, eccezioni di gestioneupload, security e BackendApplication, classi senza logica di business significativa. I report HTML vengono generati in fase `verify` e pubblicati su GitHub Pages per una consultazione continuativa.
+*Risultati*: la copertura attuale si attesta intorno al *91%* (dati CodeCov), in seguito all'aggiunta di nuove classi nel modulo di autenticazione JWT. Le esclusioni agent/report sono state allineate: entity, enum, utility, eccezioni di gestioneupload, security e BackendApplication, classi senza logica di business significativa. I report HTML vengono generati in fase `verify` e pubblicati su GitHub Pages per una consultazione continuativa.
 
 *Importanza per la sostenibilità tecnica*: una copertura adeguata riduce il rischio di regressioni e abbassa il costo di manutenzione nel tempo. Codice non testato è codice che degrada — richiede più tempo per essere modificato con sicurezza e tende ad accumulare debito tecnico. Mantenere una copertura elevata significa preservare la *manutenibilità* del sistema, un pilastro della sostenibilità del software a lungo termine.
 
@@ -307,9 +307,6 @@ codice:
   chiamate virtuali) e da `MockMultipartFile` (spring-test) per la
   simulazione degli upload. In occasione dell'intervento è stato
   anche corretto il packaging del jar eseguibile `benchmarks.jar`.
-
-// TODO: rieseguire i benchmark sulla macchina di riferimento e
-// aggiornare i valori alla suite consolidata (4 classi, 9 benchmark).
 
 Durante le esecuzioni preliminari, i benchmark sono terminati con
 errori `OutOfMemoryError: Java heap space` durante la fase di
@@ -868,8 +865,7 @@ riferimento iniziale per i futuri cicli di monitoraggio.
   [*Strumento*], [*Sfera*], [*Baseline*], [*Risultato*],
   [JaCoCo], [Tecnica],
   [Nessuna misurazione di copertura],
-  [97,5% linee / 97,2% rami / 100% classi (30/30);
-   gate `--fail-below 80` su PR via script],
+  [~91% (CodeCov); gate `--fail-below 80` su PR via script],
   [CI/CD coverage reporting], [Tecnica],
   [Nessun reporting automatizzato in CI],
   [Script jacoco/pitest con `--markdownify` in step summary e commento PR;
@@ -897,7 +893,7 @@ riferimento iniziale per i futuri cicli di monitoraggio.
    Spike: 72 req/s, p95 552 ms; Soak: 31 req/s, p95 18 ms (30 min)],
   [GreenIT-Analysis], [Ambientale],
   [Nessuna analisi del frontend],
-  [73/75 buone pratiche; EcoIndex 76/100 B],
+  [73/75 buone pratiche; EcoIndex 76/100 A],
   [WebsiteCarbon], [Ambientale],
   [N/D — richiede URL pubblico],
   [N/D — rimandato a dopo il deploy],
@@ -922,8 +918,6 @@ riferimento iniziale per i futuri cicli di monitoraggio.
 Le attività di misurazione hanno evidenziato i seguenti aspetti da
 approfondire o completare in iterazioni future:
 
-- *Confronto Angular vs Nuxt 4* con GreenIT-Analysis dopo la
-  migrazione del frontend.
 - *WebsiteCarbon e EcoIndex* su URL pubblico dopo il deploy.
 - *Riesecuzione dei benchmark* con warm-up dinamico (es. AMBER)
   per confrontare i consumi rispetto al warm-up fisso.
