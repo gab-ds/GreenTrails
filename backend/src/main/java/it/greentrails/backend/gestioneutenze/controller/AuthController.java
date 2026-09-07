@@ -34,9 +34,15 @@ public class AuthController {
       final String token = jwtUtil.generateToken(utente.getId(),
           utente.getEmail(), utente.getNome(),
           utente.getCognome(), utente.getRuolo().name());
+      final Map<String, Object> safeUser = Map.of(
+          "id", utente.getId(),
+          "nome", utente.getNome(),
+          "cognome", utente.getCognome(),
+          "email", utente.getEmail(),
+          "ruolo", utente.getRuolo().name());
 
       return ResponseGenerator.generateResponse(HttpStatus.OK,
-          Map.of("token", token, "utente", utente));
+          Map.of("token", token, "utente", safeUser));
     } catch (AuthenticationException e) {
       return ResponseGenerator.generateResponse(HttpStatus.UNAUTHORIZED,
           "Credenziali non valide.");
