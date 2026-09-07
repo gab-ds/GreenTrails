@@ -226,6 +226,16 @@ class ArchiviazioneFileSystemServiceTest {
   }
 
   @Test
+  void loadAllMediaPathTraversalThrows() {
+    assertThrows(ArchiviazioneException.class, () -> service.loadAll("../escape"));
+  }
+
+  @Test
+  void deleteMediaPathTraversalThrows() {
+    assertThrows(ArchiviazioneException.class, () -> service.delete("../escape", "file.txt"));
+  }
+
+  @Test
   void loadAllNonExistingThrows() {
     // se la directory non esiste Files.walk solleverà NoSuchFileException -> deve essere wrap in ArchiviazioneException
     assertThrows(ArchiviazioneException.class, () -> service.loadAll("non_esiste"));
