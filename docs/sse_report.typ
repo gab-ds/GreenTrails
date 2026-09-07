@@ -1,6 +1,17 @@
-= Introduzione
+#align(center)[
+  #text(size: 24pt)[GreenTrails — SSE Report]
+  #v(0.5cm)
+  #text(size: 14pt)[Roberta Galluzzo]
+  #text(size: 14pt)[Gabriele Di Stefano]
+  #v(0.3cm)
+  #text(size: 11pt)[r.galluzzo3\@studenti.unisa.it]
+  #text(size: 11pt)[g.distefano10\@studenti.unisa.it]
+  #v(0.5cm)
+  #link("https://github.com/gab-ds/GreenTrails")
+  #v(1cm)
+]
 
-#link("https://github.com/gab-ds/GreenTrails")
+= Introduzione
 
 Il presente documento fornisce una sintesi delle attività di
 manutenzione perfettiva dell'applicativo web GreenTrails dal punto
@@ -443,30 +454,49 @@ codice), utilizzando SonarQube 9.9.8 in esecuzione su Docker con il plugin
 Creedengo 2.0.0. Il profilo "Creedengo", che eredita le regole di "Sonar way",
 è stato impostato come default per il linguaggio Java.
 
-*Risultati:*
-- *Bug:* 0 — *Vulnerabilità:* 0 — *Code Smells totali:* 3
-- *Debito tecnico:* 150 minuti (0,1% del costo di sviluppo stimato)
-- *Duplicazioni:* 5,1%
-- *Rating:* affidabilità A, sicurezza A, manutenibilità A
+==== interventi di manutenzione perfettiva
 
-Tutti e 3 i code smell rilevati appartengono alla regola *GCI1 — Avoid
-Spring repository call in loop or stream*:
+Nel corso della manutenzione è stata condotta un'analisi sistematica
+delle issue SonarQube sul backend, con interventi mirati a migliorare
+qualità del codice, affidabilità e manutenibilità. Le categorie di
+issue risolte includono:
 
 #table(
   columns: (auto, auto, auto),
   inset: 6pt,
   stroke: 0.5pt,
-  [*File*], [*Linea*], [*Descrizione*],
-  [ItinerariStubAdapter.java], [48], [Repository call in stream],
-  [ItinerariStubAdapter.java], [62], [Repository call in stream],
-  [RicercaServiceImpl.java], [36], [Repository call in stream],
+  [*Regola*], [*Descrizione*], [*Issue risolte*],
+  [GCI82], [Variabili locali non riassegnate rese `final`], [~63],
+  [S3751], [Metodi handler Spring privati resi `public`], [53],
+  [S5786], [Classi e metodi test JUnit5 resi package-private], [17],
+  [S1854], [Assegnazioni inutili a variabili locali rimosse], [10],
+  [S1192], [Stringhe duplicate estratte come costanti], [4],
+  [S6204], [`.collect(Collectors.toList())` sostituito con `.toList()`], [5],
+  [S5786], [Rimossi modificatori `public` superflui da classi/metodi test], [17],
+  [S6837], [Rimosso `@ResponseBody` superfluo su `@RestController`], [1],
+  [S1186], [Metodi vuoti nei test corretti], [2],
+  [S1452], [Tipo wildcard generico `ResponseEntity<?>` → `ResponseEntity<Void>`], [1],
+  [GCI74], [Sostituito `SELECT *` con colonne espresse nella query nativa], [1],
+  [S6353], [Sostituito `[0-9]` con `\d` nelle regex], [1],
+  [S1611], [Rimossi parentesi da lambda a singolo parametro], [1],
+  [GCI1], [Convertite chiamate `save()` in loop a `saveAll()` batch], [2],
+  [Blocker], [Fix leak Stream in `ArchiviazioneFileSystemService`], [1],
+  [Blocker], [Fix test vuoto in `ArchiviazioneFileSystemServiceTest`], [1],
 )
 
-Tutte e tre le occorrenze riguardano chiamate a repository JPA all'interno di
-stream Java, un pattern che moltiplica le connessioni al database per ogni
-elemento della collezione, aumentando il carico sulla base dati e il consumo
-energetico complessivo. La severità è *MINOR* e il debito stimato per ogni
-occorrenza è di 50 minuti di refactoring.
+In totale sono stati risolti circa *180 issue* SonarQube, riducendo
+significativamente il debito tecnico. Le issue non risolte (GCI82 su
+entity Lombok, GCI1 su pattern complessi) sono state valutate come
+a basso impatto o con falsi positivi, e la loro risoluzione è
+rimandata a iterazioni future.
+
+=== Creedengo — Risultati attuali
+
+*Risultati:*
+- *Bug:* 0 — *Vulnerabilità:* 0 — *Code Smells residui:* 724
+- *Debito tecnico:* 6.082 minuti
+- *Duplicazioni:* 4,1%
+- *Rating:* affidabilità A, sicurezza A, manutenibilità A
 
 *Importanza per la sostenibilità tecnica:* l'analisi statica con Creedengo
 si inserisce nella sfera della *sostenibilità tecnica* perché individua
@@ -853,9 +883,12 @@ riferimento iniziale per i futuri cicli di monitoraggio.
   [N/D — non utilizzato],
   [Warm-up fisso 3 iterazioni
    (dynamic halt non impiegato per problematiche di utilizzo)],
-  [Creedengo], [Tecnica],
-  [Nessuna analisi di efficienza energetica],
-  [0 bug, 0 vulnerabilità, 3 code smell GCI1],
+   [Creedengo], [Tecnica],
+   [Nessuna analisi di efficienza energetica],
+   [~180 issue SonarQube risolte (GCI82, S3751, S5786, S1854, S1192,
+    S6204, S6837, S1186, S1452, GCI74, GCI1, S6353, S1611, Blocker);
+    724 code smell residui, 0 bug, 0 vulnerabilità;
+    debito tecnico 6.082 min; duplicazioni 4,1%; rating A/A/A],
   [JMeter], [Economica / Tecnica],
   [Nessuna analisi di performance],
   [4 piani eseguiti (Load, Stress, Spike, Soak);
