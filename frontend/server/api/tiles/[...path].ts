@@ -1,4 +1,4 @@
-const TILE_PATTERN = /^\d{1,2}\/\d{1,2}\/\d{1,2}\.png$/
+const TILE_PATTERN = /^\d{1,2}\/\d{1,6}\/\d{1,6}\.png$/
 
 export default defineEventHandler(async (event) => {
   const path = getRouterParam(event, 'path')
