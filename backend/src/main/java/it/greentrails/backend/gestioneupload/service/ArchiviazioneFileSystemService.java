@@ -83,7 +83,7 @@ public class ArchiviazioneFileSystemService implements ArchiviazioneService {
   @Override
   public List<String> loadAll(String media) {
     try {
-      final Path mediaDir = this.rootLocation.resolve(media);
+      final Path mediaDir = resolveMediaDir(media);
       try (Stream<Path> stream = Files.walk(mediaDir, 1)) {
         return stream
             .filter(path -> !path.equals(mediaDir))
@@ -97,10 +97,28 @@ public class ArchiviazioneFileSystemService implements ArchiviazioneService {
 
   }
 
+  private Path resolveMediaDir(String media) {
+    final Path baseDir = this.rootLocation.toAbsolutePath().normalize();
+    final Path mediaDir = baseDir.resolve(media).normalize().toAbsolutePath();
+    if (!mediaDir.startsWith(baseDir)) {
+      throw new ArchiviazioneException("Percorso media non valido.");
+    }
+    return mediaDir;
+  }
+
+  private Path resolveFilePath(String media, String filename) {
+    final Path mediaDir = resolveMediaDir(media);
+    final Path file = mediaDir.resolve(filename).normalize().toAbsolutePath();
+    if (!file.startsWith(mediaDir)) {
+      throw new ArchiviazioneException("Percorso file non valido.");
+    }
+    return file;
+  }
+
   /*@ requires media != null; requires filename != null; @*/
   @Override
   public Path load(String media, String filename) {
-    return rootLocation.resolve(media).resolve(filename);
+    return resolveFilePath(media, filename);
   }
 
   /*@
@@ -129,12 +147,7 @@ public class ArchiviazioneFileSystemService implements ArchiviazioneService {
   /*@ requires media != null; requires filename != null; @*/
   @Override
   public void delete(String media, String filename) {
-    final Path destinationDir = this.rootLocation.resolve(media);
-    final Path file = destinationDir.resolve(filename);
-    if (!file.getParent().equals(destinationDir.toAbsolutePath())) {
-      throw new ArchiviazioneException(
-          "Impossibile eliminare al di fuori della cartella di upload.");
-    }
+    final Path file = resolveFilePath(media, filename);
     if (Files.exists(file)) {
       try {
         Files.delete(file);
