@@ -31,6 +31,9 @@ public class AuthController {
   @Value("${jwt.expiration-ms:3600000}")
   private long jwtExpirationMs;
 
+  @Value("${jwt.cookie.secure:true}")
+  private boolean cookieSecure;
+
   @PostMapping("login")
   public ResponseEntity<Object> login(
       @RequestBody final LoginRequest request,
@@ -53,7 +56,7 @@ public class AuthController {
       final long maxAgeSeconds = jwtExpirationMs / 1000;
       final ResponseCookie cookie = ResponseCookie.from("token", token)
           .httpOnly(true)
-          .secure(true)
+          .secure(cookieSecure)
           .sameSite("Strict")
           .path("/")
           .maxAge(maxAgeSeconds)
@@ -72,7 +75,7 @@ public class AuthController {
   public ResponseEntity<Object> logout(final HttpServletResponse response) {
     final ResponseCookie cookie = ResponseCookie.from("token", "")
         .httpOnly(true)
-        .secure(true)
+        .secure(cookieSecure)
         .sameSite("Strict")
         .path("/")
         .maxAge(0)
