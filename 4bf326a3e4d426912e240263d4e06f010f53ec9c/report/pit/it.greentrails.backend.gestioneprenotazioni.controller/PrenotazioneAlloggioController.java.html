@@ -1,0 +1,4328 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>PrenotazioneAlloggioController.java</h1>
+
+<table class="src">
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package it.greentrails.backend.gestioneprenotazioni.controller;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.entities.Attivita;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.entities.Camera;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.entities.Itinerario;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.entities.PrenotazioneAlloggio;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.entities.Utente;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.enums.StatoPrenotazione;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.gestioneattivita.service.AttivitaService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.gestioneattivita.service.CameraService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.gestioneitinerari.service.ItinerariService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.gestioneprenotazioni.service.PrenotazioneAlloggioService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.utils.service.ResponseGenerator;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.time.Duration;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.Date;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_16'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import lombok.RequiredArgsConstructor;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_17'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.format.annotation.DateTimeFormat;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_18'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.http.HttpStatus;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_19'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.http.ResponseEntity;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_20'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.security.core.annotation.AuthenticationPrincipal;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.DeleteMapping;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_22'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.GetMapping;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_23'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.PathVariable;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_24'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.PostMapping;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.RequestMapping;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_26'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.RequestParam;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_27'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.RestController;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_28'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_29'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>@RestController</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_30'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>@RequestMapping(path = &#34;api/prenotazioni-alloggio&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_31'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>@RequiredArgsConstructor</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_32'/>
+32
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_32'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>public class PrenotazioneAlloggioController {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_33'/>
+33
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_33'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_34'/>
+34
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_34'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private static final String PRENOTAZIONE_NON_TROVATA = &#34;Prenotazione non trovata&#34;;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_35'/>
+35
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_35'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_36'/>
+36
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_36'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final ItinerariService itinerariService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_37'/>
+37
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_37'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final AttivitaService attivitaService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_38'/>
+38
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_38'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final CameraService cameraService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_39'/>
+39
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_39'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final PrenotazioneAlloggioService prenotazioneAlloggioService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_40'/>
+40
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_40'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_41'/>
+41
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_41'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_42'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @PostMapping</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_43'/>
+43
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_43'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ResponseEntity&#60;Object&#62; creaPrenotazioneAlloggio(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_44'/>
+44
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_44'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @AuthenticationPrincipal Utente utente,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_45'/>
+45
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_45'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;idItinerario&#34;) final Long idItinerario,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_46'/>
+46
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_46'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;idCamera&#34;) final Long idCamera,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_47'/>
+47
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_47'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;numAdulti&#34;) final int adulti,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_48'/>
+48
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_48'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(value = &#34;numBambini&#34;, defaultValue = &#34;0&#34;, required = false) final int bambini,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_49'/>
+49
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_49'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;dataInizio&#34;) @DateTimeFormat(pattern = &#34;yyyy-MM-dd&#34;) final Date dataInizio,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_50'/>
+50
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_50'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;dataFine&#34;) @DateTimeFormat(pattern = &#34;yyyy-MM-dd&#34;) final Date dataFine,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_51'/>
+51
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_51'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;numCamere&#34;) final int numCamere</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_52'/>
+52
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_52'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  ) {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_53'/>
+53
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_53'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    try {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_54'/>
+54
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_54'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      Itinerario itinerario = itinerariService.findById(idItinerario);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_55'/>
+55
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_55'>1</a>
+<span>
+1. creaPrenotazioneAlloggio : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      if (!itinerario.getVisitatore().getId().equals(utente.getId())) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_56'/>
+56
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_56'>1</a>
+<span>
+1. creaPrenotazioneAlloggio : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::creaPrenotazioneAlloggio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_57'/>
+57
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_57'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            &#34;Itinerario non trovato&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_58'/>
+58
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_58'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_59'/>
+59
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_59'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      Camera camera = cameraService.findById(idCamera);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_60'/>
+60
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_60'>4</a>
+<span>
+1. creaPrenotazioneAlloggio : Replaced integer addition with subtraction &rarr; SURVIVED<br/>
+2. creaPrenotazioneAlloggio : changed conditional boundary &rarr; KILLED<br/>
+3. creaPrenotazioneAlloggio : negated conditional &rarr; KILLED<br/>
+4. creaPrenotazioneAlloggio : Replaced integer multiplication with division &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>      if (adulti + bambini &#62; camera.getCapienza() * numCamere) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_61'/>
+61
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_61'>1</a>
+<span>
+1. creaPrenotazioneAlloggio : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::creaPrenotazioneAlloggio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_62'/>
+62
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_62'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            &#34;Numero camere non sufficienti&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_63'/>
+63
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_63'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_64'/>
+64
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_64'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      PrenotazioneAlloggio prenotazioneAlloggio = new PrenotazioneAlloggio();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_65'/>
+65
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_65'>1</a>
+<span>
+1. creaPrenotazioneAlloggio : removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setCamera &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      prenotazioneAlloggio.setCamera(camera);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_66'/>
+66
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_66'>1</a>
+<span>
+1. creaPrenotazioneAlloggio : removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setItinerario &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      prenotazioneAlloggio.setItinerario(itinerario);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_67'/>
+67
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_67'>1</a>
+<span>
+1. creaPrenotazioneAlloggio : removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setNumAdulti &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      prenotazioneAlloggio.setNumAdulti(adulti);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_68'/>
+68
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_68'>1</a>
+<span>
+1. creaPrenotazioneAlloggio : removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setNumBambini &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      prenotazioneAlloggio.setNumBambini(bambini);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_69'/>
+69
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_69'>1</a>
+<span>
+1. creaPrenotazioneAlloggio : removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setNumCamere &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      prenotazioneAlloggio.setNumCamere(numCamere);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_70'/>
+70
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_70'>1</a>
+<span>
+1. creaPrenotazioneAlloggio : removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setDataInizio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      prenotazioneAlloggio.setDataInizio(dataInizio);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_71'/>
+71
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_71'>1</a>
+<span>
+1. creaPrenotazioneAlloggio : removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setStato &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      prenotazioneAlloggio.setStato(StatoPrenotazione.CREATA);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_72'/>
+72
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_72'>1</a>
+<span>
+1. creaPrenotazioneAlloggio : Replaced double multiplication with division &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      double prezzo = numCamere * camera.getPrezzo();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_73'/>
+73
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_73'>1</a>
+<span>
+1. creaPrenotazioneAlloggio : removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setDataFine &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      prenotazioneAlloggio.setDataFine(dataFine);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_74'/>
+74
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_74'>2</a>
+<span>
+1. creaPrenotazioneAlloggio : negated conditional &rarr; KILLED<br/>
+2. creaPrenotazioneAlloggio : changed conditional boundary &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      if (prenotazioneAlloggioService.controllaDisponibilitaCamera(camera,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_75'/>
+75
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_75'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          dataInizio, dataFine) &#60; numCamere) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_76'/>
+76
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_76'>1</a>
+<span>
+1. creaPrenotazioneAlloggio : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::creaPrenotazioneAlloggio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_77'/>
+77
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_77'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            &#34;Camera non disponibile&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_78'/>
+78
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_78'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_79'/>
+79
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_79'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      long durataOre = Duration.between(dataInizio.toInstant(), dataFine.toInstant()).toHours();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_80'/>
+80
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_80'>2</a>
+<span>
+1. creaPrenotazioneAlloggio : changed conditional boundary &rarr; SURVIVED<br/>
+2. creaPrenotazioneAlloggio : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>      if (durataOre &#62; 24) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_81'/>
+81
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_81'>2</a>
+<span>
+1. creaPrenotazioneAlloggio : Replaced double multiplication with division &rarr; KILLED<br/>
+2. creaPrenotazioneAlloggio : Replaced double division with multiplication &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        prezzo = prezzo * Math.ceil((double) durataOre / 24);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_82'/>
+82
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_82'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_83'/>
+83
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_83'>1</a>
+<span>
+1. creaPrenotazioneAlloggio : removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setPrezzo &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      prenotazioneAlloggio.setPrezzo(prezzo);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_84'/>
+84
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_84'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      prenotazioneAlloggio = prenotazioneAlloggioService.savePrenotazioneAlloggio(camera,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_85'/>
+85
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_85'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          prenotazioneAlloggio);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_86'/>
+86
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_86'>2</a>
+<span>
+1. creaPrenotazioneAlloggio : removed call to it/greentrails/backend/entities/Itinerario::setTotale &rarr; SURVIVED<br/>
+2. creaPrenotazioneAlloggio : Replaced double addition with subtraction &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>      itinerario.setTotale(prezzo + itinerario.getTotale());</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_87'/>
+87
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_87'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      itinerariService.saveItinerario(itinerario);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_88'/>
+88
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_88'>1</a>
+<span>
+1. creaPrenotazioneAlloggio : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::creaPrenotazioneAlloggio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.OK, prenotazioneAlloggio);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_89'/>
+89
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_89'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    } catch (Exception e) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_90'/>
+90
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_90'>1</a>
+<span>
+1. creaPrenotazioneAlloggio : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::creaPrenotazioneAlloggio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_91'/>
+91
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_91'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_92'/>
+92
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_92'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_93'/>
+93
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_93'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_94'/>
+94
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_94'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @PostMapping(&#34;{id}&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_95'/>
+95
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_95'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ResponseEntity&#60;Object&#62; confermaPrenotazioneAlloggio(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_96'/>
+96
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_96'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @AuthenticationPrincipal Utente utente,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_97'/>
+97
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_97'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @PathVariable(&#34;id&#34;) final long id,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_98'/>
+98
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_98'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;numAdulti&#34;) final int adulti,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_99'/>
+99
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_99'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(value = &#34;numBambini&#34;, defaultValue = &#34;0&#34;, required = false) final int bambini,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_100'/>
+100
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_100'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;dataInizio&#34;) @DateTimeFormat(pattern = &#34;yyyy-MM-dd&#34;) final Date dataInizio,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_101'/>
+101
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_101'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;dataFine&#34;) @DateTimeFormat(pattern = &#34;yyyy-MM-dd&#34;) final Date dataFine,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_102'/>
+102
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_102'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;numCamere&#34;) final int numCamere</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_103'/>
+103
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_103'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  ) {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_104'/>
+104
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_104'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    try {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_105'/>
+105
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_105'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      PrenotazioneAlloggio prenotazione = prenotazioneAlloggioService.findById(id);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_106'/>
+106
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_106'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      Itinerario itinerario = prenotazione.getItinerario();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_107'/>
+107
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_107'>1</a>
+<span>
+1. confermaPrenotazioneAlloggio : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      if (!itinerario.getVisitatore().getId().equals(utente.getId())) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_108'/>
+108
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_108'>1</a>
+<span>
+1. confermaPrenotazioneAlloggio : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::confermaPrenotazioneAlloggio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_109'/>
+109
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_109'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            PRENOTAZIONE_NON_TROVATA);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_110'/>
+110
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_110'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_111'/>
+111
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_111'>1</a>
+<span>
+1. confermaPrenotazioneAlloggio : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      if (prenotazione.getStato() != StatoPrenotazione.NON_CONFERMATA) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_112'/>
+112
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_112'>1</a>
+<span>
+1. confermaPrenotazioneAlloggio : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::confermaPrenotazioneAlloggio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_113'/>
+113
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_113'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            &#34;Prenotazione non modificabile&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_114'/>
+114
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_114'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_115'/>
+115
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_115'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      Camera camera = prenotazione.getCamera();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_116'/>
+116
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_116'>4</a>
+<span>
+1. confermaPrenotazioneAlloggio : Replaced integer addition with subtraction &rarr; SURVIVED<br/>
+2. confermaPrenotazioneAlloggio : changed conditional boundary &rarr; KILLED<br/>
+3. confermaPrenotazioneAlloggio : Replaced integer multiplication with division &rarr; KILLED<br/>
+4. confermaPrenotazioneAlloggio : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>      if (adulti + bambini &#62; camera.getCapienza() * numCamere) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_117'/>
+117
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_117'>1</a>
+<span>
+1. confermaPrenotazioneAlloggio : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::confermaPrenotazioneAlloggio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_118'/>
+118
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_118'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            &#34;Numero camere non sufficienti&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_119'/>
+119
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_119'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_120'/>
+120
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_120'>1</a>
+<span>
+1. confermaPrenotazioneAlloggio : removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setNumAdulti &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      prenotazione.setNumAdulti(adulti);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_121'/>
+121
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_121'>1</a>
+<span>
+1. confermaPrenotazioneAlloggio : removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setNumBambini &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      prenotazione.setNumBambini(bambini);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_122'/>
+122
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_122'>1</a>
+<span>
+1. confermaPrenotazioneAlloggio : removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setNumCamere &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      prenotazione.setNumCamere(numCamere);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_123'/>
+123
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_123'>1</a>
+<span>
+1. confermaPrenotazioneAlloggio : removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setDataInizio &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>      prenotazione.setDataInizio(dataInizio);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_124'/>
+124
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_124'>1</a>
+<span>
+1. confermaPrenotazioneAlloggio : removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setStato &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      prenotazione.setStato(StatoPrenotazione.CREATA);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_125'/>
+125
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_125'>1</a>
+<span>
+1. confermaPrenotazioneAlloggio : Replaced double multiplication with division &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      double prezzo = numCamere * camera.getPrezzo();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_126'/>
+126
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_126'>1</a>
+<span>
+1. confermaPrenotazioneAlloggio : removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setDataFine &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>      prenotazione.setDataFine(dataFine);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_127'/>
+127
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_127'>2</a>
+<span>
+1. confermaPrenotazioneAlloggio : negated conditional &rarr; KILLED<br/>
+2. confermaPrenotazioneAlloggio : changed conditional boundary &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      if (prenotazioneAlloggioService.controllaDisponibilitaCamera(camera,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_128'/>
+128
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_128'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          dataInizio, dataFine) &#60; numCamere) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_129'/>
+129
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_129'>1</a>
+<span>
+1. confermaPrenotazioneAlloggio : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::confermaPrenotazioneAlloggio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_130'/>
+130
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_130'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            &#34;Camera non disponibile&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_131'/>
+131
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_131'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_132'/>
+132
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_132'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      long durataOre = Duration.between(dataInizio.toInstant(), dataFine.toInstant()).toHours();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_133'/>
+133
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_133'>2</a>
+<span>
+1. confermaPrenotazioneAlloggio : changed conditional boundary &rarr; SURVIVED<br/>
+2. confermaPrenotazioneAlloggio : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>      if (durataOre &#62; 24) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_134'/>
+134
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_134'>2</a>
+<span>
+1. confermaPrenotazioneAlloggio : Replaced double multiplication with division &rarr; KILLED<br/>
+2. confermaPrenotazioneAlloggio : Replaced double division with multiplication &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        prezzo = prezzo * Math.ceil((double) durataOre / 24);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_135'/>
+135
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_135'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_136'/>
+136
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_136'>1</a>
+<span>
+1. confermaPrenotazioneAlloggio : removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setPrezzo &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      prenotazione.setPrezzo(prezzo);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_137'/>
+137
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_137'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      prenotazione = prenotazioneAlloggioService.savePrenotazioneAlloggio(camera,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_138'/>
+138
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_138'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          prenotazione);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_139'/>
+139
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_139'>2</a>
+<span>
+1. confermaPrenotazioneAlloggio : removed call to it/greentrails/backend/entities/Itinerario::setTotale &rarr; SURVIVED<br/>
+2. confermaPrenotazioneAlloggio : Replaced double addition with subtraction &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>      itinerario.setTotale(prezzo + itinerario.getTotale());</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_140'/>
+140
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_140'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      itinerariService.saveItinerario(itinerario);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_141'/>
+141
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_141'>1</a>
+<span>
+1. confermaPrenotazioneAlloggio : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::confermaPrenotazioneAlloggio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.OK, prenotazione);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_142'/>
+142
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_142'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    } catch (Exception e) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_143'/>
+143
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_143'>1</a>
+<span>
+1. confermaPrenotazioneAlloggio : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::confermaPrenotazioneAlloggio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_144'/>
+144
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_144'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_145'/>
+145
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_145'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_146'/>
+146
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_146'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_147'/>
+147
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_147'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @GetMapping(&#34;{id}&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_148'/>
+148
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_148'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ResponseEntity&#60;Object&#62; visualizzaPrenotazioneAlloggio(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_149'/>
+149
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_149'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @AuthenticationPrincipal Utente utente,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_150'/>
+150
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_150'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @PathVariable(&#34;id&#34;) final Long id</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_151'/>
+151
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_151'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  ) {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_152'/>
+152
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_152'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    try {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_153'/>
+153
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_153'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      PrenotazioneAlloggio prenotazioneAlloggio = prenotazioneAlloggioService.findById(id);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_154'/>
+154
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_154'>1</a>
+<span>
+1. visualizzaPrenotazioneAlloggio : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      if (!prenotazioneAlloggio.getItinerario().getVisitatore().getId().equals(utente.getId())) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_155'/>
+155
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_155'>1</a>
+<span>
+1. visualizzaPrenotazioneAlloggio : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaPrenotazioneAlloggio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, PRENOTAZIONE_NON_TROVATA);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_156'/>
+156
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_156'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_157'/>
+157
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_157'>1</a>
+<span>
+1. visualizzaPrenotazioneAlloggio : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaPrenotazioneAlloggio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.OK, prenotazioneAlloggio);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_158'/>
+158
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_158'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    } catch (Exception e) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_159'/>
+159
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_159'>1</a>
+<span>
+1. visualizzaPrenotazioneAlloggio : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaPrenotazioneAlloggio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_160'/>
+160
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_160'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_161'/>
+161
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_161'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_162'/>
+162
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_162'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_163'/>
+163
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_163'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @GetMapping(&#34;perAttivita/{idAttivita}&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_164'/>
+164
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_164'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ResponseEntity&#60;Object&#62; visualizzaPrenotazioniAlloggioPerAttivita(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_165'/>
+165
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_165'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @AuthenticationPrincipal Utente utente,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_166'/>
+166
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_166'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @PathVariable(&#34;idAttivita&#34;) final long idAttivita</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_167'/>
+167
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_167'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  ) {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_168'/>
+168
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_168'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    try {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_169'/>
+169
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_169'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      Attivita attivita = attivitaService.findById(idAttivita);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_170'/>
+170
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_170'>1</a>
+<span>
+1. visualizzaPrenotazioniAlloggioPerAttivita : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      if (!attivita.getGestore().getId().equals(utente.getId())) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_171'/>
+171
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_171'>1</a>
+<span>
+1. visualizzaPrenotazioniAlloggioPerAttivita : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaPrenotazioniAlloggioPerAttivita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, &#34;Alloggio non trovato&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_172'/>
+172
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_172'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_173'/>
+173
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_173'>1</a>
+<span>
+1. visualizzaPrenotazioniAlloggioPerAttivita : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaPrenotazioniAlloggioPerAttivita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.OK,</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_174'/>
+174
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_174'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>          prenotazioneAlloggioService.getPrenotazioniByAlloggio(attivita));</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_175'/>
+175
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_175'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    } catch (Exception e) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_176'/>
+176
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_176'>1</a>
+<span>
+1. visualizzaPrenotazioniAlloggioPerAttivita : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaPrenotazioniAlloggioPerAttivita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_177'/>
+177
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_177'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_178'/>
+178
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_178'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_179'/>
+179
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_179'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_180'/>
+180
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_180'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @GetMapping(&#34;perAttivita/{idAttivita}/disponibilita&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_181'/>
+181
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_181'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ResponseEntity&#60;Object&#62; visualizzaDisponibilitaPerAlloggio(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_182'/>
+182
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_182'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @PathVariable(&#34;idAttivita&#34;) final long idAttivita,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_183'/>
+183
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_183'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;dataInizio&#34;) @DateTimeFormat(pattern = &#34;yyyy-MM-dd&#34;) final Date dataInizio,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_184'/>
+184
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_184'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;dataFine&#34;) @DateTimeFormat(pattern = &#34;yyyy-MM-dd&#34;) final Date dataFine</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_185'/>
+185
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_185'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  ) {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_186'/>
+186
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_186'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    try {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_187'/>
+187
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_187'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      Attivita attivita = attivitaService.findById(idAttivita);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_188'/>
+188
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_188'>1</a>
+<span>
+1. visualizzaDisponibilitaPerAlloggio : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaDisponibilitaPerAlloggio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.OK,</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_189'/>
+189
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_189'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>          prenotazioneAlloggioService.controllaDisponibilitaAlloggio(attivita, dataInizio,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_190'/>
+190
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_190'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>              dataFine));</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_191'/>
+191
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_191'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    } catch (Exception e) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_192'/>
+192
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_192'>1</a>
+<span>
+1. visualizzaDisponibilitaPerAlloggio : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaDisponibilitaPerAlloggio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_193'/>
+193
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_193'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_194'/>
+194
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_194'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_195'/>
+195
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_195'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_196'/>
+196
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_196'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @GetMapping(&#34;perCamera/{idCamera}/disponibilita&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_197'/>
+197
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_197'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ResponseEntity&#60;Object&#62; visualizzaDisponibilitaPerCamera(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_198'/>
+198
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_198'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @PathVariable(&#34;idCamera&#34;) final long idCamera,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_199'/>
+199
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_199'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;dataInizio&#34;) @DateTimeFormat(pattern = &#34;yyyy-MM-dd&#34;) final Date dataInizio,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_200'/>
+200
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_200'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;dataFine&#34;) @DateTimeFormat(pattern = &#34;yyyy-MM-dd&#34;) final Date dataFine</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_201'/>
+201
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_201'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  ) {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_202'/>
+202
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_202'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    try {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_203'/>
+203
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_203'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      Camera camera = cameraService.findById(idCamera);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_204'/>
+204
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_204'>1</a>
+<span>
+1. visualizzaDisponibilitaPerCamera : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaDisponibilitaPerCamera &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.OK,</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_205'/>
+205
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_205'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>          prenotazioneAlloggioService.controllaDisponibilitaCamera(camera, dataInizio, dataFine));</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_206'/>
+206
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_206'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    } catch (Exception e) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_207'/>
+207
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_207'>1</a>
+<span>
+1. visualizzaDisponibilitaPerCamera : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaDisponibilitaPerCamera &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_208'/>
+208
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_208'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_209'/>
+209
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_209'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_210'/>
+210
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_210'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_211'/>
+211
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_211'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @GetMapping</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_212'/>
+212
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_212'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ResponseEntity&#60;Object&#62; visualizzaPrenotazioniAlloggioPerVisitatore(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_213'/>
+213
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_213'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @AuthenticationPrincipal Utente utente</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_214'/>
+214
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_214'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  ) {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_215'/>
+215
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_215'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    try {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_216'/>
+216
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_216'>1</a>
+<span>
+1. visualizzaPrenotazioniAlloggioPerVisitatore : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaPrenotazioniAlloggioPerVisitatore &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.OK,</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_217'/>
+217
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_217'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>          prenotazioneAlloggioService.getPrenotazioniByVisitatore(utente));</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_218'/>
+218
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_218'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    } catch (Exception e) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_219'/>
+219
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_219'>1</a>
+<span>
+1. visualizzaPrenotazioniAlloggioPerVisitatore : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaPrenotazioniAlloggioPerVisitatore &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_220'/>
+220
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_220'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_221'/>
+221
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_221'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_222'/>
+222
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_222'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_223'/>
+223
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_223'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @DeleteMapping(&#34;{id}&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_224'/>
+224
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_224'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ResponseEntity&#60;Object&#62; cancellaPrenotazioneAlloggio(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_225'/>
+225
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_225'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @AuthenticationPrincipal Utente utente,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_226'/>
+226
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_226'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @PathVariable(&#34;id&#34;) final Long id</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_227'/>
+227
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_227'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  ) {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_228'/>
+228
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_228'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    try {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_229'/>
+229
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_229'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      PrenotazioneAlloggio prenotazioneAlloggio = prenotazioneAlloggioService.findById(id);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_230'/>
+230
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_230'>1</a>
+<span>
+1. cancellaPrenotazioneAlloggio : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      if (!prenotazioneAlloggio.getItinerario().getVisitatore().getId().equals(utente.getId())) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_231'/>
+231
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_231'>1</a>
+<span>
+1. cancellaPrenotazioneAlloggio : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::cancellaPrenotazioneAlloggio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, PRENOTAZIONE_NON_TROVATA);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_232'/>
+232
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_232'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_233'/>
+233
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_233'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      Itinerario itinerario = prenotazioneAlloggio.getItinerario();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_234'/>
+234
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_234'>2</a>
+<span>
+1. cancellaPrenotazioneAlloggio : removed call to it/greentrails/backend/entities/Itinerario::setTotale &rarr; KILLED<br/>
+2. cancellaPrenotazioneAlloggio : Replaced double subtraction with addition &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      itinerario.setTotale(itinerario.getTotale() - prenotazioneAlloggio.getPrezzo());</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_235'/>
+235
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_235'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      itinerariService.saveItinerario(itinerario);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_236'/>
+236
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_236'>1</a>
+<span>
+1. cancellaPrenotazioneAlloggio : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::cancellaPrenotazioneAlloggio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.OK,</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_237'/>
+237
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_237'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>          prenotazioneAlloggioService.deletePrenotazioneAlloggio(prenotazioneAlloggio));</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_238'/>
+238
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_238'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    } catch (Exception e) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_239'/>
+239
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_239'>1</a>
+<span>
+1. cancellaPrenotazioneAlloggio : replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::cancellaPrenotazioneAlloggio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_240'/>
+240
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_240'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_241'/>
+241
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_241'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_242'/>
+242
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_242'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_243'/>
+243
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_243'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@296fc004_244'/>
+244
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_244'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_55'>55</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_55'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_ItinerarioNonTrovato()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_56'>56</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_56'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_ItinerarioNonTrovato()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::creaPrenotazioneAlloggio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_60'>60</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_60'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_Durata48Ore()]</span></span> changed conditional boundary &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_Durata48Ore()]</span></span> negated conditional &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_MultipleCamera()]</span></span> Replaced integer multiplication with division &rarr; KILLED</span>
+</div> <p class='SURVIVED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>none</span></span> Replaced integer addition with subtraction &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=creaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;Ljava/lang/Long;Ljava/lang/Long;IILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[36],-mutator=org.pitest.mutationtest.engine.gregor.mutators.MathMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=creaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;Ljava/lang/Long;Ljava/lang/Long;IILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[36],-mutator=org.pitest.mutationtest.engine.gregor.mutators.MathMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=creaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;Ljava/lang/Long;Ljava/lang/Long;IILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[36],-mutator=org.pitest.mutationtest.engine.gregor.mutators.MathMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_61'>61</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_61'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_CapienzaNonSufficiente()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::creaPrenotazioneAlloggio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_65'>65</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_65'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_Success()]</span></span> removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setCamera &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_66'>66</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_66'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_Success()]</span></span> removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setItinerario &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_67'>67</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_67'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_CapienzaEsatta()]</span></span> removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setNumAdulti &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_68'>68</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_68'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_CapienzaEsatta()]</span></span> removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setNumBambini &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_69'>69</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_69'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_MultipleCamera()]</span></span> removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setNumCamere &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_70'>70</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_70'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_Success()]</span></span> removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setDataInizio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_71'>71</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_71'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_Success()]</span></span> removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setStato &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_72'>72</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_72'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_Durata48Ore()]</span></span> Replaced double multiplication with division &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_73'>73</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_73'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_Success()]</span></span> removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setDataFine &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_74'>74</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_74'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_CameraNonDisponibile()]</span></span> negated conditional &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_DisponibilitaEsattaAlLimite()]</span></span> changed conditional boundary &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_76'>76</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_76'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_CameraNonDisponibile()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::creaPrenotazioneAlloggio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_80'>80</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_80'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>none</span></span> changed conditional boundary &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=creaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;Ljava/lang/Long;Ljava/lang/Long;IILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[136],-mutator=org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=creaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;Ljava/lang/Long;Ljava/lang/Long;IILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[136],-mutator=org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=creaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;Ljava/lang/Long;Ljava/lang/Long;IILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[136],-mutator=org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_Durata48Ore()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_81'>81</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_81'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_Durata48Ore()]</span></span> Replaced double multiplication with division &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_Durata48Ore()]</span></span> Replaced double division with multiplication &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_83'>83</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_83'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_Durata48Ore()]</span></span> removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setPrezzo &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_86'>86</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_86'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>none</span></span> removed call to it/greentrails/backend/entities/Itinerario::setTotale &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=creaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;Ljava/lang/Long;Ljava/lang/Long;IILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[168],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=creaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;Ljava/lang/Long;Ljava/lang/Long;IILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[168],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=creaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;Ljava/lang/Long;Ljava/lang/Long;IILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[168],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>none</span></span> Replaced double addition with subtraction &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=creaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;Ljava/lang/Long;Ljava/lang/Long;IILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[167],-mutator=org.pitest.mutationtest.engine.gregor.mutators.MathMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=creaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;Ljava/lang/Long;Ljava/lang/Long;IILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[167],-mutator=org.pitest.mutationtest.engine.gregor.mutators.MathMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=creaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;Ljava/lang/Long;Ljava/lang/Long;IILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[167],-mutator=org.pitest.mutationtest.engine.gregor.mutators.MathMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_88'>88</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_88'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_Success()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::creaPrenotazioneAlloggio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_90'>90</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_90'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_Exception()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::creaPrenotazioneAlloggio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_107'>107</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_107'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_PrenotazioneNonTrovata()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_108'>108</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_108'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_PrenotazioneNonTrovata()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::confermaPrenotazioneAlloggio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_111'>111</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_111'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_MultipleCamera()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_112'>112</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_112'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_PrenotazioneNonModificabile()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::confermaPrenotazioneAlloggio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_116'>116</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_116'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_CapienzaEsatta()]</span></span> changed conditional boundary &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_MultipleCamera()]</span></span> Replaced integer multiplication with division &rarr; KILLED</span>
+</div> <p class='SURVIVED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>none</span></span> Replaced integer addition with subtraction &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=confermaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;JIILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[54],-mutator=org.pitest.mutationtest.engine.gregor.mutators.MathMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=confermaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;JIILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[54],-mutator=org.pitest.mutationtest.engine.gregor.mutators.MathMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=confermaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;JIILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[54],-mutator=org.pitest.mutationtest.engine.gregor.mutators.MathMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_MultipleCamera()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_117'>117</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_117'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_CapienzaNonSufficiente()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::confermaPrenotazioneAlloggio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_120'>120</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_120'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_CapienzaEsatta()]</span></span> removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setNumAdulti &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_121'>121</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_121'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_CapienzaEsatta()]</span></span> removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setNumBambini &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_122'>122</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_122'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_MultipleCamera()]</span></span> removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setNumCamere &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_123'>123</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_123'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>none</span></span> removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setDataInizio &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=confermaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;JIILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[87],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=confermaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;JIILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[87],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=confermaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;JIILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[87],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_124'>124</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_124'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_Success()]</span></span> removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setStato &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_125'>125</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_125'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_MultipleCamera()]</span></span> Replaced double multiplication with division &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_126'>126</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_126'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>none</span></span> removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setDataFine &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=confermaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;JIILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[105],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=confermaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;JIILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[105],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=confermaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;JIILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[105],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_127'>127</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_127'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_CameraNonDisponibile()]</span></span> negated conditional &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_DisponibilitaEsattaAlLimite()]</span></span> changed conditional boundary &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_129'>129</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_129'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_CameraNonDisponibile()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::confermaPrenotazioneAlloggio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_133'>133</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_133'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>none</span></span> changed conditional boundary &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=confermaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;JIILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[138],-mutator=org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=confermaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;JIILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[138],-mutator=org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=confermaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;JIILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[138],-mutator=org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_Durata48Ore()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_134'>134</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_134'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_Durata48Ore()]</span></span> Replaced double multiplication with division &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_Durata48Ore()]</span></span> Replaced double division with multiplication &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_136'>136</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_136'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_MultipleCamera()]</span></span> removed call to it/greentrails/backend/entities/PrenotazioneAlloggio::setPrezzo &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_139'>139</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_139'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>none</span></span> removed call to it/greentrails/backend/entities/Itinerario::setTotale &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=confermaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;JIILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[170],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=confermaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;JIILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[170],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=confermaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;JIILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[170],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>none</span></span> Replaced double addition with subtraction &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=confermaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;JIILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[169],-mutator=org.pitest.mutationtest.engine.gregor.mutators.MathMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=confermaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;JIILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[169],-mutator=org.pitest.mutationtest.engine.gregor.mutators.MathMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioController,-method=confermaPrenotazioneAlloggio,-methodDesc=(Lit/greentrails/backend/entities/Utente;JIILjava/util/Date;Ljava/util/Date;I)Lorg/springframework/http/ResponseEntity;],-indexes=[169],-mutator=org.pitest.mutationtest.engine.gregor.mutators.MathMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_141'>141</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_141'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_Success()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::confermaPrenotazioneAlloggio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_143'>143</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_143'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>confermaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_Exception()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::confermaPrenotazioneAlloggio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_154'>154</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_154'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>visualizzaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioneAlloggio_Success()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_155'>155</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_155'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>visualizzaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioneAlloggio_PrenotazioneNonTrovata()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaPrenotazioneAlloggio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_157'>157</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_157'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>visualizzaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioneAlloggio_Success()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaPrenotazioneAlloggio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_159'>159</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_159'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>visualizzaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioneAlloggio_Exception()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaPrenotazioneAlloggio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_170'>170</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_170'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>visualizzaPrenotazioniAlloggioPerAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioniAlloggioPerAttivita_AlloggioNonTrovato()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_171'>171</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_171'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>visualizzaPrenotazioniAlloggioPerAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioniAlloggioPerAttivita_AlloggioNonTrovato()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaPrenotazioniAlloggioPerAttivita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_173'>173</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_173'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>visualizzaPrenotazioniAlloggioPerAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioniAlloggioPerAttivita_Success()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaPrenotazioniAlloggioPerAttivita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_176'>176</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_176'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>visualizzaPrenotazioniAlloggioPerAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioniAlloggioPerAttivita_Exception()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaPrenotazioniAlloggioPerAttivita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_188'>188</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_188'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>visualizzaDisponibilitaPerAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaDisponibilitaPerAlloggio_Success()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaDisponibilitaPerAlloggio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_192'>192</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_192'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>visualizzaDisponibilitaPerAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaDisponibilitaPerAlloggio_Exception()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaDisponibilitaPerAlloggio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_204'>204</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_204'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>visualizzaDisponibilitaPerCamera<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaDisponibilitaPerCamera_Success()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaDisponibilitaPerCamera &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_207'>207</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_207'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>visualizzaDisponibilitaPerCamera<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaDisponibilitaPerCamera_Exception()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaDisponibilitaPerCamera &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_216'>216</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_216'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>visualizzaPrenotazioniAlloggioPerVisitatore<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioniAlloggioPerVisitatore_Success()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaPrenotazioniAlloggioPerVisitatore &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_219'>219</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_219'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>visualizzaPrenotazioniAlloggioPerVisitatore<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioniAlloggioPerVisitatore_Exception()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::visualizzaPrenotazioniAlloggioPerVisitatore &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_230'>230</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_230'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>cancellaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCancellaPrenotazioneAlloggio_PrenotazioneNonTrovata()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_231'>231</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_231'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>cancellaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCancellaPrenotazioneAlloggio_PrenotazioneNonTrovata()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::cancellaPrenotazioneAlloggio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_234'>234</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_234'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>cancellaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCancellaPrenotazioneAlloggio_Success()]</span></span> removed call to it/greentrails/backend/entities/Itinerario::setTotale &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>cancellaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCancellaPrenotazioneAlloggio_Success()]</span></span> Replaced double subtraction with addition &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_236'>236</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_236'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>cancellaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCancellaPrenotazioneAlloggio_Success()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::cancellaPrenotazioneAlloggio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@296fc004_239'>239</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@296fc004_239'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>cancellaPrenotazioneAlloggio<br/><b>Killed by : </b>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCancellaPrenotazioneAlloggio_Exception()]</span></span> replaced return value with null for it/greentrails/backend/gestioneprenotazioni/controller/PrenotazioneAlloggioController::cancellaPrenotazioneAlloggio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+<li class='mutator'>CONDITIONALS_BOUNDARY</li>
+<li class='mutator'>EMPTY_RETURNS</li>
+<li class='mutator'>FALSE_RETURNS</li>
+<li class='mutator'>INCREMENTS</li>
+<li class='mutator'>INVERT_NEGS</li>
+<li class='mutator'>MATH</li>
+<li class='mutator'>NEGATE_CONDITIONALS</li>
+<li class='mutator'>NULL_RETURNS</li>
+<li class='mutator'>PRIMITIVE_RETURNS</li>
+<li class='mutator'>TRUE_RETURNS</li>
+<li class='mutator'>VOID_METHOD_CALLS</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_Durata48Ore()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_DurataPiuDi24Ore()] (7 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_DurataPiuDi24Ore()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_CapienzaEsatta()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_Durata48Ore()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_MultipleCamera()] (7 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_SenzaNumBambini()] (7 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_Success()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_DisponibilitaEsattaAlLimite()] (24 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_CapienzaNonSufficiente()] (7 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_DisponibilitaEsattaAlLimite()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_CapienzaEsatta()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_MultipleCamera()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_Success()] (7 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_CameraNonDisponibile()] (13 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_SenzaNumBambini()] (13 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaDisponibilitaPerCamera_Success()] (11 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioneAlloggio_Exception()] (9 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioniAlloggioPerAttivita_Success()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_CapienzaNonSufficiente()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_CameraNonDisponibile()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioneAlloggio_Success()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioneAlloggio_PrenotazioneNonTrovata()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioniAlloggioPerAttivita_AlloggioNonTrovato()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_PrenotazioneNonModificabile()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCancellaPrenotazioneAlloggio_Exception()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCancellaPrenotazioneAlloggio_Success()] (14 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_ItinerarioNonTrovato()] (8 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_Exception()] (5 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testConfermaPrenotazioneAlloggio_PrenotazioneNonTrovata()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCreaPrenotazioneAlloggio_Exception()] (8 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaDisponibilitaPerAlloggio_Success()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioniAlloggioPerVisitatore_Success()] (13 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaDisponibilitaPerCamera_Exception()] (8 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testCancellaPrenotazioneAlloggio_PrenotazioneNonTrovata()] (4 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioniAlloggioPerAttivita_Exception()] (7 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaDisponibilitaPerAlloggio_Exception()] (6 ms)</li><li>it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneprenotazioni.controller.PrenotazioneAlloggioControllerTest]/[method:testVisualizzaPrenotazioniAlloggioPerVisitatore_Exception()] (13 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='https://pitest.org'>PIT</a> 1.30.0 <a href='https://github.com/sponsors/hcoles'>support</a>
+
+</body>
+</html>
