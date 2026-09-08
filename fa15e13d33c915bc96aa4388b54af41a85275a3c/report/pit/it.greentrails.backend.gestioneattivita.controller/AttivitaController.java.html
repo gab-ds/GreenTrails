@@ -1,0 +1,4671 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>AttivitaController.java</h1>
+
+<table class="src">
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package it.greentrails.backend.gestioneattivita.controller;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.entities.Attivita;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.entities.Utente;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.enums.CategorieAlloggio;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.enums.CategorieAttivitaTuristica;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.gestioneattivita.service.AttivitaService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.gestioneattivita.service.ValoriEcosostenibilitaService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.gestioneupload.service.ArchiviazioneService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.gestioneutenze.service.GestioneUtenzeService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import it.greentrails.backend.utils.service.ResponseGenerator;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.UUID;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import lombok.RequiredArgsConstructor;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.data.geo.Point;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.http.HttpStatus;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_16'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.http.ResponseEntity;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_17'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.security.core.annotation.AuthenticationPrincipal;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_18'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.DeleteMapping;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_19'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.GetMapping;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_20'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.PathVariable;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.PostMapping;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_22'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.RequestMapping;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_23'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.RequestParam;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_24'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.bind.annotation.RestController;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.web.multipart.MultipartFile;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_26'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_27'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>@RestController</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_28'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>@RequestMapping(path = &#34;api/attivita&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_29'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>@RequiredArgsConstructor</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_30'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>public class AttivitaController {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_31'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_32'/>
+32
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_32'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final AttivitaService attivitaService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_33'/>
+33
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_33'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final GestioneUtenzeService gestioneUtenzeService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_34'/>
+34
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_34'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final ValoriEcosostenibilitaService valoriEcosostenibilitaService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_35'/>
+35
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_35'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final ArchiviazioneService archiviazioneService;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_36'/>
+36
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_36'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_37'/>
+37
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_37'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @PostMapping</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_38'/>
+38
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_38'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ResponseEntity&#60;Object&#62; creaAttivita(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_39'/>
+39
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_39'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @AuthenticationPrincipal Utente utente,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_40'/>
+40
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_40'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;alloggio&#34;) final boolean isAlloggio,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_41'/>
+41
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_41'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;nome&#34;) final String nome,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_42'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;indirizzo&#34;) final String indirizzo,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_43'/>
+43
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_43'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;cap&#34;) final String cap,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_44'/>
+44
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_44'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;citta&#34;) final String citta,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_45'/>
+45
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_45'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;provincia&#34;) final String provincia,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_46'/>
+46
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_46'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;latitudine&#34;) final Double latitudine,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_47'/>
+47
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_47'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;longitudine&#34;) final Double longitudine,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_48'/>
+48
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_48'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;descrizioneBreve&#34;) final String descrizioneBreve,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_49'/>
+49
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_49'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;descrizioneLunga&#34;) final String descrizioneLunga,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_50'/>
+50
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_50'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;valori&#34;) final long idValori,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_51'/>
+51
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_51'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(value = &#34;immagine&#34;, required = false) final MultipartFile immagine,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_52'/>
+52
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_52'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(value = &#34;prezzo&#34;, required = false) final Double prezzo,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_53'/>
+53
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_53'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(value = &#34;disponibilita&#34;, required = false) final Integer disponibilita,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_54'/>
+54
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_54'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(value = &#34;categoriaAlloggio&#34;, required = false) final Integer categoriaAlloggio,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_55'/>
+55
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_55'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(value = &#34;categoriaAttivitaTuristica&#34;, required = false)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_56'/>
+56
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_56'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      final Integer categoriaAttivitaTuristica</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_57'/>
+57
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_57'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  ) {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_58'/>
+58
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_58'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    try {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_59'/>
+59
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_59'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      Utente gestore = gestioneUtenzeService.findById(utente.getId());</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_60'/>
+60
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_60'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      Attivita attivita = new Attivita();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_61'/>
+61
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_61'>1</a>
+<span>
+1. creaAttivita : removed call to it/greentrails/backend/entities/Attivita::setAlloggio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      attivita.setAlloggio(isAlloggio);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_62'/>
+62
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_62'>1</a>
+<span>
+1. creaAttivita : removed call to it/greentrails/backend/entities/Attivita::setGestore &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      attivita.setGestore(gestore);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_63'/>
+63
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_63'>1</a>
+<span>
+1. creaAttivita : removed call to it/greentrails/backend/entities/Attivita::setNome &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      attivita.setNome(nome);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_64'/>
+64
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_64'>1</a>
+<span>
+1. creaAttivita : removed call to it/greentrails/backend/entities/Attivita::setIndirizzo &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      attivita.setIndirizzo(indirizzo);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_65'/>
+65
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_65'>1</a>
+<span>
+1. creaAttivita : removed call to it/greentrails/backend/entities/Attivita::setCap &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      attivita.setCap(cap);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_66'/>
+66
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_66'>1</a>
+<span>
+1. creaAttivita : removed call to it/greentrails/backend/entities/Attivita::setCitta &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      attivita.setCitta(citta);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_67'/>
+67
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_67'>1</a>
+<span>
+1. creaAttivita : removed call to it/greentrails/backend/entities/Attivita::setProvincia &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      attivita.setProvincia(provincia);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_68'/>
+68
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_68'>1</a>
+<span>
+1. creaAttivita : removed call to it/greentrails/backend/entities/Attivita::setCoordinate &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>      attivita.setCoordinate(new Point(latitudine, longitudine));</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_69'/>
+69
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_69'>1</a>
+<span>
+1. creaAttivita : removed call to it/greentrails/backend/entities/Attivita::setDescrizioneBreve &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      attivita.setDescrizioneBreve(descrizioneBreve);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_70'/>
+70
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_70'>1</a>
+<span>
+1. creaAttivita : removed call to it/greentrails/backend/entities/Attivita::setDescrizioneLunga &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      attivita.setDescrizioneLunga(descrizioneLunga);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_71'/>
+71
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_71'>1</a>
+<span>
+1. creaAttivita : removed call to it/greentrails/backend/entities/Attivita::setValoriEcosostenibilita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      attivita.setValoriEcosostenibilita(valoriEcosostenibilitaService.findById(idValori));</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_72'/>
+72
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_72'>1</a>
+<span>
+1. creaAttivita : removed call to it/greentrails/backend/entities/Attivita::setPrezzo &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>      attivita.setPrezzo(prezzo);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_73'/>
+73
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_73'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      String media = UUID.randomUUID().toString();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_74'/>
+74
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_74'>1</a>
+<span>
+1. creaAttivita : removed call to it/greentrails/backend/entities/Attivita::setMedia &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      attivita.setMedia(media);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_75'/>
+75
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_75'>2</a>
+<span>
+1. creaAttivita : negated conditional &rarr; KILLED<br/>
+2. creaAttivita : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      if (immagine != null &#38;&#38; !immagine.isEmpty()) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_76'/>
+76
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_76'>1</a>
+<span>
+1. creaAttivita : removed call to it/greentrails/backend/gestioneupload/service/ArchiviazioneService::store &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        archiviazioneService.store(media, immagine);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_77'/>
+77
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_77'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_78'/>
+78
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_78'>1</a>
+<span>
+1. creaAttivita : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      if (isAlloggio) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_79'/>
+79
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_79'>1</a>
+<span>
+1. creaAttivita : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (categoriaAlloggio == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_80'/>
+80
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_80'>1</a>
+<span>
+1. creaAttivita : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::creaAttivita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_81'/>
+81
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_81'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>              &#34;Categoria per alloggio non presente.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_82'/>
+82
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_82'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_83'/>
+83
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_83'>1</a>
+<span>
+1. creaAttivita : removed call to it/greentrails/backend/entities/Attivita::setCategoriaAlloggio &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        attivita.setCategoriaAlloggio(CategorieAlloggio.values()[categoriaAlloggio]);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_84'/>
+84
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_84'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_85'/>
+85
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_85'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      } else {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_86'/>
+86
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_86'>1</a>
+<span>
+1. creaAttivita : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (disponibilita == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_87'/>
+87
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_87'>1</a>
+<span>
+1. creaAttivita : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::creaAttivita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_88'/>
+88
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_88'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>              &#34;Disponibilit&#224; per attivit&#224; turistica non presente.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_89'/>
+89
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_89'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_90'/>
+90
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_90'>1</a>
+<span>
+1. creaAttivita : removed call to it/greentrails/backend/entities/Attivita::setDisponibilita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        attivita.setDisponibilita(disponibilita);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_91'/>
+91
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_91'>1</a>
+<span>
+1. creaAttivita : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (prezzo == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_92'/>
+92
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_92'>1</a>
+<span>
+1. creaAttivita : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::creaAttivita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_93'/>
+93
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_93'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>              &#34;Prezzo per attivit&#224; turistica non presente.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_94'/>
+94
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_94'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_95'/>
+95
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_95'>1</a>
+<span>
+1. creaAttivita : removed call to it/greentrails/backend/entities/Attivita::setPrezzo &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        attivita.setPrezzo(prezzo);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_96'/>
+96
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_96'>1</a>
+<span>
+1. creaAttivita : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (categoriaAttivitaTuristica == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_97'/>
+97
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_97'>1</a>
+<span>
+1. creaAttivita : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::creaAttivita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_98'/>
+98
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_98'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>              &#34;Categoria per attivit&#224; turistica non presente.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_99'/>
+99
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_99'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_100'/>
+100
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_100'>1</a>
+<span>
+1. creaAttivita : removed call to it/greentrails/backend/entities/Attivita::setCategoriaAttivitaTuristica &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        attivita.setCategoriaAttivitaTuristica(</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_101'/>
+101
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_101'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            CategorieAttivitaTuristica.values()[categoriaAttivitaTuristica]);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_102'/>
+102
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_102'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_103'/>
+103
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_103'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      attivita = attivitaService.saveAttivita(attivita);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_104'/>
+104
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_104'>1</a>
+<span>
+1. creaAttivita : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::creaAttivita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.OK, attivita);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_105'/>
+105
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_105'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    } catch (Exception e) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_106'/>
+106
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_106'>1</a>
+<span>
+1. creaAttivita : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::creaAttivita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_107'/>
+107
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_107'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_108'/>
+108
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_108'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_109'/>
+109
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_109'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_110'/>
+110
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_110'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @GetMapping(&#34;{id}&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_111'/>
+111
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_111'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ResponseEntity&#60;Object&#62; visualizzaAttivita(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_112'/>
+112
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_112'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @PathVariable(&#34;id&#34;) final Long id</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_113'/>
+113
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_113'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  ) {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_114'/>
+114
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_114'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    try {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_115'/>
+115
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_115'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      Attivita attivita = attivitaService.findById(id);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_116'/>
+116
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_116'>1</a>
+<span>
+1. visualizzaAttivita : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::visualizzaAttivita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.OK, attivita);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_117'/>
+117
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_117'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    } catch (Exception e) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_118'/>
+118
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_118'>1</a>
+<span>
+1. visualizzaAttivita : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::visualizzaAttivita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_119'/>
+119
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_119'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_120'/>
+120
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_120'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_121'/>
+121
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_121'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_122'/>
+122
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_122'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @GetMapping(&#34;perGestore&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_123'/>
+123
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_123'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ResponseEntity&#60;Object&#62; visualizzaAttivitaPerGestore(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_124'/>
+124
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_124'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @AuthenticationPrincipal Utente utente</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_125'/>
+125
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_125'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  ) {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_126'/>
+126
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_126'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    try {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_127'/>
+127
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_127'>1</a>
+<span>
+1. visualizzaAttivitaPerGestore : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::visualizzaAttivitaPerGestore &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.OK,</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_128'/>
+128
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_128'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>          attivitaService.findAllAttivitaByGestore(utente.getId()));</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_129'/>
+129
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_129'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    } catch (Exception e) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_130'/>
+130
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_130'>1</a>
+<span>
+1. visualizzaAttivitaPerGestore : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::visualizzaAttivitaPerGestore &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_131'/>
+131
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_131'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_132'/>
+132
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_132'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_133'/>
+133
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_133'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_134'/>
+134
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_134'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @GetMapping(&#34;perPrezzo&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_135'/>
+135
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_135'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ResponseEntity&#60;Object&#62; visualizzaAttivitaPerPrezzo(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_136'/>
+136
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_136'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(value = &#34;limite&#34;, required = false) Integer limite</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_137'/>
+137
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_137'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  ) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_138'/>
+138
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_138'>1</a>
+<span>
+1. visualizzaAttivitaPerPrezzo : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (limite == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_139'/>
+139
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_139'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      limite = 10;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_140'/>
+140
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_140'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_141'/>
+141
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_141'>1</a>
+<span>
+1. visualizzaAttivitaPerPrezzo : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::visualizzaAttivitaPerPrezzo &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return ResponseGenerator.generateResponse(HttpStatus.OK,</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_142'/>
+142
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_142'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        attivitaService.getAttivitaTuristicheEconomiche(limite));</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_143'/>
+143
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_143'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_144'/>
+144
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_144'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_145'/>
+145
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_145'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @PostMapping(&#34;{id}&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_146'/>
+146
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_146'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ResponseEntity&#60;Object&#62; modificaAttivita(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_147'/>
+147
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_147'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @AuthenticationPrincipal Utente utente,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_148'/>
+148
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_148'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @PathVariable(&#34;id&#34;) final long idAttivita,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_149'/>
+149
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_149'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;nome&#34;) final String nome,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_150'/>
+150
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_150'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;indirizzo&#34;) final String indirizzo,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_151'/>
+151
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_151'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;cap&#34;) final String cap,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_152'/>
+152
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_152'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;citta&#34;) final String citta,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_153'/>
+153
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_153'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;provincia&#34;) final String provincia,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_154'/>
+154
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_154'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;latitudine&#34;) final Double latitudine,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_155'/>
+155
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_155'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;longitudine&#34;) final Double longitudine,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_156'/>
+156
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_156'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;descrizioneBreve&#34;) final String descrizioneBreve,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_157'/>
+157
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_157'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;descrizioneLunga&#34;) final String descrizioneLunga,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_158'/>
+158
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_158'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(&#34;valori&#34;) final long idValori,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_159'/>
+159
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_159'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(value = &#34;prezzo&#34;, required = false) final Double prezzo,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_160'/>
+160
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_160'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(value = &#34;disponibilita&#34;, required = false) final Integer disponibilita,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_161'/>
+161
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_161'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(value = &#34;categoriaAlloggio&#34;, required = false) final Integer categoriaAlloggio,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_162'/>
+162
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_162'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(value = &#34;categoriaAttivitaTuristica&#34;, required = false)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_163'/>
+163
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_163'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      final Integer categoriaAttivitaTuristica</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_164'/>
+164
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_164'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  ) {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_165'/>
+165
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_165'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    try {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_166'/>
+166
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_166'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      Utente gestore = gestioneUtenzeService.findById(utente.getId());</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_167'/>
+167
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_167'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      Attivita attivita = attivitaService.findById(idAttivita);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_168'/>
+168
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_168'>2</a>
+<span>
+1. modificaAttivita : negated conditional &rarr; KILLED<br/>
+2. modificaAttivita : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      if (!gestore.getId().equals(attivita.getGestore().getId()) || attivita.isEliminata()) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_169'/>
+169
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_169'>1</a>
+<span>
+1. modificaAttivita : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::modificaAttivita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_170'/>
+170
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_170'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            &#34;Attivit&#224; non trovata.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_171'/>
+171
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_171'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_172'/>
+172
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_172'>1</a>
+<span>
+1. modificaAttivita : removed call to it/greentrails/backend/entities/Attivita::setGestore &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>      attivita.setGestore(gestore);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_173'/>
+173
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_173'>1</a>
+<span>
+1. modificaAttivita : removed call to it/greentrails/backend/entities/Attivita::setNome &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      attivita.setNome(nome);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_174'/>
+174
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_174'>1</a>
+<span>
+1. modificaAttivita : removed call to it/greentrails/backend/entities/Attivita::setIndirizzo &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>      attivita.setIndirizzo(indirizzo);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_175'/>
+175
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_175'>1</a>
+<span>
+1. modificaAttivita : removed call to it/greentrails/backend/entities/Attivita::setCap &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>      attivita.setCap(cap);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_176'/>
+176
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_176'>1</a>
+<span>
+1. modificaAttivita : removed call to it/greentrails/backend/entities/Attivita::setCitta &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>      attivita.setCitta(citta);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_177'/>
+177
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_177'>1</a>
+<span>
+1. modificaAttivita : removed call to it/greentrails/backend/entities/Attivita::setProvincia &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>      attivita.setProvincia(provincia);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_178'/>
+178
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_178'>1</a>
+<span>
+1. modificaAttivita : removed call to it/greentrails/backend/entities/Attivita::setCoordinate &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>      attivita.setCoordinate(new Point(latitudine, longitudine));</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_179'/>
+179
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_179'>1</a>
+<span>
+1. modificaAttivita : removed call to it/greentrails/backend/entities/Attivita::setDescrizioneBreve &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>      attivita.setDescrizioneBreve(descrizioneBreve);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_180'/>
+180
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_180'>1</a>
+<span>
+1. modificaAttivita : removed call to it/greentrails/backend/entities/Attivita::setDescrizioneLunga &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>      attivita.setDescrizioneLunga(descrizioneLunga);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_181'/>
+181
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_181'>1</a>
+<span>
+1. modificaAttivita : removed call to it/greentrails/backend/entities/Attivita::setValoriEcosostenibilita &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>      attivita.setValoriEcosostenibilita(valoriEcosostenibilitaService.findById(idValori));</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_182'/>
+182
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_182'>1</a>
+<span>
+1. modificaAttivita : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      if (attivita.isAlloggio()) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_183'/>
+183
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_183'>1</a>
+<span>
+1. modificaAttivita : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (categoriaAlloggio == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_184'/>
+184
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_184'>1</a>
+<span>
+1. modificaAttivita : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::modificaAttivita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_185'/>
+185
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_185'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>              &#34;Categoria per alloggio non presente.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_186'/>
+186
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_186'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_187'/>
+187
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_187'>1</a>
+<span>
+1. modificaAttivita : removed call to it/greentrails/backend/entities/Attivita::setCategoriaAlloggio &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        attivita.setCategoriaAlloggio(CategorieAlloggio.values()[categoriaAlloggio]);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_188'/>
+188
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_188'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_189'/>
+189
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_189'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      } else {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_190'/>
+190
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_190'>1</a>
+<span>
+1. modificaAttivita : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (disponibilita == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_191'/>
+191
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_191'>1</a>
+<span>
+1. modificaAttivita : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::modificaAttivita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_192'/>
+192
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_192'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>              &#34;Disponibilit&#224; per attivit&#224; turistica non presente.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_193'/>
+193
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_193'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_194'/>
+194
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_194'>1</a>
+<span>
+1. modificaAttivita : removed call to it/greentrails/backend/entities/Attivita::setDisponibilita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        attivita.setDisponibilita(disponibilita);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_195'/>
+195
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_195'>1</a>
+<span>
+1. modificaAttivita : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (prezzo == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_196'/>
+196
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_196'>1</a>
+<span>
+1. modificaAttivita : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::modificaAttivita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_197'/>
+197
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_197'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>              &#34;Prezzo per attivit&#224; turistica non presente.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_198'/>
+198
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_198'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_199'/>
+199
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_199'>1</a>
+<span>
+1. modificaAttivita : removed call to it/greentrails/backend/entities/Attivita::setPrezzo &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        attivita.setPrezzo(prezzo);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_200'/>
+200
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_200'>1</a>
+<span>
+1. modificaAttivita : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (categoriaAttivitaTuristica == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_201'/>
+201
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_201'>1</a>
+<span>
+1. modificaAttivita : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::modificaAttivita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          return ResponseGenerator.generateResponse(HttpStatus.BAD_REQUEST,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_202'/>
+202
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_202'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>              &#34;Categoria per attivit&#224; turistica non presente.&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_203'/>
+203
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_203'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_204'/>
+204
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_204'>1</a>
+<span>
+1. modificaAttivita : removed call to it/greentrails/backend/entities/Attivita::setCategoriaAttivitaTuristica &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        attivita.setCategoriaAttivitaTuristica(</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_205'/>
+205
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_205'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            CategorieAttivitaTuristica.values()[categoriaAttivitaTuristica]);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_206'/>
+206
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_206'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_207'/>
+207
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_207'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      attivita = attivitaService.saveAttivita(attivita);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_208'/>
+208
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_208'>1</a>
+<span>
+1. modificaAttivita : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::modificaAttivita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.OK, attivita);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_209'/>
+209
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_209'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    } catch (Exception e) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_210'/>
+210
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_210'>1</a>
+<span>
+1. modificaAttivita : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::modificaAttivita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_211'/>
+211
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_211'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_212'/>
+212
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_212'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_213'/>
+213
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_213'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_214'/>
+214
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_214'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @DeleteMapping(&#34;{id}&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_215'/>
+215
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_215'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ResponseEntity&#60;Object&#62; cancellaAttivita(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_216'/>
+216
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_216'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @AuthenticationPrincipal Utente utente,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_217'/>
+217
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_217'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @PathVariable(&#34;id&#34;) final Long id</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_218'/>
+218
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_218'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  ) {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_219'/>
+219
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_219'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    try {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_220'/>
+220
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_220'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      Attivita attivita = attivitaService.findById(id);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_221'/>
+221
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_221'>1</a>
+<span>
+1. cancellaAttivita : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      if (!attivita.getGestore().getId().equals(utente.getId())) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_222'/>
+222
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_222'>1</a>
+<span>
+1. cancellaAttivita : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::cancellaAttivita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return ResponseGenerator.generateResponse(HttpStatus.NOT_FOUND, &#34;Attivit&#224; non trovata&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_223'/>
+223
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_223'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_224'/>
+224
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_224'>1</a>
+<span>
+1. cancellaAttivita : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::cancellaAttivita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.OK,</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_225'/>
+225
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_225'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>          attivitaService.deleteAttivita(attivita));</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_226'/>
+226
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_226'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    } catch (Exception e) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_227'/>
+227
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_227'>1</a>
+<span>
+1. cancellaAttivita : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::cancellaAttivita &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return ResponseGenerator.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_228'/>
+228
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_228'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_229'/>
+229
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_229'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_230'/>
+230
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_230'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_231'/>
+231
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_231'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @GetMapping(&#34;alloggi&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_232'/>
+232
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_232'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ResponseEntity&#60;Object&#62; getAlloggi(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_233'/>
+233
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_233'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(value = &#34;limite&#34;, required = false) Integer limite</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_234'/>
+234
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_234'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  ) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_235'/>
+235
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_235'>1</a>
+<span>
+1. getAlloggi : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (limite == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_236'/>
+236
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_236'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      limite = 5;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_237'/>
+237
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_237'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_238'/>
+238
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_238'>1</a>
+<span>
+1. getAlloggi : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::getAlloggi &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return ResponseGenerator.generateResponse(HttpStatus.OK,</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_239'/>
+239
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_239'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        attivitaService.getAlloggi(limite));</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_240'/>
+240
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_240'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_241'/>
+241
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_241'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_242'/>
+242
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_242'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @GetMapping(&#34;attivitaTuristiche&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_243'/>
+243
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_243'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ResponseEntity&#60;Object&#62; getAttivitaTuristiche(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_244'/>
+244
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_244'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      @RequestParam(value = &#34;limite&#34;, required = false) Integer limite</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_245'/>
+245
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_245'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  ) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_246'/>
+246
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_246'>1</a>
+<span>
+1. getAttivitaTuristiche : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (limite == null) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_247'/>
+247
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_247'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      limite = 5;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_248'/>
+248
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_248'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_249'/>
+249
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_249'>1</a>
+<span>
+1. getAttivitaTuristiche : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::getAttivitaTuristiche &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return ResponseGenerator.generateResponse(HttpStatus.OK,</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_250'/>
+250
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_250'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        attivitaService.getAttivitaTuristiche(limite));</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_251'/>
+251
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_251'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_252'/>
+252
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_252'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_253'/>
+253
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_253'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @GetMapping(&#34;all&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_254'/>
+254
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_254'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ResponseEntity&#60;Object&#62; findAll() {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_255'/>
+255
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_255'>1</a>
+<span>
+1. findAll : replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::findAll &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return ResponseGenerator.generateResponse(HttpStatus.OK,</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_256'/>
+256
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_256'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        attivitaService.findAll());</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_257'/>
+257
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_257'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_258'/>
+258
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_258'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@592f77e0_259'/>
+259
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_259'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_61'>61</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_61'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAlloggio_Success()]</span></span> removed call to it/greentrails/backend/entities/Attivita::setAlloggio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_62'>62</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_62'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_Success()]</span></span> removed call to it/greentrails/backend/entities/Attivita::setGestore &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_63'>63</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_63'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_Success()]</span></span> removed call to it/greentrails/backend/entities/Attivita::setNome &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_64'>64</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_64'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_Success()]</span></span> removed call to it/greentrails/backend/entities/Attivita::setIndirizzo &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_65'>65</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_65'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_Success()]</span></span> removed call to it/greentrails/backend/entities/Attivita::setCap &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_66'>66</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_66'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_Success()]</span></span> removed call to it/greentrails/backend/entities/Attivita::setCitta &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_67'>67</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_67'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_Success()]</span></span> removed call to it/greentrails/backend/entities/Attivita::setProvincia &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_68'>68</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_68'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>none</span></span> removed call to it/greentrails/backend/entities/Attivita::setCoordinate &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=creaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLorg/springframework/web/multipart/MultipartFile;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[60],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=creaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLorg/springframework/web/multipart/MultipartFile;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[60],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=creaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLorg/springframework/web/multipart/MultipartFile;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[60],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_69'>69</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_69'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_Success()]</span></span> removed call to it/greentrails/backend/entities/Attivita::setDescrizioneBreve &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_70'>70</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_70'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_Success()]</span></span> removed call to it/greentrails/backend/entities/Attivita::setDescrizioneLunga &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_71'>71</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_71'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_Success()]</span></span> removed call to it/greentrails/backend/entities/Attivita::setValoriEcosostenibilita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_72'>72</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_72'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>none</span></span> removed call to it/greentrails/backend/entities/Attivita::setPrezzo &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=creaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLorg/springframework/web/multipart/MultipartFile;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[84],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=creaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLorg/springframework/web/multipart/MultipartFile;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[84],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=creaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLorg/springframework/web/multipart/MultipartFile;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[84],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_74'>74</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_74'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_Success()]</span></span> removed call to it/greentrails/backend/entities/Attivita::setMedia &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_75'>75</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_75'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivita_ArchiviazioneException()]</span></span> negated conditional &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivita_ArchiviazioneException()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_76'>76</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_76'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivita_ArchiviazioneException()]</span></span> removed call to it/greentrails/backend/gestioneupload/service/ArchiviazioneService::store &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_78'>78</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_78'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivita_SaveException()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_79'>79</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_79'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAlloggio_SenzaCategoria()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_80'>80</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_80'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAlloggio_SenzaCategoria()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::creaAttivita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_83'>83</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_83'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAlloggio_Success()]</span></span> removed call to it/greentrails/backend/entities/Attivita::setCategoriaAlloggio &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_86'>86</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_86'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_SenzaDisponibilita()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_87'>87</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_87'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_SenzaDisponibilita()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::creaAttivita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_90'>90</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_90'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_Success()]</span></span> removed call to it/greentrails/backend/entities/Attivita::setDisponibilita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_91'>91</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_91'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_Success()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_92'>92</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_92'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_SenzaPrezzo()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::creaAttivita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_95'>95</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_95'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>none</span></span> removed call to it/greentrails/backend/entities/Attivita::setPrezzo &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=creaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLorg/springframework/web/multipart/MultipartFile;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[169],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=creaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLorg/springframework/web/multipart/MultipartFile;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[169],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=creaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLorg/springframework/web/multipart/MultipartFile;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[169],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_96'>96</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_96'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_SenzaCategoria()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_97'>97</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_97'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_SenzaCategoria()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::creaAttivita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_100'>100</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_100'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_Success()]</span></span> removed call to it/greentrails/backend/entities/Attivita::setCategoriaAttivitaTuristica &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_104'>104</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_104'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAlloggio_Success()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::creaAttivita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_106'>106</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_106'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>creaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivita_Exception()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::creaAttivita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_116'>116</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_116'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>visualizzaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testVisualizzaAttivita_Success()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::visualizzaAttivita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_118'>118</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_118'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>visualizzaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testVisualizzaAttivita_Exception()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::visualizzaAttivita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_127'>127</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_127'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>visualizzaAttivitaPerGestore<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testVisualizzaAttivitaPerGestore_Success()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::visualizzaAttivitaPerGestore &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_130'>130</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_130'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>visualizzaAttivitaPerGestore<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testVisualizzaAttivitaPerGestore_Exception()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::visualizzaAttivitaPerGestore &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_138'>138</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_138'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>visualizzaAttivitaPerPrezzo<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testVisualizzaAttivitaPerPrezzo_SenzaLimite()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_141'>141</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_141'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>visualizzaAttivitaPerPrezzo<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testVisualizzaAttivitaPerPrezzo_SenzaLimite()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::visualizzaAttivitaPerPrezzo &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_168'>168</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_168'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivita_ValoriException()]</span></span> negated conditional &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivita_AttivitaEliminata()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_169'>169</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_169'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivita_GestoreDiverso()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::modificaAttivita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_172'>172</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_172'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>none</span></span> removed call to it/greentrails/backend/entities/Attivita::setGestore &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[42],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[42],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[42],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_173'>173</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_173'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAlloggio_Success()]</span></span> removed call to it/greentrails/backend/entities/Attivita::setNome &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_174'>174</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_174'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>none</span></span> removed call to it/greentrails/backend/entities/Attivita::setIndirizzo &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[52],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[52],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[52],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_175'>175</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_175'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>none</span></span> removed call to it/greentrails/backend/entities/Attivita::setCap &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[57],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[57],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[57],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_176'>176</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_176'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>none</span></span> removed call to it/greentrails/backend/entities/Attivita::setCitta &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[62],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[62],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[62],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_177'>177</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_177'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>none</span></span> removed call to it/greentrails/backend/entities/Attivita::setProvincia &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[67],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[67],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[67],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_178'>178</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_178'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>none</span></span> removed call to it/greentrails/backend/entities/Attivita::setCoordinate &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[78],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[78],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[78],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_179'>179</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_179'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>none</span></span> removed call to it/greentrails/backend/entities/Attivita::setDescrizioneBreve &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[83],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[83],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[83],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_180'>180</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_180'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>none</span></span> removed call to it/greentrails/backend/entities/Attivita::setDescrizioneLunga &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[88],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[88],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[88],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_181'>181</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_181'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>none</span></span> removed call to it/greentrails/backend/entities/Attivita::setValoriEcosostenibilita &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[97],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[97],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[97],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_182'>182</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_182'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivita_SaveException()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_183'>183</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_183'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAlloggio_SenzaCategoria()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_184'>184</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_184'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAlloggio_SenzaCategoria()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::modificaAttivita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_187'>187</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_187'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>none</span></span> removed call to it/greentrails/backend/entities/Attivita::setCategoriaAlloggio &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[122],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[122],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[122],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_190'>190</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_190'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivitaTuristica_SenzaDisponibilita()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_191'>191</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_191'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivitaTuristica_SenzaDisponibilita()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::modificaAttivita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_194'>194</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_194'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivitaTuristica_Success()]</span></span> removed call to it/greentrails/backend/entities/Attivita::setDisponibilita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_195'>195</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_195'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivitaTuristica_SenzaPrezzo()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_196'>196</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_196'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivitaTuristica_SenzaPrezzo()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::modificaAttivita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_199'>199</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_199'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivitaTuristica_Success()]</span></span> removed call to it/greentrails/backend/entities/Attivita::setPrezzo &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_200'>200</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_200'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivitaTuristica_SenzaCategoria()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_201'>201</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_201'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivitaTuristica_SenzaCategoria()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::modificaAttivita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_204'>204</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_204'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>none</span></span> removed call to it/greentrails/backend/entities/Attivita::setCategoriaAttivitaTuristica &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[182],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[182],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=it.greentrails.backend.gestioneattivita.controller.AttivitaController,-method=modificaAttivita,-methodDesc=(Lit/greentrails/backend/entities/Utente;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/String;Ljava/lang/String;JLjava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lorg/springframework/http/ResponseEntity;],-indexes=[182],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_208'>208</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_208'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAlloggio_Success()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::modificaAttivita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_210'>210</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_210'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>modificaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivita_ValoriException()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::modificaAttivita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_221'>221</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_221'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>cancellaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCancellaAttivita_GestoreDiverso()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_222'>222</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_222'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>cancellaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCancellaAttivita_GestoreDiverso()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::cancellaAttivita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_224'>224</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_224'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>cancellaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCancellaAttivita_Success()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::cancellaAttivita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_227'>227</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_227'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>cancellaAttivita<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCancellaAttivita_Exception()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::cancellaAttivita &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_235'>235</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_235'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getAlloggi<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testGetAlloggi_SenzaLimite()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_238'>238</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_238'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getAlloggi<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testGetAlloggi_SenzaLimite()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::getAlloggi &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_246'>246</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_246'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getAttivitaTuristiche<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testGetAttivitaTuristiche_SenzaLimite()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_249'>249</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_249'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getAttivitaTuristiche<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testGetAttivitaTuristiche_SenzaLimite()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::getAttivitaTuristiche &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@592f77e0_255'>255</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@592f77e0_255'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>findAll<br/><b>Killed by : </b>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testFindAll()]</span></span> replaced return value with null for it/greentrails/backend/gestioneattivita/controller/AttivitaController::findAll &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+<li class='mutator'>CONDITIONALS_BOUNDARY</li>
+<li class='mutator'>EMPTY_RETURNS</li>
+<li class='mutator'>FALSE_RETURNS</li>
+<li class='mutator'>INCREMENTS</li>
+<li class='mutator'>INVERT_NEGS</li>
+<li class='mutator'>MATH</li>
+<li class='mutator'>NEGATE_CONDITIONALS</li>
+<li class='mutator'>NULL_RETURNS</li>
+<li class='mutator'>PRIMITIVE_RETURNS</li>
+<li class='mutator'>TRUE_RETURNS</li>
+<li class='mutator'>VOID_METHOD_CALLS</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testGetAttivitaTuristiche_ConLimite()] (8 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testGetAttivitaTuristiche_SenzaLimite()] (13 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testFindAll()] (114 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAlloggio_SenzaCategoria()] (10 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivitaTuristica_SenzaPrezzo()] (8 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivitaTuristica_SenzaCategoria()] (12 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivitaTuristica_Success()] (13 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCancellaAttivita_Success()] (9 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCancellaAttivita_GestoreDiverso()] (14 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testVisualizzaAttivita_Success()] (8 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_SenzaDisponibilita()] (9 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_SenzaCategoria()] (18 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_Success()] (18 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivitaTuristica_SenzaPrezzo()] (129 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivitaTuristica_SenzaDisponibilita()] (8 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivita_ValoriException()] (8 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAlloggio_Success()] (11 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivita_SaveException()] (16 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAlloggio_SenzaCategoria()] (9 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivita_SaveException()] (13 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivita_ArchiviazioneException()] (18 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAlloggio_Success()] (15 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testVisualizzaAttivitaPerPrezzo_ConLimite()] (8 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testVisualizzaAttivitaPerPrezzo_SenzaLimite()] (8 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivita_ValoriNotFound()] (9 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testVisualizzaAttivitaPerGestore_Exception()] (10 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivita_Exception()] (18 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testGetAlloggi_SenzaLimite()] (10 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testGetAlloggi_ConLimite()] (10 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testVisualizzaAttivita_Exception()] (11 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivita_GestoreDiverso()] (13 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testModificaAttivita_AttivitaEliminata()] (17 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testVisualizzaAttivitaPerGestore_Success()] (9 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCreaAttivita_Exception()] (12 ms)</li><li>it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest.[engine:junit-jupiter]/[class:it.greentrails.backend.gestioneattivita.controller.AttivitaControllerTest]/[method:testCancellaAttivita_Exception()] (8 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='https://pitest.org'>PIT</a> 1.30.0 <a href='https://github.com/sponsors/hcoles'>support</a>
+
+</body>
+</html>
