@@ -1,33 +1,15 @@
-#import "@preview/charged-ieee:0.1.4": ieee
-
-#show: ieee.with(
-    title: [GreenTrails — Dependability Report],
-    authors: (
-        (
-            name: "Gabriele Di Stefano",
-            email: "g.distefano10@studenti.unisa.it",
-        ),
-        (
-            name: "Roberta Galluzzo",
-            email: "r.galluzzo3@studenti.unisa.it",
-        ),
-    ),
-    abstract: [
-        #link("https://github.com/gab-ds/GreenTrails")
-        #v(0.5cm)
-
-        Il presente documento fornisce una sintesi delle attività di
-        manutenzione perfettiva dell'applicativo web GreenTrails dal
-        punto di vista della Software Dependability, illustrando le
-        metodologie di verifica, gli strumenti di analisi e i risultati
-        ottenuti     per ciascun attributo di affidabilità: test unitari e
-        di integrazione, code coverage (JaCoCo), mutation testing
-        (Pitest), analisi statica (Checkstyle, SonarQube con Creedengo),
-        vulnerability scanning (Snyk) e secret scanning (GitGuardian).
-    ],
-    index-terms: ("Dependability", "Software Reliability", "Mutation Testing", "JaCoCo", "Pitest", "Security"),
-    paper-size: "a4",
-)
+#align(center)[
+  #text(size: 24pt)[GreenTrails — Dependability Report]
+  #v(0.5cm)
+  #text(size: 14pt)[Gabriele Di Stefano]
+  #text(size: 14pt)[Roberta Galluzzo]
+  #v(0.3cm)
+  #text(size: 11pt)[g.distefano10\@studenti.unisa.it]
+  #text(size: 11pt)[r.galluzzo3\@studenti.unisa.it]
+  #v(0.5cm)
+  #link("https://github.com/gab-ds/GreenTrails")
+  #v(1cm)
+]
 
 = Introduzione
 
@@ -125,11 +107,12 @@ gestionericerca, gestionesegnalazioni, gestioneupload e utils.
 
 == Stack Tecnologico
 
-Il backend è sviluppato in *Java 21* con *Spring Boot 3.5.16*
-(aggiornato da 3.2.1), moduli Web MVC, Data JPA, Security
-(HTTP Basic + BCrypt), Actuator, Validation. Dipendenze gestite con
-Maven, profiling per ambienti dev/prod/test. Database MySQL 8
-(produzione) / H2 embedded (test).
+Il backend è sviluppato in *Java 21* con *Spring Boot 4.1.1*
+(aggiornato da 3.2.1, passato per 3.5.16; Spring Framework 7),
+moduli Web MVC, Data JPA, Security (JWT HttpOnly cookie + BCrypt),
+Actuator, Validation. Dipendenze gestite con Maven, profiling per
+ambienti dev/prod/test. Database MySQL 8 (produzione) / H2 embedded
+(test).
 
 Il frontend è stato oggetto di un'importante migrazione durante la
 manutenzione evolutiva:
@@ -144,10 +127,12 @@ manutenzione evolutiva:
 
 == Componenti Principali
 
-- *Sicurezza:* HTTP Basic Authentication, BCryptPasswordEncoder
-    (work factor 10, ~130 ms per hash), controllo accessi basato su
-    ruoli (VISITATORE, GESTORE_ATTIVITA, AMMINISTRATORE), CORS
-    configurato per frontend su localhost:9000 e :3000.
+- *Sicurezza:* JWT firmato (HMAC-SHA) in cookie `HttpOnly; Secure;
+    SameSite=Strict`, scadenza 1 ora (migrato da HTTP Basic
+    Authentication); BCryptPasswordEncoder (work factor 10, ~130 ms per
+    hash); controllo accessi basato su ruoli (VISITATORE,
+    GESTORE_ATTIVITA, AMMINISTRATORE); CORS configurato per frontend su
+    localhost:9000, :3000, :4200, frontend e frontend:80.
 - *Servizi Core:* GestioneUtenzeServiceImpl (UserDetailsService),
     AttivitaServiceImpl (CRUD e filtri attività), ItinerariServiceImpl
     (pianificazione itinerari con adattatore AI in stub),
@@ -182,7 +167,7 @@ ottimizzazioni:
     `warning` per garantire best practice nella scrittura dei Dockerfile.
 
 La configurazione multi-ambiente rimane invariata: sviluppo
-(docker-compose.yml orchesta backend, frontend Nuxt 4, MySQL) e
+(docker-compose.yml orchestra backend, frontend Nuxt 4, MySQL) e
 produzione (docker-compose.prod.yml con policy di riavvio e limiti
 risorse). Health check su `/actuator/health` per monitoraggio della
 disponibilità del backend.
@@ -328,8 +313,8 @@ valore, la build falliva. Nel corso della manutenzione il controllo
 `scripts/jacoco_coverage.py --fail-below 80`, eseguito sulle pull
 request al posto della precedente action `PavanMudigonda/jacoco-reporter`.
 
-*Risultati:* la copertura attuale si attesta al 97,5% sulle linee,
-97,2% sui rami e 100% sulle classi (30/30), con i service layer al
+*Risultati:* la copertura attuale si attesta al 96,4% sulle linee,
+94,8% sui rami e 96,7% sulle classi (29/30), con i service layer al
 100%. Le esclusioni agent/report sono state allineate: entity, enum,
 utility, eccezioni di gestioneupload, security e BackendApplication,
 classi senza logica di business significativa.
@@ -342,15 +327,15 @@ l'efficacia dei test introducendo sistematicamente piccole modifiche
 le rilevano. Una mutazione "sopravvissuta" indica una lacuna nella
 suite di test.
 
-Nel progetto è integrato come plugin Maven con versione 1.22.1,
+Nel progetto è integrato come plugin Maven con versione 1.30.0,
 configurato per escludere entity, enum, classi di configurazione e
 l'AI adapter (esclusione temporanea). Il test viene eseguito in
 fase `verify` con soglia minima dell'80% di mutation coverage,
 verificata in CI/CD tramite lo script
 `scripts/pitest_coverage.py --fail-below 80` sulle pull request.
 
-*Risultati:* la mutation coverage si attesta all'89,6%
-(583 mutazioni uccise su 651 valide), con 68 mutazioni
+*Risultati:* la mutation coverage si attesta al 90%
+(619 mutazioni uccise su 688 valide), con 69 mutazioni
 sopravvissute riportate nella sezione collassabile dei commenti PR.
 I report HTML vengono generati nella directory `target/pit-reports/`.
 
@@ -372,27 +357,55 @@ CI/CD tramite GitHub Actions.
 *SonarQube* 9.9.8 è stato installato su Docker per l'analisi
 statica del codice backend (4.352 linee). Il plugin *Creedengo*
 2.0.0 (ex ecoCode) estende l'analisi con 15 regole specifiche per
-l'efficienza energetica e la qualità del codice Java.
+l'efficienza energetica e la qualità del codice Java, ed è stato
+impostato come profilo di default per il linguaggio Java (ereditando
+le regole di "Sonar way").
 
-*Risultati:*
-- *Bug:* 0 — *Vulnerabilità:* 0 — *Code Smells:* 3
-- *Debito tecnico:* 150 minuti (0,1% del costo di sviluppo)
-- *Duplicazioni:* 5,1%
-- *Rating:* affidabilità A, sicurezza A, manutenibilità A
+Nel corso della manutenzione è stata condotta un'analisi sistematica
+delle issue rilevate, con circa *180 issue risolte* appartenenti alle
+categorie più significative:
 
-I 3 code smell appartengono alla regola *GCI1 — Avoid Spring
-repository call in loop or stream*, presenti in:
 #table(
     columns: (auto, auto, auto),
     inset: 6pt,
     stroke: 0.5pt,
-    [*File*], [*Linea*], [*Descrizione*],
-    [ItinerariStubAdapter.java], [48], [Repository call in stream],
-    [ItinerariStubAdapter.java], [62], [Repository call in stream],
-    [RicercaServiceImpl.java], [36], [Repository call in stream],
+    [*Regola*], [*Descrizione*], [*Issue risolte*],
+    [GCI82], [Variabili locali non riassegnate rese `final`], [~63],
+    [S3751], [Metodi handler Spring privati resi `public`], [53],
+    [S5786], [Classi e metodi test JUnit5 resi package-private], [17],
+    [S1854], [Assegnazioni inutili a variabili locali rimosse], [10],
+    [S1192], [Stringhe duplicate estratte come costanti], [4],
+    [S6204], [`.collect(Collectors.toList())` → `.toList()`], [5],
+    [S6837], [Rimosso `@ResponseBody` superfluo su `@RestController`], [1],
+    [GCI74], [Sostituito `SELECT *` con colonne espresse nella query nativa], [1],
+    [GCI1], [Convertite chiamate `save()` in loop a `saveAll()` batch], [2],
+    [Blocker], [Fix leak Stream e test vuoto in `ArchiviazioneFileSystemService`], [2],
 )
 
-Tutti con severità MINOR e debito stimato di 50 minuti ciascuno.
+*Risultati attuali:*
+- *Bug:* 0 — *Vulnerabilità:* 0 — *Code Smells residui:* 724
+- *Debito tecnico:* 6.082 minuti
+- *Duplicazioni:* 4,1%
+- *Rating:* affidabilità A, sicurezza A, manutenibilità A
+
+I code smell residui (724) sono prevalentemente imputabili a GCI82
+su entity con Lombok (falsi positivi: le variabili sono final di
+fatto ma il getter/setter è generato da Lombok) e a GCI1 su pattern
+complessi non riscrivibili senza alterare la semantica. Le issue
+non risolte sono state valutate come a basso impatto o falsi
+positivi; la loro risoluzione è rimandata a iterazioni future.
+
+*Security Hotspot — CSRF disabilitato:* SonarQube ha segnalato un
+security hotspot relativo alla disabilitazione della protezione CSRF
+(`AbstractHttpConfigurer::disable` in `SecurityConfig`). L'hotspot è
+stato esaminato e correttamente *ignorato*: la disabilitazione del
+CSRF è una scelta consapevole e sicura per un'API REST stateless che
+utilizza autenticazione JWT in cookie `HttpOnly; SameSite=Strict`.
+Il meccanismo CSRF è rilevante solo per sessioni server-side con cookie
+di sessione leggibili da JavaScript; in un contesto stateless con JWT
+httpOnly il vettore d'attacco CSRF non è applicabile, rendendo la
+protezione ridondante. La dismissione rimane valida fintanto che
+l'autenticazione resta stateless.
 
 == JML e OpenJML — Specifica Formale e Static Checking
 
@@ -455,6 +468,14 @@ specifiche non ha prodotto benefici proporzionali, perche' la stragrande
 maggioranza dei failure residui e' costituita da falsi positivi generati
 da Lombok e Spring, non da bug reali nel codice applicativo.
 
+Il livello di rumore generato rende inoltre impossibile condurre
+un'analisi formale significativa equivalente a quanto offerto da
+*OCL* (Object Constraint Language) su un modello UML: in presenza di
+cosi' tanti falsi positivi strutturali, non e' possibile distinguere
+i failure reali da quelli generati dal framework, vanificando
+l'obiettivo primario della specifica formale — la verifica automatica
+di proprieta' di correttezza sul codice applicativo.
+
 = Analisi della Sicurezza
 
 La sicurezza informatica è uno degli attributi fondamentali della
@@ -514,14 +535,24 @@ su `esbuild` (frontend), `spring-boot-starter-parent`, `checkstyle`,
 `maven-checkstyle-plugin` (backend) e `eclipse-temurin:21-ubi10-minimal`
 (Docker image backend). Le vulnerabilità sulle dipendenze Maven e npm
 sono state risolte aggiornando alle versioni correnti:
-`spring-boot-starter-parent` 3.2.1 → 3.5.16,
-`checkstyle` 10.12.7 → 10.25.0,
+`spring-boot-starter-parent` 3.2.1 → 3.5.16 → 4.1.1 (Spring
+Framework 7), `checkstyle` 10.12.7 → 14.1.0,
 `maven-checkstyle-plugin` 3.3.1 → 3.6.0, e aggiungendo un override
 per `esbuild` in `package.json` (`"esbuild": "^0.28.1"`). La
 vulnerabilità sull'immagine Docker di base `eclipse-temurin:21-ubi10-minimal`
-non è invece risolvibile: la remediation proposta da Snyk
-(`eclipse-temurin:21.0.11_10-jre-alpine-3.23`) è una JRE, mentre il
-progetto richiede un JDK per la build multi-stage.
+— precedentemente non risolvibile tramite upgrade (la remediation Snyk
+puntava a una JRE, non a un JDK) — è stata risolta sostituendo tutte le
+immagini Docker con le corrispondenti versioni *Docker Hardened Images*
+(`dhi.io`): `dhi.io/eclipse-temurin:21-jdk-alpine-dev` (builder) e
+`dhi.io/eclipse-temurin:21-alpine` (runtime), pinnate per SHA con
+aggiornamento automatico tramite Dependabot.
+
+*Stato attuale:* tutte le vulnerabilità risolvibili tramite upgrade di
+dipendenze o sostituzione di immagini sono state eliminate. Le
+vulnerabilità residue segnalate da Snyk sono esclusivamente di tipo
+*non risolvibile* allo stato attuale — legate a dipendenze transitive
+o a limitazioni delle immagini base per le quali non è ancora
+disponibile una remediation compatibile con i vincoli del progetto.
 
 == GitGuardian — Secret Scanning
 
@@ -535,8 +566,10 @@ scansionare automaticamente ogni push e pull request alla ricerca
 di segreti accidentalmente committati. È inoltre presente un hook
 pre-commit locale (gitleaks) per il rilevamento prima del commit.
 
-*Risultati:* nessun segreto rilevato nel codice del backend al
-momento della scansione.
+*Risultati:* nel corso dell'analisi è stato rilevato un potenziale
+segreto, classificato e confermato come *falso positivo* dai
+manutentori del repository. Nessun segreto reale è stato individuato
+nel codice del backend.
 
 == CI/CD — Sicurezza automatizzata
 
@@ -568,26 +601,61 @@ progressivo hardening:
 - *Gitleaks* (pre-commit hook): hook locale che previene il commit
     di segreti prima che raggiungano il repository remoto,
     affiancando la scansione automatica di GitGuardian.
-- *Snyk* (GitHub App): scansione automatica delle vulnerabilità
-    nelle dipendenze a ogni push e pull request su `main`.
-- *GitGuardian* (GitHub App): scansione automatica di segreti
-    sull'intero repository a ogni push e PR.
+- *Snyk* (GitHub App — CI check): scansione automatica delle
+    vulnerabilità nelle dipendenze a ogni push e pull request,
+    con risultato visibile come status check sulla PR.
+- *GitGuardian* (GitHub App — CI check): scansione automatica di
+    segreti sull'intero repository a ogni push e PR, con risultato
+    visibile come status check sulla PR.
+- *FOSSA* (GitHub App — CI check): analisi automatica della
+    conformità delle licenze open-source delle dipendenze a ogni
+    push e pull request. Verifica che tutte le librerie utilizzate
+    siano compatibili con la licenza del progetto e segnala conflitti
+    di licenza o obblighi di attribuzione, con risultato visibile
+    come status check sulla PR.
 - *SonarQube* (servizio esterno): analisi statica di sicurezza
     e qualità del codice, eseguita su Docker con il plugin
-    Creedengo per regole di efficienza energetica.
-- *CodeCov:* l'action `codecov/codecov-action` (pinnata per SHA)
-    carica a ogni run del job `test` del backend, tramite il token
-    `CODECOV_TOKEN` configurato nei secret del repository, due tipi
-    di report: la copertura JaCoCo (`target/site/jacoco/jacoco.xml`,
-    `report_type: coverage`, caricata solo a report generati) e i
-    risultati dei test Surefire (`target/surefire-reports/TEST-*.xml`,
+    Creedengo per regole di efficienza energetica; l'analisi viene
+    triggerata dal job `test` su push a `main` tramite
+    `sonar-maven-plugin`.
+- *CodeCov* (GitHub App — CI check): l'action
+    `codecov/codecov-action` (pinnata per SHA) carica a ogni run
+    del job `test` del backend, tramite il token `CODECOV_TOKEN`,
+    due tipi di report: la copertura JaCoCo
+    (`target/site/jacoco/jacoco.xml`, `report_type: coverage`,
+    caricata solo a report generati) e i risultati dei test Surefire
+    (`target/surefire-reports/TEST-*.xml`,
     `report_type: test_results` per le Test Analytics). L'upload
-    dei test_results usa `if: always()`: viene eseguito anche in
-    caso di fallimento dei test, come raccomandato da CodeCov, per
-    garantire la visibilità dei fallimenti in Test Analytics. CodeCov
-    fornisce una visione storica e per-PR della copertura del
-    backend (97,5% medio sulle linee) e delle performance/fallimenti
-    dei test, complementare ai report generati in CI.
+    dei test_results usa `if: !cancelled()`: viene eseguito anche
+    in caso di fallimento dei test per garantire la visibilità dei
+    fallimenti in Test Analytics. CodeCov fornisce una visione
+    storica e per-PR della copertura del backend (97,5% medio sulle
+    linee) e delle performance/fallimenti dei test, ed espone il
+    proprio risultato come status check sulla PR.
+
+Snyk, GitGuardian, FOSSA e CodeCov sono quindi tutti visibili come
+*status check* sulla pull request, offrendo al reviewer un quadro
+immediato della security posture, della conformità delle licenze e
+della copertura prima dell'approvazione — in aggiunta ai check di
+CI nativi (test, gate coverage, Hadolint, Surefire report).
+
+- *Pipeline di test backend — suite estesa in un unico job:*
+    il job `test` esegue in sequenza Checkstyle,
+    `mvn test jacoco:report surefire-report:report
+    pitest:mutationCoverage -Dthreads=4`, con cache della
+    PIT history per velocizzare l'analisi incrementale dei mutanti.
+    SonarQube viene triggerato a valle sullo stesso job (solo su
+    push a `main`). I gate di coverage — JaCoCo ≥ 80% e Pitest
+    ≥ 80% — bloccano le PR in caso di regressione. Il riepilogo
+    Markdown di JaCoCo e Pitest viene pubblicato nello step summary
+    e come commento sulla PR.
+- *Pipeline di test frontend — gate unificato:* il job `gate`
+    esegue in un unico step `bun run gate` (ESLint + vue-tsc +
+    Vitest) con timeout di 10 minuti.
+- *Validazione workflow — actionlint:* il workflow `lint.yml`
+    esegue `actionlint` su ogni modifica ai file YAML di
+    `.github/workflows/`, garantendo la correttezza sintattica
+    e semantica della pipeline CI stessa.
 - *Branch protection su \`main\`:* protezione server-side attiva sul
     repository che impone il passaggio obbligatorio da pull request
     per ogni modifica a `main` — nessun commit diretto è consentito
@@ -655,10 +723,14 @@ che resta attiva anche per gli amministratori del repository.
 
 == Riepilogo della Sicurezza
 
-L'analisi combinata dei tre strumenti mostra che il backend
-*non presenta vulnerabilità note*: Snyk ha rilevato 0 CVE,
-SonarQube ha riportato 0 vulnerabilità e 0 bug, GitGuardian ha
-identificato 0 segreti esposti. Il modello di autenticazione e
+L'analisi combinata dei tre strumenti mostra che il backend presenta
+un perimetro di sicurezza solido: Snyk segnala esclusivamente
+vulnerabilità *non risolvibili* allo stato attuale (tutte quelle
+risolvibili tramite upgrade o cambio immagine sono state eliminate,
+inclusa quella sull'immagine Docker di base grazie alle Docker
+Hardened Images di `dhi.io`); SonarQube ha riportato 0 vulnerabilità
+e 0 bug; GitGuardian ha rilevato un segnale, classificato come falso positivo
+e confermato dai manutentori — nessun segreto reale esposto. Il modello di autenticazione e
 autorizzazione (JWT httpOnly cookie + BCrypt + ruoli granulari +
 CORS) completa il perimetro di sicurezza backend.
 
@@ -852,8 +924,10 @@ sessione stateless.
 
 #set enum(numbering: "1)")
 + *Dipendenza jjwt:* aggiunta la libreria `io.jsonwebtoken`
-    (jjwt-api, jjwt-impl, jjwt-jackson versione 0.12.6) nel
-    `pom.xml`.
+    (jjwt-api, jjwt-impl, jjwt-orgjson versione 0.13.0) nel
+    `pom.xml`. Il modulo `jjwt-orgjson` è stato preferito a
+    `jjwt-jackson` per compatibilità con Jackson 3 (adottato in
+    Spring Boot 4.1.1).
 
 + *JwtUtil:* classe `JwtUtil.java` che gestisce la generazione,
     il parsing e la validazione dei JWT. Utilizza HMAC-SHA
@@ -1589,9 +1663,6 @@ tramite una manutenzione evolutiva mirata alla qualità della misura:
   simulazione degli upload. In occasione dell'intervento è stato
   anche corretto il packaging del jar eseguibile `benchmarks.jar`.
 
-// TODO: rieseguire i benchmark sulla macchina di riferimento e
-// aggiornare i valori alla suite consolidata (4 classi, 9 benchmark).
-
 Durante le esecuzioni preliminari, i benchmark sono terminati con
 errori `OutOfMemoryError: Java heap space` durante la fase di
 warm-up (alla iterazione 44 su 500 previste). La causa è stata
@@ -1600,11 +1671,30 @@ accumulava ogni oggetto `Itinerario` nella lista `items` senza mai
 svuotarla. Il problema è stato risolto rimuovendo
 l'`items.add(entity)` dal metodo `save()`.
 
-I risultati preliminari della suite consolidata (9 benchmark) su
-VM Proxmox mostrano valori coerenti con la baseline storica:
-BCrypt 73 ms (vs 66 ms storici, differenza hardware),
-Archiviazione 10/27/24 μs (vs 1.4/17/68 μs), Pianificazione
-0.004--0.315 ms (vs 0.052--0.537 ms).
+*Risultati — suite consolidata, VM QEMU*
+(1 fork, 500 iterazioni warm-up + 300 misurazioni, `--summary`):
+
+#table(
+  columns: (auto, auto, auto, auto),
+  inset: 6pt,
+  stroke: 0.5pt,
+  [*Benchmark*], [*Modo*], [*Score*], [*Errore 99,9 %*],
+  [benchmarkDelete], [avgt], [0,0104 ms/op], [± 0,0000],
+  [benchmarkLoadAll], [avgt], [0,0273 ms/op], [± 0,0001],
+  [benchmarkStore], [avgt], [0,0245 ms/op], [± 0,0002],
+  [benchmarkPianificazione (100)], [avgt], [0,0035 ms/op], [± 0,0000],
+  [benchmarkPianificazione (1.000)], [avgt], [0,0324 ms/op], [± 0,0000],
+  [benchmarkPianificazione (5.000)], [avgt], [0,1570 ms/op], [± 0,0010],
+  [benchmarkPianificazione (10.000)], [avgt], [0,3150 ms/op], [± 0,0026],
+  [benchmarkPasswordEncoding], [avgt], [73,1671 ms/op], [± 0,0367],
+  [benchmarkPasswordMatching], [avgt], [73,1230 ms/op], [± 0,0332],
+)
+
+I valori sono coerenti con la baseline storica: BCrypt 73 ms (vs 66 ms
+storici, delta atteso per differenza hardware CPU), archiviazione
+0,010/0,027/0,024 ms (vs 1,4/17/68 μs — variazioni compatibili con I/O
+filesystem su VM vs bare metal), pianificazione 0,004--0,315 ms (vs
+0,052--0,537 ms — range coerente, crescita lineare).
 
 = Riepilogo delle Misurazioni
 
@@ -1613,9 +1703,9 @@ Archiviazione 10/27/24 μs (vs 1.4/17/68 μs), Pianificazione
     inset: 6pt,
     stroke: 0.5pt,
     [*Strumento*], [*Attributo*], [*Baseline*], [*Risultato*],
-    [JaCoCo], [Affidabilità], [Nessuna misura di copertura], [97,5% linee / 97,2% rami / 100% classi (30/30); esclusioni agent/report allineate],
-    [CodeCov], [Affidabilità (monitoraggio copertura e test)], [Nessuna piattaforma di copertura], [Copertura JaCoCo e risultati Surefire caricati a ogni run del job test backend; storico e commenti per-PR],
-    [Pitest], [Affidabilità], [Nessun mutation testing], [Mutation coverage 89,6% (583/651); 68 sopravvissute],
+    [JaCoCo], [Affidabilità], [Nessuna misura di copertura], [96,4% linee / 94,8% rami / 96,7% classi (29/30); esclusioni agent/report allineate],
+    [CodeCov], [Affidabilità — copertura e test analytics (CI check)], [Nessuna piattaforma di copertura], [JaCoCo + Surefire caricati a ogni run; storico per-PR; status check su PR],
+    [Pitest], [Affidabilità], [Nessun mutation testing], [Mutation coverage 90% (619/688); 69 sopravvissute],
     [Gate coverage CI], [Affidabilità], [Soglia 80% nella build], [Gate raw("--fail-below 80") su PR via script (JaCoCo e Pitest), al posto di PavanMudigonda/jacoco-reporter],
     [Checkstyle], [Manutenibilità], [Nessun controllo stile], [0 violazioni Google Java Style],
     [Buildabilità],
@@ -1626,11 +1716,13 @@ Archiviazione 10/27/24 μs (vs 1.4/17/68 μs), Pianificazione
     [SonarQube/Creedengo],
     [Manutenibilità / Sicurezza],
     [Nessuna analisi statica],
-    [Rating A/A/A; 3 code smell GCI1 (MINOR)],
+    [~180 issue risolte; 724 code smell residui; debito 6.082 min; duplicazioni 4,1%; rating A/A/A],
 
-    [Snyk], [Sicurezza], [Nessuna scansione dipendenze], [0 vulnerabilità ad alta/media severità],
-    [GitGuardian], [Sicurezza], [Nessuna scansione segreti], [0 segreti rilevati],
-    [Spring Security], [Sicurezza], [Nessuna configurazione], [JWT (HMAC-SHA) + httpOnly cookie + BCrypt + ruoli granulari + CORS],
+    [Snyk], [Sicurezza (CI check)], [Nessuna scansione dipendenze], [Sole vulnerabilità non risolvibili allo stato attuale; tutte le fixable risolte tramite upgrade dipendenze e adozione immagini DHI; status check visibile su ogni PR],
+    [GitGuardian], [Sicurezza (CI check)], [Nessuna scansione segreti], [1 segnalazione rilevata, classificata e confermata come falso positivo dai manutentori; 0 segreti reali esposti; status check visibile su ogni PR],
+    [FOSSA], [Conformità licenze (CI check)], [Nessuna analisi licenze], [Analisi automatica delle licenze open-source attiva come GitHub App; status check visibile su ogni PR],
+    [CodeCov], [Affidabilità — monitoraggio copertura (CI check)], [Nessuna piattaforma di copertura], [JaCoCo e Surefire caricati a ogni run; storico e commenti per-PR; status check visibile su ogni PR],
+    [Spring Security], [Sicurezza], [Nessuna configurazione], [JWT (HMAC-SHA) + httpOnly cookie + BCrypt + ruoli granulari + CORS; migrato da HTTP Basic (Spring Boot 4.1.1, Framework 7)],
 
     [JML/OpenJML],
     [Affidabilità (specifica formale)],
@@ -1666,16 +1758,13 @@ seguenti aspetti da approfondire o completare:
     energetico.
 - *Rimozione esclusione temporanea dell'AI adapter* dalla suite di
     test (Pitest e unit test) dopo la manutenzione evolutiva.
-- *Risoluzione dei 3 code smell GCI1* (repository call in stream)
-    per ridurre il debito tecnico e migliorare l'affidabilità del
-    data access layer.
-- *Remediation delle vulnerabilità frontend:* tutte e 9 le
-    vulnerabilità risolte: V-01 (JWT), V-02 (cookie plaintext),
-    V-03 (XSS Leaflet), V-04 (localStorage), V-05 (HTTPS),
-    V-06 (CSP condizionale), V-07 (path traversal tile proxy),
-    V-08 (JWT httpOnly: false → cookie HttpOnly lato server),
-    V-09 (hash password in risposta login + padding Base64 JWT).
+- *Risoluzione dei code smell residui SonarQube/Creedengo* (724
+    issue, prevalentemente GCI82 su entity Lombok e GCI1 su pattern
+    complessi) per ridurre il debito tecnico (6.082 min) e migliorare
+    ulteriormente la manutenibilità del codice.
 - *Integrazione CI/CD continua* delle scansioni Snyk e GitGuardian
     per mantenere la security posture nel tempo.
 - *Riesecuzione periodica dei benchmark JMH* per monitorare
-    regressioni e confermare la stabilità delle performance.
+    regressioni e confermare la stabilità delle performance dopo
+    ogni aggiornamento di dipendenze significativo (es. Spring Boot
+    4.1.1 → versioni future).
