@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ItinerariStubAdapter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">it.greentrails.backend.gestioneitinerari.adapter</a> &gt; <span class="el_source">ItinerariStubAdapter.java</span></div><h1>ItinerariStubAdapter.java</h1><pre class="source lang-java linenums">package it.greentrails.backend.gestioneitinerari.adapter;
+
+import it.greentrails.backend.entities.Attivita;
+import it.greentrails.backend.entities.Camera;
+import it.greentrails.backend.entities.Itinerario;
+import it.greentrails.backend.entities.Preferenze;
+import it.greentrails.backend.entities.PrenotazioneAlloggio;
+import it.greentrails.backend.entities.PrenotazioneAttivitaTuristica;
+import it.greentrails.backend.gestioneattivita.repository.AttivitaRepository;
+import it.greentrails.backend.gestioneattivita.repository.CameraRepository;
+import it.greentrails.backend.gestioneitinerari.repository.ItinerariRepository;
+import it.greentrails.backend.gestioneprenotazioni.repository.PrenotazioneAlloggioRepository;
+import it.greentrails.backend.gestioneprenotazioni.repository.PrenotazioneAttivitaTuristicaRepository;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+/*@ nullable_by_default @*/
+public class ItinerariStubAdapter implements ItinerariAdapter {
+
+  /*@ spec_public non_null @*/
+  private final AttivitaRepository attivitaRepository;
+  /*@ spec_public non_null @*/
+  private final CameraRepository cameraRepository;
+  /*@ spec_public non_null @*/
+  private final ItinerariRepository itinerariRepository;
+  /*@ spec_public non_null @*/
+  private final PrenotazioneAlloggioRepository prenotazioneAlloggioRepository;
+  /*@ spec_public non_null @*/
+  private final PrenotazioneAttivitaTuristicaRepository prenotazioneAttivitaTuristicaRepository;
+
+  // Spring guarantees injection — removed JML invariants to fix InvariantExit errors
+
+
+  /*@
+    @ also
+    @ requires preferenze != null;
+    @ ensures \result != null;
+    @*/
+  @Override
+  public Itinerario pianificazioneAutomatica(Preferenze preferenze) {
+<span class="fc" id="L49">    final Itinerario itinerario = new Itinerario();</span>
+<span class="fc" id="L50">    itinerario.setVisitatore(preferenze.getVisitatore());</span>
+<span class="fc" id="L51">    final Itinerario itinerarioFinal = itinerariRepository.save(itinerario);</span>
+<span class="fc" id="L52">    List&lt;Attivita&gt; attivitaTuristiche = attivitaRepository.findAll();</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">    if (attivitaTuristiche == null) {</span>
+<span class="nc" id="L54">      attivitaTuristiche = Collections.emptyList();</span>
+    }
+<span class="fc" id="L56">    Collections.shuffle(attivitaTuristiche);</span>
+<span class="fc" id="L57">    List&lt;PrenotazioneAttivitaTuristica&gt; prenotazioniAttivita = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">    attivitaTuristiche.stream().filter(a -&gt; !a.isAlloggio()).limit(3).forEach(a -&gt; {</span>
+<span class="fc" id="L59">      PrenotazioneAttivitaTuristica p = new PrenotazioneAttivitaTuristica();</span>
+<span class="fc" id="L60">      p.setAttivitaTuristica(a);</span>
+<span class="fc" id="L61">      p.setItinerario(itinerarioFinal);</span>
+<span class="fc" id="L62">      p.setDataInizio(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)));</span>
+<span class="fc" id="L63">      p.setNumAdulti(1);</span>
+<span class="fc" id="L64">      p.setNumBambini(0);</span>
+<span class="fc" id="L65">      p.setPrezzo(a.getPrezzo());</span>
+<span class="fc" id="L66">      prenotazioniAttivita.add(p);</span>
+<span class="fc" id="L67">    });</span>
+<span class="fc" id="L68">    prenotazioneAttivitaTuristicaRepository.saveAll(prenotazioniAttivita);</span>
+<span class="fc" id="L69">    List&lt;Camera&gt; camere = cameraRepository.findAll();</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">    if (camere == null) {</span>
+<span class="nc" id="L71">      camere = Collections.emptyList();</span>
+    }
+<span class="fc" id="L73">    Collections.shuffle(camere);</span>
+<span class="fc" id="L74">    List&lt;PrenotazioneAlloggio&gt; prenotazioniAlloggio = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L75">    camere.stream().limit(1).forEach(c -&gt; {</span>
+<span class="fc" id="L76">      PrenotazioneAlloggio p = new PrenotazioneAlloggio();</span>
+<span class="fc" id="L77">      p.setCamera(c);</span>
+<span class="fc" id="L78">      p.setItinerario(itinerarioFinal);</span>
+<span class="fc" id="L79">      p.setDataInizio(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)));</span>
+<span class="fc" id="L80">      p.setDataFine(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));</span>
+<span class="fc" id="L81">      p.setNumAdulti(1);</span>
+<span class="fc" id="L82">      p.setNumBambini(0);</span>
+<span class="fc" id="L83">      p.setNumCamere(1);</span>
+<span class="fc" id="L84">      p.setPrezzo(c.getPrezzo());</span>
+<span class="fc" id="L85">      prenotazioniAlloggio.add(p);</span>
+<span class="fc" id="L86">    });</span>
+<span class="fc" id="L87">    prenotazioneAlloggioRepository.saveAll(prenotazioniAlloggio);</span>
+<span class="fc" id="L88">    return itinerarioFinal;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>
