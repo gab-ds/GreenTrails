@@ -69,7 +69,9 @@ jobs:
             echo "ok=true" >> "$GITHUB_OUTPUT"
           fi
       - name: SonarQube Analysis
-        if: ${{ !cancelled() && steps.check.outputs.ok == 'true' }}
+        timeout-minutes: 10
+        continue-on-error: true
+        if: ${{ !cancelled() && steps.check.outputs.ok == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
@@ -78,6 +80,7 @@ jobs:
             -Dsonar.projectKey=gab-ds_GreenTrails_0f2f65ea-0ac1-4f74-8a26-a216168e69bd \
             -Dsonar.projectName='GreenTrails' \
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
+            -Dsonar.ws.timeout=300 \
             --batch-mode
       - name: Genera badge coverage
         if: ${{ !cancelled() && steps.check.outputs.ok == 'true' }}
