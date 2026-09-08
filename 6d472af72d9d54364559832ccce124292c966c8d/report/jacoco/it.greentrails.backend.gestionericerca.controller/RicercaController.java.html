@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RicercaController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">it.greentrails.backend.gestionericerca.controller</a> &gt; <span class="el_source">RicercaController.java</span></div><h1>RicercaController.java</h1><pre class="source lang-java linenums">package it.greentrails.backend.gestionericerca.controller;
+
+import it.greentrails.backend.entities.Attivita;
+import it.greentrails.backend.gestioneattivita.service.CategoriaService;
+import it.greentrails.backend.gestionericerca.service.RicercaService;
+import it.greentrails.backend.utils.service.ResponseGenerator;
+import java.util.Arrays;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.geo.Point;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Controller
+@RequestMapping(&quot;api/ricerca&quot;)
+@RequiredArgsConstructor
+public class RicercaController {
+
+  private final RicercaService ricercaService;
+  private final CategoriaService categoriaService;
+
+  @PostMapping
+  public ResponseEntity&lt;Object&gt; cerca(
+      @RequestParam(value = &quot;query&quot;) final String query,
+      @RequestParam(value = &quot;idCategorie&quot;, required = false) final Long[] idCategorie,
+      @RequestParam(value = &quot;latitudine&quot;, required = false) final Long latitudine,
+      @RequestParam(value = &quot;longitudine&quot;, required = false) final Long longitudine,
+      @RequestParam(value = &quot;raggio&quot;, required = false) final Double raggio
+  ) {
+<span class="fc" id="L34">    List&lt;Attivita&gt; risultati = ricercaService.findAttivita(query);</span>
+<span class="fc bfc" id="L35" title="All 4 branches covered.">    if (idCategorie != null &amp;&amp; idCategorie.length &gt; 0) {</span>
+<span class="fc" id="L36">      risultati = ricercaService.findAttivitaByCategorie(</span>
+<span class="fc" id="L37">              Arrays.stream(idCategorie).map(idCategoria -&gt; {</span>
+                try {
+<span class="fc" id="L39">                  return categoriaService.findById(idCategoria);</span>
+<span class="nc" id="L40">                } catch (Exception e) {</span>
+<span class="nc" id="L41">                  throw new RuntimeException(e);</span>
+                }
+<span class="fc" id="L43">              }).toList())</span>
+<span class="fc" id="L44">          .stream()</span>
+<span class="fc" id="L45">          .filter(risultati::contains)</span>
+<span class="fc" id="L46">          .toList();</span>
+    }
+<span class="pc bpc" id="L48" title="1 of 6 branches missed.">    if (latitudine != null &amp;&amp; longitudine != null &amp;&amp; raggio != null) {</span>
+<span class="fc" id="L49">      Point coordinate = new Point(latitudine, longitudine);</span>
+<span class="fc" id="L50">      risultati = ricercaService.findAttivitaByPosizione(coordinate, raggio)</span>
+<span class="fc" id="L51">          .stream()</span>
+<span class="fc" id="L52">          .filter(risultati::contains)</span>
+<span class="fc" id="L53">          .toList();</span>
+    }
+<span class="fc" id="L55">    return ResponseGenerator.generateResponse(HttpStatus.OK, risultati);</span>
+  }
+
+  @PostMapping(&quot;perPosizione&quot;)
+  public ResponseEntity&lt;Object&gt; cercaSenzaQuery(
+      @RequestParam(value = &quot;latitudine&quot;) final Double latitudine,
+      @RequestParam(value = &quot;longitudine&quot;) final Double longitudine,
+      @RequestParam(value = &quot;raggio&quot;) final Double raggio,
+      @RequestParam(value = &quot;idCategorie&quot;, required = false) final Long[] idCategorie
+  ) {
+<span class="fc" id="L65">    Point coordinate = new Point(latitudine, longitudine);</span>
+<span class="fc" id="L66">    List&lt;Attivita&gt; risultati = ricercaService.findAttivitaByPosizione(coordinate, raggio);</span>
+<span class="fc bfc" id="L67" title="All 4 branches covered.">    if (idCategorie != null &amp;&amp; idCategorie.length &gt; 0) {</span>
+<span class="fc" id="L68">      risultati = ricercaService.findAttivitaByCategorie(</span>
+<span class="fc" id="L69">              Arrays.stream(idCategorie).map(idCategoria -&gt; {</span>
+                try {
+<span class="fc" id="L71">                  return categoriaService.findById(idCategoria);</span>
+<span class="nc" id="L72">                } catch (Exception e) {</span>
+<span class="nc" id="L73">                  throw new RuntimeException(e);</span>
+                }
+<span class="fc" id="L75">              }).toList())</span>
+<span class="fc" id="L76">          .stream()</span>
+<span class="fc" id="L77">          .filter(risultati::contains)</span>
+<span class="fc" id="L78">          .toList();</span>
+    }
+<span class="fc" id="L80">    return ResponseGenerator.generateResponse(HttpStatus.OK, risultati);</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>
