@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ArchiviazioneFileSystemService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">it.greentrails.backend.gestioneupload.service</a> &gt; <span class="el_source">ArchiviazioneFileSystemService.java</span></div><h1>ArchiviazioneFileSystemService.java</h1><pre class="source lang-java linenums">package it.greentrails.backend.gestioneupload.service;
+
+import it.greentrails.backend.gestioneupload.exceptions.ArchiviazioneException;
+import it.greentrails.backend.gestioneupload.exceptions.FileNonTrovatoException;
+import it.greentrails.backend.utils.ArchiviazioneProperties;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+@Service
+public class ArchiviazioneFileSystemService implements ArchiviazioneService {
+
+  private final Path rootLocation;
+<span class="fc" id="L28">  private static final Set&lt;String&gt; ALLOWED_CONTENT_TYPES = Set.of(&quot;image/jpeg&quot;, &quot;image/png&quot;, &quot;video/mp4&quot;);</span>
+<span class="fc" id="L29">  private static final Set&lt;String&gt; ALLOWED_EXTENSIONS = Set.of(&quot;jpg&quot;, &quot;jpeg&quot;, &quot;png&quot;, &quot;mp4&quot;);</span>
+
+  @Autowired
+<span class="fc" id="L32">  public ArchiviazioneFileSystemService(ArchiviazioneProperties properties) {</span>
+<span class="pc bpc" id="L33" title="1 of 4 branches missed.">    if (properties.getLocation() == null || properties.getLocation().trim().isEmpty()) {</span>
+<span class="fc" id="L34">      throw new ArchiviazioneException(&quot;Il percorso di upload è vuoto.&quot;);</span>
+    }
+<span class="fc" id="L36">    this.rootLocation = Paths.get(properties.getLocation()).toAbsolutePath().normalize();</span>
+<span class="fc" id="L37">  }</span>
+
+  @Override
+  public void store(String media, MultipartFile file) {
+    try {
+<span class="pc bpc" id="L42" title="1 of 4 branches missed.">      if (file == null || file.isEmpty()) {</span>
+<span class="fc" id="L43">        throw new ArchiviazioneException(&quot;Il file è vuoto.&quot;);</span>
+      }
+
+<span class="fc" id="L46">      String extension = validateAndExtractExtension(file);</span>
+<span class="fc" id="L47">      Path destinationDir = resolveAndValidate(media, null);</span>
+<span class="fc" id="L48">      Files.createDirectories(destinationDir);</span>
+
+<span class="fc" id="L50">      String filename = (System.currentTimeMillis() / 1000L) + &quot;.&quot; + extension;</span>
+<span class="fc" id="L51">      Path destinationFile = destinationDir.resolve(filename);</span>
+
+<span class="fc" id="L53">      try (InputStream inputStream = file.getInputStream()) {</span>
+<span class="fc" id="L54">        Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);</span>
+      }
+<span class="fc" id="L56">    } catch (IOException e) {</span>
+<span class="fc" id="L57">      throw new ArchiviazioneException(&quot;Impossibile salvare il file.&quot;, e);</span>
+<span class="fc" id="L58">    }</span>
+<span class="fc" id="L59">  }</span>
+
+  @Override
+  public List&lt;String&gt; loadAll(String media) {
+<span class="fc" id="L63">    Path mediaDir = resolveAndValidate(media, null);</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">    if (!Files.exists(mediaDir)) {</span>
+<span class="fc" id="L65">      return List.of();</span>
+    }
+<span class="fc" id="L67">    try (Stream&lt;Path&gt; stream = Files.walk(mediaDir, 1)) {</span>
+<span class="fc" id="L68">      return stream</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">          .filter(path -&gt; !path.equals(mediaDir))</span>
+<span class="fc" id="L70">          .map(mediaDir::relativize)</span>
+<span class="fc" id="L71">          .map(Path::toString)</span>
+<span class="fc" id="L72">          .toList();</span>
+<span class="nc" id="L73">    } catch (IOException e) {</span>
+<span class="nc" id="L74">      throw new ArchiviazioneException(&quot;Impossibile leggere i file salvati&quot;, e);</span>
+    }
+  }
+
+  @Override
+  public Path load(String media, String filename) {
+<span class="fc" id="L80">    return resolveAndValidate(media, filename);</span>
+  }
+
+  @Override
+  public Resource loadAsResource(String media, String filename) {
+    try {
+<span class="fc" id="L86">      Path file = load(media, filename);</span>
+<span class="fc" id="L87">      Resource resource = new UrlResource(file.toUri());</span>
+<span class="fc bfc" id="L88" title="All 4 branches covered.">      if (resource.exists() &amp;&amp; resource.isReadable()) {</span>
+<span class="fc" id="L89">        return resource;</span>
+      }
+<span class="fc" id="L91">      throw new FileNonTrovatoException(&quot;Impossibile trovare il file: &quot; + filename);</span>
+<span class="nc" id="L92">    } catch (MalformedURLException e) {</span>
+<span class="nc" id="L93">      throw new FileNonTrovatoException(&quot;Impossibile trovare il file: &quot; + filename, e);</span>
+    }
+  }
+
+  @Override
+  public void delete(String media, String filename) {
+<span class="fc" id="L99">    Path file = resolveAndValidate(media, filename);</span>
+    try {
+<span class="fc" id="L101">      Files.deleteIfExists(file);</span>
+<span class="nc" id="L102">    } catch (IOException e) {</span>
+<span class="nc" id="L103">      throw new ArchiviazioneException(&quot;Impossibile eliminare il file: &quot; + filename, e);</span>
+<span class="fc" id="L104">    }</span>
+<span class="fc" id="L105">  }</span>
+
+  @Override
+  public void deleteAll() {
+<span class="fc" id="L109">    FileSystemUtils.deleteRecursively(rootLocation.toFile());</span>
+<span class="fc" id="L110">  }</span>
+
+  @Override
+  public void init() {
+    try {
+<span class="fc" id="L115">      Files.createDirectories(rootLocation);</span>
+<span class="nc" id="L116">    } catch (IOException e) {</span>
+<span class="nc" id="L117">      throw new ArchiviazioneException(&quot;Impossibile inizializzare l'archiviazione&quot;, e);</span>
+<span class="fc" id="L118">    }</span>
+<span class="fc" id="L119">  }</span>
+
+  private Path resolveAndValidate(String media, String filename) {
+<span class="fc" id="L122">    Path mediaDir = this.rootLocation.resolve(media).normalize().toAbsolutePath();</span>
+
+<span class="fc bfc" id="L124" title="All 2 branches covered.">    if (!mediaDir.startsWith(this.rootLocation)) {</span>
+<span class="fc" id="L125">      throw new ArchiviazioneException(&quot;Accesso negato: contesto media non valido.&quot;);</span>
+    }
+
+<span class="pc bpc" id="L128" title="1 of 4 branches missed.">    if (filename == null || filename.isBlank()) {</span>
+<span class="fc" id="L129">      return mediaDir;</span>
+    }
+
+<span class="fc" id="L132">    Path targetFile = mediaDir.resolve(filename).normalize().toAbsolutePath();</span>
+
+<span class="fc bfc" id="L134" title="All 2 branches covered.">    if (!targetFile.startsWith(mediaDir)) {</span>
+<span class="fc" id="L135">      throw new ArchiviazioneException(&quot;Accesso negato: percorso file non valido.&quot;);</span>
+    }
+
+<span class="fc" id="L138">    return targetFile;</span>
+  }
+
+  private String validateAndExtractExtension(MultipartFile file) {
+<span class="fc" id="L142">    String contentType = file.getContentType();</span>
+<span class="pc bpc" id="L143" title="1 of 4 branches missed.">    if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType)) {</span>
+<span class="fc" id="L144">      throw new ArchiviazioneException(&quot;Il formato del file non è valido.&quot;);</span>
+    }
+
+<span class="fc" id="L147">    String ext = StringUtils.getFilenameExtension(file.getOriginalFilename());</span>
+<span class="pc bpc" id="L148" title="1 of 4 branches missed.">    if (ext == null || !ALLOWED_EXTENSIONS.contains(ext.toLowerCase())) {</span>
+<span class="fc" id="L149">      throw new ArchiviazioneException(&quot;Estensione del file non supportata.&quot;);</span>
+    }
+
+<span class="fc" id="L152">    return ext.toLowerCase();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>
