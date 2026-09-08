@@ -14,9 +14,9 @@ import it.greentrails.backend.utils.DataSeeder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.mock.web.MockMultipartFile;
@@ -45,19 +45,19 @@ class GestioneUploadControllerTest {
   @Autowired
   private MockMvc mockMvc;
 
-  @MockBean
+  @MockitoBean
   private ArchiviazioneService archiviazioneService;
 
-  @MockBean
+  @MockitoBean
   private AttivitaRepository attivitaRepository;
 
-  @MockBean
+  @MockitoBean
   private RecensioneRepository recensioneRepository;
 
-  @MockBean
+  @MockitoBean
   private SegnalazioniRepository segnalazioniRepository;
 
-  @MockBean
+  @MockitoBean
   private DataSeeder dataSeeder;
 
   private Utente visitatore;

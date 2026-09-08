@@ -15,9 +15,9 @@ import it.greentrails.backend.gestioneupload.service.ArchiviazioneService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.data.geo.Point;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
@@ -42,16 +42,16 @@ class SegnalazioniControllerTest {
   @Autowired
   private MockMvc mockMvc;
 
-  @MockBean
+  @MockitoBean
   private SegnalazioniService segnalazioniService;
 
-  @MockBean
+  @MockitoBean
   private AttivitaService attivitaService;
 
-  @MockBean
+  @MockitoBean
   private RecensioneService recensioneService;
 
-  @MockBean
+  @MockitoBean
   private ArchiviazioneService archiviazioneService;
 
   private Utente visitatore;

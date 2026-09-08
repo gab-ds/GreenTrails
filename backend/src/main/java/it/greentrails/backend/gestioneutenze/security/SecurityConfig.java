@@ -1,10 +1,8 @@
 package it.greentrails.backend.gestioneutenze.security;
 
 import it.greentrails.backend.enums.RuoloUtente;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -25,7 +23,6 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@Order(SecurityProperties.BASIC_AUTH_ORDER - 10)
 public class SecurityConfig {
 
   private static final String ROLE_VISITATORE = RuoloUtente.VISITATORE.name();

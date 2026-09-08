@@ -234,16 +234,6 @@ abstract class FakeJpaRepository<T, ID> implements JpaRepository<T, ID> {
   }
 
   @Override
-  public T getById(ID id) {
-    return null;
-  }
-
-  @Override
-  public T getOne(ID id) {
-    return null;
-  }
-
-  @Override
   public <S extends T> Optional<S> findOne(Example<S> example) {
     return Optional.empty();
   }

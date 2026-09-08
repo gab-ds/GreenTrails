@@ -15,16 +15,14 @@ import it.greentrails.backend.gestioneutenze.repository.PreferenzeRepository;
 import it.greentrails.backend.gestioneutenze.repository.UtenteRepository;
 import java.util.Date;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest
-@ActiveProfiles("test")
 class GestioneUtenzeServiceImplTest {
 
   @Mock
@@ -32,6 +30,11 @@ class GestioneUtenzeServiceImplTest {
 
   @Mock
   private UtenteRepository repository;
+
+  @BeforeEach
+  void setUp() {
+    MockitoAnnotations.openMocks(this);
+  }
 
   @InjectMocks
   private GestioneUtenzeServiceImpl service;
