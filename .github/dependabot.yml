@@ -14,7 +14,9 @@ updates:
     registries:
       - docker-hardened
     schedule:
-      interval: weekly
+      interval: daily
+    cooldown:
+      default-days: 7
     ignore:
       - dependency-name: eclipse-temurin
         update-types: ["version-update:semver-major"]
@@ -24,7 +26,9 @@ updates:
     registries:
       - docker-hardened
     schedule:
-      interval: weekly
+      interval: daily
+    cooldown:
+      default-days: 7
     ignore:
       - dependency-name: node
         update-types: ["version-update:semver-major"]
@@ -38,7 +42,9 @@ updates:
   - package-ecosystem: bun
     directory: /frontend
     schedule:
-      interval: weekly
+      interval: daily
+    cooldown:
+      default-days: 7
     groups:
       nuxt-ecosystem:
         patterns:
@@ -50,4 +56,6 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
+      interval: daily
+    cooldown:
+      default-days: 7
