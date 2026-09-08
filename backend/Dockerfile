@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM dhi.io/eclipse-temurin:21-jdk-alpine-dev@sha256:a106a33ad38786bb643711d311f667a21c69d2cbdb0716f27accc680217e21b6 AS builder
+FROM dhi.io/eclipse-temurin:21-jdk-alpine-dev@sha256:301822cf8c408f181c8a7ebb246b52fddeb25f49a20f65153d234df711eb64fb AS builder
 WORKDIR /build
 
 # copia solo i file maven che cambiano raramente per sfruttare la cache
@@ -14,7 +14,7 @@ RUN --mount=type=cache,target=/root/.m2 ./mvnw -B -DskipTests -Drevision=${revis
 COPY HealthCheck.java .
 RUN javac HealthCheck.java
 
-FROM dhi.io/eclipse-temurin:21-alpine@sha256:d00b984738d9cdd1f2b6e8aeb0547228fd6a973e39dc1e3be913dc3cb27af0e9 AS runtime
+FROM dhi.io/eclipse-temurin:21-alpine@sha256:77c267a66d1ab6e67f09b9342c90568c9f1fae7c32997744f55adefb5707b7d1 AS runtime
 WORKDIR /app
 COPY --from=builder /build/target/backend*.jar ./backend.jar
 COPY --from=builder /build/HealthCheck.class ./HealthCheck.class
