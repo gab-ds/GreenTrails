@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM dhi.io/eclipse-temurin:21-jdk-alpine-dev@sha256:301822cf8c408f181c8a7ebb246b52fddeb25f49a20f65153d234df711eb64fb AS builder
+FROM dhi.io/eclipse-temurin:21-jdk-alpine-dev@sha256:59b8d90281f56d329f59b6c9c8ded94dcfe2f760b3a5e6954e37c110f2755690 AS builder
 WORKDIR /build
 
 # copia solo i file maven che cambiano raramente per sfruttare la cache
