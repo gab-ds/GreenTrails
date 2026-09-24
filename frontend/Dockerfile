@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM dhi.io/bun:1-alpine-dev@sha256:b5492189839cd527d1edbae14828009c5535b6248b7c1c01cea16ec81a724934 AS builder
+FROM dhi.io/bun:1-alpine-dev@sha256:7a4cb5bc86a33f37d5461cbec29ca26e70fc51d2fe719e60c5a2928942d04115 AS builder
 WORKDIR /app
 COPY package.json bun.lock ./
 RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lockfile
