@@ -627,7 +627,7 @@
 
     "@tiptap/extension-mention": ["@tiptap/extension-mention@3.31.3", "", { "peerDependencies": { "@tiptap/core": "3.31.3", "@tiptap/pm": "3.31.3", "@tiptap/suggestion": "3.31.3" } }, "sha512-ygOPc3nQijSMUTbEdMeng12P1szk3znubA9xNi84f31VnR18VjmU0we8SIOSSVwDfm1GppSjRER2qHmX/wGIIw=="],
 
-    "@tiptap/extension-node-range": ["@tiptap/extension-node-range@3.31.3", "", { "peerDependencies": { "@tiptap/core": "3.31.3", "@tiptap/pm": "3.31.3" } }, "sha512-8/CKctvTNmzkPkqC9wxVY4TVhOax5WkqiImkvMb3Qv+OJgKC0pTlAhSS+ks3YYTbbmJuCYvHef3QuGiwRnu9gw=="],
+    "@tiptap/extension-node-range": ["@tiptap/extension-node-range@3.31.4", "", { "peerDependencies": { "@tiptap/core": "3.31.4", "@tiptap/pm": "3.31.4" } }, "sha512-PctcI8ru/69CoOtWNtDt6HHxqIvX1zqzK7Zlt+mehdMCXOXLedHBvh4SwuqP19X/Vdzdm+OH8bHlnT+MGd0liw=="],
 
     "@tiptap/extension-ordered-list": ["@tiptap/extension-ordered-list@3.31.3", "", { "peerDependencies": { "@tiptap/extension-list": "3.31.3" } }, "sha512-mp3g11NgA/PYu8rj7J7Ez3l4qBy6WfTSmHIG4PZvEGG5w2oUAIkgb9DU7nPPzjmeme27oazFYZw+AtZA0+u4tw=="],
 
